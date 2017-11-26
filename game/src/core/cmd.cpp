@@ -169,7 +169,7 @@ CmdBasicAttack::CmdBasicAttack(Unit* atk, Unit* def, Type type)
 }
 
 unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
-  if (atk_->IsHPZero()) return nullptr;
+  if (atk_->IsHPZero() || def_->IsHPZero()) return nullptr;
 
   Vec2D atk_pos = atk_->GetCoords();
   Vec2D def_pos = def_->GetCoords();
@@ -195,16 +195,19 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
       damage *= 0.75;
     }
     ret->Append(unique_ptr<CmdHit>(new CmdHit(atk_, def_, CmdActResult::Type::kBasicAttack, hit_type, damage)));
-    if (!IsSecond() && TryBasicAttackDouble()) {
-      ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk_, def_, (Type)(type_ | Type::kSecond))));
-    }
   } else {
     ret->Append(unique_ptr<CmdMiss>(new CmdMiss(atk_, def_, CmdActResult::Type::kBasicAttack)));
   }
 
+  bool reserve_second_attack = TryBasicAttackDouble();
+  if (!IsSecond() && reserve_second_attack) {
+    ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk_, def_, (Type)(type_ | Type::kSecond))));
+  }
+
   // atk_->GainExp(def_);
 
-  if (!IsCounter() && def_->IsInRange(atk_->GetCoords())) {
+  bool is_last_attack = (reserve_second_attack == IsSecond());
+  if (is_last_attack && !IsCounter() && def_->IsInRange(atk_->GetCoords())) {
     // Add counter attack command
     LOG_INFO("'%s's' counter-attack to '%s' is reserved.",
              def_->GetId().c_str(),
