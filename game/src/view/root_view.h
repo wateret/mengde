@@ -35,7 +35,6 @@ class RootView : public View {
   void SetUnitViewUnit(Unit*);
   void SetUnitInfoViewUnitTerrainInfo(Cell* cell);
   void SetUnitInfoViewVisible(bool);
-  void SetUnitInfoViewUnit(Unit*);
   void SetDialogViewVisible(bool);
   void SetDialogViewText(const string&);
   void SetUnitDialogViewVisible(bool);

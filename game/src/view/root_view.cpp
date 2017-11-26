@@ -238,10 +238,6 @@ void RootView::SetUnitInfoViewUnitTerrainInfo(Cell* cell) {
   unit_info_view_->SetUnitTerrainInfo(cell);
 }
 
-void RootView::SetUnitInfoViewUnit(Unit* unit) {
-  unit_info_view_->SetUnit(unit);
-}
-
 void RootView::SetDialogViewVisible(bool b) {
   dialog_view_->SetVisible(b);
 }

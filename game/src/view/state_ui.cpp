@@ -148,9 +148,9 @@ void StateUIOperable::Update() {
   rv_->SetUnitViewVisible(false);
   if (map->UnitInCell(cursor_cell_)) {
     Unit* unit = map->GetUnit(cursor_cell_);
-    rv_->SetUnitViewUnit(unit); // TODO Refactor : remove dependency with Unit
+    rv_->SetUnitInfoViewUnitTerrainInfo(map->GetCell(cursor_cell_)); // TODO Refactor : remove dependency with Unit
     rv_->SetUnitInfoViewVisible(true);
-    rv_->SetUnitInfoViewUnit(unit); // TODO Refactor : remove dependency with Unit
+    rv_->SetUnitViewUnit(unit); // TODO Refactor : remove dependency with Unit
     rv_->SetUnitViewVisible(true);
   }
 
