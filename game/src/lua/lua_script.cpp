@@ -24,15 +24,15 @@ void LuaScript::Register(const string& name, lua_CFunction fn) {
 }
 
 void LuaScript::LogError(const string& msg) {
-  LOG_ERROR("[Lua] %s", msg.c_str());
+  LOGM_ERROR(Lua, "%s", msg.c_str());
 }
 
 void LuaScript::LogWarning(const string& msg) {
-  LOG_WARNING("[Lua] %s", msg.c_str());
+  LOGM_WARNING(Lua, "%s", msg.c_str());
 }
 
 void LuaScript::LogDebug(const string& msg) {
-  LOG_DEBUG("[Lua] %s", msg.c_str());
+  LOGM_DEBUG(Lua, "%s", msg.c_str());
 }
 
 void LuaScript::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {

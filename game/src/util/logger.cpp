@@ -30,6 +30,7 @@ Logger* Logger::GetInstance() {
 }
 
 void Logger::Log(LogLevel level,
+                 const char* module,
                  const char* file,
                  int         line,
                  const char* func,
@@ -38,17 +39,17 @@ void Logger::Log(LogLevel level,
   if (level > level_) return;
   va_list args;
   va_start(args, msg);
-  fprintf(stderr, "%s[%s]%s (%s:%d) ", LogLevelToColor(level), LogLevelToString(level), color_reset_, func, line);
+  fprintf(stderr, "%s[%s]%s%s (%s:%d) ", LogLevelToColor(level), LogLevelToString(level), color_reset_, module, func, line);
   vfprintf(stderr, msg, args);
   fprintf(stderr, "\n");
   va_end(args);
 }
 
-void Logger::Log(LogLevel level, const char* msg, ...) {
+void Logger::Log(LogLevel level, const char* module, const char* msg, ...) {
   if (level > level_) return;
   va_list args;
   va_start(args, msg);
-  fprintf(stderr, "%s[%s]%s ", LogLevelToColor(level), LogLevelToString(level), color_reset_);
+  fprintf(stderr, "%s[%s]%s%s ", LogLevelToColor(level), LogLevelToString(level), color_reset_, module);
   vfprintf(stderr, msg, args);
   fprintf(stderr, "\n");
   va_end(args);
