@@ -23,8 +23,16 @@ void LuaScript::Register(const string& name, lua_CFunction fn) {
   lua_register(L, name.c_str(), fn);
 }
 
-void LuaScript::PrintError(const string& variableName, const string& reason) {
-  printf("[Lua][Error] Cannot get \"%s\". %s\n", variableName.c_str(), reason.c_str());
+void LuaScript::LogError(const string& msg) {
+  LOG_ERROR("[Lua] %s", msg.c_str());
+}
+
+void LuaScript::LogWarning(const string& msg) {
+  LOG_WARNING("[Lua] %s", msg.c_str());
+}
+
+void LuaScript::LogDebug(const string& msg) {
+  LOG_DEBUG("[Lua] %s", msg.c_str());
 }
 
 void LuaScript::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
@@ -62,7 +70,7 @@ void LuaScript::SetGlobal(const string& name, const string& val) {
 template<>
 void LuaScript::Call<void>(unsigned argc) {
   if (lua_pcall(L, argc, 0, 0)) {
-    PrintError("", "Error on Call");
+    LogError("Error on Call.");
   }
 }
 

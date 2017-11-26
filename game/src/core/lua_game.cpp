@@ -33,9 +33,9 @@ LUA_IMPL(GenerateUnit) {
 LUA_IMPL(UnitPutItemsOn) {
   Game* game = lua_get_game_object(L);
   LuaScript lua(L);
-  string aid_s = lua.Get<string>();
-  string armor_s = lua.Get<string>();
-  string weapon_s = lua.Get<string>();
+  string aid_s = lua.GetOpt<string>();
+  string armor_s = lua.GetOpt<string>();
+  string weapon_s = lua.GetOpt<string>();
   int no = lua.Get<int>();
 
   Unit* unit = game->GetUnit(no);

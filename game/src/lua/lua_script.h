@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include "util/common.h"
 using std::string;
 using std::vector;
 using std::function;
@@ -22,7 +23,9 @@ class LuaScript {
   LuaScript();
   LuaScript(lua_State*);
   ~LuaScript();
-  void PrintError(const string&, const string&);
+  void LogError(const string&);
+  void LogWarning(const string&);
+  void LogDebug(const string&);
   void ForEachTableEntry(const string&, ForEachEntryFunc);
   void Run(const string&);
   void Register(const string&, lua_CFunction);
@@ -62,6 +65,8 @@ class LuaScript {
 
   template<typename T>
   T Get(const string& var_expr = "") {
+    ASSERT(L != nullptr);
+
     GetToStack(var_expr);
     T result = GetTop<T>();  
    
@@ -71,10 +76,7 @@ class LuaScript {
 
   template<typename T>
   T GetOpt(const string& var_expr = "") {
-    if (L == nullptr) {
-      PrintError(var_expr, "Lua is not ready");
-      return GetTopDefault<T>();
-    }
+    ASSERT(L != nullptr);
     
     GetToStackOpt(var_expr);
     T result = GetTopOpt<T>();  
@@ -156,7 +158,7 @@ class LuaScript {
         }
         
         if (lua_isnil(L, -1)) {
-          PrintError(var_expr, var + " is not defined");
+          if (!optional) LogError(var + " is not defined");
           lua_pop(L, level);
           if (!optional) throw "GetToStack Error";
           return 0;
@@ -178,7 +180,7 @@ class LuaScript {
   template<typename T>
   T GetTop() {
     if(!lua_isnumber(L, -1)) {
-      PrintError("", "Not a number");
+      LogError("Not a number.");
       throw "Not a number";
     }
     return (T)lua_tonumber(L, -1);
@@ -187,14 +189,14 @@ class LuaScript {
   template<typename T>
   T GetTopOpt() {
     if(!lua_isnumber(L, -1)) {
-      PrintError("", "Not a number. Returning default value");
-      return GetTopDefault<T>();
+      LogDebug("Not a number. Returning default value.");
+      return GetDefault<T>();
     }
     return (T)lua_tonumber(L, -1);
   }
 
   template<typename T>
-  T GetTopDefault() { return 0; }
+  T GetDefault() { return 0; }
 
   void DumpStack() {
 #ifdef DEBUG
@@ -227,7 +229,7 @@ class LuaScript {
   template<typename R>
   R Call(unsigned argc) {
     if (lua_pcall(L, argc, 1, 0)) {
-      PrintError("", "Error on Call");
+      LogError("Error on Call");
     }
     R ret = (R)GetTop<R>();
     lua_pop(L, 1);
@@ -251,27 +253,45 @@ class LuaScript {
   bool       destroy_;
 };
 
- // Template Specializations
+// Template Specializations
+
+template<>
+inline string LuaScript::GetDefault<string>() {
+  return "nil";
+}
 
 template<> 
 inline bool LuaScript::GetTop<bool>() {
   return (bool)lua_toboolean(L, -1);
 }
 
-template<>
-inline string LuaScript::GetTop<string>() {
-  string s = "nil";
-  if (lua_isstring(L, -1)) {
-    s = string(lua_tostring(L, -1));
+template<> 
+inline bool LuaScript::GetTopOpt<bool>() {
+  if (lua_isboolean(L, -1)) {
+    return (bool)lua_toboolean(L, -1);
   } else {
-    PrintError("", "Not a string");
+    LogError("Not a boolean.");
+    throw "Not a boolean";
   }
-  return s;
 }
 
 template<>
-inline string LuaScript::GetTopDefault<string>() {
-  return "nil";
+inline string LuaScript::GetTop<string>() {
+  if (lua_isstring(L, -1)) {
+    return string(lua_tostring(L, -1));
+  } else {
+    LogError("Not a string.");
+    throw "Not a string";
+  }
+}
+
+template<>
+inline string LuaScript::GetTopOpt<string>() {
+  if (lua_isstring(L, -1)) {
+    return string(lua_tostring(L, -1));
+  } else {
+    return GetDefault<string>();
+  }
 }
 
 template<>
