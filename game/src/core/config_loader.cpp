@@ -135,10 +135,6 @@ void ConfigLoader::ParseMagics() {
     string target_s = this->lua_config_->Get<string>("target");
     string type_s   = this->lua_config_->Get<string>("type");
     int    mp       = this->lua_config_->Get<int>("mp");
-    int    power    = this->lua_config_->Get<int>("power");
-    string stat_s   = this->lua_config_->Get<string>("stat");
-    int    amount   = this->lua_config_->Get<int>("amount");
-    int    turns    = this->lua_config_->Get<int>("turns");
 
     Range::Type range = Range::StringToRange(range_s);
     bool target = (target_s == "enemy");
@@ -150,9 +146,28 @@ void ConfigLoader::ParseMagics() {
       return Magic::MagicType::kMagicNone;
     }(type_s);
 
-    uint16_t stat = StatStrToIdx(stat_s);
+    Magic* magic = nullptr;
 
-    Magic* magic = new Magic(id, type, range, target, mp, power, stat, amount, turns);
+    switch (type) {
+      case Magic::MagicType::kMagicDeal:
+      case Magic::MagicType::kMagicHeal: {
+        int power = this->lua_config_->Get<int>("power");
+        magic = new Magic(id, type, range, target, mp, power, 0, 0, 0);
+        break;
+      }
+      case Magic::MagicType::kMagicStatMod: {
+        string   stat_s = this->lua_config_->Get<string>("stat");
+        int      amount = this->lua_config_->Get<int>("amount");
+        int      turns  = this->lua_config_->Get<int>("turns");
+        uint16_t stat   = StatStrToIdx(stat_s);
+        magic = new Magic(id, type, range, target, mp, 0, stat, amount, turns);
+        break;
+      }
+      default:
+        UNREACHABLE("Unknown type of magic");
+        break;
+    };
+
     this->lua_config_->ForEachTableEntry("learnat", [=, &magic] () {
       string uclass = this->lua_config_->Get<string>("class");
       uint16_t level = (uint16_t) this->lua_config_->Get<int>("level");
@@ -181,14 +196,15 @@ void ConfigLoader::ParseItems() {
     this->lua_config_->ForEachTableEntry("effects", [=, &item] () {
       string type = this->lua_config_->Get<string>("type");
       // XXX Fix generation of EventEffect : gets different by type
-      int  amount = this->lua_config_->Get<int>("amount");
+      int amount = this->lua_config_->Get<int>("amount");
       EventEffect* effect = GenerateEventEffect(type, amount);
       item->AddEffect(effect);
     });
     this->lua_config_->ForEachTableEntry("modifiers", [=, &item] () {
-      string stat_s = this->lua_config_->Get<string>("stat");
-      int    amount = this->lua_config_->Get<int>("amount");
-      StatModifier* mod = new StatModifier("", StatStrToIdx(stat_s), amount, 0, 255); // XXX constants
+      string   stat_s     = this->lua_config_->Get<string>("stat");
+      uint16_t addend     = this->lua_config_->Get<uint16_t>("addend");
+      uint16_t multiplier = this->lua_config_->Get<uint16_t>("multiplier");
+      StatModifier* mod = new StatModifier(id, StatStrToIdx(stat_s), addend, multiplier);
       item->AddModifier(mod);
     });
     this->rc_.item_manager->Add(id, item);
