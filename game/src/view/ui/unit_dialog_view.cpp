@@ -2,6 +2,7 @@
 #include "text_view.h"
 #include "image_view.h"
 #include "core/unit.h"
+#include "../drawer.h"
 
 UnitDialogView::UnitDialogView(const Rect* frame, const string& message, Unit* unit)
     : CompositeView(frame),

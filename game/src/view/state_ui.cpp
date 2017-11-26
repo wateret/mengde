@@ -14,6 +14,7 @@
 #include "view/ui/terrain_info_view.h"
 #include "view/ui/unit_info_view.h"
 #include "view/ui/modal_dialog_view.h"
+#include "view/drawer.h"
 
 // StateUI
 

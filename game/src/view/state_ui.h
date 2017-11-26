@@ -2,7 +2,6 @@
 #define STATE_UI_H_
 
 #include "state.h"
-#include "i_controller.h"
 #include "i_view.h"
 
 // StateUI
@@ -12,7 +11,7 @@ class Game;
 class Drawer;
 class Unit;
 
-class StateUI : public State, IView, IController {
+class StateUI : public State, IView {
  public:
   struct Base {
     Game*     game;

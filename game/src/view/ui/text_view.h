@@ -3,6 +3,7 @@
 
 #include "view.h"
 #include "common.h"
+#include "layout_helper.h"
 
 class TextView : public View {
  public:

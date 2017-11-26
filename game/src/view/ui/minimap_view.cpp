@@ -2,6 +2,9 @@
 #include "rect_view.h"
 #include "image_view.h"
 #include "core/game.h"
+#include "../view.h"
+#include "../layout_helper.h"
+#include "../drawer.h"
 
 MinimapView::MinimapView(const Rect* frame,
                          Game* game,

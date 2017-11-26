@@ -1,4 +1,5 @@
 #include "button_view.h"
+#include "../drawer.h"
 
 ButtonView::ButtonView(const Rect* frame, const std::string& text)
     : CallbackView(frame), text_(text), hover_color_(0,0,0,255) {

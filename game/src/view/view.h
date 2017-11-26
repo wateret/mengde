@@ -3,10 +3,12 @@
 
 #include "util/common.h"
 #include "rect.h"
-#include "i_controller.h"
 #include "i_view.h"
+#include "color.h"
 
-class View : public IView, public IController {
+class Drawer;
+
+class View : public IView {
  public:
   View();
   View(const Rect*);

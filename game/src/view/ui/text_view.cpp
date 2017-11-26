@@ -1,4 +1,5 @@
 #include "text_view.h"
+#include "../drawer.h"
 
 TextView::TextView(const Rect* frame, const std::string& text)
     : View(frame),

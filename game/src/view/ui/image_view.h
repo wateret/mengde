@@ -6,6 +6,7 @@
 #include <string>
 
 class Drawer;
+class Texture;
 
 class ImageView : public View {
  public:
