@@ -216,9 +216,9 @@ void ConfigLoader::ParseHeroes() {
   lua_config_->ForEachTableEntry("$gconf.heroes", [this] () {
     string id         = this->lua_config_->Get<string>("id");
     string uclass     = this->lua_config_->Get<string>("class");
-    int    level      = this->lua_config_->Get<int>("level");
+    int    level      = this->lua_config_->GetOpt<int>("level");
     vector<int> statr = this->lua_config_->GetVector<int>("stat");
-    string model      = this->lua_config_->Get<string>("model");
+    string model      = this->lua_config_->GetOpt<string>("model");
     if (model == "nil") {
       model = "infantry-1-red"; // XXX hardcoded. Make this to find default model
     }
