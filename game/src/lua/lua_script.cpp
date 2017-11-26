@@ -67,6 +67,31 @@ void LuaScript::SetGlobal(const string& name, const string& val) {
   lua_setglobal(L, name.c_str());
 }
 
+void LuaScript::DumpStack() {
+#ifdef DEBUG
+  int i = lua_gettop(L);
+  printf("--------------- Stack Dump ----------------\n");
+  while (i) {
+    int t = lua_type(L, i);
+    switch (t) {
+      case LUA_TSTRING:
+        printf("%d:`%s'", i, lua_tostring(L, i));
+        break;
+      case LUA_TBOOLEAN:
+        printf("%d: %s",i,lua_toboolean(L, i) ? "true" : "false");
+        break;
+      case LUA_TNUMBER:
+        printf("%d: %g",  i, lua_tonumber(L, i));
+        break;
+      default: printf("%d: %s", i, lua_typename(L, t)); break;
+    }
+    printf("\n");
+    i--;
+  }
+  printf("--------------- Stack Dump Finished ---------------\n");
+#endif // DEBUG
+} 
+
 template<>
 void LuaScript::Call<void>(unsigned argc) {
   if (lua_pcall(L, argc, 0, 0)) {

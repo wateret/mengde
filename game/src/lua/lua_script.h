@@ -198,30 +198,7 @@ class LuaScript {
   template<typename T>
   T GetDefault() { return 0; }
 
-  void DumpStack() {
-#ifdef DEBUG
-		int i = lua_gettop(L);
-		printf("--------------- Stack Dump ----------------\n");
-		while (i) {
-			int t = lua_type(L, i);
-			switch (t) {
-				case LUA_TSTRING:
-					printf("%d:`%s'", i, lua_tostring(L, i));
-					break;
-				case LUA_TBOOLEAN:
-					printf("%d: %s",i,lua_toboolean(L, i) ? "true" : "false");
-					break;
-				case LUA_TNUMBER:
-					printf("%d: %g",  i, lua_tonumber(L, i));
-					break;
-				default: printf("%d: %s", i, lua_typename(L, t)); break;
-			}
-      printf("\n");
-			i--;
-		}
-		printf("--------------- Stack Dump Finished ---------------\n");
-#endif // DEBUG
-	} 
+  void DumpStack();
 
   void SetRawPointerToGlobal(const string&, void*);
 
