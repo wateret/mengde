@@ -1,0 +1,85 @@
+#include "gauge_view.h"
+#include "app.h"
+#include "drawer.h"
+
+GaugeView::GaugeView(const Rect* frame,
+                     int cur_val,
+                     int max_val,
+                     Color cur_color,
+                     Color max_color)
+    : GaugeView(frame,
+                cur_val,
+                max_val,
+                0,
+                cur_color,
+                max_color,
+                {0, 0, 0, 0}) {
+}
+
+GaugeView::GaugeView(const Rect* frame,
+                     int cur_val,
+                     int max_val,
+                     int ext_val,
+                     Color cur_color,
+                     Color max_color,
+                     Color ext_color)
+    : View(frame),
+      cur_val_(cur_val),
+      max_val_(max_val),
+      ext_val_(ext_val),
+      cur_color_(cur_color),
+      max_color_(max_color),
+      ext_color_(ext_color),
+      help_text_type_(kHelpTextNone),
+      help_text_align_(LayoutHelper::kAlignCenter) {
+  if (cur_val_ < 0)
+    cur_val_ = 0;
+}
+
+GaugeView::~GaugeView() {
+}
+
+int GaugeView::CalcWidth(int val) {
+  ASSERT(max_val_ > 0);
+  int w = GetFrame()->GetW();
+  return val * w / max_val_;
+}
+
+void GaugeView::RenderView(Drawer* drawer) {
+  Rect frame(Vec2D(0, 0), GetFrameSize());
+  drawer->SetDrawColor(max_color_);
+//  LOG_INFO("GaugeView Render WH : %d %d", frame.GetW(), frame.GetH());
+  drawer->FillRectAbs(&frame);
+
+  if (ext_val_ > 0) {
+    Rect ext_rect = frame;
+    ext_rect.SetW(CalcWidth(cur_val_));
+    drawer->SetDrawColor(ext_color_);
+    drawer->FillRectAbs(&ext_rect);
+  }
+
+  Rect cur_rect = frame;
+  cur_rect.SetW(CalcWidth(cur_val_ - ext_val_));
+  drawer->SetDrawColor(cur_color_);
+  drawer->FillRectAbs(&cur_rect);
+
+  if (help_text_type_ != kHelpTextNone) {
+    std::string str_hp;
+    switch (help_text_type_) {
+      case kHelpTextCurMax:
+        str_hp = std::to_string(cur_val_) + " / " + std::to_string(max_val_);
+        break;
+
+      case kHelpTextCurOnly:
+        str_hp = std::to_string(cur_val_);
+        break;
+
+      case kHelpTextNone:
+      default:
+        UNREACHABLE("Invalid help text type");
+        break;
+    }
+    frame.Contract(4);
+    drawer->DrawTextAbs(str_hp, 14, {255, 255, 255, 255}, &frame, help_text_align_);
+  }
+}

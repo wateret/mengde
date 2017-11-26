@@ -1,0 +1,44 @@
+#ifndef RECT_H
+#define RECT_H
+
+#include <SDL.h>
+#include "util/common.h"
+
+class Rect {
+ public:
+  Rect(int, int, int, int);
+  Rect(Vec2D, Vec2D);
+  Rect();
+
+ public:
+  const SDL_Rect* GetRawRectPtr() const;
+  int GetX() const { return rect_.x; }
+  int GetY() const { return rect_.y; }
+  int GetW() const { return rect_.w; }
+  int GetH() const { return rect_.h; }
+  void SetX(int v) { rect_.x = v; }
+  void SetY(int v) { rect_.y = v; }
+  void SetW(int v) { rect_.w = v; }
+  void SetH(int v) { rect_.h = v; }
+  Vec2D GetSize() const { return Vec2D(rect_.w, rect_.h); }
+  Vec2D GetPos() const { return Vec2D(rect_.x, rect_.y); }
+  void Contract(int);
+  void Move(int, int);
+  void Move(Vec2D);
+  void SetPos(Vec2D);
+  bool Contains(Vec2D) const;
+  Rect operator*(int) const;
+  Rect& operator*=(int);
+  Rect& operator*=(Vec2D);
+  Rect& operator+=(int);
+  Rect& operator+=(Vec2D);
+  Rect& operator-=(int);
+  Rect& operator-=(Vec2D);
+  Rect& Magnify(int);
+  Rect& Magnify(Vec2D);
+
+ private:
+  SDL_Rect rect_;
+};
+
+#endif

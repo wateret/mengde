@@ -1,0 +1,9 @@
+*.swp
+*.swo
+.DS_Store
+build/
+res/
+sce/
+TODO.md
+tags
+
