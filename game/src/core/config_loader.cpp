@@ -202,8 +202,8 @@ void ConfigLoader::ParseItems() {
     });
     this->lua_config_->ForEachTableEntry("modifiers", [=, &item] () {
       string   stat_s     = this->lua_config_->Get<string>("stat");
-      uint16_t addend     = this->lua_config_->Get<uint16_t>("addend");
-      uint16_t multiplier = this->lua_config_->Get<uint16_t>("multiplier");
+      uint16_t addend     = this->lua_config_->GetOpt<uint16_t>("addend");
+      uint16_t multiplier = this->lua_config_->GetOpt<uint16_t>("multiplier");
       StatModifier* mod = new StatModifier(id, StatStrToIdx(stat_s), addend, multiplier);
       item->AddModifier(mod);
     });

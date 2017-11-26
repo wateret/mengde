@@ -62,13 +62,22 @@ class LuaScript {
 
   template<typename T>
   T Get(const string& var_expr = "") {
+    GetToStack(var_expr);
+    T result = GetTop<T>();  
+   
+    lua_pop(L, 1);
+    return result;
+  }
+
+  template<typename T>
+  T GetOpt(const string& var_expr = "") {
     if (L == nullptr) {
       PrintError(var_expr, "Lua is not ready");
       return GetTopDefault<T>();
     }
     
-    GetToStack(var_expr);
-    T result = GetTop<T>();  
+    GetToStackOpt(var_expr);
+    T result = GetTopOpt<T>();  
    
     lua_pop(L, 1);
     return result;
@@ -132,7 +141,7 @@ class LuaScript {
   void PushToStack(const string&);
   void PushToStack(lua_CFunction);
 
-  int GetToStack(const string& var_expr) {
+  int GetToStack(const string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
 
     string var = "";
@@ -149,6 +158,7 @@ class LuaScript {
         if (lua_isnil(L, -1)) {
           PrintError(var_expr, var + " is not defined");
           lua_pop(L, level);
+          if (!optional) throw "GetToStack Error";
           return 0;
         }
         var = "";
@@ -161,10 +171,24 @@ class LuaScript {
     return level;
   }
 
+  int GetToStackOpt(const string& var_expr) {
+    return GetToStack(var_expr, true);
+  }
+
   template<typename T>
   T GetTop() {
     if(!lua_isnumber(L, -1)) {
       PrintError("", "Not a number");
+      throw "Not a number";
+    }
+    return (T)lua_tonumber(L, -1);
+  }
+
+  template<typename T>
+  T GetTopOpt() {
+    if(!lua_isnumber(L, -1)) {
+      PrintError("", "Not a number. Returning default value");
+      return GetTopDefault<T>();
     }
     return (T)lua_tonumber(L, -1);
   }
