@@ -78,3 +78,47 @@ void LuaScript::NewGlobalTable(const string& name) {
   lua_newtable(L);
   lua_setglobal(L, name.c_str());
 }
+
+template<>
+bool LuaScript::GetDefault<bool>() {
+  return false;
+}
+
+template<> 
+bool LuaScript::GetTop<bool>() {
+  return (bool)lua_toboolean(L, -1);
+}
+
+template<> 
+bool LuaScript::GetTopOpt<bool>() {
+  if (lua_isboolean(L, -1)) {
+    return (bool)lua_toboolean(L, -1);
+  } else {
+    LogError("Not a boolean.");
+    throw "Not a boolean";
+  }
+}
+
+template<>
+string LuaScript::GetDefault<string>() {
+  return "nil";
+}
+
+template<>
+string LuaScript::GetTop<string>() {
+  if (lua_isstring(L, -1)) {
+    return string(lua_tostring(L, -1));
+  } else {
+    LogError("Not a string.");
+    throw "Not a string";
+  }
+}
+
+template<>
+string LuaScript::GetTopOpt<string>() {
+  if (lua_isstring(L, -1)) {
+    return string(lua_tostring(L, -1));
+  } else {
+    return GetDefault<string>();
+  }
+}

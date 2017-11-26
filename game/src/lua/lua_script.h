@@ -256,43 +256,22 @@ class LuaScript {
 // Template Specializations
 
 template<>
-inline string LuaScript::GetDefault<string>() {
-  return "nil";
-}
+bool LuaScript::GetDefault<bool>();
 
 template<> 
-inline bool LuaScript::GetTop<bool>() {
-  return (bool)lua_toboolean(L, -1);
-}
+bool LuaScript::GetTop<bool>();
 
 template<> 
-inline bool LuaScript::GetTopOpt<bool>() {
-  if (lua_isboolean(L, -1)) {
-    return (bool)lua_toboolean(L, -1);
-  } else {
-    LogError("Not a boolean.");
-    throw "Not a boolean";
-  }
-}
+bool LuaScript::GetTopOpt<bool>();
 
 template<>
-inline string LuaScript::GetTop<string>() {
-  if (lua_isstring(L, -1)) {
-    return string(lua_tostring(L, -1));
-  } else {
-    LogError("Not a string.");
-    throw "Not a string";
-  }
-}
+string LuaScript::GetDefault<string>();
 
 template<>
-inline string LuaScript::GetTopOpt<string>() {
-  if (lua_isstring(L, -1)) {
-    return string(lua_tostring(L, -1));
-  } else {
-    return GetDefault<string>();
-  }
-}
+string LuaScript::GetTop<string>();
+
+template<>
+string LuaScript::GetTopOpt<string>();
 
 template<>
 void LuaScript::Call<void>(unsigned argc);
