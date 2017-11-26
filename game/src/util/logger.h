@@ -36,4 +36,10 @@ class Logger {
   const char* color_reset_;
 };
 
+#define LOG_INFO(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogInfo, __VA_ARGS__)
+#define LOG_DEBUG(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogDebug, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
+#define LOG_WARNING(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogWarning, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
+#define LOG_ERROR(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogError, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
+#define LOG_FATAL(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogFatal, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
+
 #endif // LOGGER_H_
