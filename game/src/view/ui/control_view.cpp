@@ -1,11 +1,11 @@
-#include "debug_view.h"
+#include "control_view.h"
 #include "button_view.h"
 #include "core/cmd.h"
 #include "core/game.h"
 #include "view/root_view.h"
 #include "minimap_view.h"
 
-DebugView::DebugView(const Rect* rect, Game* game, RootView* rv)
+ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
   SetBgColor(COLOR_DARKGRAY);
   SetPadding(8);

@@ -9,7 +9,7 @@
 #include "ui/unit_info_view.h"
 #include "ui/unit_view.h"
 #include "ui/unit_dialog_view.h"
-#include "ui/debug_view.h"
+#include "ui/control_view.h"
 #include "ui/modal_dialog_view.h"
 #include "ui/magic_list_view.h"
 #include "core/magic_list.h"
@@ -21,7 +21,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
       app_(app),
       unit_info_view_(nullptr),
       unit_view_(nullptr),
-      debug_view_(nullptr),
+      control_view_(nullptr),
       dialog_view_(nullptr),
       magic_list_view_(nullptr),
       ui_state_machine_(new StateUIView({game, this})),
@@ -50,11 +50,11 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   unit_view_ = new UnitView(&unit_frame);
 //  unit_view_->SetVisible(false);
 
-  Rect debug_frame = LayoutHelper::CalcPosition(GetFrameSize(),
+  Rect control_frame = LayoutHelper::CalcPosition(GetFrameSize(),
                                                 {300, 150},
                                                 LayoutHelper::kAlignRgtBot,
                                                 LayoutHelper::kDefaultSpace);
-  debug_view_ = new DebugView(&debug_frame, game_, this);
+  control_view_ = new ControlView(&control_frame, game_, this);
 
   Rect dialog_frame = *GetFrame();
   dialog_view_ = new ModalDialogView(&dialog_frame, "Put your message here!");
@@ -81,7 +81,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
 RootView::~RootView() {
   delete unit_info_view_;
   delete unit_view_;
-  delete debug_view_;
+  delete control_view_;
   delete dialog_view_;
   delete unit_dialog_view_;
   delete magic_list_view_;
@@ -89,7 +89,7 @@ RootView::~RootView() {
 
 void RootView::Update() {
   GetCurrentState()->Update();
-  debug_view_->Update();
+  control_view_->Update();
   frame_count_++;
 }
 
@@ -132,7 +132,7 @@ void RootView::RenderView(Drawer* drawer) {
 
   unit_view_->Render(drawer);
   unit_info_view_->Render(drawer);
-  debug_view_->Render(drawer);
+  control_view_->Render(drawer);
   magic_list_view_->Render(drawer);
   dialog_view_->Render(drawer);
   unit_dialog_view_->Render(drawer);
@@ -142,7 +142,7 @@ bool RootView::OnMouseButtonEvent(const MouseButtonEvent e) {
   if (unit_dialog_view_->DelegateMouseButtonEvent(e)) return true;
   if (dialog_view_->DelegateMouseButtonEvent(e)) return true;
   if (magic_list_view_->DelegateMouseButtonEvent(e)) return true;
-  if (debug_view_->DelegateMouseButtonEvent(e)) return true;
+  if (control_view_->DelegateMouseButtonEvent(e)) return true;
   if (unit_view_->DelegateMouseButtonEvent(e)) return true;
   return GetCurrentState()->OnMouseButtonEvent(e);
 }
@@ -153,7 +153,7 @@ bool RootView::OnMouseMotionEvent(const MouseMotionEvent e) {
   if (unit_dialog_view_->DelegateMouseMotionEvent(e)) return true;
   if (dialog_view_->DelegateMouseMotionEvent(e)) return true;
   if (magic_list_view_->DelegateMouseMotionEvent(e)) return true;
-  if (debug_view_->DelegateMouseMotionEvent(e)) return true;
+  if (control_view_->DelegateMouseMotionEvent(e)) return true;
   if (unit_view_->DelegateMouseMotionEvent(e)) return true;
   if (GetCurrentState()->OnMouseMotionEvent(e)) return true;
 

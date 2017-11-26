@@ -13,7 +13,7 @@ class Cell;
 
 class UnitView;
 class UnitDialogView;
-class DebugView;
+class ControlView;
 class ModalDialogView;
 class MagicListView;
 class UnitInfoView;
@@ -67,7 +67,7 @@ class RootView : public View {
   App*                   app_;
   UnitInfoView*          unit_info_view_;
   UnitView*              unit_view_;
-  DebugView*             debug_view_;
+  ControlView*           control_view_;
   ModalDialogView*       dialog_view_;
   UnitDialogView*        unit_dialog_view_;
   MagicListView*         magic_list_view_;
