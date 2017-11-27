@@ -30,6 +30,7 @@ Vec2D View::GetActualFrameCoords() const {
   return {frame_.GetX() + padding_, frame_.GetY() + padding_};
 }
 
+/*
 void View::Render(Drawer* drawer) {
   if (!visible_) return;
 
@@ -43,6 +44,25 @@ void View::Render(Drawer* drawer) {
 
   RenderView(drawer);
 
+  drawer->ResetViewport();
+}
+*/
+
+bool View::RenderBegin(Drawer*) {
+  if (!visible_) return false;
+
+  const Rect* frame = GetFrame();
+  Rect actual_frame = *frame;
+
+  drawer->SetDrawColor(bg_color_);
+  drawer->FillRectAbs(frame);
+  actual_frame.Contract(padding_);
+  drawer->SetViewport(&actual_frame);
+
+  return true;
+}
+
+void View::RenderEnd(Drawer*) {
   drawer->ResetViewport();
 }
 

@@ -30,13 +30,16 @@ class View : public IView {
   bool DelegateMouseMotionEvent(const MouseMotionEvent);
 
  public:
-  virtual void Render(Drawer*) override final;
+  virtual void Render(Drawer*) override {}
   virtual void Update() override {}
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override { return false; }
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override { return false; }
 
  private:
-  virtual void RenderView(Drawer*) = 0;
+  bool RenderBegin(Drawer*);
+  void RenderEnd(Drawer*);
+#define RENDER_BEGIN(o) if (!(o)->RenderBegin()) return;
+#define RENDER_END(o)   (!(o)->RenderEnd());
 
  private:
   Rect frame_;
