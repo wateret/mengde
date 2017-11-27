@@ -23,19 +23,19 @@ void CompositeView::RemoveChild(int index) {
 }
 
 void CompositeView::RenderView(Drawer* drawer) {
-  for (auto itr = children_.begin(); itr != children_.end(); itr++) {
-    View* view = *itr;
-    view->Render(drawer);
+  for (auto child : children_) {
+    child->Render(drawer);
   }
 }
 
 void CompositeView::Update() {
-  for (auto v : children_) {
-    v->Update();
+  for (auto child : children_) {
+    child->Update();
   }
 }
 
 bool CompositeView::OnMouseButtonEvent(const MouseButtonEvent e) {
+  // Mouse events should be handled in reverse order
   for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
     View* view = *itr;
     if (view->DelegateMouseButtonEvent(e)) return true;
@@ -46,6 +46,7 @@ bool CompositeView::OnMouseButtonEvent(const MouseButtonEvent e) {
 bool CompositeView::OnMouseMotionEvent(const MouseMotionEvent e) {
   if (e.IsMotionOver()) {
     bool is_handled = false;
+    // Mouse events should be handled in reverse order
     for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
       View* view = *itr;
       is_handled = view->DelegateMouseMotionEvent(e) || is_handled;
@@ -53,6 +54,7 @@ bool CompositeView::OnMouseMotionEvent(const MouseMotionEvent e) {
     return is_handled;
   } else {
     ASSERT(e.IsMotionOut());
+    // Mouse events should be handled in reverse order
     for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
       View* view = *itr;
       view->DelegateMouseMotionEvent(e);
