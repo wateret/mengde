@@ -4,15 +4,18 @@
 #include "unit.h"
 #include "cell.h"
 #include "gauge_view.h"
+#include "text_view.h"
 #include "drawer.h"
 
 UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
-    : View(frame),
+    : CompositeView(frame),
       unit_(unit),
-      gv_hp_(NULL),
-      gv_mp_(NULL),
-      str_lftbot_(),
-      str_rgtbot_() {
+      gv_hp_(nullptr),
+      gv_mp_(nullptr),
+      tv_name_(nullptr),
+      tv_lv_(nullptr),
+      tv_lftbot_(nullptr),
+      tv_rgtbot_(nullptr) {
   SetBgColor({64, 64, 64, 255});
   SetPadding(8);
 
@@ -32,13 +35,22 @@ UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
                          COLORC_GAUGE_BG);
   gv_hp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
   gv_mp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
+
+  Rect tv_rect = GetActualFrame();
+  tv_name_   = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignLftTop);
+  tv_lv_     = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignRgtTop);
+  tv_lftbot_ = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignLftBot);
+  tv_rgtbot_ = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignRgtBot);
+
+  AddChild(gv_hp_);
+  AddChild(gv_mp_);
+  AddChild(tv_name_);
+  AddChild(tv_lv_);
+  AddChild(tv_lftbot_);
+  AddChild(tv_rgtbot_);
 }
 
 UnitInfoView::~UnitInfoView() {
-  ASSERT(gv_hp_ != NULL);
-  ASSERT(gv_mp_ != NULL);
-  delete gv_hp_;
-  delete gv_mp_;
 }
 
 void UnitInfoView::SetUnitTerrainInfo(Cell* cell) {
@@ -51,15 +63,13 @@ void UnitInfoView::SetUnitTerrainInfo(Cell* cell) {
   string name = cell->GetTerrainName();
   int effect = cell->GetTerrainEffectThisCell();
   string terrain_effect = name + " " + std::to_string(effect) + "%";
-  str_rgtbot_ = terrain_effect;
+  tv_rgtbot_->SetText(terrain_effect);
 }
 
 void UnitInfoView::SetUnitAttackInfo(Unit* unit, int accuracy, int expected_damage) {
   SetUnit(unit);
   gv_hp_->SetExtVal(expected_damage);
-  str_rgtbot_ = "Accuracy : " +
-                std::to_string(accuracy) +
-                "%";
+  tv_rgtbot_->SetText("Accuracy : " + std::to_string(accuracy) + "%");
 }
 
 void UnitInfoView::SetUnit(Unit* unit) {
@@ -70,19 +80,8 @@ void UnitInfoView::SetUnit(Unit* unit) {
   gv_hp_->SetMaxVal(ori_xtat->hp);
   gv_mp_->SetCurVal(cur_xtat->mp);
   gv_mp_->SetMaxVal(ori_xtat->mp);
-}
-
-void UnitInfoView::RenderView(Drawer* drawer) {
-  gv_hp_->Render(drawer);
-  gv_mp_->Render(drawer);
-
-  string str_name = unit_->GetId();
-  string str_lv = "Lv " + std::to_string(unit_->GetLevel());
-  Rect conv(Vec2D(0, 0), GetActualFrameSize());
-  drawer->DrawTextAbs(str_name, 14, COLOR_WHITE, &conv, LayoutHelper::kAlignLftTop);
-  drawer->DrawTextAbs(str_lv, 14, COLOR_WHITE, &conv, LayoutHelper::kAlignRgtTop);
-  drawer->DrawTextAbs(str_lftbot_, 14, COLOR_WHITE, &conv, LayoutHelper::kAlignLftBot);
-  drawer->DrawTextAbs(str_rgtbot_, 14, COLOR_WHITE, &conv, LayoutHelper::kAlignRgtBot);
+  tv_name_->SetText(unit_->GetId());
+  tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
 }
 
 bool UnitInfoView::OnMouseMotionEvent(const MouseMotionEvent) {

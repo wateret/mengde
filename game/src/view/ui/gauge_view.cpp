@@ -45,10 +45,9 @@ int GaugeView::CalcWidth(int val) {
   return val * w / max_val_;
 }
 
-void GaugeView::RenderView(Drawer* drawer) {
-  Rect frame(Vec2D(0, 0), GetFrameSize());
+void GaugeView::Render(Drawer* drawer) {
+  Rect frame = *GetFrame();
   drawer->SetDrawColor(max_color_);
-//  LOG_INFO("GaugeView Render WH : %d %d", frame.GetW(), frame.GetH());
   drawer->FillRectAbs(&frame);
 
   if (ext_val_ > 0) {

@@ -35,11 +35,11 @@ class View : public IView {
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override { return false; }
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override { return false; }
 
- private:
+ public:
   bool RenderBegin(Drawer*);
   void RenderEnd(Drawer*);
-#define RENDER_BEGIN(o) if (!(o)->RenderBegin()) return;
-#define RENDER_END(o)   (!(o)->RenderEnd());
+#define RENDER_BEGIN(o) if (!(o)->RenderBegin(drawer)) return;
+#define RENDER_END(o)   (o)->RenderEnd(drawer);
 
  private:
   Rect frame_;

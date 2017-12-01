@@ -3,12 +3,6 @@
 #include "../drawer.h"
 #include "../texture_manager.h"
 
-ImageView::ImageView(const string& path)
-    : path_(path), texture_(nullptr) {
-  SetBgColor(COLOR_TRANSPARENT);
-  SetPadding(0);
-}
-
 ImageView::ImageView(const Rect* frame, const string& path)
     : View(frame), path_(path), texture_(nullptr) {
   SetBgColor(COLOR_TRANSPARENT);
@@ -23,14 +17,14 @@ void ImageView::SetPath(const string& path) {
   texture_ = nullptr;
 }
 
-void ImageView::RenderView(Drawer* drawer) {
-  Rect frame = GetActualFrame();
+void ImageView::Render(Drawer* drawer) {
   if (texture_ == nullptr) { // TODO better design?
     TextureManager* tm = drawer->GetTextureManager();
     texture_ = tm->FetchTexture(path_);
   }
   ASSERT(texture_ != nullptr);
-  drawer->CopyTextureAbs(texture_, nullptr, nullptr);
+  Rect frame = *GetFrame();
+  drawer->CopyTextureAbs(texture_, nullptr, &frame);
 }
 
 bool ImageView::OnMouseButtonEvent(const MouseButtonEvent e) {

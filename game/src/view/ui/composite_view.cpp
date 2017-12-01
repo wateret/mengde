@@ -24,13 +24,9 @@ void CompositeView::RemoveChild(int index) {
 
 void CompositeView::Render(Drawer* drawer) {
   RENDER_BEGIN(this);
-
   for (auto child : children_) {
-    RENDER_BEGIN(child);
     child->Render(drawer);
-    RENDER_END(child);
   }
-
   RENDER_END(this);
 }
 

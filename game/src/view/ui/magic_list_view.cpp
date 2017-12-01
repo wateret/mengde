@@ -68,9 +68,11 @@ void MagicListView::SetMouseUpHandler(Game* game, RootView* rv) {
   });
 }
 
-void MagicListView::RenderView(Drawer* drawer) {
+void MagicListView::Render(Drawer* drawer) {
   ASSERT((unit_ && magic_list_) || (!unit_ && !magic_list_));
   if (magic_list_ == nullptr) return;
+  // FIXME Remove this RENDER_BEGIN/END workaround
+  RENDER_BEGIN(this);
   Rect item_frame(Vec2D(0, 0), GetActualFrameSize());
   item_frame += {0, item_height_ - item_frame.GetH()};
   for (int i = 0, sz = magic_list_->NumMagics(); i < sz; i++) {
@@ -83,6 +85,7 @@ void MagicListView::RenderView(Drawer* drawer) {
     drawer->DrawTextAbs(magic->GetId(), 14, COLOR_WHITE, &item_frame, LayoutHelper::kAlignCenter);
     item_frame.Move(0, item_height_);
   }
+  RENDER_END(this);
 }
 
 void MagicListView::Cleanup() {

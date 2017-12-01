@@ -8,11 +8,12 @@
 class TextView : public View {
  public:
   TextView(const Rect*, const std::string& = "");
+  TextView(const Rect*, const std::string&, Color, int, LayoutHelper::Align);
   void SetText(const std::string& text);
   void SetAlign(LayoutHelper::Align align);
   void SetColor(Color);
 
-  virtual void RenderView(Drawer*) override;
+  virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 

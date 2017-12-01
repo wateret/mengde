@@ -93,7 +93,7 @@ void RootView::Update() {
   frame_count_++;
 }
 
-void RootView::RenderView(Drawer* drawer) {
+void RootView::Render(Drawer* drawer) {
   drawer->SetOffset(camera_coords_);
 
   // Render Background

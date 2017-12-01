@@ -45,7 +45,7 @@ MinimapUnitsView::MinimapUnitsView(const Rect* frame, Game* game, Vec2D map_size
   unit_size_ = unit_size_ * GetFrameSize() / map_size;
 }
 
-void MinimapUnitsView::RenderView(Drawer* drawer) {
+void MinimapUnitsView::Render(Drawer* drawer) {
   game_->ForEachUnit([=] (Unit* u) {
     switch (u->GetSide()) {
       case Unit::kSideOwn:

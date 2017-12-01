@@ -9,7 +9,7 @@ class RectView : public View {
   RectView(const Rect*, Color, int = 0);
 
  private:
-  virtual void RenderView(Drawer*) override;
+  virtual void Render(Drawer*) override;
 
  private:
   Color color_;

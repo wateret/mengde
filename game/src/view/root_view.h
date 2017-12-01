@@ -53,12 +53,12 @@ class RootView : public View {
 
   // Overriden method (View)
   virtual void Update() override;
+  virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 
  private:
   int GetCurrentSpriteNo(int, int) const;
-  virtual void RenderView(Drawer*) override;
   void RaiseMouseMotionEvent();
 
  private:

@@ -10,12 +10,11 @@ class Texture;
 
 class ImageView : public View {
  public:
-  ImageView(const string& = "");
   ImageView(const Rect*, const string& = "");
   ~ImageView();
   void SetPath(const string&);
 
-  virtual void RenderView(Drawer*) override;
+  virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 

@@ -30,7 +30,7 @@ class MinimapView : public CompositeView {
 class MinimapUnitsView : public View {
  public:
   MinimapUnitsView(const Rect*, Game*, Vec2D);
-  virtual void RenderView(Drawer*) override;
+  virtual void Render(Drawer*) override;
 
  private:
   Game* game_;

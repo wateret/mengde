@@ -13,7 +13,7 @@ class CompositeView : public View {
   void  RemoveChild(int);
 
  public:
-  void RenderView(Drawer*) override;
+  void Render(Drawer*) override;
   void Update() override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;

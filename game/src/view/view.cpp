@@ -10,7 +10,7 @@ View::View()
 }
 
 Rect View::GetActualFrame() const {
-  return Rect(Vec2D(0, 0), GetFrameSize());
+  return Rect(Vec2D(0, 0), GetActualFrameSize());
 }
 
 Vec2D View::GetFrameSize() const {
@@ -42,13 +42,13 @@ void View::Render(Drawer* drawer) {
   actual_frame.Contract(padding_);
   drawer->SetViewport(&actual_frame);
 
-  RenderView(drawer);
+  Render(drawer);
 
   drawer->ResetViewport();
 }
 */
 
-bool View::RenderBegin(Drawer*) {
+bool View::RenderBegin(Drawer* drawer) {
   if (!visible_) return false;
 
   const Rect* frame = GetFrame();
@@ -62,7 +62,7 @@ bool View::RenderBegin(Drawer*) {
   return true;
 }
 
-void View::RenderEnd(Drawer*) {
+void View::RenderEnd(Drawer* drawer) {
   drawer->ResetViewport();
 }
 

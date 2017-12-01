@@ -8,9 +8,7 @@
 class TerrainInfoView : public View {
  public:
   TerrainInfoView(const Rect*, Vec2D, Terrain*);
-
- private:
-  virtual void RenderView(Drawer*);
+  virtual void Render(Drawer*) override;
 
  private:
   Vec2D coords_;

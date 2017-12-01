@@ -20,10 +20,10 @@ class MagicListView : public CallbackView {
   int GetItemHeight() { return item_height_; }
   int NumItems();
   std::string GetHoverItem();
+  virtual void Render(Drawer*) override;
 
  private:
   void Cleanup();
-  virtual void RenderView(Drawer*) override;
 
  private:
   Unit* unit_;
