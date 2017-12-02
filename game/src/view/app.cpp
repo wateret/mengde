@@ -111,7 +111,7 @@ bool App::HandleEvents() {
         break;
       }
       case SDL_MOUSEMOTION: {
-        Vec2D coords = {e.button.x, e.button.y};
+        Vec2D coords = {e.motion.x, e.motion.y};
         Vec2D coords_rel = {e.motion.xrel, e.motion.yrel};
         target_view_->OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::kMotionOver, coords, coords_rel));
         break;
@@ -136,9 +136,7 @@ bool App::HandleEvents() {
             UNREACHABLE("Unknown mouse button");
             break;
         }
-        Vec2D coords;
-        SDL_GetMouseState(&coords.x, &coords.y);
-        target_view_->OnMouseButtonEvent(MouseButtonEvent(button, state, coords));
+        target_view_->OnMouseButtonEvent(MouseButtonEvent(button, state, Vec2D(e.button.x, e.motion.y)));
         break;
       }
       default:
