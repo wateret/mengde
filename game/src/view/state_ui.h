@@ -127,6 +127,7 @@ class StateUIUnitSelected : public StateUIOperable {
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
+  virtual void Update() override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
 
 #ifdef DEBUG
@@ -286,6 +287,7 @@ class StateUIAction : public StateUIOperable {
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
+  virtual void Update() override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 #ifdef DEBUG

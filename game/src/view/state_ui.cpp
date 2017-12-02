@@ -306,9 +306,13 @@ void StateUIUnitSelected::Render(Drawer* drawer) {
 
   StateUIOperable::Render(drawer);
 }
-//  Cell* cell = map->GetCell(selected_cell_);
-//  unit_info_view_->SetUnitTerrainInfo(cell);
-//  unit_info_view_->SetVisible(true);
+
+void StateUIUnitSelected::Update() {
+  StateUIOperable::Update();
+
+  rv_->SetUnitViewUnit(unit_);
+  rv_->SetUnitViewVisible(true);
+}
 
 bool StateUIUnitSelected::OnMouseButtonEvent(const MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
@@ -790,6 +794,13 @@ void StateUIAction::Render(Drawer* drawer) {
 
   StateUIOperable::Render(drawer);
   target_info_view_->Render(drawer);
+}
+
+void StateUIAction::Update() {
+  StateUIOperable::Update();
+
+  rv_->SetUnitViewUnit(unit_);
+  rv_->SetUnitViewVisible(true);
 }
 
 bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {

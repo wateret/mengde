@@ -8,6 +8,7 @@ ButtonView::ButtonView(const Rect* frame, const std::string& text)
 
   Rect rect_label = GetActualFrame();
   tv_label_= new TextView(&rect_label, text, COLOR_WHITE, 14, LayoutHelper::kAlignCenter);
+  AddChild(tv_label_);
   SetMouseMotionHandler([this] (const MouseMotionEvent e) -> bool {
     if (e.IsMotionOver()) {
       SetBgColor(COLOR_BLACK);
@@ -16,12 +17,5 @@ ButtonView::ButtonView(const Rect* frame, const std::string& text)
     }
     return true;
   });
-}
-
-void ButtonView::Render(Drawer* drawer) {
-  // FIXME This class must inherit CompositeView and not override Render function
-  RENDER_BEGIN(this);
-  tv_label_->Render(drawer);
-  RENDER_END(this);
 }
 

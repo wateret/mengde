@@ -1,10 +1,10 @@
 #include "callback_view.h"
 
-CallbackView::CallbackView() : View() {
+CallbackView::CallbackView() : CompositeView() {
   InitHandlers();
 }
 
-CallbackView::CallbackView(const Rect* rect) : View(rect) {
+CallbackView::CallbackView(const Rect* rect) : CompositeView(rect) {
   InitHandlers();
 }
 

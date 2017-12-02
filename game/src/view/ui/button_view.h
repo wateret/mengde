@@ -9,7 +9,6 @@ class TextView;
 class ButtonView : public CallbackView {
  public:
   ButtonView(const Rect*, const std::string& = "");
-  virtual void Render(Drawer*) override;
 
  private:
   TextView* tv_label_;

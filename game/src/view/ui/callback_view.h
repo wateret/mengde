@@ -1,10 +1,10 @@
 #ifndef CALLBACK_VIEW_H_
 #define CALLBACK_VIEW_H_
 
-#include "view.h"
+#include "composite_view.h"
 #include <functional>
 
-class CallbackView : public View {
+class CallbackView : public CompositeView {
  public:
   typedef std::function<bool(const MouseButtonEvent)> MouseButtonHandler;
   typedef std::function<bool(const MouseMotionEvent)> MouseMotionHandler;
