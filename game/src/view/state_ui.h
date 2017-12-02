@@ -26,6 +26,7 @@ class StateUI : public State, IView {
   virtual void Update() override {}
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override { return false; }
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override { return true; }
+  virtual bool OnMouseWheelEvent(const MouseWheelEvent) override { return false; }
   Base WrapBase() { return {game_, rv_}; }
 
 #ifdef DEBUG

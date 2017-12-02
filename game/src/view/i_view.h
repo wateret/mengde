@@ -3,6 +3,7 @@
 
 #include "mouse_button_event.h"
 #include "mouse_motion_event.h"
+#include "mouse_wheel_event.h"
 
 class Drawer;
 
@@ -13,6 +14,7 @@ class IView {
   virtual void Update() = 0;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) = 0;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) = 0;
+  virtual bool OnMouseWheelEvent(const MouseWheelEvent) = 0;
 
  private:
 };

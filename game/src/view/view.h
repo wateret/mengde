@@ -34,6 +34,7 @@ class View : public IView {
   virtual void Update() override {}
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override { return false; }
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override { return false; }
+  virtual bool OnMouseWheelEvent(const MouseWheelEvent) override { return false; }
 
  public:
   bool RenderBegin(Drawer*);
