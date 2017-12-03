@@ -539,7 +539,7 @@ void StateUIEmptySelected::Enter() {
                                           {200, 100},
                                           LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
-  terrain_info_view_ = new TerrainInfoView(&frame, coords_, terrain);
+  terrain_info_view_ = new TerrainInfoView(frame, coords_, terrain);
 }
 
 void StateUIEmptySelected::Exit() {

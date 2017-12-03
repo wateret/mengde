@@ -2,7 +2,7 @@
 #include "app.h"
 #include "drawer.h"
 
-TerrainInfoView::TerrainInfoView(const Rect* frame,
+TerrainInfoView::TerrainInfoView(const Rect& frame,
                                  Vec2D coords,
                                  Terrain* terrain)
     : View(frame), coords_(coords), terrain_(terrain) {

@@ -5,6 +5,10 @@ View::View(const Rect* frame)
  : frame_(*frame), bg_color_(0, 0, 0, 0), padding_(0), visible_(true) {
 }
 
+View::View(const Rect& frame)
+ : frame_(frame), bg_color_(0, 0, 0, 0), padding_(0), visible_(true) {
+}
+
 View::View()
  : frame_(), bg_color_(0, 0, 0, 0), padding_(0), visible_(true) {
 }

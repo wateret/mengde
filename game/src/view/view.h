@@ -12,6 +12,7 @@ class View : public IView {
  public:
   View();
   View(const Rect*);
+  View(const Rect&);
   virtual ~View() {}
   const Rect* GetFrame() { return &frame_; }
   Rect GetActualFrame() const;
