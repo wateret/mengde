@@ -22,8 +22,12 @@ struct Vec2D {
   Vec2D& operator-=(const Vec2D o) { x -= o.x; y -= o.y; return *this; }
   Vec2D& operator*=(const Vec2D o) { x *= o.x; y *= o.y; return *this; }
   Vec2D& operator/=(const Vec2D o) { x /= o.x; y /= o.y; return *this; }
-  bool   operator==(const Vec2D o) { return x == o.x && y == o.y; }
-  bool   operator!=(const Vec2D o) { return !(x == o.x && y == o.y); }
+  bool   operator==(const Vec2D o) const { return x == o.x && y == o.y; }
+  bool   operator!=(const Vec2D o) const { return x != o.x || y != o.y; }
+  bool   operator<(const Vec2D o)  const { return x <  o.x && y <  o.y; }
+  bool   operator<=(const Vec2D o) const { return x <= o.x && y <= o.y; }
+  bool   operator>(const Vec2D o)  const { return x >  o.x && y >  o.y; }
+  bool   operator>=(const Vec2D o) const { return x >= o.x && y >= o.y; }
 };
 
 #endif // Vec2D_H_
