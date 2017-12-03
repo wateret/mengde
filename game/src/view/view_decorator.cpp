@@ -1,6 +1,9 @@
 #include "view_decorator.h"
 
-ViewDecorator::ViewDecorator(View* view) : view_(view) {
+ViewDecorator::ViewDecorator(View* view) : View(view->GetFrame()), view_(view) {
+}
+
+ViewDecorator::ViewDecorator(const Rect& frame, View* view) : View(frame), view_(view) {
 }
 
 void ViewDecorator::Render(Drawer* drawer) {

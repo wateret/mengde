@@ -19,11 +19,11 @@ class MouseWheelEvent {
 
  public:
   MouseWheelEvent(Horizontal, Vertical, Vec2D);
-  bool IsLeft() { return hor_ == Horizontal::kLeft; }
-  bool IsRight() { return hor_ == Horizontal::kRight; }
-  bool IsUp() { return ver_ == Vertical::kUp; }
-  bool IsDown() { return ver_ == Vertical::kDown; }
-  Vec2D GetCoords() { return coords_; }
+  bool IsLeft() const { return hor_ == Horizontal::kLeft; }
+  bool IsRight() const { return hor_ == Horizontal::kRight; }
+  bool IsUp() const { return ver_ == Vertical::kUp; }
+  bool IsDown() const { return ver_ == Vertical::kDown; }
+  Vec2D GetCoords() const { return coords_; }
 
  private:
   Horizontal hor_;
