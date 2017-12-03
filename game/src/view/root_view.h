@@ -11,6 +11,7 @@ class StateUI;
 class Unit;
 class Cell;
 
+class CompositeView;
 class UnitView;
 class UnitDialogView;
 class ControlView;
@@ -56,6 +57,7 @@ class RootView : public View {
   virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
+  virtual bool OnMouseWheelEvent(const MouseWheelEvent) override;
 
  private:
   int GetCurrentSpriteNo(int, int) const;
@@ -64,6 +66,7 @@ class RootView : public View {
  private:
   Game*                  game_;
   App*                   app_;
+  CompositeView*         ui_views_;
   UnitInfoView*          unit_info_view_;
   UnitView*              unit_view_;
   ControlView*           control_view_;

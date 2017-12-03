@@ -6,12 +6,14 @@
 #include "drawer.h"
 #include "texture_manager.h"
 #include "util/state_machine.h"
+#include "ui/composite_view.h"
 #include "ui/unit_info_view.h"
 #include "ui/unit_view.h"
 #include "ui/unit_dialog_view.h"
 #include "ui/control_view.h"
 #include "ui/modal_dialog_view.h"
 #include "ui/magic_list_view.h"
+#include "ui/scroll_view.h"
 #include "core/magic_list.h"
 #include "core/cell.h"
 
@@ -19,6 +21,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
     : View(),
       game_(game),
       app_(app),
+      ui_views_(nullptr),
       unit_info_view_(nullptr),
       unit_view_(nullptr),
       control_view_(nullptr),
@@ -31,6 +34,9 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
       frame_count_(-1) {
   const Rect frame = {0, 0, size.x, size.y};
   SetFrame(&frame);
+
+  ui_views_ = new CompositeView(frame);
+  ui_views_->SetTransparent();
 
   // Calculate max_camera_coords_
   const int kMapWidth     = game_->GetMapSize().x * App::kBlockSize;
@@ -76,15 +82,19 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   Rect unit_dialog_frame = *GetFrame();
   unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
   unit_dialog_view_->SetVisible(false);
+
+  control_frame -= {50, 50};
+  ScrollView* scroll_control_view = new ScrollView(control_frame, control_view_);
+
+  ui_views_->AddChild(unit_info_view_);
+  ui_views_->AddChild(unit_view_);
+  ui_views_->AddChild(scroll_control_view);
+  ui_views_->AddChild(dialog_view_);
+  ui_views_->AddChild(unit_dialog_view_);
+  ui_views_->AddChild(magic_list_view_);
 }
 
 RootView::~RootView() {
-  delete unit_info_view_;
-  delete unit_view_;
-  delete control_view_;
-  delete dialog_view_;
-  delete unit_dialog_view_;
-  delete magic_list_view_;
 }
 
 void RootView::Update() {
@@ -130,32 +140,26 @@ void RootView::Render(Drawer* drawer) {
                    unit->GetCoords());
   });
 
-  unit_view_->Render(drawer);
-  unit_info_view_->Render(drawer);
-  control_view_->Render(drawer);
-  magic_list_view_->Render(drawer);
-  dialog_view_->Render(drawer);
-  unit_dialog_view_->Render(drawer);
+  ui_views_->Render(drawer);
 }
 
 bool RootView::OnMouseButtonEvent(const MouseButtonEvent e) {
-  if (unit_dialog_view_->DelegateMouseButtonEvent(e)) return true;
-  if (dialog_view_->DelegateMouseButtonEvent(e)) return true;
-  if (magic_list_view_->DelegateMouseButtonEvent(e)) return true;
-  if (control_view_->DelegateMouseButtonEvent(e)) return true;
-  if (unit_view_->DelegateMouseButtonEvent(e)) return true;
+  if (ui_views_->OnMouseButtonEvent(e)) return true;
   return GetCurrentState()->OnMouseButtonEvent(e);
 }
 
 bool RootView::OnMouseMotionEvent(const MouseMotionEvent e) {
   mouse_coords_ = e.GetCoords();
 
-  if (unit_dialog_view_->DelegateMouseMotionEvent(e)) return true;
-  if (dialog_view_->DelegateMouseMotionEvent(e)) return true;
-  if (magic_list_view_->DelegateMouseMotionEvent(e)) return true;
-  if (control_view_->DelegateMouseMotionEvent(e)) return true;
-  if (unit_view_->DelegateMouseMotionEvent(e)) return true;
+  if (ui_views_->OnMouseMotionEvent(e)) return true;
   if (GetCurrentState()->OnMouseMotionEvent(e)) return true;
+
+  return true;
+}
+
+bool RootView::OnMouseWheelEvent(const MouseWheelEvent e) {
+  if (ui_views_->DelegateMouseWheelEvent(e)) return true;
+  if (GetCurrentState()->OnMouseWheelEvent(e)) return true;
 
   return true;
 }

@@ -1,9 +1,12 @@
 #include "composite_view.h"
 
-CompositeView::CompositeView() : View() {
+CompositeView::CompositeView() : View(), transparent_(false) {
 }
 
-CompositeView::CompositeView(const Rect* rect) : View(rect) {
+CompositeView::CompositeView(const Rect* rect) : View(rect), transparent_(false) {
+}
+
+CompositeView::CompositeView(const Rect& rect) : View(rect), transparent_(false) {
 }
 
 CompositeView::~CompositeView() {
@@ -42,7 +45,7 @@ bool CompositeView::OnMouseButtonEvent(const MouseButtonEvent e) {
     View* view = *itr;
     if (view->DelegateMouseButtonEvent(e)) return true;
   }
-  return true;
+  return !transparent_;
 }
 
 bool CompositeView::OnMouseMotionEvent(const MouseMotionEvent e) {
@@ -53,7 +56,7 @@ bool CompositeView::OnMouseMotionEvent(const MouseMotionEvent e) {
       View* view = *itr;
       is_handled = view->DelegateMouseMotionEvent(e) || is_handled;
     }
-    return is_handled;
+    return is_handled || !transparent_;
   } else {
     ASSERT(e.IsMotionOut());
     // Mouse events should be handled in reverse order
@@ -63,4 +66,13 @@ bool CompositeView::OnMouseMotionEvent(const MouseMotionEvent e) {
     }
     return true;
   }
+}
+
+bool CompositeView::OnMouseWheelEvent(const MouseWheelEvent e) {
+  // Mouse events should be handled in reverse order
+  for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
+    View* view = *itr;
+    if (view->DelegateMouseWheelEvent(e)) return true;
+  }
+  return true;
 }

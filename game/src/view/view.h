@@ -30,6 +30,7 @@ class View : public IView {
   void SetVisible(bool b) { visible_ = b; }
   bool DelegateMouseButtonEvent(const MouseButtonEvent);
   bool DelegateMouseMotionEvent(const MouseMotionEvent);
+  bool DelegateMouseWheelEvent(const MouseWheelEvent);
 
  public:
   virtual void Render(Drawer*) override {}

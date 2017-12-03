@@ -100,3 +100,13 @@ bool View::DelegateMouseMotionEvent(MouseMotionEvent e) {
   }
   return false;
 }
+
+bool View::DelegateMouseWheelEvent(MouseWheelEvent e) {
+  // FIXME This is same routine with DelegateMouseButtonEvent
+  if (visible_ && GetFrame()->Contains(e.GetCoords())) {
+    Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
+    MouseWheelEvent ec(e, conv_coords);
+    if (OnMouseWheelEvent(ec)) return true;
+  }
+  return false;
+}

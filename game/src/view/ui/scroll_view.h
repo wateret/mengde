@@ -7,7 +7,7 @@ class Drawer;
 
 class ScrollView : public ViewDecorator {
  public:
-  const int kDefaultScrollAmount = 8;
+  const int kDefaultScrollAmount = 6;
 
  public:
   ScrollView(const Rect&, View*);
