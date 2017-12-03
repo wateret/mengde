@@ -48,19 +48,19 @@ int GaugeView::CalcWidth(int val) {
 void GaugeView::Render(Drawer* drawer) {
   Rect frame = *GetFrame();
   drawer->SetDrawColor(max_color_);
-  drawer->FillRectAbs(&frame);
+  drawer->FillRect(&frame);
 
   if (ext_val_ > 0) {
     Rect ext_rect = frame;
     ext_rect.SetW(CalcWidth(cur_val_));
     drawer->SetDrawColor(ext_color_);
-    drawer->FillRectAbs(&ext_rect);
+    drawer->FillRect(&ext_rect);
   }
 
   Rect cur_rect = frame;
   cur_rect.SetW(CalcWidth(cur_val_ - ext_val_));
   drawer->SetDrawColor(cur_color_);
-  drawer->FillRectAbs(&cur_rect);
+  drawer->FillRect(&cur_rect);
 
   if (help_text_type_ != kHelpTextNone) {
     std::string str_hp;
@@ -79,6 +79,6 @@ void GaugeView::Render(Drawer* drawer) {
         break;
     }
     frame.Contract(4);
-    drawer->DrawTextAbs(str_hp, 14, {255, 255, 255, 255}, &frame, help_text_align_);
+    drawer->DrawText(str_hp, 14, {255, 255, 255, 255}, &frame, help_text_align_);
   }
 }

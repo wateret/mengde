@@ -25,7 +25,7 @@ void TextView::SetColor(Color c) {
 
 void TextView::Render(Drawer* drawer) {
   Rect frame(GetFrameCoords(), GetActualFrameSize());
-  drawer->DrawTextAbs(text_, size_, color_, &frame, align_);
+  drawer->DrawText(text_, size_, color_, &frame, align_);
 }
 
 bool TextView::OnMouseButtonEvent(const MouseButtonEvent e) {

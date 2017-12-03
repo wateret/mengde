@@ -24,7 +24,7 @@ void ImageView::Render(Drawer* drawer) {
   }
   ASSERT(texture_ != nullptr);
   Rect frame = *GetFrame();
-  drawer->CopyTextureAbs(texture_, nullptr, &frame);
+  drawer->CopyTexture(texture_, nullptr, &frame);
 }
 
 bool ImageView::OnMouseButtonEvent(const MouseButtonEvent e) {

@@ -66,6 +66,6 @@ void MinimapUnitsView::Render(Drawer* drawer) {
     Rect rect(u->GetCoords(), {1, 1});
     rect.Magnify(unit_size_);
     rect -= 1;
-    drawer->FillRectAbs(&rect);
+    drawer->FillRect(&rect);
   });
 }

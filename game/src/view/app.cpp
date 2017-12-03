@@ -172,7 +172,7 @@ void App::Render() {
 #if 1
   static char msg_buf[256];
   sprintf(msg_buf, "fps: %.1f", fps_);
-  drawer_->DrawTextAbs(msg_buf, 12, COLOR_WHITE, {0, 0});
+  drawer_->DrawText(msg_buf, 12, COLOR_WHITE, {0, 0});
 #endif
 
   drawer_->End();

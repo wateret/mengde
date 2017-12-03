@@ -51,13 +51,6 @@ void Drawer::CopyTextureToCell(Texture* texture, Rect* rect_src, Vec2D pos) {
   CopyTexture(texture, rect_src, &rect_dst);
 }
 
-void Drawer::CopyTextureAbs(Texture* texture,
-                            Rect* rect_src,
-                            Rect* rect_dst,
-                            bool flip_hor) {
-  renderer_->CopyTexture(texture, rect_src, rect_dst, flip_hor);
-}
-
 void Drawer::CopyTextureBackground(Texture* texture,
                                    Rect* rect_src,
                                    Rect* rect_dst) {
@@ -156,20 +149,12 @@ void Drawer::DrawRect(const Rect* r, const int border) {
   renderer_->DrawRect(&rr, border);
 }
 
-void Drawer::DrawRectAbs(const Rect* r, const int border) {
-  renderer_->DrawRect(r, border);
-}
-
 void Drawer::FillRect(const Rect* r) {
   Rect rr = *r;
   rr.Move(-offset_);
   renderer_->FillRect(&rr);
 }
 
-void Drawer::FillRectAbs(const Rect* r) {
-  renderer_->FillRect(r);
-}
-
 void Drawer::DrawText(const std::string& text,
                       int size,
                       Color color,
@@ -189,27 +174,6 @@ void Drawer::DrawText(const std::string& text,
   Texture* texture = texture_manager_->FetchTextTexture(text, size, color, frame->GetW());
   Rect rect = LayoutHelper::CalcPosition(frame, texture->GetSize(), align);
   CopyTexture(texture, NULL, &rect);
-}
-
-void Drawer::DrawTextAbs(const std::string& text,
-                      int size,
-                      Color color,
-                      Vec2D pos) {
-  if (text == "") return;
-  Texture* texture = texture_manager_->FetchTextTexture(text, size, color);
-  Rect rect(pos, texture->GetSize());
-  CopyTextureAbs(texture, NULL, &rect);
-}
-
-void Drawer::DrawTextAbs(const std::string& text,
-                      int size,
-                      Color color,
-                      const Rect* frame,
-                      LayoutHelper::Align align) {
-  if (text == "") return;
-  Texture* texture = texture_manager_->FetchTextTexture(text, size, color, frame->GetW());
-  Rect rect = LayoutHelper::CalcPosition(frame, texture->GetSize(), align);
-  CopyTextureAbs(texture, NULL, &rect);
 }
 
 void Drawer::BorderCell(Vec2D c, const int b) {

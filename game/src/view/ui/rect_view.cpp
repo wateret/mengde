@@ -10,5 +10,5 @@ RectView::RectView(const Rect* frame, Color color, int border)
 void RectView::Render(Drawer* drawer) {
   Rect r(GetFrameCoords(), GetActualFrameSize());
   drawer->SetDrawColor({255, 255, 255, 192});
-  drawer->DrawRectAbs(&r, border_);
+  drawer->DrawRect(&r, border_);
 }

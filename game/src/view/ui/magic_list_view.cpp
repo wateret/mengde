@@ -79,10 +79,10 @@ void MagicListView::Render(Drawer* drawer) {
     if (i == hover_index_) {
       Rect r = item_frame;
       drawer->SetDrawColor(COLOR_GRAY);
-      drawer->FillRectAbs(&r);
+      drawer->FillRect(&r);
     }
     Magic* magic = magic_list_->GetMagic(i);
-    drawer->DrawTextAbs(magic->GetId(), 14, COLOR_WHITE, &item_frame, LayoutHelper::kAlignCenter);
+    drawer->DrawText(magic->GetId(), 14, COLOR_WHITE, &item_frame, LayoutHelper::kAlignCenter);
     item_frame.Move(0, item_height_);
   }
   RENDER_END(this);

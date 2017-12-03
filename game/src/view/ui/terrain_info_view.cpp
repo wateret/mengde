@@ -12,5 +12,5 @@ TerrainInfoView::TerrainInfoView(const Rect& frame,
 
 void TerrainInfoView::Render(Drawer* drawer) {
   std::string str_name = terrain_->GetName();
-  drawer->DrawTextAbs(str_name, 14, {255, 255, 255, 255}, {0, 0});
+  drawer->DrawText(str_name, 14, {255, 255, 255, 255}, {0, 0});
 }

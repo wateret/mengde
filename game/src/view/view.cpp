@@ -42,7 +42,7 @@ void View::Render(Drawer* drawer) {
   Rect actual_frame = *frame;
 
   drawer->SetDrawColor(bg_color_);
-  drawer->FillRectAbs(frame);
+  drawer->FillRect(frame);
   actual_frame.Contract(padding_);
   drawer->SetViewport(&actual_frame);
 
@@ -59,7 +59,7 @@ bool View::RenderBegin(Drawer* drawer) {
   Rect actual_frame = *frame;
 
   drawer->SetDrawColor(bg_color_);
-  drawer->FillRectAbs(frame);
+  drawer->FillRect(frame);
   actual_frame.Contract(padding_);
   drawer->SetViewport(&actual_frame);
 

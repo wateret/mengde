@@ -25,12 +25,13 @@ class Drawer {
   void SetViewport(const Rect*);
   void ResetViewport();
   void SetOffset(Vec2D offset) { offset_ = offset; }
+  void AddOffset(Vec2D offset) { offset_ += offset; }
+  void SubOffset(Vec2D offset) { offset_ -= offset; }
 
   // Draw Functions
   void SetDrawColor(Color c);
   void CopyTexture(Texture*, Rect*, Rect*, bool = false);
   void CopyTextureToCell(Texture*, Rect*, Vec2D);
-  void CopyTextureAbs(Texture*, Rect* = NULL, Rect* = NULL, bool = false);
   void CopyTextureBackground(Texture*, Rect* = NULL, Rect* = NULL);
   void CopySprite(const std::string&,
                   SpriteType,
@@ -40,13 +41,9 @@ class Drawer {
                   Vec2D,
                   Vec2D = {0, 0});
   void DrawRect(const Rect*, const int = 1);
-  void DrawRectAbs(const Rect*, const int = 1);
   void FillRect(const Rect*);
-  void FillRectAbs(const Rect*);
   void DrawText(const std::string&, int, Color, Vec2D);
   void DrawText(const std::string&, int, Color, const Rect*, LayoutHelper::Align);
-  void DrawTextAbs(const std::string&, int, Color, Vec2D);
-  void DrawTextAbs(const std::string&, int, Color, const Rect*, LayoutHelper::Align);
   void BorderCell(Vec2D, const int = 1);
   void FillCell(Vec2D);
 

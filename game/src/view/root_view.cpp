@@ -57,9 +57,10 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
 //  unit_view_->SetVisible(false);
 
   Rect control_frame = LayoutHelper::CalcPosition(GetFrameSize(),
-                                                {300, 150},
+                                                {250, 100},
                                                 LayoutHelper::kAlignRgtBot,
                                                 LayoutHelper::kDefaultSpace);
+  control_frame += {50, 50};
   control_view_ = new ControlView(&control_frame, game_, this);
 
   Rect dialog_frame = *GetFrame();
@@ -139,6 +140,8 @@ void RootView::Render(Drawer* drawer) {
                    sprite_effect,
                    unit->GetCoords());
   });
+
+  drawer->SetOffset({0, 0});
 
   ui_views_->Render(drawer);
 }
