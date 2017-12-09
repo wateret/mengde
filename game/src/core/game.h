@@ -17,7 +17,7 @@ class ConfigLoader;
 
 class Game {
  public:
-  enum class EndType {
+  enum class Status {
     kNone,
     kUndecided,
     kLose,
@@ -56,7 +56,7 @@ class Game {
   bool UnitInCell(Vec2D) const;
   uint32_t GetNumEnemiesAlive();
   uint32_t GetNumOwnsAlive();
-  EndType CheckEndCondition();
+  Status CheckStatus();
   int GenerateUnit(const string&, Unit::Side, Vec2D);
 
   // AI related API //
@@ -78,6 +78,7 @@ class Game {
   std::vector<Unit*> units_;
   std::vector<Unit*> dead_units_;
   Turn               turn_;
+  Status             status_;
 };
 
 #endif

@@ -18,7 +18,8 @@ Game::Game(ConfigLoader* config_loader)
       map_(nullptr),
       units_(),
       dead_units_(),
-      turn_() {
+      turn_(),
+      status_(Status::kUndecided) {
   InitLua();
 
   // Read map data
@@ -66,9 +67,9 @@ void Game::InitLua() {
   lua_script_->Set("$C.enums.side.own", (int)Unit::kSideOwn);
   lua_script_->Set("$C.enums.side.ally", (int)Unit::kSideAlly);
   lua_script_->Set("$C.enums.side.enemy", (int)Unit::kSideEnemy);
-  lua_script_->Set("$C.enums.end_type.undecided", (int)EndType::kUndecided);
-  lua_script_->Set("$C.enums.end_type.lose", (int)EndType::kLose);
-  lua_script_->Set("$C.enums.end_type.win", (int)EndType::kWin);
+  lua_script_->Set("$C.enums.end_type.undecided", (int)Status::kUndecided);
+  lua_script_->Set("$C.enums.end_type.lose", (int)Status::kLose);
+  lua_script_->Set("$C.enums.end_type.win", (int)Status::kWin);
 
   // Run the main script
   string lua_script_path = GameEnv::GetInstance()->GetScenarioPath() + "/01.lua";
@@ -220,9 +221,10 @@ void Game::PushCmd(unique_ptr<Cmd> cmd) {
   commander_.PushCmd(std::move(cmd));
 }
 
-Game::EndType Game::CheckEndCondition() {
+Game::Status Game::CheckStatus() {
   uint32_t res = lua_script_->Call<uint32_t>("$end_condition");
-  return (Game::EndType)res;
+  status_ = static_cast<Status>(res);
+  return status_;
 }
 
 uint32_t Game::GetNumEnemiesAlive() {
