@@ -26,6 +26,7 @@ class View : public IView {
   int  GetPadding() { return padding_; }
   void SetFrame(const Rect* r) { frame_ = *r; }
   void SetBgColor(Color c) { bg_color_ = c; }
+  Color GetBgColor() { return bg_color_; }
   void SetPadding(int p) { padding_ = p; }
   void SetVisible(bool b) { visible_ = b; }
   bool DelegateMouseButtonEvent(const MouseButtonEvent);

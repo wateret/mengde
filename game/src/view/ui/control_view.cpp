@@ -8,7 +8,7 @@
 ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
   SetBgColor(COLOR_DARKGRAY);
-  SetPadding(0);
+  SetPadding(8);
   Rect button_coords = {0, 30, 80, 20};
   ButtonView* button = new ButtonView(&button_coords, "EndTurn");
   button->SetMouseButtonHandler([this] (const MouseButtonEvent e) {
