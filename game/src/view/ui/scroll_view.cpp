@@ -10,6 +10,7 @@ ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, vie
   // XXX Remove this workaround for padding
   SetPadding(view_->GetPadding());
   view_->SetPadding(0);
+  SetPadding(0);
   SetBgColor(view_->GetBgColor());
   view_->SetBgColor({255, 255, 255, 0});
 }
@@ -31,6 +32,7 @@ bool ScrollView::OnMouseMotionEvent(const MouseMotionEvent e) {
 }
 
 bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
+  Vec2D coords_o = coords_;
   if (e.IsLeft()) {
     coords_.x += kDefaultScrollAmount;
     coords_.x = std::min(coords_.x, 0);
@@ -48,5 +50,6 @@ bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
     coords_.y = std::max(coords_.y, y_min);
   }
   view_->SetCoords(coords_);
+  OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::kMotionOver, e.GetCoords(), coords_ - coords_o));
   return true;
 }

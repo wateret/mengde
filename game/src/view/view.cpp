@@ -87,16 +87,17 @@ bool View::DelegateMouseMotionEvent(MouseMotionEvent e) {
     if (GetFrame()->Contains(e.GetCoords())) {
       Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
       ec = MouseMotionEvent(MouseMotionEvent::kMotionOver, conv_coords, e.GetCoordsRel());
-      if (OnMouseMotionEvent(ec)) return true;
+      return OnMouseMotionEvent(ec);
     } else {
       if (GetFrame()->Contains(e.GetLastCoords())) {
         ec = MouseMotionEvent(MouseMotionEvent::kMotionOut, {0, 0}, {0, 0});
         OnMouseMotionEvent(ec);
+        return false; // Always return false to keep delegating
       }
     }
   } else {
     ASSERT(e.IsMotionOut());
-    OnMouseMotionEvent(e);
+    return OnMouseMotionEvent(e);
   }
   return false;
 }

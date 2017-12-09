@@ -1,7 +1,7 @@
 #include "mouse_motion_event.h"
 
 MouseMotionEvent::MouseMotionEvent(const MouseMotionEvent& e, Vec2D change)
-    : motion_(e.motion_), coords_(e.coords_ + change), coords_rel_(e.coords_rel_ + change) {
+    : motion_(e.motion_), coords_(e.coords_ + change), coords_rel_(e.coords_rel_) {
 }
 
 MouseMotionEvent::MouseMotionEvent(Motion motion,
