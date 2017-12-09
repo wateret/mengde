@@ -8,7 +8,7 @@
 
 class EventEffectList : public IEvent {
  public:
-  void RaiseEvent(EventEffect::Type, Unit*, void*) override;
+  void RaiseEvent(EventEffect::Type, Unit*) override;
 
  public:
   EventEffectList();

@@ -21,6 +21,6 @@ Stat Item::CalcModifierMultipliers() {
   return unit_effect_list_.CalcModifierMultipliers();
 }
 
-void Item::RaiseEvent(EventEffect::Type type, Unit* unit, void* data) {
-  unit_effect_list_.RaiseEvent(type, unit, data);
+void Item::RaiseEvent(EventEffect::Type type, Unit* unit) {
+  unit_effect_list_.RaiseEvent(type, unit);
 }

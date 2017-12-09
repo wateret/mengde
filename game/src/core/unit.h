@@ -28,8 +28,8 @@ class Unit : public IEvent {
   ~Unit();
 
  public:
-  void RaiseEvent(EventEffect::Type, Unit*, void*) override;
-  void RaiseEvent(EventEffect::Type, void* = nullptr);
+  void RaiseEvent(EventEffect::Type, Unit*) override;
+  void RaiseEvent(EventEffect::Type);
 
  public:
   std::string GetId();
