@@ -8,6 +8,12 @@
 #include "sprite_type.h"
 #include "layout_helper.h"
 
+struct Viewport {
+  Rect  rect;
+  Vec2D neg_coords;
+  Viewport(const Rect& r, Vec2D neg) : rect(r), neg_coords(neg) { /* ASSERT(neg.x < 0 && neg.y < 0); */ }
+};
+
 class Window;
 class Renderer;
 class Texture;
@@ -25,8 +31,6 @@ class Drawer {
   void SetViewport(const Rect*);
   void ResetViewport();
   void SetOffset(Vec2D offset) { offset_ = offset; }
-  void AddOffset(Vec2D offset) { offset_ += offset; }
-  void SubOffset(Vec2D offset) { offset_ -= offset; }
 
   // Draw Functions
   void SetDrawColor(Color c);
@@ -52,7 +56,7 @@ class Drawer {
   Renderer* renderer_;
   Vec2D window_size_;
   Vec2D offset_;
-  std::stack<Rect> viewports_;
+  std::stack<Viewport> viewports_;
 };
 
 #endif // DRAWER_H_

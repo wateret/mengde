@@ -12,7 +12,7 @@ Drawer::Drawer(Window* window)
       viewports_() {
   renderer_ = new Renderer(window);
   texture_manager_ = new TextureManager(renderer_);
-  viewports_.push(Rect(0, 0, window_size_.x, window_size_.y));
+  viewports_.push(Viewport(Rect(0, 0, window_size_.x, window_size_.y), {0, 0}));
 }
 
 Drawer::~Drawer() {
@@ -40,6 +40,7 @@ void Drawer::CopyTexture(Texture* texture,
   ASSERT(rect_dst != NULL);
   Rect rr = *rect_dst;
   rr.Move(-offset_);
+  rr.Move(viewports_.top().neg_coords);
   renderer_->CopyTexture(texture, rect_src, &rr, flip_hor);
 }
 
@@ -56,6 +57,7 @@ void Drawer::CopyTextureBackground(Texture* texture,
                                    Rect* rect_dst) {
   Rect rr = *rect_src;
   rr.Move(offset_);
+  rr.Move(viewports_.top().neg_coords);
   renderer_->CopyTexture(texture, &rr, rect_dst);
 }
 
@@ -146,12 +148,14 @@ void Drawer::CopySprite(const std::string& path,
 void Drawer::DrawRect(const Rect* r, const int border) {
   Rect rr = *r;
   rr.Move(-offset_);
+  rr.Move(viewports_.top().neg_coords);
   renderer_->DrawRect(&rr, border);
 }
 
 void Drawer::FillRect(const Rect* r) {
   Rect rr = *r;
   rr.Move(-offset_);
+  rr.Move(viewports_.top().neg_coords);
   renderer_->FillRect(&rr);
 }
 
@@ -189,18 +193,27 @@ void Drawer::FillCell(Vec2D c) {
 }
 
 void Drawer::SetViewport(const Rect* r) {
-  Rect top_rect = viewports_.top();
-  Rect rr(top_rect.GetPos() + r->GetPos(), r->GetSize());
-//  ASSERT(rr.GetW() >= 0 && rr.GetH() >= 0);
-  viewports_.push(rr);
-//  LOG_INFO("Viewport push (%d %d %d %d)", rr.GetX(), rr.GetY(), rr.GetW(), rr.GetH());
-  renderer_->SetViewport(&rr);
+  Viewport top_vp = viewports_.top();
+
+  Rect& rect = top_vp.rect;
+  Vec2D neg_coords = {0, 0};
+  Rect rr(rect.GetPos() + r->GetPos() + top_vp.neg_coords, r->GetSize());
+  ASSERT(rr.GetW() >= 0 && rr.GetH() >= 0);
+  int y = rr.GetY() - rect.GetY();
+  if (y < 0) {
+    rr.SetY(rect.GetY());
+    neg_coords.y = y;
+  }
+  Viewport new_vp(rr, neg_coords);
+//  LOG_INFO("Viewport push (%d %d %d %d) (%d %d)", rr.GetX(), rr.GetY(), rr.GetW(), rr.GetH(), neg_coords.x, neg_coords.y);
+  renderer_->SetViewport(&new_vp.rect);
+  viewports_.push(new_vp);
 }
 
 void Drawer::ResetViewport() {
   viewports_.pop();
-  Rect r = viewports_.top();
-//  LOG_INFO("Viewport pop  (%d %d %d %d)", r.GetX(), r.GetY(), r.GetW(), r.GetH());
-  renderer_->SetViewport(&r);
+  Viewport vp = viewports_.top();
+//  LOG_INFO("Viewport pop  (%d %d %d %d)", vp.rect.GetX(), vp.rect.GetY(), vp.rect.GetW(), vp.rect.GetH());
+  renderer_->SetViewport(&vp.rect);
 }
 
