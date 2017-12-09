@@ -4,13 +4,16 @@
 #include <vector>
 
 #include "event_effect.h"
+#include "i_event.h"
 
-class EventEffectList {
+class EventEffectList : public IEvent {
+ public:
+  void RaiseEvent(EventEffect::EventEffectType, Unit*, void*) override;
+
  public:
   EventEffectList();
   ~EventEffectList();
   void AddEffect(EventEffect*);
-  void RaiseEvent(EventEffect::EventEffectType, Unit*, void* = nullptr);
   void NextTurn();
 
  private:

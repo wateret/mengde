@@ -7,10 +7,11 @@
 #include "hero.h"
 #include "stat_modifier_list.h"
 #include "item_slot.h"
+#include "i_event.h"
 
 class UnitClass;
 
-class Unit {
+class Unit : public IEvent {
  public:
   enum Side {
     kSideNone     = 0x00,
@@ -25,6 +26,10 @@ class Unit {
  public:
   Unit(Hero*, const Side);
   ~Unit();
+
+ public:
+  void RaiseEvent(EventEffect::EventEffectType, Unit*, void*) override;
+  void RaiseEvent(EventEffect::EventEffectType, void* = nullptr);
 
  public:
   std::string GetId();
@@ -62,7 +67,6 @@ class Unit {
   void LevelUp();
   void EndAction();
   void ResetAction();
-  void RaiseEvent(EventEffect::EventEffectType, void* = NULL);
   void PutWeaponOn(Item*);
   void PutArmorOn(Item*);
   void PutAidOn(Item*);

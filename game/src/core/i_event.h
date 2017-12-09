@@ -5,7 +5,7 @@
 
 class IEvent {
  public:
-   virtual void RaiseEvent(EventEffect::EventEffectType, void*) = 0;
+   virtual void RaiseEvent(EventEffect::EventEffectType, Unit*, void*) = 0;
 };
 
 #endif // I_EVENT_H_

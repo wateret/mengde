@@ -3,15 +3,18 @@
 
 #include "stat_modifier_list.h"
 #include "event_effect_list.h"
+#include "i_event.h"
 
-class UnitEffectList {
+class UnitEffectList : public IEvent {
+ public:
+  void RaiseEvent(EventEffect::EventEffectType, Unit*, void*) override;
+
  public:
   UnitEffectList();
   void AddModifier(StatModifier*);
   Stat CalcModifierAddends();
   Stat CalcModifierMultipliers();
   void AddEffect(EventEffect*);
-  void RaiseEvent(EventEffect::EventEffectType, Unit*, void*);
   void NextTurn();
 
  private:

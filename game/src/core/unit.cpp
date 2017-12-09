@@ -192,12 +192,18 @@ void Unit::ResetAction() {
   done_action_ = false;
 }
 
-void Unit::RaiseEvent(EventEffect::EventEffectType type, void* _data) {
+void Unit::RaiseEvent(EventEffect::EventEffectType type, Unit* unit, void* _data) {
+  ASSERT(unit == this);
+
   Item* weapon = GetWeapon();
   Item* armor = GetArmor();
   Item* aid = GetAid();
   if (weapon != nullptr) weapon->RaiseEvent(type, this, _data);
   if (armor != nullptr) armor->RaiseEvent(type, this, _data);
   if (aid != nullptr) aid->RaiseEvent(type, this, _data);
+}
+
+void Unit::RaiseEvent(EventEffect::EventEffectType type, void* _data) {
+  RaiseEvent(type, this, _data);
 }
 

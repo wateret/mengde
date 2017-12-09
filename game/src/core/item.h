@@ -4,11 +4,12 @@
 #include <string>
 #include "unit_effect_list.h"
 #include "common.h"
+#include "i_event.h"
 
 class EventEffect;
 class StatModifier;
 
-class Item {
+class Item : public IEvent {
  public:
   enum ItemType {
     kItemNone,
@@ -18,6 +19,9 @@ class Item {
   };
 
  public:
+  void RaiseEvent(EventEffect::EventEffectType, Unit*, void*) override;
+
+ public:
   Item(const std::string&, ItemType);
   string GetId() { return id_; }
   ItemType GetType() { return type_; }
@@ -25,7 +29,6 @@ class Item {
   void AddEffect(EventEffect*);
   Stat CalcModifierAddends();
   Stat CalcModifierMultipliers();
-  void RaiseEvent(EventEffect::EventEffectType, Unit*, void*);
 
  private:
   string id_;
