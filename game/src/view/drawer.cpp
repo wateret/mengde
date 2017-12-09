@@ -204,6 +204,11 @@ void Drawer::SetViewport(const Rect* r) {
     rr.SetY(rect.GetY());
     neg_coords.y = y;
   }
+  int x = rr.GetX() - rect.GetX();
+  if (x < 0) {
+    rr.SetX(rect.GetX());
+    neg_coords.x = x;
+  }
   Viewport new_vp(rr, neg_coords);
 //  LOG_INFO("Viewport push (%d %d %d %d) (%d %d)", rr.GetX(), rr.GetY(), rr.GetW(), rr.GetH(), neg_coords.x, neg_coords.y);
   renderer_->SetViewport(&new_vp.rect);

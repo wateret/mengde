@@ -35,6 +35,16 @@ bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
     int y_min = std::min(0, GetFrame()->GetH() - view_->GetFrame()->GetH());
     coords_.y = std::max(coords_.y, y_min);
   }
+  if (e.IsLeft()) {
+    LOG_DEBUG("Left");
+    coords_.x += kDefaultScrollAmount;
+    coords_.x = std::min(coords_.x, 0);
+  } else if (e.IsRight()) {
+    LOG_DEBUG("Right");
+    coords_.x -= kDefaultScrollAmount;
+    int x_min = std::min(0, GetFrame()->GetW() - view_->GetFrame()->GetW());
+    coords_.x = std::max(coords_.x, x_min);
+  }
   view_->SetCoords(coords_);
   return true;
 }
