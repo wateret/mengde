@@ -184,7 +184,7 @@ Item* Unit::GetAid() {
 }
 
 void Unit::EndAction() {
-  RaiseEvent(EventEffect::kOnActionDone);
+  RaiseEvent(EventEffect::Type::kOnActionDone);
   done_action_ = true;
 }
 
@@ -192,7 +192,7 @@ void Unit::ResetAction() {
   done_action_ = false;
 }
 
-void Unit::RaiseEvent(EventEffect::EventEffectType type, Unit* unit, void* _data) {
+void Unit::RaiseEvent(EventEffect::Type type, Unit* unit, void* _data) {
   ASSERT(unit == this);
 
   Item* weapon = GetWeapon();
@@ -203,7 +203,7 @@ void Unit::RaiseEvent(EventEffect::EventEffectType type, Unit* unit, void* _data
   if (aid != nullptr) aid->RaiseEvent(type, this, _data);
 }
 
-void Unit::RaiseEvent(EventEffect::EventEffectType type, void* _data) {
+void Unit::RaiseEvent(EventEffect::Type type, void* _data) {
   RaiseEvent(type, this, _data);
 }
 

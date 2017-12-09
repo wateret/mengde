@@ -5,7 +5,7 @@ class Unit;
 
 class EventEffect {
  public:
-  enum EventEffectType {
+  enum class Type {
     kOnNone,
     kOnTurnBegin,
     kOnReceiveDamage,
@@ -13,38 +13,25 @@ class EventEffect {
   };
 
  public:
-  EventEffect(EventEffectType);
+  EventEffect(Type);
   virtual ~EventEffect();
   virtual void OnEvent(Unit*, void*) = 0;
-  bool IsOfType(EventEffectType type) { return type_ == type; }
+  bool IsOfType(Type type) { return type_ == type; }
   int GetTurnsLeft() { return turns_left_; }
   void NextTurn() { --turns_left_; }
 
  private:
-  EventEffectType type_;
+  Type type_;
   int turns_left_;
 };
 
-class EERestoreHPAfterAction : public EventEffect {
+class EERestoreHP : public EventEffect {
  public:
    struct EEData {
    };
 
  public:
-  EERestoreHPAfterAction(int);
-  virtual void OnEvent(Unit*, void*) override;
-
- private:
-  int amount_;
-};
-
-class EERestoreHPOnTurnBegin : public EventEffect {
- public:
-   struct EEData {
-   };
-
- public:
-  EERestoreHPOnTurnBegin(int);
+  EERestoreHP(Type, int);
   virtual void OnEvent(Unit*, void*) override;
 
  private:

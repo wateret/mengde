@@ -136,7 +136,7 @@ bool Game::EndSideTurn() {
 
   ForEachUnit([this] (Unit* u) {
     if (this->IsCurrentTurn(u)) {
-      u->RaiseEvent(EventEffect::kOnTurnBegin);
+      u->RaiseEvent(EventEffect::Type::kOnTurnBegin);
     }
   });
 

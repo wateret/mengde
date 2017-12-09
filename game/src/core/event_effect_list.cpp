@@ -15,7 +15,7 @@ void EventEffectList::AddEffect(EventEffect* e) {
   elements_.push_back(e);
 }
 
-void EventEffectList::RaiseEvent(EventEffect::EventEffectType type, Unit* unit, void* data) {
+void EventEffectList::RaiseEvent(EventEffect::Type type, Unit* unit, void* data) {
   for (auto e : elements_) {
     if (e->IsOfType(type)) {
       e->OnEvent(unit, data);

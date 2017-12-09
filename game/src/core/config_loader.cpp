@@ -33,9 +33,9 @@ ConfigLoader::~ConfigLoader() {
 
 EventEffect* ConfigLoader::GenerateEventEffect(const string& type, int amount) {
   if (type == "restore_hp_after_action") {
-    return new EERestoreHPAfterAction(amount);
+    return new EERestoreHP(EventEffect::Type::kOnActionDone, amount);
   } else if (type == "restore_hp_on_turn_begin") {
-    return new EERestoreHPOnTurnBegin(amount);
+    return new EERestoreHP(EventEffect::Type::kOnTurnBegin, amount);
   }
   UNREACHABLE("Unknown ID");
   return nullptr;
