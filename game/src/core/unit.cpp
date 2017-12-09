@@ -198,9 +198,9 @@ void Unit::RaiseEvent(EventEffect::Type type, Unit* unit) {
   Item* weapon = GetWeapon();
   Item* armor = GetArmor();
   Item* aid = GetAid();
-  if (weapon != nullptr) weapon->RaiseEvent(type, this);
-  if (armor != nullptr) armor->RaiseEvent(type, this);
-  if (aid != nullptr) aid->RaiseEvent(type, this);
+  if (weapon != nullptr) weapon->RaiseEvent(type, unit);
+  if (armor != nullptr) armor->RaiseEvent(type, unit);
+  if (aid != nullptr) aid->RaiseEvent(type, unit);
 }
 
 void Unit::RaiseEvent(EventEffect::Type type) {
