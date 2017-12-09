@@ -196,23 +196,16 @@ void Drawer::SetViewport(const Rect* r) {
   Viewport top_vp = viewports_.top();
 
   Rect& rect = top_vp.rect;
-  Vec2D neg_coords = {0, 0};
   Rect rr(rect.GetPos() + r->GetPos() + top_vp.neg_coords, r->GetSize());
   ASSERT(rr.GetW() >= 0 && rr.GetH() >= 0);
-  int y = rr.GetY() - rect.GetY();
-  if (y < 0) {
-    rr.SetY(rect.GetY());
-    rr.SetH(rr.GetH() - y);
-    neg_coords.y = y;
-  }
-  int x = rr.GetX() - rect.GetX();
-  if (x < 0) {
-    rr.SetX(rect.GetX());
-    rr.SetW(rr.GetW() - x);
-    neg_coords.x = x;
-  }
-  int bot = std::min(0, rect.GetBottom() - rr.GetBottom());
+
+  Vec2D neg_coords;
+  neg_coords.x = std::min(0, rr.GetX() - rect.GetX());
+  neg_coords.y = std::min(0, rr.GetY() - rect.GetY());
+  rr.Move(-neg_coords);
+//  rr -= neg_coords;
   int rgt = std::min(0, rect.GetRight() - rr.GetRight());
+  int bot = std::min(0, rect.GetBottom() - rr.GetBottom());
   rr += {rgt, bot};
 
   Viewport new_vp(rr, neg_coords);

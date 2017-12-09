@@ -143,11 +143,11 @@ bool App::HandleEvents() {
         int32_t x, y;
         SDL_GetMouseState(&x, &y);
         MouseWheelEvent::Horizontal hor = MouseWheelEvent::Horizontal::kNone;
-        if (e.wheel.x > 0) hor = MouseWheelEvent::Horizontal::kLeft;
-        if (e.wheel.x < 0) hor = MouseWheelEvent::Horizontal::kRight;
+        if (e.wheel.x < 0) hor = MouseWheelEvent::Horizontal::kLeft;
+        if (e.wheel.x > 0) hor = MouseWheelEvent::Horizontal::kRight;
         MouseWheelEvent::Vertical ver = MouseWheelEvent::Vertical::kNone;
+        if (e.wheel.y < 0) ver = MouseWheelEvent::Vertical::kDown;   // TODO check the direction
         if (e.wheel.y > 0) ver = MouseWheelEvent::Vertical::kUp;
-        if (e.wheel.y < 0) ver = MouseWheelEvent::Vertical::kDown;
         target_view_->OnMouseWheelEvent(MouseWheelEvent(hor, ver, Vec2D(x, y)));
       }
       default:
