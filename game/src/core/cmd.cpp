@@ -62,6 +62,7 @@ unique_ptr<Cmd> CmdQueue::Do(Game* game) {
       break;
     case Game::EndType::kWin:
       LOG_DEBUG("Wins!");
+      game->PushCmd(unique_ptr<CmdGameWin>(new CmdGameWin()));
       break;
     default:
       break;

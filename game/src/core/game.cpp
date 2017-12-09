@@ -144,22 +144,6 @@ bool Game::EndSideTurn() {
     // TODO do stuff when next turn begins (when actually the turn number increased)
   }
 
-  switch (CheckEndCondition()) {
-    case EndType::kUndecided:
-      LOG_DEBUG("Undecided!");
-      break;
-    case EndType::kLose:
-      LOG_DEBUG("Lose!");
-      UNREACHABLE("NYI");
-      break;
-    case EndType::kWin:
-      LOG_DEBUG("Wins!");
-      PushCmd(unique_ptr<CmdGameWin>(new CmdGameWin()));
-      break;
-    default:
-      break;
-  }
-
   return IsUserTurn();
 }
 
