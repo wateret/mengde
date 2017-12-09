@@ -793,7 +793,13 @@ void StateUIAction::Render(Drawer* drawer) {
   }
 
   StateUIOperable::Render(drawer);
+
+  // FIXME Remove this workaround
+  //       To remove this, target_info_view_ should be in RootView
+  Vec2D temp_offset = drawer->GetOffset();
+  drawer->SetOffset({0, 0});
   target_info_view_->Render(drawer);
+  drawer->SetOffset(temp_offset);
 }
 
 void StateUIAction::Update() {

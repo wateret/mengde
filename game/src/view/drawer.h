@@ -31,6 +31,7 @@ class Drawer {
   void SetViewport(const Rect*);
   void ResetViewport();
   void SetOffset(Vec2D offset) { offset_ = offset; }
+  Vec2D GetOffset() { return offset_; } // FIXME Remove this method
 
   // Draw Functions
   void SetDrawColor(Color c);
