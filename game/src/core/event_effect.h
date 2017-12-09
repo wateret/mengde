@@ -17,7 +17,7 @@ class EventEffect {
  public:
   EventEffect(Type);
   virtual ~EventEffect();
-  virtual void OnEvent(Unit*, void*) = 0;
+  virtual void OnEvent(Unit*) = 0;
   bool IsOfType(Type type) { return type_ == type; }
   int GetTurnsLeft() { return turns_left_; }
   void NextTurn() { --turns_left_; }
@@ -29,12 +29,8 @@ class EventEffect {
 
 class EERestoreHP : public EventEffect {
  public:
-   struct EEData {
-   };
-
- public:
   EERestoreHP(Type, int);
-  virtual void OnEvent(Unit*, void*) override;
+  virtual void OnEvent(Unit*) override;
 
  private:
   int amount_;

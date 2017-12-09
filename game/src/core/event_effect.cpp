@@ -17,7 +17,7 @@ EERestoreHP::EERestoreHP(Type type, int amount)
   ASSERT(0 <= amount_ && amount_ <= 100);
 }
 
-void EERestoreHP::OnEvent(Unit* unit, void*) {
+void EERestoreHP::OnEvent(Unit* unit) {
   int maxhp = unit->GetOriginalXtat()->hp;
   int real_amount = maxhp * amount_ / 100;
   unit->RestoreHP(real_amount);
