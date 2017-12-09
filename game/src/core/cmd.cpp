@@ -53,19 +53,21 @@ unique_ptr<Cmd> CmdQueue::Do(Game* game) {
     Append(std::move(result));
   }
 
-  switch (game->CheckStatus()) {
-    case Game::Status::kUndecided:
-      LOG_DEBUG("Undecided!");
-      break;
-    case Game::Status::kLose:
-      LOG_DEBUG("Lose!");
-      break;
-    case Game::Status::kWin:
-      LOG_DEBUG("Wins!");
-      game->PushCmd(unique_ptr<CmdGameWin>(new CmdGameWin()));
-      break;
-    default:
-      break;
+  if (game->CheckStatus()) {
+    switch (game->GetStatus()) {
+      case Game::Status::kUndecided:
+        LOG_DEBUG("Undecided!");
+        break;
+      case Game::Status::kLose:
+        LOG_DEBUG("Lose!");
+        break;
+      case Game::Status::kWin:
+        LOG_DEBUG("Wins!");
+        game->PushCmd(unique_ptr<CmdGameWin>(new CmdGameWin()));
+        break;
+      default:
+        break;
+    }
   }
 
   return current;

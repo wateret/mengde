@@ -221,10 +221,11 @@ void Game::PushCmd(unique_ptr<Cmd> cmd) {
   commander_.PushCmd(std::move(cmd));
 }
 
-Game::Status Game::CheckStatus() {
+bool Game::CheckStatus() {
+  if (status_ != Status::kUndecided) return false;
   uint32_t res = lua_script_->Call<uint32_t>("$end_condition");
   status_ = static_cast<Status>(res);
-  return status_;
+  return (status_ != Status::kUndecided);
 }
 
 uint32_t Game::GetNumEnemiesAlive() {

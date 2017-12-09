@@ -56,7 +56,9 @@ class Game {
   bool UnitInCell(Vec2D) const;
   uint32_t GetNumEnemiesAlive();
   uint32_t GetNumOwnsAlive();
-  Status CheckStatus();
+  bool CheckStatus();
+  Status GetStatus() { return status_; }
+
   int GenerateUnit(const string&, Unit::Side, Vec2D);
 
   // AI related API //
