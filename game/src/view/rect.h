@@ -16,6 +16,8 @@ class Rect {
   int GetY() const { return rect_.y; }
   int GetW() const { return rect_.w; }
   int GetH() const { return rect_.h; }
+  int GetRight() const { return rect_.x + rect_.w; }
+  int GetBottom() const { return rect_.y + rect_.h; }
   void SetX(int v) { rect_.x = v; }
   void SetY(int v) { rect_.y = v; }
   void SetW(int v) { rect_.w = v; }

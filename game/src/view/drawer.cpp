@@ -202,13 +202,19 @@ void Drawer::SetViewport(const Rect* r) {
   int y = rr.GetY() - rect.GetY();
   if (y < 0) {
     rr.SetY(rect.GetY());
+    rr.SetH(rr.GetH() - y);
     neg_coords.y = y;
   }
   int x = rr.GetX() - rect.GetX();
   if (x < 0) {
     rr.SetX(rect.GetX());
+    rr.SetW(rr.GetW() - x);
     neg_coords.x = x;
   }
+  int bot = std::min(0, rect.GetBottom() - rr.GetBottom());
+  int rgt = std::min(0, rect.GetRight() - rr.GetRight());
+  rr += {rgt, bot};
+
   Viewport new_vp(rr, neg_coords);
 //  LOG_INFO("Viewport push (%d %d %d %d) (%d %d)", rr.GetX(), rr.GetY(), rr.GetW(), rr.GetH(), neg_coords.x, neg_coords.y);
   renderer_->SetViewport(&new_vp.rect);
