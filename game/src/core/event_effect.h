@@ -3,6 +3,8 @@
 
 class Unit;
 
+// EventEffect class is an observer for game event handling
+
 class EventEffect {
  public:
   enum class Type {
