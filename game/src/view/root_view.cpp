@@ -96,6 +96,8 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
 }
 
 RootView::~RootView() {
+  // FIXME ui_view_ is deleted first then StateMachine destructs and it could do something with ui_views_ then
+  //       we are doomed.
   delete ui_views_;
 }
 
