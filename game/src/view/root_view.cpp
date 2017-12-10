@@ -191,7 +191,7 @@ void RootView::CenterCamera(Vec2D coords) {
 void RootView::RaiseMouseMotionEvent() {
   Vec2D mouse_pos;
   SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y); // FIXME Not to use SDL interface directly
-  OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::kOver, mouse_pos, mouse_pos));
+  OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, mouse_pos, mouse_pos));
 }
 
 void RootView::ChangeUIState(StateUI* state_ui) {
