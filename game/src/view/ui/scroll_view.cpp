@@ -10,7 +10,6 @@ ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, vie
   // XXX Remove this workaround for padding
   SetPadding(view_->GetPadding());
   view_->SetPadding(0);
-  SetPadding(0);
   SetBgColor(view_->GetBgColor());
   view_->SetBgColor({255, 255, 255, 0});
 }
