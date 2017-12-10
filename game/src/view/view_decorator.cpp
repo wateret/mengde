@@ -6,6 +6,10 @@ ViewDecorator::ViewDecorator(View* view) : View(view->GetFrame()), view_(view) {
 ViewDecorator::ViewDecorator(const Rect& frame, View* view) : View(frame), view_(view) {
 }
 
+ViewDecorator::~ViewDecorator() {
+  delete view_;
+}
+
 void ViewDecorator::Render(Drawer* drawer) {
   view_->Render(drawer);
 }

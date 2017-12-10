@@ -7,6 +7,7 @@ class ViewDecorator : public View {
  public:
   ViewDecorator(View*);
   ViewDecorator(const Rect&, View*);
+  virtual ~ViewDecorator();
   virtual void Render(Drawer*) override;
   virtual void Update() override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;

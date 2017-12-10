@@ -96,6 +96,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
 }
 
 RootView::~RootView() {
+  delete ui_views_;
 }
 
 void RootView::Update() {
