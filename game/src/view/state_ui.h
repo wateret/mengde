@@ -298,7 +298,6 @@ class StateUIAction : public StateUIOperable {
 
  private:
   Unit* unit_;
-  MagicListView* magic_list_view_;
   UnitInfoView* target_info_view_;
   string magic_id_;
   Vec2D* range_itr_;

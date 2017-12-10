@@ -178,23 +178,25 @@ void StateUIOperable::Render(Drawer* drawer) {
 }
 
 bool StateUIOperable::OnMouseMotionEvent(const MouseMotionEvent e) {
-  cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / App::kBlockSize;
+  if (e.IsMotionOver()) {
+    cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / App::kBlockSize;
 
-  // mouse scroll
-  int window_width  = rv_->GetFrameSize().x;
-  int window_height = rv_->GetFrameSize().y;
-  const int kScrollRange = App::kBlockSize;
-  const int kLeftScroll  = kScrollRange;
-  const int kRightScroll = window_width - kScrollRange;
-  const int kUpScroll    = kScrollRange;
-  const int kDownScroll  = window_height - kScrollRange;
+    // mouse scroll
+    int window_width  = rv_->GetFrameSize().x;
+    int window_height = rv_->GetFrameSize().y;
+    const int kScrollRange = App::kBlockSize;
+    const int kLeftScroll  = kScrollRange;
+    const int kRightScroll = window_width - kScrollRange;
+    const int kUpScroll    = kScrollRange;
+    const int kDownScroll  = window_height - kScrollRange;
 
-  ClearScrolls();
-  Vec2D mouse_coords = rv_->GetMouseCoords();
-  if (mouse_coords.x < kLeftScroll) SetScrollLeft();
-  if (mouse_coords.x > kRightScroll) SetScrollRight();
-  if (mouse_coords.y < kUpScroll) SetScrollUp();
-  if (mouse_coords.y > kDownScroll) SetScrollDown();
+    ClearScrolls();
+    Vec2D mouse_coords = rv_->GetMouseCoords();
+    if (mouse_coords.x < kLeftScroll) SetScrollLeft();
+    if (mouse_coords.x > kRightScroll) SetScrollRight();
+    if (mouse_coords.y < kUpScroll) SetScrollUp();
+    if (mouse_coords.y > kDownScroll) SetScrollDown();
+  }
   return true;
 }
 
@@ -893,7 +895,7 @@ void StateUINextTurn::Update() {
   }
 }
 
-void StateUINextTurn::Render(Drawer* drawer) {
+void StateUINextTurn::Render(Drawer*) {
 }
 
 void StateUINextTurn::Enter() {
