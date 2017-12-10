@@ -29,17 +29,25 @@ StateUIMain::StateUIMain(StateUI::Base base) : StateUI(base) {
 
 // StateUIDoCmd
 
-StateUIDoCmd::StateUIDoCmd(StateUI::Base base) : StateUI(base) {
+StateUIDoCmd::StateUIDoCmd(StateUI::Base base) : StateUI(base), cmd_to_do_(false) {
 }
 
 void StateUIDoCmd::Enter() {
+  if (cmd_to_do_) {
+    // Run reserved command run
+    ASSERT(game_->HasPendingCmd());
+    game_->DoPendingCmd();
+    cmd_to_do_ = false;
+  }
   while (game_->HasPendingCmd()) {
     StateUI* state = GenerateNextCmdUIState();
     if (state != nullptr) {
       rv_->PushUIState(state);
-      game_->DoPendingCmd();
+      // Reserve doing the command. Cmd will be run when coming back(pop from the pushed state) to this State
+      cmd_to_do_ = true;
       break;
     } else {
+      // If we do not have UIState for the command do it immediately
       game_->DoPendingCmd();
     }
   }

@@ -56,7 +56,7 @@ class StateUIMain : public StateUI {
 
 };
 
-// StateUIDoCmd 
+// StateUIDoCmd
 
 class StateUIDoCmd : public StateUI {
  public:
@@ -76,6 +76,7 @@ class StateUIDoCmd : public StateUI {
   StateUI* GenerateNextCmdUIState();
 
  private:
+  bool cmd_to_do_;
 };
 
 class StateUIOperable : public StateUI {
