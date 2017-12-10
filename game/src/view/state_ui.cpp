@@ -96,7 +96,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     }
     case Cmd::Op::kCmdEndTurn:
       return new StateUINextTurn(WrapBase());
-      
+
     case Cmd::Op::kCmdSpeak: {
       const CmdSpeak* c = DYNAMIC_CAST_CHECK(CmdSpeak);
       return new StateUISpeak(WrapBase(), c->GetUnit(), c->GetWords());
@@ -285,7 +285,6 @@ StateUIUnitSelected::~StateUIUnitSelected() {
 
 void StateUIUnitSelected::Enter() {
   game_->MoveUnit(unit_, origin_coords_);
-  rv_->CenterCamera(unit_->GetCoords() * App::kBlockSize + (App::kBlockSize / 2));
 }
 
 void StateUIUnitSelected::Exit() {
