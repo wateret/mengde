@@ -9,26 +9,26 @@ MouseButtonEvent::MouseButtonEvent(const Button mouse_button,
 }
 
 bool MouseButtonEvent::IsLeftButtonDown() const {
-  return mouse_button_ == kButtonLeft && mouse_button_state_ == kStateDown;
+  return mouse_button_ == Button::kLeft && mouse_button_state_ == State::kDown;
 }
 
 bool MouseButtonEvent::IsLeftButtonUp() const {
-  return mouse_button_ == kButtonLeft && mouse_button_state_ == kStateUp;
+  return mouse_button_ == Button::kLeft && mouse_button_state_ == State::kUp;
 }
 
 bool MouseButtonEvent::IsMiddleButtonDown() const {
-  return mouse_button_ == kButtonMiddle && mouse_button_state_ == kStateDown;
+  return mouse_button_ == Button::kMiddle && mouse_button_state_ == State::kDown;
 }
 
 bool MouseButtonEvent::IsMiddleButtonUp() const {
-  return mouse_button_ == kButtonMiddle && mouse_button_state_ == kStateUp;
+  return mouse_button_ == Button::kMiddle && mouse_button_state_ == State::kUp;
 }
 
 bool MouseButtonEvent::IsRightButtonDown() const {
-  return mouse_button_ == kButtonRight && mouse_button_state_ == kStateDown;
+  return mouse_button_ == Button::kRight && mouse_button_state_ == State::kDown;
 }
 
 bool MouseButtonEvent::IsRightButtonUp() const {
-  return mouse_button_ == kButtonRight && mouse_button_state_ == kStateUp;
+  return mouse_button_ == Button::kRight && mouse_button_state_ == State::kUp;
 }
 

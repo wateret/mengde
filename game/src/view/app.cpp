@@ -119,18 +119,18 @@ bool App::HandleEvents() {
       case SDL_MOUSEBUTTONUP:
       case SDL_MOUSEBUTTONDOWN: {
         MouseButtonEvent::State state = (e.type == SDL_MOUSEBUTTONUP) ?
-                                        MouseButtonEvent::kStateUp :
-                                        MouseButtonEvent::kStateDown;
-        MouseButtonEvent::Button button = MouseButtonEvent::kButtonNone;
+                                        MouseButtonEvent::State::kUp :
+                                        MouseButtonEvent::State::kDown;
+        MouseButtonEvent::Button button = MouseButtonEvent::Button::kNone;
         switch (e.button.button) {
           case SDL_BUTTON_LEFT:
-            button = MouseButtonEvent::kButtonLeft;
+            button = MouseButtonEvent::Button::kLeft;
             break;
           case SDL_BUTTON_MIDDLE:
-            button = MouseButtonEvent::kButtonMiddle;
+            button = MouseButtonEvent::Button::kMiddle;
             break;
           case SDL_BUTTON_RIGHT:
-            button = MouseButtonEvent::kButtonRight;
+            button = MouseButtonEvent::Button::kRight;
             break;
           default:
             UNREACHABLE("Unknown mouse button");

@@ -5,17 +5,17 @@
 
 class MouseButtonEvent {
  public:
-  enum Button : uint16_t {
-    kButtonNone,
-    kButtonLeft,
-    kButtonMiddle,
-    kButtonRight
+  enum class Button : uint16_t {
+    kNone,
+    kLeft,
+    kMiddle,
+    kRight
   };
 
-  enum State : uint16_t {
-    kStateIdle,
-    kStateDown,
-    kStateUp
+  enum class State : uint16_t {
+    kIdle,
+    kDown,
+    kUp
   };
 
  public:
