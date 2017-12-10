@@ -299,10 +299,10 @@ unique_ptr<Cmd> CmdHit::Do(Game*) {
   if (type_ == Type::kBasicAttack) {
     const string hit_type = hit_type_ == HitType::kCritical ? "Critical" : "Normal";
     LOG_INFO("%s does damage to %s by %d (%s)",
-             damage_,
-             hit_type.c_str(),
              atk_->GetId().c_str(),
-             def_->GetId().c_str());
+             def_->GetId().c_str(),
+             damage_,
+             hit_type.c_str());
     if (!def_->DoDamage(damage_)) { // unit is dead
       ret = unique_ptr<CmdKilled>(new CmdKilled(def_));
     }
