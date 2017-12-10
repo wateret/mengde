@@ -182,7 +182,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
 
   LOG_INFO("%s(%s) '%s' -> '%s'",
            IsCounter() ? "CounterAttack" : "BasicAttack",
-           IsSecond() ? "1st" : "2nd",
+           IsSecond() ? "2nd" : "1st",
            atk_->GetId().c_str(),
            def_->GetId().c_str());
 
@@ -326,7 +326,7 @@ unique_ptr<Cmd> CmdMiss::Do(Game*) {
   return nullptr;
 }
 
-// CmdKilled 
+// CmdKilled
 
 CmdKilled::CmdKilled(Unit* unit) : CmdOneUnit(unit) {
 }
