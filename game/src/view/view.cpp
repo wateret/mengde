@@ -83,14 +83,13 @@ bool View::DelegateMouseMotionEvent(MouseMotionEvent e) {
   if (!visible_) return false;
   if (e.IsMotionOver()) {
 //    LOG_DEBUG("OnMouseOver (%d %d)", e.GetCoords().x, e.GetCoords().y);
-    MouseMotionEvent ec;
     if (GetFrame()->Contains(e.GetCoords())) {
       Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
-      ec = MouseMotionEvent(MouseMotionEvent::kMotionOver, conv_coords, e.GetCoordsRel());
+      MouseMotionEvent ec(MouseMotionEvent::kMotionOver, conv_coords, e.GetCoordsRel());
       return OnMouseMotionEvent(ec);
     } else {
       if (GetFrame()->Contains(e.GetLastCoords())) {
-        ec = MouseMotionEvent(MouseMotionEvent::kMotionOut, {0, 0}, {0, 0});
+        MouseMotionEvent ec(MouseMotionEvent::kMotionOut);
         OnMouseMotionEvent(ec);
         return false; // Always return false to keep delegating
       }

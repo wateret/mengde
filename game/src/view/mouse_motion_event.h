@@ -12,7 +12,8 @@ class MouseMotionEvent {
   };
 
   MouseMotionEvent(const MouseMotionEvent&, Vec2D);
-  MouseMotionEvent(Motion = kMotionNone, const Vec2D = {0, 0}, const Vec2D = {0, 0});
+  MouseMotionEvent(Motion, const Vec2D, const Vec2D);
+  MouseMotionEvent(Motion);
   bool IsMotionOver() const { return motion_ == kMotionOver; }
   bool IsMotionOut() const { return motion_ == kMotionOut; }
   Motion GetMotion() const { return motion_; }
