@@ -113,7 +113,7 @@ bool App::HandleEvents() {
       case SDL_MOUSEMOTION: {
         Vec2D coords = {e.motion.x, e.motion.y};
         Vec2D coords_rel = {e.motion.xrel, e.motion.yrel};
-        target_view_->OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::kMotionOver, coords, coords_rel));
+        target_view_->OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::kOver, coords, coords_rel));
         break;
       }
       case SDL_MOUSEBUTTONUP:

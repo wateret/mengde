@@ -14,5 +14,5 @@ MouseMotionEvent::MouseMotionEvent(Motion motion,
 
 MouseMotionEvent::MouseMotionEvent(Motion motion) : MouseMotionEvent(motion, {0, 0}, {0, 0}) {
   // Do not need coords and coords_rel for MouseOut
-  ASSERT(motion == Motion::kMotionOut);
+  ASSERT(motion == Motion::kOut);
 }

@@ -6,16 +6,16 @@
 class MouseMotionEvent {
  public:
   enum Motion : uint16_t {
-    kMotionNone,
-    kMotionOver,
-    kMotionOut
+    kNone,
+    kOver,
+    kOut
   };
 
   MouseMotionEvent(const MouseMotionEvent&, Vec2D);
   MouseMotionEvent(Motion, const Vec2D, const Vec2D);
   MouseMotionEvent(Motion);
-  bool IsMotionOver() const { return motion_ == kMotionOver; }
-  bool IsMotionOut() const { return motion_ == kMotionOut; }
+  bool IsMotionOver() const { return motion_ == kOver; }
+  bool IsMotionOut() const { return motion_ == kOut; }
   Motion GetMotion() const { return motion_; }
   Vec2D GetCoords() const { return coords_; }
   Vec2D GetCoordsRel() const { return coords_rel_; }
