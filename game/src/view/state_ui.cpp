@@ -658,6 +658,7 @@ void StateUIAttack::Render(Drawer* drawer) {
   };
 
   int cut_no = frames_ / kFramesPerCut;
+  ASSERT(cut_no < kNumCuts);
   const CutInfo* cut_atk = &kCutInfoAtk[cut_no];
   const CutInfo* cut_def = hit_ ? &kCutInfoDefDamaged[cut_no] : &kCutInfoDefBlocked[cut_no];
   Vec2D atk_pos = atk_->GetCoords();
