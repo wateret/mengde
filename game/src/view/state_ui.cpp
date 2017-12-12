@@ -734,10 +734,10 @@ void StateUIAttack::Render(Drawer* drawer) {
     }
     drawer->DrawText(damage_text, text_size, {228, 32, 32, 255}, damage_text_pos);
   }
+  frames_++;
 }
 
 void StateUIAttack::Update() {
-  frames_++;
   if (frames_ >= kNumCuts * kFramesPerCut) {
     rv_->PopUIState();
   }
