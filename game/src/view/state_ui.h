@@ -20,6 +20,7 @@ class StateUI : public State, IView {
 
  public:
   StateUI(Base);
+  virtual ~StateUI() = default;
   virtual void Enter() override {}
   virtual void Exit() override {}
   virtual void Render(Drawer*) override {}
