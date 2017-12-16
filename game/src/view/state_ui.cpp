@@ -354,16 +354,20 @@ StateUIMoving::StateUIMoving(StateUI::Base base,
                              Unit*         unit,
                              Vec2D         dest,
                              Flag          flag)
-    : StateUI(base), unit_(unit), dest_(dest), path_(), frames_(-1), flag_(flag) {
+    : StateUI(base), unit_(unit), dest_(dest), path_(), frames_(0), flag_(flag) {
 }
 
 StateUIMoving::StateUIMoving(StateUI::Base        base,
                              Unit*                unit,
                              const vector<Vec2D>& path,
                              Flag                 flag)
-    : StateUI(base), unit_(unit), dest_(), path_(path), frames_(-1), flag_(flag) {
+    : StateUI(base), unit_(unit), dest_(), path_(path), frames_(0), flag_(flag) {
   ASSERT(!path_.empty());
   dest_ = path_[0];
+}
+
+int StateUIMoving::CalcPathIdx() {
+  return (int)(path_.size() - 1) - (frames_ / kFramesPerCell);
 }
 
 void StateUIMoving::Enter() {
@@ -382,7 +386,6 @@ void StateUIMoving::Exit() {
 }
 
 void StateUIMoving::Update() {
-  frames_++;
   int path_idx = CalcPathIdx();
   if (path_idx == 0) { // Arrived at the destination
     ASSERT(dest_ == path_[0]);
@@ -400,7 +403,10 @@ void StateUIMoving::Update() {
 }
 
 void StateUIMoving::Render(Drawer* drawer) {
+  ASSERT_LT(frames_, NumPaths() * kFramesPerCell);
+
   int path_idx = CalcPathIdx();
+  ASSERT_GT(path_idx, 0);
 
   int frames_current = frames_ % kFramesPerCell;
   int sprite_no = frames_current / (kFramesPerCell / 2);
@@ -416,6 +422,8 @@ void StateUIMoving::Render(Drawer* drawer) {
                      path_[path_idx],
                      diff_pos);
   rv_->CenterCamera(path_[path_idx] * App::kBlockSize + diff_pos + (App::kBlockSize / 2));
+
+  frames_++;
 }
 
 // StateUIMagic

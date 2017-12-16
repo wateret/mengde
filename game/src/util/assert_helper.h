@@ -22,6 +22,46 @@
     } \
   } while (0)
 
+#define ASSERT_BIN_(A, OP, B) \
+  do \
+  { \
+    if (!((A) OP (B))) \
+    { \
+      fprintf(stderr, \
+              "\n" \
+              "******** ASSERTION \"%s %s %s\" FAILED ********\n" \
+              "%s:%d In function '%s'\n" \
+              "\n" \
+              "Compare Result : (%d %s %d)\n" \
+              "\n", \
+              #A, \
+              #OP, \
+              #B, \
+               __FILE__, \
+               __LINE__, \
+               __func__, \
+              (int)(A), \
+              #OP, \
+              (int)(B)); \
+      abort(); \
+    } \
+  } while (0)
+
+#define ASSERT_EQ(A, B) \
+  ASSERT_BIN_(A, ==, B)
+
+#define ASSERT_LT(A, B) \
+  ASSERT_BIN_(A, <, B)
+
+#define ASSERT_LE(A, B) \
+  ASSERT_BIN_(A, <=, B)
+
+#define ASSERT_GT(A, B) \
+  ASSERT_BIN_(A, >, B)
+
+#define ASSERT_GE(A, B) \
+  ASSERT_BIN_(A, >=, B)
+
 #define UNREACHABLE(msg) \
   do \
   { \
