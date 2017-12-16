@@ -271,6 +271,9 @@ class StateUIAttack : public StateUI {
   static const int kStateDuration = kFramesPerCut * kNumCuts;
 
  private:
+  bool LastFrame() { return frames_ == kNumCuts * kFramesPerCut - 1; }
+
+ private:
   Unit* atk_;
   Unit* def_;
   bool  hit_;

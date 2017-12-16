@@ -422,7 +422,6 @@ void StateUIMoving::Render(Drawer* drawer) {
   ASSERT_LT(frames_, NumPaths() * kFramesPerCell);
 
   int path_idx = CalcPathIdx();
-  LOG_DEBUG("frame_ : %2d path idx : %d", frames_, path_idx);
   ASSERT_GT(path_idx, 0);
 
   int frames_current = frames_ % kFramesPerCell;
@@ -603,7 +602,7 @@ StateUIAttack::StateUIAttack(StateUI::Base base,
                              bool hit,
                              bool critical,
                              int damage)
-    : StateUI(base), atk_(atk), def_(def), hit_(hit), critical_(critical), damage_(damage), frames_(0) {
+    : StateUI(base), atk_(atk), def_(def), hit_(hit), critical_(critical), damage_(damage), frames_(-1) {
 }
 
 void StateUIAttack::Enter() {
@@ -757,11 +756,11 @@ void StateUIAttack::Render(Drawer* drawer) {
     }
     drawer->DrawText(damage_text, text_size, {228, 32, 32, 255}, damage_text_pos);
   }
-  frames_++;
 }
 
 void StateUIAttack::Update() {
-  if (frames_ >= kNumCuts * kFramesPerCut) {
+  frames_++;
+  if (LastFrame()) {
     rv_->PopUIState();
   }
 }
