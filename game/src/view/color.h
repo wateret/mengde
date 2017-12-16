@@ -43,11 +43,11 @@ struct Color {
 #define COLOR_NAVY        {0, 0, 128, 255}
 #define COLOR_ORANGE      {255, 165, 0, 255}
 
-#define COLORC_GAUGE_STATS {255, 203, 107, 255}
-#define COLORC_GAUGE_BG    COLOR_GRAY
-#define COLORC_GAUGE_HP    {64, 192, 64, 255}
-#define COLORC_GAUGE_MP    {64, 192, 224, 255}
-#define COLORC_GAUGE_EXP   {199, 146, 234, 255}
-#define COLORC_GAUGE_HPRED {192, 64, 64, 255}
+#define COLORC_GAUGE_STATS(A) {255, 203, 107, (A)}
+#define COLORC_GAUGE_BG(A)    {128, 128, 128, (A)}
+#define COLORC_GAUGE_HP(A)    {64, 192, 64, (A)}
+#define COLORC_GAUGE_MP(A)    {64, 192, 224, (A)}
+#define COLORC_GAUGE_EXP(A)   {199, 146, 234, (A)}
+#define COLORC_GAUGE_HPRED(A) {192, 64, 64, (A)}
 
 #endif

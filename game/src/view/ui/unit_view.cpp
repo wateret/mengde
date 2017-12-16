@@ -58,9 +58,9 @@ UnitOverView::UnitOverView(const Rect* frame)
   }
 
   Rect gv_frame = {kLabelWidth, 92, 220-16-kLabelWidth, kLabelHeight};
-  static const Color colors[kNumXtats] = {COLORC_GAUGE_HP,
-                                          COLORC_GAUGE_MP,
-                                          COLORC_GAUGE_EXP};
+  static const Color colors[kNumXtats] = {COLORC_GAUGE_HP(255),
+                                          COLORC_GAUGE_MP(255),
+                                          COLORC_GAUGE_EXP(255)};
 
   for (int i = 0; i < kNumXtats; i++) {
     GaugeView* gv = new GaugeView(&gv_frame,
@@ -81,7 +81,7 @@ UnitOverView::UnitOverView(const Rect* frame)
                                   1,
                                   max_value,
                                   1,
-                                  COLORC_GAUGE_STATS,
+                                  COLORC_GAUGE_STATS(255),
                                   {128, 128, 128, 255},
                                   {255, 242, 175, 255});
     gv->SetHelpTextType(GaugeView::kHelpTextCurOnly);

@@ -16,7 +16,8 @@ UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
       tv_lv_(nullptr),
       tv_lftbot_(nullptr),
       tv_rgtbot_(nullptr) {
-  SetBgColor({64, 64, 64, 255});
+  const int kAlpha = 160;
+  SetBgColor({64, 64, 64, kAlpha});
   SetPadding(8);
 
   Rect gv_frame = {0, 22, 184, 16};
@@ -24,15 +25,15 @@ UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
                          0,
                          1,
                          0,
-                         COLORC_GAUGE_HP,
-                         COLORC_GAUGE_BG,
-                         COLORC_GAUGE_HPRED);
+                         COLORC_GAUGE_HP(kAlpha),
+                         COLORC_GAUGE_BG(kAlpha),
+                         COLORC_GAUGE_HPRED(kAlpha));
   gv_frame.Move(0, 22);
   gv_mp_ = new GaugeView(&gv_frame,
                          0,
                          1,
-                         COLORC_GAUGE_MP,
-                         COLORC_GAUGE_BG);
+                         COLORC_GAUGE_MP(kAlpha),
+                         COLORC_GAUGE_BG(kAlpha));
   gv_hp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
   gv_mp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
 
@@ -85,10 +86,25 @@ void UnitInfoView::SetUnit(Unit* unit) {
 }
 
 void UnitInfoView::SetCoordsByUnitCoords(Vec2D unit_cell, Vec2D camera_coords) {
-  Vec2D c = ((unit_cell + 1) * 48) - camera_coords;
-  SetCoords(c);
+  LOG_DEBUG("frame size (%3d, %3d)", GetFrameSize().x, GetFrameSize().y);
+  Vec2D cands[] = {(unit_cell + Vec2D(1, 0)) * 48,
+                   (unit_cell + Vec2D(0, 1)) * 48,
+                   (unit_cell * 48 - Vec2D(GetFrameSize().x, 0)),
+                   (unit_cell * 48 - Vec2D(0, GetFrameSize().y))};
+  Vec2D res(0, 0);
+  for (auto e : cands) {
+    Vec2D calc_lt = e - camera_coords;
+    Vec2D calc_rb = calc_lt + GetFrameSize();;
+    Rect frame = {0, 0, 800, 600};
+    if (frame.Contains(calc_lt) && frame.Contains(calc_rb)) {
+      LOG_DEBUG("cand (%3d, %3d)", calc_lt.x, calc_lt.y);
+      res = calc_lt;
+      break;
+    }
+  }
+  SetCoords(res);
 }
 
 bool UnitInfoView::OnMouseMotionEvent(const MouseMotionEvent) {
-  return true;
+  return false;
 }

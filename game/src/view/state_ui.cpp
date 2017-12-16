@@ -165,7 +165,7 @@ void StateUIOperable::Update() {
     rv_->SetUnitViewUnit(unit);
 
     rv_->SetUnitInfoViewVisible(true);
-    rv_->SetUnitViewVisible(true);
+//    rv_->SetUnitViewVisible(true);
   } else {
     rv_->SetUnitInfoViewVisible(false);
     rv_->SetUnitViewVisible(false);
