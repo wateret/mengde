@@ -104,11 +104,10 @@ void Texture::CreateFromSurface(Renderer* renderer, SDL_Surface* surface) {
 }
 
 void Texture::FreeIfLoaded() {
-  if (Loaded()) {
-    SDL_DestroyTexture(texture_);
-    if (surface_ != nullptr) {
-      SDL_FreeSurface(surface_);
-    }
+  // We do not free Texture here since they are
+  // TODO what if we erase some textures in texture manager?
+  if (surface_ != nullptr) {
+    SDL_FreeSurface(surface_);
   }
 }
 
