@@ -96,7 +96,11 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     case Cmd::Op::kCmdMove: {
       const CmdMove* c = DYNAMIC_CAST_CHECK(CmdMove);
       StateUIMoving::Flag flag = StateUIMoving::Flag::kNone;
-      return new StateUIMoving(WrapBase(), c->GetUnit(), c->GetDest(), flag);
+      if (c->GetUnit()->GetCoords() == c->GetDest()) {
+        return no_state_ui;
+      } else {
+        return new StateUIMoving(WrapBase(), c->GetUnit(), c->GetDest(), flag);
+      }
     }
     case Cmd::Op::kCmdKilled: {
       const CmdKilled* c = DYNAMIC_CAST_CHECK(CmdKilled);
