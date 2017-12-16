@@ -170,7 +170,8 @@ class StateUIMoving : public StateUI {
 
  private:
   int CalcPathIdx();
-  int NumPaths() { return static_cast<int>(path_.size() - 1); };
+  int NumPaths();
+  bool LastFrame();
 
  private:
   Unit*         unit_;
