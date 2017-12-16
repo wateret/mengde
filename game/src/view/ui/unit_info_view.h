@@ -16,6 +16,7 @@ class UnitInfoView : public CompositeView {
   void SetUnitTerrainInfo(Cell* cell);
   void SetUnitAttackInfo(Unit*, int, int);
   void SetUnit(Unit*);
+  void SetCoordsByUnitCoords(Vec2D, Vec2D);
 
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 

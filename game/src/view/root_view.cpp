@@ -269,6 +269,10 @@ void RootView::SetUnitInfoViewUnitTerrainInfo(Cell* cell) {
   unit_info_view_->SetUnitTerrainInfo(cell);
 }
 
+void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
+  unit_info_view_->SetCoordsByUnitCoords(unit, camera);
+}
+
 void RootView::SetDialogViewVisible(bool b) {
   dialog_view_->SetVisible(b);
 }

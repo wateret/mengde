@@ -157,14 +157,18 @@ StateUIOperable::StateUIOperable(Base base)
 
 void StateUIOperable::Update() {
   Map* map = game_->GetMap();
-  rv_->SetUnitInfoViewVisible(false);
-  rv_->SetUnitViewVisible(false);
   if (map->UnitInCell(cursor_cell_)) {
+    Cell* cell = map->GetCell(cursor_cell_);
     Unit* unit = map->GetUnit(cursor_cell_);
-    rv_->SetUnitInfoViewUnitTerrainInfo(map->GetCell(cursor_cell_)); // TODO Refactor : remove dependency with Unit
+    rv_->SetUnitInfoViewUnitTerrainInfo(cell);
+    rv_->SetUnitInfoViewCoordsByUnitCoords(unit->GetCoords(), rv_->GetCameraCoords());
+    rv_->SetUnitViewUnit(unit);
+
     rv_->SetUnitInfoViewVisible(true);
-    rv_->SetUnitViewUnit(unit); // TODO Refactor : remove dependency with Unit
     rv_->SetUnitViewVisible(true);
+  } else {
+    rv_->SetUnitInfoViewVisible(false);
+    rv_->SetUnitViewVisible(false);
   }
 
   // Update camera coords

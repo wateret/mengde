@@ -84,6 +84,11 @@ void UnitInfoView::SetUnit(Unit* unit) {
   tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
 }
 
+void UnitInfoView::SetCoordsByUnitCoords(Vec2D unit_cell, Vec2D camera_coords) {
+  Vec2D c = ((unit_cell + 1) * 48) - camera_coords;
+  SetCoords(c);
+}
+
 bool UnitInfoView::OnMouseMotionEvent(const MouseMotionEvent) {
   return true;
 }
