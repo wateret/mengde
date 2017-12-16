@@ -61,7 +61,7 @@ void StateMachine<T>::PushState(T state) {
     GetCurrentState()->Exit();
   }
   stack_.push(state);
-//  LOG_INFO("StateMachine Pushed   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+  LOG_INFO("StateMachine Pushed   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
   state->Enter();
 }
 
@@ -74,7 +74,7 @@ void StateMachine<T>::ChangeState(T state) {
   stack_.pop();
   stack_.push(state);
   state->Enter();
-//  LOG_INFO("StateMachine Replaced / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+  LOG_INFO("StateMachine Replaced / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
 }
 
 template <typename T>
@@ -87,10 +87,10 @@ void StateMachine<T>::PopState() {
   if (!IsStackEmpty()) {
     cur_state = GetCurrentState();
     cur_state->Enter();
-//    LOG_INFO("StateMachine Popped   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+    LOG_INFO("StateMachine Popped   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
   }
   else {
-//    LOG_INFO("StateMachine Popped   / Stack is empty");
+    LOG_INFO("StateMachine Popped   / Stack is empty");
   }
 }
 

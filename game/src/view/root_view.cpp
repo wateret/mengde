@@ -28,6 +28,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
       dialog_view_(nullptr),
       magic_list_view_(nullptr),
       ui_state_machine_(new StateUIView({game, this})),
+      reserved_callbacks_(),
       mouse_coords_(-1, -1),
       camera_coords_(0, 0),
       max_camera_coords_(size),
@@ -102,6 +103,7 @@ RootView::~RootView() {
 }
 
 void RootView::Update() {
+  RunCallbacks();
   GetCurrentState()->Update();
   control_view_->Update();
   frame_count_++;
@@ -197,26 +199,45 @@ void RootView::RaiseMouseMotionEvent() {
   OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, mouse_pos, mouse_pos));
 }
 
+void RootView::NextFrame(NextFrameCallback cb) {
+  reserved_callbacks_.push(cb);
+}
+
+void RootView::RunCallbacks() {
+  while (!reserved_callbacks_.empty()) {
+    reserved_callbacks_.front()();
+    reserved_callbacks_.pop();
+  }
+}
+
 void RootView::ChangeUIState(StateUI* state_ui) {
-  ui_state_machine_.ChangeState(state_ui);
-  RaiseMouseMotionEvent();
+  NextFrame([this, state_ui] () {
+    this->ui_state_machine_.ChangeState(state_ui);
+    this->RaiseMouseMotionEvent();
+  });
 }
 
 void RootView::PushUIState(StateUI* state_ui) {
-  ui_state_machine_.PushState(state_ui);
-  RaiseMouseMotionEvent();
+  NextFrame([this, state_ui] () {
+    this->ui_state_machine_.PushState(state_ui);
+    this->RaiseMouseMotionEvent();
+  });
 }
 
 void RootView::PopUIState() {
-  ui_state_machine_.PopState();
-  RaiseMouseMotionEvent();
+  NextFrame([this] () {
+    this->ui_state_machine_.PopState();
+    this->RaiseMouseMotionEvent();
+  });
 }
 
 void RootView::InitUIStateMachine() {
-  ui_state_machine_.InitState();
-  if (game_->HasPendingCmd()) {
-    ui_state_machine_.PushState(new StateUIDoCmd({game_, this}));
-  }
+  NextFrame([this] () {
+    ui_state_machine_.InitState();
+    if (game_->HasPendingCmd()) {
+      ui_state_machine_.PushState(new StateUIDoCmd({game_, this}));
+    }
+  });
 }
 
 int RootView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {

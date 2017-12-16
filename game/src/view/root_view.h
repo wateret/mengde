@@ -21,6 +21,9 @@ class UnitInfoView;
 
 class RootView : public View {
  public:
+   typedef function<void()> NextFrameCallback;
+
+ public:
   RootView(const Vec2D, Game*, App*);
   ~RootView();
   Vec2D GetMouseCoords() { return mouse_coords_; }
@@ -44,6 +47,7 @@ class RootView : public View {
   void SetUnitDialogViewUnit(Unit*);
   void CenterCamera(Vec2D);
   void EndGame();
+  void NextFrame(NextFrameCallback);
 
   // UIStateMachine related
   void ChangeUIState(StateUI*);
@@ -60,6 +64,7 @@ class RootView : public View {
   virtual bool OnMouseWheelEvent(const MouseWheelEvent) override;
 
  private:
+  void RunCallbacks();
   int GetCurrentSpriteNo(int, int) const;
   void RaiseMouseMotionEvent();
 
@@ -74,6 +79,7 @@ class RootView : public View {
   UnitDialogView*        unit_dialog_view_;
   MagicListView*         magic_list_view_;
   StateMachine<StateUI*> ui_state_machine_;
+  queue<NextFrameCallback> reserved_callbacks_;
   Vec2D mouse_coords_;
   Vec2D camera_coords_;
   Vec2D max_camera_coords_;

@@ -382,6 +382,7 @@ void StateUIMoving::Exit() {
 }
 
 void StateUIMoving::Update() {
+  frames_++;
   int path_idx = CalcPathIdx();
   if (path_idx == 0) { // Arrived at the destination
     ASSERT(dest_ == path_[0]);
@@ -396,7 +397,6 @@ void StateUIMoving::Update() {
       rv_->PopUIState();
     }
   }
-  frames_++;
 }
 
 void StateUIMoving::Render(Drawer* drawer) {
