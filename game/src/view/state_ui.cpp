@@ -67,7 +67,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
   switch (cmd->GetOp()) {
     case Cmd::Op::kCmdAction:
     case Cmd::Op::kCmdPlayAI:
-    case Cmd::Op::kCmdGameWin:
+    case Cmd::Op::kCmdGameVictory:
       return no_state_ui;
 
     case Cmd::Op::kCmdHit: {

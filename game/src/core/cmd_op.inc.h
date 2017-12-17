@@ -15,7 +15,7 @@ MACRO_CMD_OP(Killed     )
 MACRO_CMD_OP(EndTurn    )
 MACRO_CMD_OP(PlayAI     )
 MACRO_CMD_OP(Stay       )
-MACRO_CMD_OP(GameWin    )
+MACRO_CMD_OP(GameVictory)
 MACRO_CMD_OP(Speak      )
 MACRO_CMD_OP(GameEnd    )
 

@@ -63,7 +63,7 @@ unique_ptr<Cmd> CmdQueue::Do(Game* game) {
         break;
       case Game::Status::kWin:
         LOG_DEBUG("Wins!");
-        game->PushCmd(unique_ptr<CmdGameWin>(new CmdGameWin()));
+        game->PushCmd(unique_ptr<CmdGameVictory>(new CmdGameVictory()));
         break;
       default:
         break;
@@ -474,12 +474,12 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
   return unique_ptr<CmdAction>(cmd);
 }
 
-// CmdGameWin
+// CmdGameVictory
 
-CmdGameWin::CmdGameWin() : Cmd() {
+CmdGameVictory::CmdGameVictory() : Cmd() {
 }
 
-unique_ptr<Cmd> CmdGameWin::Do(Game* game) {
+unique_ptr<Cmd> CmdGameVictory::Do(Game* game) {
   LuaScript* lua_script = game->GetLuaScript();
   lua_script->Call<void>("$on_victory");
   // Return a new CmdGameEnd just in case when user script does not specifies next scenario

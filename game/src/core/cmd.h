@@ -247,11 +247,11 @@ class CmdPlayAI : public Cmd {
   virtual Cmd::Op GetOp() const override { return Op::kCmdPlayAI; }
 };
 
-class CmdGameWin : public Cmd {
+class CmdGameVictory : public Cmd {
  public:
-  CmdGameWin();
+  CmdGameVictory();
   virtual unique_ptr<Cmd> Do(Game*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdGameWin; }
+  virtual Cmd::Op GetOp() const override { return Op::kCmdGameVictory; }
 };
 
 class CmdGameEnd : public Cmd {
