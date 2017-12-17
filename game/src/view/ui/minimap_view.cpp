@@ -52,17 +52,17 @@ void MinimapUnitsView::Render(Drawer* drawer) {
         drawer->SetDrawColor({192, 0, 0, 255});
         break;
       case Unit::kSideAlly:
-        drawer->SetDrawColor(COLOR_ORANGE);
+        drawer->SetDrawColor(COLOR("orange"));
         break;
       case Unit::kSideEnemy:
-        drawer->SetDrawColor(COLOR_BLUE);
+        drawer->SetDrawColor(COLOR("blue"));
         break;
       default:
         LOG_FATAL("Unknown side for a unit.");
-        drawer->SetDrawColor(COLOR_GRAY);
+        drawer->SetDrawColor(COLOR("gray"));
         break;
       }
-        
+
     Rect rect(u->GetCoords(), {1, 1});
     rect.Magnify(unit_size_);
     rect -= 1;

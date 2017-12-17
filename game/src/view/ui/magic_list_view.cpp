@@ -16,7 +16,7 @@ MagicListView::MagicListView(const Rect* frame,
       item_height_(20),
       hover_index_(-1) {
   ASSERT(unit_ || !magic_list_);
-  SetBgColor(COLOR_DARKGRAY);
+  SetBgColor(COLOR("darkgray"));
   SetPadding(LayoutHelper::kDefaultSpace);
 
   SetMouseMotionHandler([this] (const MouseMotionEvent e) {
@@ -78,11 +78,11 @@ void MagicListView::Render(Drawer* drawer) {
   for (int i = 0, sz = magic_list_->NumMagics(); i < sz; i++) {
     if (i == hover_index_) {
       Rect r = item_frame;
-      drawer->SetDrawColor(COLOR_GRAY);
+      drawer->SetDrawColor(COLOR("gray"));
       drawer->FillRect(&r);
     }
     Magic* magic = magic_list_->GetMagic(i);
-    drawer->DrawText(magic->GetId(), 14, COLOR_WHITE, &item_frame, LayoutHelper::kAlignCenter);
+    drawer->DrawText(magic->GetId(), 14, COLOR("white"), &item_frame, LayoutHelper::kAlignCenter);
     item_frame.Move(0, item_height_);
   }
   RENDER_END(this);

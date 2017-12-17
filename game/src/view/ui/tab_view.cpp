@@ -4,7 +4,7 @@
 
 TabView::TabView(const Rect* frame)
     : CompositeView(frame), view_index_(0) {
-  SetBgColor(COLOR_DARKGRAY);
+  SetBgColor(COLOR("darkgray"));
   SetPadding(LayoutHelper::kDefaultSpace);
 }
 

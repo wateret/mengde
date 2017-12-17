@@ -33,7 +33,7 @@ UnitDialogView::UnitDialogView(const Rect* frame, const string& message, Unit* u
   Rect name_frame(message_pos + Vec2D(0, 80+4), {64, 20});
   tv_name_ = new TextView(&name_frame, "");
   tv_name_->SetAlign(LayoutHelper::kAlignCenter);
-  tv_name_->SetColor(COLOR_YELLOW);
+  tv_name_->SetColor(COLOR("yellow"));
 
   frame_view_->AddChild(tv_name_);
   frame_view_->AddChild(tv_message_);

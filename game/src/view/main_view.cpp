@@ -4,7 +4,7 @@
 #include "layout_helper.h"
 
 MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
-  SetBgColor(COLOR_WHITE);
+  SetBgColor(COLOR("white"));
   const Vec2D kButtonSize = {100, 100};
   Rect start_frame = LayoutHelper::CalcPosition(frame, {100, 100}, LayoutHelper::kAlignHMid);
   start_frame.Move(0, 100);

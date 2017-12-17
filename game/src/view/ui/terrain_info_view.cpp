@@ -6,7 +6,7 @@ TerrainInfoView::TerrainInfoView(const Rect& frame,
                                  Vec2D coords,
                                  Terrain* terrain)
     : View(frame), coords_(coords), terrain_(terrain) {
-  SetBgColor(COLOR_DARKGRAY);
+  SetBgColor(COLOR("darkgray"));
   SetPadding(8);
 }
 

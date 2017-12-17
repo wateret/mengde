@@ -767,7 +767,7 @@ void StateUIAttack::Render(Drawer* drawer) {
     for (int i = -1; i <= 1; i++) {
       for (int j = -1; j <= 1; j++) {
         Vec2D border_pos = {i, j};
-        drawer->DrawText(damage_text, text_size, COLOR_WHITE, damage_text_pos + border_pos);
+        drawer->DrawText(damage_text, text_size, COLOR("white"), damage_text_pos + border_pos);
       }
     }
     drawer->DrawText(damage_text, text_size, {228, 32, 32, 255}, damage_text_pos);

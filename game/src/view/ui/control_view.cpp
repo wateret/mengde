@@ -8,7 +8,7 @@
 
 ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
-  SetBgColor(COLOR_DARKGRAY);
+  SetBgColor(COLOR("darkgray"));
   SetPadding(8);
 
   Rect frame_tv_turn = {0, 0, 80, 22};

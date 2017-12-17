@@ -25,23 +25,23 @@ UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
                          0,
                          1,
                          0,
-                         COLORC_GAUGE_HP(kAlpha),
-                         COLORC_GAUGE_BG(kAlpha),
-                         COLORC_GAUGE_HPRED(kAlpha));
+                         COLOR("gauge_hp", kAlpha),
+                         COLOR("gauge_bg", kAlpha),
+                         COLOR("gauge_hp_damage", kAlpha));
   gv_frame.Move(0, 22);
   gv_mp_ = new GaugeView(&gv_frame,
                          0,
                          1,
-                         COLORC_GAUGE_MP(kAlpha),
-                         COLORC_GAUGE_BG(kAlpha));
+                         COLOR("gauge_mp", kAlpha),
+                         COLOR("gauge_bg", kAlpha));
   gv_hp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
   gv_mp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
 
   Rect tv_rect = GetActualFrame();
-  tv_name_   = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignLftTop);
-  tv_lv_     = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignRgtTop);
-  tv_lftbot_ = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignLftBot);
-  tv_rgtbot_ = new TextView(&tv_rect, "", COLOR_WHITE, 14, LayoutHelper::kAlignRgtBot);
+  tv_name_   = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftTop);
+  tv_lv_     = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
+  tv_lftbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftBot);
+  tv_rgtbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtBot);
 
   AddChild(gv_hp_);
   AddChild(gv_mp_);

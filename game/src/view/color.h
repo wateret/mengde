@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <string>
+#include <unordered_map>
 
 typedef unsigned char uint8_t;
 
@@ -30,24 +31,19 @@ struct Color {
   }
 };
 
-#define COLOR_TRANSPARENT {255, 255, 255, 0}
-#define COLOR_WHITE       {255, 255, 255, 255}
-#define COLOR_BLACK       {0, 0, 0, 255}
-#define COLOR_RED         {255, 0, 0, 255}
-#define COLOR_BLUE        {0, 0, 255, 255}
-#define COLOR_GREEN       {0, 255, 0, 255}
-#define COLOR_GRAY        {128, 128, 128, 255}
-#define COLOR_DARKGRAY    {64, 64, 64, 255}
-#define COLOR_YELLOW      {255, 255, 0, 255}
-#define COLOR_LIGHTYELLOW {255, 255, 224, 255}
-#define COLOR_NAVY        {0, 0, 128, 255}
-#define COLOR_ORANGE      {255, 165, 0, 255}
+class ColorGen {
+ public:
+  static ColorGen* GetInstance();
+  Color Generate(const std::string& /* name */, uint8_t /* alpha */ = 255);
 
-#define COLORC_GAUGE_STATS(A) {255, 203, 107, (A)}
-#define COLORC_GAUGE_BG(A)    {128, 128, 128, (A)}
-#define COLORC_GAUGE_HP(A)    {64, 192, 64, (A)}
-#define COLORC_GAUGE_MP(A)    {64, 192, 224, (A)}
-#define COLORC_GAUGE_EXP(A)   {199, 146, 234, (A)}
-#define COLORC_GAUGE_HPRED(A) {192, 64, 64, (A)}
+ private:
+  ColorGen();
+
+ private:
+  std::unordered_map<std::string, Color> colors_;
+};
+
+#define COLOR ColorGen::GetInstance()->Generate
+#define COLOR ColorGen::GetInstance()->Generate
 
 #endif
