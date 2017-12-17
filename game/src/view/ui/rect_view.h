@@ -6,7 +6,8 @@
 
 class RectView : public View {
  public:
-  RectView(const Rect*, Color, int = 0);
+  RectView(const Rect*, Color);
+  void SetBorder(int, Color);
 
  private:
   virtual void Render(Drawer*) override;
@@ -14,6 +15,7 @@ class RectView : public View {
  private:
   Color color_;
   int   border_;
+  Color border_color_;
 };
 
 #endif // RECT_VIEW_H_

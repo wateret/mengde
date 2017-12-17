@@ -28,7 +28,8 @@ MinimapView::MinimapView(const Rect* frame,
   Vec2D frame_size = GetFrameSize();
   Vec2D camera_area_size = frame_size * camera_size / map_size;
   Rect rect_frame(MagnifyForMinimap(*camera_coords_ptr), camera_area_size);
-  camera_rect_view_ = new RectView(&rect_frame, {255, 255, 255, 0}, 2);
+  camera_rect_view_ = new RectView(&rect_frame, COLOR("transparent"));
+  camera_rect_view_->SetBorder(2, COLOR("white"));
   AddChild(camera_rect_view_);
 }
 

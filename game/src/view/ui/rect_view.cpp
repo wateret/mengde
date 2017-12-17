@@ -1,14 +1,18 @@
 #include "rect_view.h"
 #include "../drawer.h"
 
-RectView::RectView(const Rect* frame, Color color, int border)
-    : View(frame), color_(color), border_(border) {
+RectView::RectView(const Rect* frame, Color color)
+    : View(frame), color_(color), border_(0), border_color_(COLOR("transparent")) {
   SetBgColor(color_);
   SetPadding(0);
 }
 
+void RectView::SetBorder(int width, Color color) {
+  border_ = width;
+  border_color_ = color;
+}
+
 void RectView::Render(Drawer* drawer) {
-  Rect r(GetFrameCoords(), GetActualFrameSize());
-  drawer->SetDrawColor({255, 255, 255, 192});
-  drawer->DrawRect(&r, border_);
+  drawer->SetDrawColor(border_color_);
+  drawer->DrawRect(GetFrame(), border_);
 }
