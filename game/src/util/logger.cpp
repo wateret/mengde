@@ -36,6 +36,8 @@ void Logger::Log(LogLevel level,
                  const char* func,
                  const char* msg,
                  ...) {
+  (void) (file); // Currently file param is unused
+
   if (level > level_) return;
   va_list args;
   va_start(args, msg);

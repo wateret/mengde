@@ -26,6 +26,8 @@ FontManager::~FontManager() {
 }
 
 TTF_Font* FontManager::FetchFont(const string& name, int size) {
+  UNUSED(name);
+
   std::string base_path = GameEnv::GetInstance()->GetResourcePath();
   std::string full_path = base_path + "/" + default_font_name_ + ".ttf";
   std::string key = default_font_name_ + ":" + std::to_string(size);

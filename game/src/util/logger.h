@@ -27,13 +27,13 @@ class Logger {
 
  private:
   LogLevel level_;
+  const char* color_reset_;
   const char* color_red_;
   const char* color_green_;
   const char* color_yellow_;
   const char* color_blue_;
   const char* color_magenta_;
   const char* color_cyan_;
-  const char* color_reset_;
 };
 
 #define LOGM_INFO(m, ...) Logger::GetInstance()->Log(Logger::LogLevel::kLogInfo, "[" #m "]", __VA_ARGS__)

@@ -193,9 +193,6 @@ void ItemView::SetItem(Item* item) {
     desc = "Item Description";
   }
 
-  Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(),
-                                             {32, 32},
-                                             LayoutHelper::kAlignLftMid);
   iv_image_->SetPath(image_path);
   tv_name_->SetText(name);
   tv_desc_->SetText(desc);
