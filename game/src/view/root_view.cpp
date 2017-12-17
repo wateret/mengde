@@ -265,6 +265,10 @@ void RootView::SetUnitInfoViewUnitTerrainInfo(Cell* cell) {
   unit_info_view_->SetUnitTerrainInfo(cell);
 }
 
+void RootView::SetUnitInfoViewUnitAttackInfo(Unit* unit, int accuracy, int damage) {
+  unit_info_view_->SetUnitAttackInfo(unit, accuracy, damage);
+}
+
 void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
   unit_info_view_->SetCoordsByUnitCoords(unit, camera);
 }

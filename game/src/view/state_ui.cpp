@@ -164,21 +164,6 @@ void StateUIOperable::Exit() {
 }
 
 void StateUIOperable::Update() {
-  Map* map = game_->GetMap();
-  if (map->UnitInCell(cursor_cell_)) {
-    Cell* cell = map->GetCell(cursor_cell_);
-    Unit* unit = map->GetUnit(cursor_cell_);
-    rv_->SetUnitInfoViewUnitTerrainInfo(cell);
-    rv_->SetUnitInfoViewCoordsByUnitCoords(unit->GetCoords(), rv_->GetCameraCoords());
-    rv_->SetUnitViewUnit(unit);
-
-    rv_->SetUnitInfoViewVisible(true);
-//    rv_->SetUnitViewVisible(true);
-  } else {
-    rv_->SetUnitInfoViewVisible(false);
-    rv_->SetUnitViewVisible(false);
-  }
-
   // Update camera coords
   static const int kScrollAmount = 8;
   if (IsScrollLeft()) rv_->MoveCameraX(-kScrollAmount);
@@ -259,6 +244,21 @@ StateUIView::StateUIView(Base base) : StateUIOperable(base) {
 
 void StateUIView::Update() {
   StateUIOperable::Update();
+
+  Map* map = game_->GetMap();
+  if (map->UnitInCell(cursor_cell_)) {
+    Cell* cell = map->GetCell(cursor_cell_);
+    Unit* unit = map->GetUnit(cursor_cell_);
+    rv_->SetUnitInfoViewUnitTerrainInfo(cell);
+    rv_->SetUnitInfoViewCoordsByUnitCoords(unit->GetCoords(), rv_->GetCameraCoords());
+    rv_->SetUnitViewUnit(unit);
+
+    rv_->SetUnitInfoViewVisible(true);
+//    rv_->SetUnitViewVisible(true);
+  } else {
+    rv_->SetUnitInfoViewVisible(false);
+    rv_->SetUnitViewVisible(false);
+  }
 
   if (game_->IsAITurn()) {
     game_->PushCmd(unique_ptr<CmdPlayAI>(new CmdPlayAI()));
@@ -788,7 +788,6 @@ StateUIAction::StateUIAction(StateUI::Base base,
                              const string& magic_id)
     : StateUIOperable(base),
       unit_(unit),
-      target_info_view_(NULL),
       magic_id_(magic_id),
       range_itr_(NULL),
       is_basic_attack_(true) {
@@ -805,15 +804,13 @@ StateUIAction::StateUIAction(StateUI::Base base,
                                           LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
   frame.Move(frame.GetW() + LayoutHelper::kDefaultSpace, 0);
-  target_info_view_ = new UnitInfoView(&frame, unit_);
-  target_info_view_->SetVisible(false);
 }
 
 StateUIAction::~StateUIAction() {
-  delete target_info_view_;
 }
 
 void StateUIAction::Enter() {
+  StateUIOperable::Enter();
   if (is_basic_attack_) {
     rv_->ShowMagicListView(unit_);
   }
@@ -823,6 +820,8 @@ void StateUIAction::Exit() {
   if (is_basic_attack_) {
     rv_->HideMagicListView();
   }
+  rv_->SetUnitInfoViewVisible(false);
+  StateUIOperable::Exit();
 }
 
 void StateUIAction::Render(Drawer* drawer) {
@@ -841,20 +840,10 @@ void StateUIAction::Render(Drawer* drawer) {
   }
 
   StateUIOperable::Render(drawer);
-
-  // FIXME Remove this workaround
-  //       To remove this, target_info_view_ should be in RootView
-  Vec2D temp_offset = drawer->GetOffset();
-  drawer->SetOffset({0, 0});
-  target_info_view_->Render(drawer);
-  drawer->SetOffset(temp_offset);
 }
 
 void StateUIAction::Update() {
   StateUIOperable::Update();
-
-  rv_->SetUnitViewUnit(unit_);
-  rv_->SetUnitViewVisible(true);
 }
 
 bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
@@ -903,8 +892,8 @@ bool StateUIAction::OnMouseMotionEvent(const MouseMotionEvent e) {
 
   Map* map = game_->GetMap();
   Vec2D cursor_cell = GetCursorCell();
-  bool info_visible = false;
-  if (map->UnitInCell(cursor_cell)) {
+  bool unit_in_cell = map->UnitInCell(cursor_cell);
+  if (unit_in_cell) {
     Unit* unit_target = map->GetUnit(cursor_cell);
     bool hostile = unit_->IsHostile(unit_target);
     if (hostile) {
@@ -913,11 +902,14 @@ bool StateUIAction::OnMouseMotionEvent(const MouseMotionEvent e) {
       int accuracy = is_basic_attack_ ? Formulae::ComputeBasicAttackAccuracy(unit_, unit_target) :
                                         Formulae::ComputeMagicAccuracy(unit_, unit_target);
 
-      target_info_view_->SetUnitAttackInfo(unit_target, accuracy, damage);
+      rv_->SetUnitInfoViewUnitAttackInfo(unit_target, accuracy, damage);
     }
-    info_visible = hostile;
+    else {
+      rv_->SetUnitInfoViewUnitTerrainInfo(map->GetCell(cursor_cell));
+    }
+    rv_->SetUnitInfoViewCoordsByUnitCoords(unit_target->GetCoords(), rv_->GetCameraCoords());
   }
-  target_info_view_->SetVisible(info_visible);
+  rv_->SetUnitInfoViewVisible(unit_in_cell);
   return true;
 }
 

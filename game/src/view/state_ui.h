@@ -100,8 +100,10 @@ class StateUIOperable : public StateUI {
   bool IsScrollDown();
   void SetCursorCell(Vec2D c) { cursor_cell_ = c; }
 
- private:
+ protected:
   Vec2D cursor_cell_;
+
+ private:
   bool  scroll_left_;
   bool  scroll_right_;
   bool  scroll_up_;
@@ -306,7 +308,6 @@ class StateUIAction : public StateUIOperable {
 
  private:
   Unit* unit_;
-  UnitInfoView* target_info_view_;
   string magic_id_;
   Vec2D* range_itr_;
   bool is_basic_attack_;

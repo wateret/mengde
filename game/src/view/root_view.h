@@ -38,6 +38,7 @@ class RootView : public View {
   void SetUnitViewVisible(bool);
   void SetUnitViewUnit(Unit*);
   void SetUnitInfoViewUnitTerrainInfo(Cell* cell);
+  void SetUnitInfoViewUnitAttackInfo(Unit* unit, int, int);
   void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
   void SetUnitInfoViewVisible(bool);
   void SetDialogViewVisible(bool);

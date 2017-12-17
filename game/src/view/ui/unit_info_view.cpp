@@ -79,8 +79,10 @@ void UnitInfoView::SetUnit(Unit* unit) {
   const Xtat* ori_xtat = unit_->GetOriginalXtat();
   gv_hp_->SetCurVal(cur_xtat->hp);
   gv_hp_->SetMaxVal(ori_xtat->hp);
+  gv_hp_->SetExtVal(0);
   gv_mp_->SetCurVal(cur_xtat->mp);
   gv_mp_->SetMaxVal(ori_xtat->mp);
+  gv_mp_->SetExtVal(0);
   tv_name_->SetText(unit_->GetId());
   tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
 }
