@@ -15,7 +15,7 @@ ColorGen::ColorGen() {
   colors_.insert(std::make_pair("navy", Color(0, 0, 128)));
   colors_.insert(std::make_pair("orange", Color(255, 165, 0)));
 
-  colors_.insert(std::make_pair("gauge_stats", Color(64, 192, 64)));
+  colors_.insert(std::make_pair("gauge_stats", Color(255, 203, 107)));
   colors_.insert(std::make_pair("gauge_bg", Color(128, 128, 128)));
   colors_.insert(std::make_pair("gauge_hp", Color(64, 192, 64)));
   colors_.insert(std::make_pair("gauge_mp", Color(64, 192, 224)));
