@@ -70,8 +70,8 @@ void Game::InitLua() {
   lua_script_->Set(CAPI_OBJECT "side.ally", (int)Unit::kSideAlly);
   lua_script_->Set(CAPI_OBJECT "side.enemy", (int)Unit::kSideEnemy);
   lua_script_->Set(CAPI_OBJECT "end_type.undecided", (int)Status::kUndecided);
-  lua_script_->Set(CAPI_OBJECT "end_type.lose", (int)Status::kLose);
-  lua_script_->Set(CAPI_OBJECT "end_type.win", (int)Status::kWin);
+  lua_script_->Set(CAPI_OBJECT "end_type.defeat", (int)Status::kDefeat);
+  lua_script_->Set(CAPI_OBJECT "end_type.victory", (int)Status::kVictory);
 
 #undef CAPI_OBJECT
 

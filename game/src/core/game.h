@@ -20,8 +20,8 @@ class Game {
   enum class Status {
     kNone,
     kUndecided,
-    kLose,
-    kWin
+    kVictory,
+    kDefeat
   };
 
  public:

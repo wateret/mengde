@@ -58,11 +58,11 @@ unique_ptr<Cmd> CmdQueue::Do(Game* game) {
       case Game::Status::kUndecided:
         LOG_DEBUG("Undecided!");
         break;
-      case Game::Status::kLose:
-        LOG_DEBUG("Lose!");
+      case Game::Status::kDefeat:
+        LOG_DEBUG("Defeat!");
         break;
-      case Game::Status::kWin:
-        LOG_DEBUG("Wins!");
+      case Game::Status::kVictory:
+        LOG_DEBUG("Victory!");
         game->PushCmd(unique_ptr<CmdGameVictory>(new CmdGameVictory()));
         break;
       default:
