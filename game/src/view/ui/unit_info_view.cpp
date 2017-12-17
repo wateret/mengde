@@ -86,18 +86,18 @@ void UnitInfoView::SetUnit(Unit* unit) {
 }
 
 void UnitInfoView::SetCoordsByUnitCoords(Vec2D unit_cell, Vec2D camera_coords) {
-  LOG_DEBUG("frame size (%3d, %3d)", GetFrameSize().x, GetFrameSize().y);
-  Vec2D cands[] = {(unit_cell + Vec2D(1, 0)) * 48,
-                   (unit_cell + Vec2D(0, 1)) * 48,
-                   (unit_cell * 48 - Vec2D(GetFrameSize().x, 0)),
-                   (unit_cell * 48 - Vec2D(0, GetFrameSize().y))};
+  const int kCellSize = 48;
+  const Vec2D frame_size = GetFrameSize();
+  Vec2D cands[] = {(unit_cell + Vec2D(1, 0)) * kCellSize,
+                   (unit_cell + Vec2D(0, 1)) * kCellSize,
+                   (unit_cell * kCellSize - Vec2D(frame_size.x, frame_size.y - kCellSize)),
+                   (unit_cell * kCellSize - Vec2D(frame_size.x - kCellSize, frame_size.y))};
   Vec2D res(0, 0);
   for (auto e : cands) {
     Vec2D calc_lt = e - camera_coords;
     Vec2D calc_rb = calc_lt + GetFrameSize();;
-    Rect frame = {0, 0, 800, 600};
-    if (frame.Contains(calc_lt) && frame.Contains(calc_rb)) {
-      LOG_DEBUG("cand (%3d, %3d)", calc_lt.x, calc_lt.y);
+    Rect window = {0, 0, 800, 600};
+    if (window.Contains(calc_lt) && window.Contains(calc_rb)) {
       res = calc_lt;
       break;
     }

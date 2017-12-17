@@ -155,6 +155,14 @@ StateUIOperable::StateUIOperable(Base base)
   ClearScrolls();
 }
 
+void StateUIOperable::Enter() {
+}
+
+void StateUIOperable::Exit() {
+  rv_->SetUnitInfoViewVisible(false);
+  rv_->SetUnitViewVisible(false);
+}
+
 void StateUIOperable::Update() {
   Map* map = game_->GetMap();
   if (map->UnitInCell(cursor_cell_)) {

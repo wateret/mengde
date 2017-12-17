@@ -37,7 +37,7 @@ string Map::GetBitmapPath() {
   return bitmap_path_;
 }
 
-Cell* Map::GetCell(int r, int c) {
+Cell* Map::GetCell(int c, int r) {
   ASSERT(IsValidCoords({c, r}));
   return grid_[r][c];
 }
@@ -160,7 +160,7 @@ void Map::PlaceUnit(Unit* unit, Vec2D c) {
   unit->SetCoords(c);
 
 }
- 
+
 void Map::MoveUnit(Vec2D src, Vec2D dst) {
   Unit* unit = GetUnit(src);
   EmptyCell(src);

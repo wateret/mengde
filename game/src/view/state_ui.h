@@ -83,6 +83,8 @@ class StateUIDoCmd : public StateUI {
 class StateUIOperable : public StateUI {
  public:
   StateUIOperable(StateUI::Base);
+  virtual void Enter() override;
+  virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual void Update() override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;

@@ -24,8 +24,8 @@ Game::Game(ConfigLoader* config_loader)
 
   // Read map data
   vector<uint32_t> rc = lua_script_->GetVector<uint32_t>("$gdata.map.size");
-  uint32_t rows = rc[0];
-  uint32_t cols = rc[1];
+  uint32_t cols = rc[0];
+  uint32_t rows = rc[1];
   vector<string> map_input = lua_script_->GetVector<string>("$gdata.map.terrain");
   ASSERT(rows == map_input.size());
   for (auto e : map_input)
