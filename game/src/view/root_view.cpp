@@ -58,10 +58,9 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
 //  unit_view_->SetVisible(false);
 
   Rect control_frame = LayoutHelper::CalcPosition(GetFrameSize(),
-                                                {250, 100},
+                                                {300, 150},
                                                 LayoutHelper::kAlignRgtBot,
                                                 LayoutHelper::kDefaultSpace);
-  control_frame += {50, 50};
   control_view_ = new ControlView(&control_frame, game_, this);
 
   Rect dialog_frame = *GetFrame();
@@ -85,12 +84,9 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
   unit_dialog_view_->SetVisible(false);
 
-  control_frame -= {50, 50};
-  ScrollView* scroll_control_view = new ScrollView(control_frame, control_view_);
-
   ui_views_->AddChild(unit_info_view_);
   ui_views_->AddChild(unit_view_);
-  ui_views_->AddChild(scroll_control_view);
+  ui_views_->AddChild(control_view_);
   ui_views_->AddChild(dialog_view_);
   ui_views_->AddChild(unit_dialog_view_);
   ui_views_->AddChild(magic_list_view_);
