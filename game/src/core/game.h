@@ -49,6 +49,8 @@ class Game {
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
   bool IsUserTurn() const;
+  uint16_t GetTurnCurrent() const;
+  uint16_t GetTurnLimit() const;
   bool HasPendingCmd() const;
   void DoPendingCmd();
   void PushCmd(unique_ptr<Cmd>);

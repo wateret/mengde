@@ -18,7 +18,6 @@ class MinimapView : public CompositeView {
   Vec2D MagnifyForMinimap(Vec2D);
 
  private:
-  Game*  game_;
   Vec2D* camera_coords_ptr_; // FIXME not a good design to have this as a pointer
   Vec2D  camera_size_;
   Vec2D  map_size_;

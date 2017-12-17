@@ -12,8 +12,9 @@ ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
   SetPadding(8);
 
   Rect frame_tv_turn = {0, 0, 100, 22};
-  TextView* tv_turn = new TextView(&frame_tv_turn, "Turn 10/20");
-  AddChild(tv_turn);
+  tv_turn_ = new TextView(&frame_tv_turn);
+  SetTurnText(game_->GetTurnCurrent(), game_->GetTurnLimit());
+  AddChild(tv_turn_);
 
   Rect button_coords = {0, 30, 100, 20};
   ButtonView* button = new ButtonView(&button_coords, "EndTurn");
@@ -39,3 +40,6 @@ ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
   AddChild(minimap_view);
 }
 
+void ControlView::SetTurnText(int cur_turn, int max_turn) {
+  tv_turn_->SetText(string("Turn ") + std::to_string(cur_turn) + string("/") + std::to_string(max_turn));
+}

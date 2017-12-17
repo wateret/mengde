@@ -249,6 +249,10 @@ void RootView::HideMagicListView() {
   magic_list_view_->SetVisible(false);
 }
 
+void RootView::SetControlViewTurnText(int turn_current, int turn_limit) {
+  control_view_->SetTurnText(turn_current, turn_limit);
+}
+
 void RootView::SetUnitViewVisible(bool b) {
   unit_view_->SetVisible(b);
 }

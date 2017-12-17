@@ -130,7 +130,6 @@ Item* Game::GetItem(const std::string& id) {
 }
 
 bool Game::EndSideTurn() {
-  LOG_DEBUG("END SIDE TURN");
   ForEachUnit([this] (Unit* u) {
     if (this->IsCurrentTurn(u)) {
       u->ResetAction();
@@ -162,6 +161,14 @@ bool Game::IsAITurn() const {
 
 bool Game::IsCurrentTurn(Unit* unit) const {
   return unit->GetSide() == turn_.GetSide();
+}
+
+uint16_t Game::GetTurnCurrent() const {
+  return turn_.GetCurrent();
+}
+
+uint16_t Game::GetTurnLimit() const {
+  return turn_.GetLimit();
 }
 
 vector<Unit*> Game::GetCurrentUnits() {

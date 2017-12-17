@@ -12,7 +12,6 @@ MinimapView::MinimapView(const Rect* frame,
                          Vec2D camera_size,
                          Vec2D map_size)
     : CompositeView(frame),
-      game_(game),
       camera_coords_ptr_(camera_coords_ptr),
       camera_size_(camera_size),
       map_size_(map_size) {

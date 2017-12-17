@@ -1,6 +1,6 @@
 #include "turn.h"
 
-Turn::Turn() : no_(0), side_(Unit::kSideFirst) {
+Turn::Turn() : current_(1), limit_(99), side_(Unit::kSideFirst) {
 }
 
 bool Turn::Next() {
@@ -8,7 +8,7 @@ bool Turn::Next() {
   bool next_turn = (next == Unit::kSideLast);
   if (next_turn) {
     next = Unit::kSideFirst;
-    no_++;
+    current_++;
   }
   side_ = next;
   return next_turn;

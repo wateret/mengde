@@ -937,6 +937,11 @@ void StateUINextTurn::Enter() {
 
 void StateUINextTurn::Exit() {
   rv_->SetDialogViewVisible(false);
+  RootView* rv = rv_;
+  Game* game = game_;
+  rv_->NextFrame([rv, game] () {
+    rv->SetControlViewTurnText(game->GetTurnCurrent(), game->GetTurnLimit());
+  });
 }
 
 // StateUISpeak

@@ -7,11 +7,13 @@ class Turn {
  public:
   Turn();
   bool Next();
+  uint16_t GetCurrent() const { return current_; }
+  uint16_t GetLimit() const { return limit_; }
   Unit::Side GetSide() const { return side_; }
 
  private:
-  int        no_;
-//int        limit_;
+  uint16_t   current_;
+  uint16_t   limit_;
   Unit::Side side_;
 };
 

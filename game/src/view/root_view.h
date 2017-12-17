@@ -35,6 +35,7 @@ class RootView : public View {
   void MoveCameraY(int d);
   void ShowMagicListView(Unit* unit);
   void HideMagicListView();
+  void SetControlViewTurnText(int, int);
   void SetUnitViewVisible(bool);
   void SetUnitViewUnit(Unit*);
   void SetUnitInfoViewUnitTerrainInfo(Cell* cell);
