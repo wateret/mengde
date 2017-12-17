@@ -1,14 +1,20 @@
 #include "control_view.h"
 #include "button_view.h"
+#include "minimap_view.h"
+#include "text_view.h"
 #include "core/cmd.h"
 #include "core/game.h"
 #include "view/root_view.h"
-#include "minimap_view.h"
 
 ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
   SetBgColor(COLOR_DARKGRAY);
   SetPadding(8);
+
+  Rect frame_tv_turn = {0, 0, 80, 22};
+  TextView* tv_turn = new TextView(&frame_tv_turn, "Turn 10/20");
+  AddChild(tv_turn);
+
   Rect button_coords = {0, 30, 80, 20};
   ButtonView* button = new ButtonView(&button_coords, "EndTurn");
   button->SetMouseButtonHandler([this] (const MouseButtonEvent e) {
