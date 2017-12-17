@@ -99,10 +99,10 @@ RootView::~RootView() {
 }
 
 void RootView::Update() {
+  frame_count_++;
   RunCallbacks();
   GetCurrentState()->Update();
   control_view_->Update();
-  frame_count_++;
 }
 
 void RootView::Render(Drawer* drawer) {
