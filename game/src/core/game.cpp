@@ -55,21 +55,25 @@ void Game::InitLua() {
   // Register game object as lua global
   lua_script_->SetRawPointerToGlobal(LUA_GAME_OBJ_NAME, (void*)this);
 
+#define CAPI_OBJECT "$Game."
+
   // Register API functions
 #define MACRO_LUA_GAME(cname, luaname) \
-  lua_script_->Set("$C." #luaname, Game_##cname);
+  lua_script_->Set(CAPI_OBJECT #luaname, Game_##cname);
 
 #include "lua_game.inc.h"
 
 #undef MACRO_LUA_GAME
 
   // Register enum values
-  lua_script_->Set("$C.enums.side.own", (int)Unit::kSideOwn);
-  lua_script_->Set("$C.enums.side.ally", (int)Unit::kSideAlly);
-  lua_script_->Set("$C.enums.side.enemy", (int)Unit::kSideEnemy);
-  lua_script_->Set("$C.enums.end_type.undecided", (int)Status::kUndecided);
-  lua_script_->Set("$C.enums.end_type.lose", (int)Status::kLose);
-  lua_script_->Set("$C.enums.end_type.win", (int)Status::kWin);
+  lua_script_->Set(CAPI_OBJECT "side.own", (int)Unit::kSideOwn);
+  lua_script_->Set(CAPI_OBJECT "side.ally", (int)Unit::kSideAlly);
+  lua_script_->Set(CAPI_OBJECT "side.enemy", (int)Unit::kSideEnemy);
+  lua_script_->Set(CAPI_OBJECT "end_type.undecided", (int)Status::kUndecided);
+  lua_script_->Set(CAPI_OBJECT "end_type.lose", (int)Status::kLose);
+  lua_script_->Set(CAPI_OBJECT "end_type.win", (int)Status::kWin);
+
+#undef CAPI_OBJECT
 
   // Run the main script
   string lua_script_path = GameEnv::GetInstance()->GetScenarioPath() + "/01.lua";
