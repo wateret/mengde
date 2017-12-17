@@ -30,6 +30,7 @@ class LayoutHelper {
  public:
   static Rect CalcPosition(Vec2D, Vec2D, Align, int = 0);
   static Rect CalcPosition(const Rect*, Vec2D, Align, int = 0);
+  static Vec2D CalcFittedSize(Vec2D, Vec2D);
 
  public:
   static const int kDefaultSpace = 8; // default value for margin and padding

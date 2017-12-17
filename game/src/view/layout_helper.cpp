@@ -55,3 +55,16 @@ Rect LayoutHelper::CalcPosition(const Rect* cont_rect,
   return ret;
 }
 
+Vec2D LayoutHelper::CalcFittedSize(Vec2D orig, Vec2D max_size) {
+  // Try fit to height
+  int h = max_size.y;
+  int w = h * orig.x / orig.y;
+  if (w > max_size.x) {
+    // Failed to fit to height, try fit to width
+    w = max_size.x;
+    h = w * orig.y / orig.x;
+    ASSERT_LE(h, max_size.y);
+  }
+  LOG_DEBUG("Fitted Size : %d %d", w, h);
+  return {w, h};
+}

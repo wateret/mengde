@@ -58,7 +58,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
 //  unit_view_->SetVisible(false);
 
   Rect control_frame = LayoutHelper::CalcPosition(GetFrameSize(),
-                                                {300, 150},
+                                                {300, 136},
                                                 LayoutHelper::kAlignRgtBot,
                                                 LayoutHelper::kDefaultSpace);
   control_view_ = new ControlView(&control_frame, game_, this);
