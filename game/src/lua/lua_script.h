@@ -63,24 +63,28 @@ class LuaScript {
     return vec;
   }
 
+  // Get a required entry
+  // If the entry is not exist, emits an error.
   template<typename T>
   T Get(const string& var_expr = "") {
     ASSERT(L != nullptr);
 
     GetToStack(var_expr);
-    T result = GetTop<T>();  
-   
+    T result = GetTop<T>();
+
     lua_pop(L, 1);
     return result;
   }
 
+  // Get an optional entry
+  // If the entry is not exist, returns default value.
   template<typename T>
   T GetOpt(const string& var_expr = "") {
     ASSERT(L != nullptr);
-    
+
     GetToStackOpt(var_expr);
-    T result = GetTopOpt<T>();  
-   
+    T result = GetTopOpt<T>();
+
     lua_pop(L, 1);
     return result;
   }
@@ -156,7 +160,7 @@ class LuaScript {
         } else {
           lua_getfield(L, -1, var.c_str());
         }
-        
+
         if (lua_isnil(L, -1)) {
           if (!optional) LogError(var + " is not defined");
           lua_pop(L, level);
@@ -235,10 +239,10 @@ class LuaScript {
 template<>
 bool LuaScript::GetDefault<bool>();
 
-template<> 
+template<>
 bool LuaScript::GetTop<bool>();
 
-template<> 
+template<>
 bool LuaScript::GetTopOpt<bool>();
 
 template<>
