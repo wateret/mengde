@@ -14,6 +14,7 @@
 #include "ui/modal_dialog_view.h"
 #include "ui/magic_list_view.h"
 #include "ui/scroll_view.h"
+#include "ui/terrain_info_view.h"
 #include "core/magic_list.h"
 #include "core/cell.h"
 
@@ -84,12 +85,20 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
   unit_dialog_view_->SetVisible(false);
 
+  Rect terrain_frame = LayoutHelper::CalcPosition(GetFrameSize(),
+                                                  {200, 100},
+                                                  LayoutHelper::kAlignLftBot,
+                                                  LayoutHelper::kDefaultSpace);
+  terrain_info_view_ = new TerrainInfoView(terrain_frame, {0, 0}); // FIXME temporary coords
+  terrain_info_view_->SetVisible(false);
+
   ui_views_->AddChild(unit_info_view_);
   ui_views_->AddChild(unit_view_);
   ui_views_->AddChild(control_view_);
   ui_views_->AddChild(dialog_view_);
   ui_views_->AddChild(unit_dialog_view_);
   ui_views_->AddChild(magic_list_view_);
+  ui_views_->AddChild(terrain_info_view_);
 }
 
 RootView::~RootView() {
@@ -287,6 +296,14 @@ void RootView::SetDialogViewText(const string& s) {
 
 void RootView::SetUnitDialogViewVisible(bool b) {
   unit_dialog_view_->SetVisible(b);
+}
+
+void RootView::SetTerrainInfoViewVisible(bool b) {
+  terrain_info_view_->SetVisible(b);
+}
+
+void RootView::SetTerrainInfoViewText(const string& s) {
+  terrain_info_view_->SetText(s);
 }
 
 bool RootView::IsUnitDialogViewVisible() {

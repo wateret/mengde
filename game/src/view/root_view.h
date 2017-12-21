@@ -18,6 +18,7 @@ class ControlView;
 class ModalDialogView;
 class MagicListView;
 class UnitInfoView;
+class TerrainInfoView;
 
 class RootView : public View {
  public:
@@ -48,6 +49,8 @@ class RootView : public View {
   bool IsUnitDialogViewVisible();
   void SetUnitDialogViewText(const string&);
   void SetUnitDialogViewUnit(Unit*);
+  void SetTerrainInfoViewVisible(bool);
+  void SetTerrainInfoViewText(const string&);
   void CenterCamera(Vec2D);
   void EndGame();
   void NextFrame(NextFrameCallback);
@@ -81,6 +84,7 @@ class RootView : public View {
   ModalDialogView*       dialog_view_;
   UnitDialogView*        unit_dialog_view_;
   MagicListView*         magic_list_view_;
+  TerrainInfoView*       terrain_info_view_;
   StateMachine<StateUI*> ui_state_machine_;
   queue<NextFrameCallback> reserved_callbacks_;
   Vec2D mouse_coords_;

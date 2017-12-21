@@ -575,32 +575,23 @@ void StateUIKilled::Update() {
 // StateUIEmptySelected
 
 StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords)
-    : StateUI(base), coords_(coords), terrain_info_view_(NULL) {
+    : StateUI(base), coords_(coords) {
 }
 
 void StateUIEmptySelected::Enter() {
-//  SelectCell(coords_);
   Map* map = game_->GetMap();
-  Terrain* terrain = map->GetTerrain(coords_);
-  Rect frame = LayoutHelper::CalcPosition({800, 600}, // FIXME hardcoded window size
-                                          {200, 100},
-                                          LayoutHelper::kAlignLftBot,
-                                          LayoutHelper::kDefaultSpace);
-  terrain_info_view_ = new TerrainInfoView(frame, coords_, terrain);
+  std::string name = map->GetTerrain(coords_)->GetName();
+  rv_->SetTerrainInfoViewText(name);
+  rv_->SetTerrainInfoViewVisible(true);
 }
 
 void StateUIEmptySelected::Exit() {
-//  DeselectCell();
-  ASSERT(terrain_info_view_ != NULL);
-  terrain_info_view_ = NULL;
-  delete terrain_info_view_;
+  rv_->SetTerrainInfoViewVisible(false);
 }
 
 void StateUIEmptySelected::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
   drawer->BorderCell(coords_, 4);
-
-  terrain_info_view_->Render(drawer);
 }
 
 bool StateUIEmptySelected::OnMouseButtonEvent(const MouseButtonEvent e) {

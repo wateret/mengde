@@ -238,8 +238,6 @@ class StateUIKilled : public StateUI {
 
 // StateUIEmptySelected
 
-class TerrainInfoView;
-
 class StateUIEmptySelected : public StateUI {
  public:
   StateUIEmptySelected(StateUI::Base, Vec2D);
@@ -253,7 +251,6 @@ class StateUIEmptySelected : public StateUI {
 
  private:
   Vec2D coords_;
-  TerrainInfoView* terrain_info_view_;
 };
 
 // StateUIAttack
