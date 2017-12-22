@@ -285,7 +285,7 @@ class StateUIAttack : public StateUI {
 
 class StateUIDamaged : public StateUI {
  public:
-  static const int kFrames = 60;
+  static const int kFrames = 90;
 
  public:
   StateUIDamaged(StateUI::Base, Unit*, int);

@@ -784,10 +784,12 @@ StateUIDamaged::StateUIDamaged(StateUI::Base base, Unit* unit, int damage)
 }
 
 void StateUIDamaged::Enter() {
+  Misc::SetShowCursor(true);
   rv_->SetUnitInfoViewVisible(true);
 }
 
 void StateUIDamaged::Exit() {
+  Misc::SetShowCursor(false);
   rv_->SetUnitInfoViewVisible(false);
 }
 
@@ -797,7 +799,7 @@ void StateUIDamaged::Update() {
     rv_->PopUIState();
   }
 
-  const int max_anim_frames = (kFrames - 1) * 2 / 3;
+  const int max_anim_frames = (kFrames - 1) * 1 / 2;
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
   Xtat xtat_mod = *unit_->GetCurrentXtat();
