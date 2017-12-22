@@ -65,6 +65,5 @@ Vec2D LayoutHelper::CalcFittedSize(Vec2D orig, Vec2D max_size) {
     h = w * orig.y / orig.x;
     ASSERT_LE(h, max_size.y);
   }
-  LOG_DEBUG("Fitted Size : %d %d", w, h);
   return {w, h};
 }
