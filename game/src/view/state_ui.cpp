@@ -33,6 +33,8 @@ StateUIDoCmd::StateUIDoCmd(StateUI::Base base) : StateUI(base), cmd_to_do_(false
 }
 
 void StateUIDoCmd::Enter() {
+  // FIXME Avoid flag based operations
+  //       Can we do the command before StateUIView?
   if (cmd_to_do_) {
     // Run reserved command run
     ASSERT(game_->HasPendingCmd());
