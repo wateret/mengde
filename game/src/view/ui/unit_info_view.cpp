@@ -87,6 +87,25 @@ void UnitInfoView::SetUnit(Unit* unit) {
   tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
 }
 
+void UnitInfoView::SetContents(const std::string& id,
+                               int lv,
+                               const Xtat* xcur,
+                               const Xtat* xmax,
+                               int damage,
+                               int mp_cost) {
+  unit_ = nullptr; // Reset cache
+  gv_hp_->SetCurVal(xcur->hp);
+  gv_hp_->SetMaxVal(xmax->hp);
+  gv_hp_->SetExtVal(damage);
+  gv_mp_->SetCurVal(xcur->mp);
+  gv_mp_->SetMaxVal(xmax->mp);
+  gv_mp_->SetExtVal(mp_cost);
+  tv_name_->SetText(id);
+  tv_lv_->SetText("Lv " + std::to_string(lv));
+  tv_lftbot_->SetText("");
+  tv_rgtbot_->SetText("");
+}
+
 void UnitInfoView::SetCoordsByUnitCoords(Vec2D unit_cell, Vec2D camera_coords) {
   const int kCellSize = 48;
   const Vec2D frame_size = GetFrameSize();

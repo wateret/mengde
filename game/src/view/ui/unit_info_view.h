@@ -8,6 +8,7 @@ class Unit;
 class Cell;
 class GaugeView;
 class TextView;
+struct Xtat;
 
 class UnitInfoView : public CompositeView {
  public:
@@ -16,6 +17,7 @@ class UnitInfoView : public CompositeView {
   void SetUnitTerrainInfo(Cell* cell);
   void SetUnitAttackInfo(Unit*, int, int);
   void SetUnit(Unit*);
+  void SetContents(const std::string&, int, const Xtat*, const Xtat*, int = 0, int = 0);
   void SetCoordsByUnitCoords(Vec2D, Vec2D);
 
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;

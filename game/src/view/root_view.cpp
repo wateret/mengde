@@ -282,6 +282,15 @@ void RootView::SetUnitInfoViewUnitAttackInfo(Unit* unit, int accuracy, int damag
   unit_info_view_->SetUnitAttackInfo(unit, accuracy, damage);
 }
 
+void RootView::SetUnitInfoViewContents(const std::string& name,
+                                   int id,
+                                   const Xtat* xcur,
+                                   const Xtat* xmax,
+                                   int damage,
+                                   int mp_cost) {
+  unit_info_view_->SetContents(name, id, xcur, xmax, damage, mp_cost);
+}
+
 void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
   unit_info_view_->SetCoordsByUnitCoords(unit, camera);
 }

@@ -768,8 +768,50 @@ void StateUIAttack::Render(Drawer* drawer) {
 void StateUIAttack::Update() {
   frames_++;
   if (LastFrame()) {
+    if (hit_) {
+      rv_->ChangeUIState(new StateUIDamaged(WrapBase(), def_, damage_));
+    } else {
+      rv_->PopUIState();
+    }
+  }
+}
+
+// StateUIDamaged
+
+StateUIDamaged::StateUIDamaged(StateUI::Base base, Unit* unit, int damage)
+   : StateUI(base), frames_(-1), unit_(unit), damage_(damage) {
+  damage_ = std::min(damage_, unit->GetCurrentXtat()->hp);
+}
+
+void StateUIDamaged::Enter() {
+  rv_->SetUnitInfoViewVisible(true);
+}
+
+void StateUIDamaged::Exit() {
+  rv_->SetUnitInfoViewVisible(false);
+}
+
+void StateUIDamaged::Update() {
+  frames_++;
+  if (LastFrame()) {
     rv_->PopUIState();
   }
+
+  const int max_anim_frames = (kFrames - 1) * 2 / 3;
+  const int cur_anim_frames = std::min(max_anim_frames, frames_);
+
+  Xtat xtat_mod = *unit_->GetCurrentXtat();
+  int damage_rem = damage_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
+  xtat_mod.hp -= damage_ - damage_rem;
+  rv_->SetUnitInfoViewContents(unit_->GetId(),
+                               unit_->GetLevel(),
+                               &xtat_mod,
+                               unit_->GetOriginalXtat(),
+                               damage_rem,
+                               0);
+}
+
+void StateUIDamaged::Render(Drawer*) {
 }
 
 // StateUIAction

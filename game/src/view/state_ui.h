@@ -283,6 +283,28 @@ class StateUIAttack : public StateUI {
   int   frames_;
 };
 
+class StateUIDamaged : public StateUI {
+ public:
+  static const int kFrames = 60;
+
+ public:
+  StateUIDamaged(StateUI::Base, Unit*, int);
+  virtual void Enter() override;
+  virtual void Exit() override;
+  virtual void Update() override;
+  virtual void Render(Drawer*) override;
+#ifdef DEBUG
+  virtual string GetStateID() const override { return "StateUIDamaged"; }
+#endif
+
+  bool LastFrame() { return frames_ == kFrames - 1; }
+
+ private:
+  int   frames_;
+  Unit* unit_;
+  int   damage_;
+};
+
 // StateUIAction
 
 class Unit;
