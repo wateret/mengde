@@ -526,7 +526,7 @@ void StateUIMagic::Update() {
   if (animator_) {
     animator_->NextFrame();
     if (animator_->DoneAnimate()) {
-      rv_->InitUIStateMachine();
+      rv_->PopUIState();
     }
   }
 }
