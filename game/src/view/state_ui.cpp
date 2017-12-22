@@ -692,7 +692,7 @@ void StateUIAttack::Render(Drawer* drawer) {
   const CutInfo* cut_def = hit_ ? &kCutInfoDefDamaged[cut_no] : &kCutInfoDefBlocked[cut_no];
   Vec2D atk_pos = atk_->GetCoords();
   Vec2D def_pos = def_->GetCoords();
-  Vec2D unit_offset = GenerateVec2DOffset(atk_->GetDirection(), cut_atk->offset);
+  Vec2D atk_offset = GenerateVec2DOffset(atk_->GetDirection(), cut_atk->offset);
   Vec2D def_offset = GenerateVec2DOffset(def_->GetDirection(), cut_def->offset);
   Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
 
@@ -725,7 +725,7 @@ void StateUIAttack::Render(Drawer* drawer) {
                        cut_atk->no,
                        sprite_effect,
                        atk_pos,
-                       unit_offset);
+                       atk_offset);
   } else {
     drawer->CopySprite(atk_->GetBitmapPath(),
                        cut_atk->sprite,
@@ -733,7 +733,7 @@ void StateUIAttack::Render(Drawer* drawer) {
                        cut_atk->no,
                        sprite_effect,
                        atk_pos,
-                       unit_offset);
+                       atk_offset);
     drawer->CopySprite(def_->GetBitmapPath(),
                        cut_def->sprite,
                        OppositeDirection(dir),
