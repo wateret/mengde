@@ -8,6 +8,7 @@
 #include "util/state_machine.h"
 #include "ui/composite_view.h"
 #include "ui/unit_info_view.h"
+#include "ui/unit_list_view.h"
 #include "ui/unit_view.h"
 #include "ui/unit_dialog_view.h"
 #include "ui/control_view.h"
@@ -28,6 +29,8 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
       control_view_(nullptr),
       dialog_view_(nullptr),
       magic_list_view_(nullptr),
+      terrain_info_view_(nullptr),
+      unit_list_view_(nullptr),
       ui_state_machine_(new StateUIView({game, this})),
       reserved_callbacks_(),
       mouse_coords_(-1, -1),
@@ -74,31 +77,43 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   mlv->SetVisible(false);
   magic_list_view_ = mlv;
 
-  // Render UnitInfoView
-  Rect unit_info_frame = LayoutHelper::CalcPosition(GetFrameSize(),
+  { // Initalize unit_info_view_
+    Rect unit_info_frame = LayoutHelper::CalcPosition(GetFrameSize(),
+                                                      {200, 100},
+                                                      LayoutHelper::kAlignLftBot,
+                                                      LayoutHelper::kDefaultSpace);
+    unit_info_view_ = new UnitInfoView(&unit_info_frame);
+
+    Rect unit_dialog_frame = *GetFrame();
+    unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
+    unit_dialog_view_->SetVisible(false);
+    ui_views_->AddChild(magic_list_view_);
+  }
+
+  { // Initialize terrain_info_view_
+    Rect terrain_frame = LayoutHelper::CalcPosition(GetFrameSize(),
                                                     {200, 100},
                                                     LayoutHelper::kAlignLftBot,
                                                     LayoutHelper::kDefaultSpace);
-  unit_info_view_ = new UnitInfoView(&unit_info_frame);
+    terrain_info_view_ = new TerrainInfoView(terrain_frame, {0, 0}); // FIXME temporary coords
+    terrain_info_view_->SetVisible(false);
+    ui_views_->AddChild(terrain_info_view_);
+  }
 
-  Rect unit_dialog_frame = *GetFrame();
-  unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
-  unit_dialog_view_->SetVisible(false);
-
-  Rect terrain_frame = LayoutHelper::CalcPosition(GetFrameSize(),
-                                                  {200, 100},
-                                                  LayoutHelper::kAlignLftBot,
-                                                  LayoutHelper::kDefaultSpace);
-  terrain_info_view_ = new TerrainInfoView(terrain_frame, {0, 0}); // FIXME temporary coords
-  terrain_info_view_->SetVisible(false);
+  { // Initialize unit_list_view_
+    Rect frame(0, 0, 150, 150);
+    unit_list_view_ = new UnitListView(frame, game_->GetCurrentUnits());
+    unit_list_view_ = new UnitListView(frame, game_->GetCurrentUnits());
+    Rect scroll_frame(0, 0, 150, 100);
+    View* scroll_view = new ScrollView(scroll_frame, unit_list_view_);
+    ui_views_->AddChild(scroll_view);
+  }
 
   ui_views_->AddChild(unit_info_view_);
   ui_views_->AddChild(unit_view_);
   ui_views_->AddChild(control_view_);
   ui_views_->AddChild(dialog_view_);
   ui_views_->AddChild(unit_dialog_view_);
-  ui_views_->AddChild(magic_list_view_);
-  ui_views_->AddChild(terrain_info_view_);
 }
 
 RootView::~RootView() {

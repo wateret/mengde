@@ -28,6 +28,7 @@ class Rect {
   void Move(int, int);
   void Move(Vec2D);
   void SetPos(Vec2D);
+  void SetSize(Vec2D);
   bool Contains(Vec2D) const;
   Rect operator*(int) const;
   Rect& operator*=(int);

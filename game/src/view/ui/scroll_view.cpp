@@ -49,6 +49,7 @@ bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
     coords_.y = std::max(coords_.y, y_min);
   }
   view_->SetCoords(coords_);
-  OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, e.GetCoords(), coords_ - coords_o));
+
+  OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, e.GetCoords(), coords_o - coords_));
   return true;
 }

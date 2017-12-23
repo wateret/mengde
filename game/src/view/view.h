@@ -21,6 +21,7 @@ class View : public IView {
   Vec2D GetFrameCoords() const;
   Vec2D GetActualFrameCoords() const;
   void SetCoords(Vec2D v) { frame_.SetPos(v); }
+  void SetSize(Vec2D v) { frame_.SetSize(v); }
   void Move(Vec2D v) { frame_.Move(v); }
   bool IsVisible() const { return visible_; }
   int  GetPadding() { return padding_; }

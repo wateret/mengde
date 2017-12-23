@@ -91,6 +91,11 @@ void Rect::SetPos(Vec2D v) {
   rect_.y = v.y;
 }
 
+void Rect::SetSize(Vec2D v) {
+  rect_.w = v.x;
+  rect_.h = v.y;
+}
+
 void Rect::Contract(int amount) {
   rect_.x += amount;
   rect_.y += amount;

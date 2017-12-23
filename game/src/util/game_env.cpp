@@ -1,7 +1,6 @@
 #include "game_env.h"
 #include "SDL.h"
 
-#include <stdio.h>
 GameEnv::GameEnv() {
   char* basepath = SDL_GetBasePath();
   printf("%s\n", basepath);

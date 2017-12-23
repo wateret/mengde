@@ -18,6 +18,7 @@ class ControlView;
 class ModalDialogView;
 class MagicListView;
 class UnitInfoView;
+class UnitListView;
 class TerrainInfoView;
 struct Xtat;
 
@@ -90,6 +91,7 @@ class RootView : public View {
   UnitDialogView*        unit_dialog_view_;
   MagicListView*         magic_list_view_;
   TerrainInfoView*       terrain_info_view_;
+  UnitListView*          unit_list_view_;
   StateMachine<StateUI*> ui_state_machine_;
   queue<NextFrameCallback> reserved_callbacks_;
   Vec2D mouse_coords_;
