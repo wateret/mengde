@@ -786,12 +786,12 @@ StateUIDamaged::StateUIDamaged(StateUI::Base base, Unit* unit, int damage)
 }
 
 void StateUIDamaged::Enter() {
-  Misc::SetShowCursor(true);
+  Misc::SetShowCursor(false);
   rv_->SetUnitInfoViewVisible(true);
 }
 
 void StateUIDamaged::Exit() {
-  Misc::SetShowCursor(false);
+  Misc::SetShowCursor(true);
   rv_->SetUnitInfoViewVisible(false);
 }
 
