@@ -104,6 +104,6 @@ void Rect::Contract(int amount) {
 }
 
 bool Rect::Contains(Vec2D v) const {
-  return rect_.x <= v.x && v.x <= rect_.x + rect_.w &&
-         rect_.y <= v.y && v.y <= rect_.y + rect_.h;
+  return rect_.x <= v.x && v.x < rect_.x + rect_.w &&
+         rect_.y <= v.y && v.y < rect_.y + rect_.h;
 }
