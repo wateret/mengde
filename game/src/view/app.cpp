@@ -12,7 +12,9 @@
 #include "game.h"
 #include "config_loader.h"
 
-FrameConfig::FrameConfig(uint16_t max_frames_sec) : max_frames_sec_(max_frames_sec) {
+FrameConfig::FrameConfig(uint16_t max_frames_sec, float speed) : max_frames_sec_(max_frames_sec), speed_(speed) {
+  ASSERT(0.125f <= speed_ && speed_ <= 4.0f);
+  LOG_DEBUG("fps:%d speed:%f", max_frames_sec_, speed_);
 }
 
 uint32_t FrameConfig::MsecToFrame(uint32_t ms) const {
@@ -44,7 +46,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
       root_view_(nullptr),
       target_view_(nullptr),
       game_(nullptr),
-      frame_config_(max_frames_sec),
+      frame_config_(max_frames_sec, 2),
       fps_timer_(),
       frames_sec_(0),
       frames_total_(0),
@@ -90,10 +92,7 @@ Drawer* App::GetDrawer() {
 }
 
 void App::Run() {
-  static const int kDelayTime = 1000.0f / frame_config_.GetMaxFps();
-
-//  Rect main_view = {0, 0, kMainViewWidth, kMainViewHeight};
-//  renderer_->SetViewport(&main_view);
+  static const int kDelayTime = frame_config_.GetDelay();
 
   Timer frame_cap_timer;
 
@@ -115,7 +114,6 @@ void App::Run() {
       Misc::Delay(kDelayTime - frame_time);
     }
   }
-
 }
 
 bool App::HandleEvents() {

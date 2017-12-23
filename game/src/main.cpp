@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
   UNUSED(argv);
 
   try {
-    App* app = new App(800, 600);
+    App* app = new App(800, 600, 60);
     app->Run();
 
     delete app;

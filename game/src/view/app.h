@@ -13,13 +13,15 @@ class Drawer;
 
 class FrameConfig {
  public:
-  FrameConfig(uint16_t max_frames_sec);
+  FrameConfig(uint16_t /* max_frames_sec */ = 60, float /* speed */ = 1);
   uint16_t GetMaxFps() const { return max_frames_sec_; }
+  uint16_t GetDelay() const { return (1000.0f / speed_) / static_cast<float>(max_frames_sec_); }
   uint32_t MsecToFrame(uint32_t) const;
   uint32_t SecToFrame(uint32_t) const;
 
  private:
   uint16_t max_frames_sec_;
+  float    speed_;
 };
 
 class FpsTimer {
