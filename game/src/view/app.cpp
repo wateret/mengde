@@ -12,13 +12,40 @@
 #include "game.h"
 #include "config_loader.h"
 
-App::App(int width, int height)
+FrameConfig::FrameConfig(uint16_t max_frames_sec) : max_frames_sec_(max_frames_sec) {
+}
+
+uint32_t FrameConfig::MsecToFrame(uint32_t ms) const {
+  return SecToFrame(ms) / 1000;
+}
+
+uint32_t FrameConfig::SecToFrame(uint32_t s) const {
+  return s * static_cast<uint32_t>(max_frames_sec_);
+}
+
+void FpsTimer::Start() {
+  timer_.Start();
+}
+
+void FpsTimer::Update() {
+  int time_elapsed = timer_.Split();
+  if (time_elapsed >= 1000) {
+    fps_ = frames_cur_sec_ / (time_elapsed / 1000.f);
+    frames_cur_sec_ = 0;
+    timer_.Start();
+  }
+  frames_cur_sec_++;
+}
+
+App::App(int width, int height, uint32_t max_frames_sec)
     : window_size_(width, height),
       drawer_(nullptr),
       main_view_(nullptr),
       root_view_(nullptr),
       target_view_(nullptr),
       game_(nullptr),
+      frame_config_(max_frames_sec),
+      fps_timer_(),
       frames_sec_(0),
       frames_total_(0),
       fps_(0.0),
@@ -63,15 +90,14 @@ Drawer* App::GetDrawer() {
 }
 
 void App::Run() {
-  const int kDelayTime = 1000.0f / kMaxFPS;
+  static const int kDelayTime = 1000.0f / frame_config_.GetMaxFps();
 
 //  Rect main_view = {0, 0, kMainViewWidth, kMainViewHeight};
 //  renderer_->SetViewport(&main_view);
 
   Timer frame_cap_timer;
-  Timer fps_timer;
 
-  fps_timer.Start();
+  fps_timer_.Start();
 
   // Main event loop
   while (!quit_)
@@ -80,16 +106,7 @@ void App::Run() {
 
     quit_ = HandleEvents();
 
-    // TODO Refactoring - Move this to Update() {
-    int time_elapsed = fps_timer.Split();
-    if (time_elapsed >= 1000) {
-      fps_ = frames_sec_ / (time_elapsed / 1000.f);
-      frames_sec_ = 0;
-      fps_timer.Start();
-    }
-    frames_sec_++;
-    // }
-
+    fps_timer_.Update();
     Update();
     Render();
 
@@ -171,7 +188,7 @@ void App::Render() {
   // Print message (fps, ...)
 #if 1
   static char msg_buf[256];
-  sprintf(msg_buf, "fps: %.1f", fps_);
+  sprintf(msg_buf, "fps: %.1f", fps_timer_.GetLastFps());
   drawer_->DrawText(msg_buf, 12, COLOR("white"), {0, 0});
 #endif
 

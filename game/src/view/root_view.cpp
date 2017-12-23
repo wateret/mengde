@@ -136,7 +136,7 @@ void RootView::Render(Drawer* drawer) {
     if (unit->IsNoRender()) return;
 
     SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
-    int sprite_no = this->GetCurrentSpriteNo(2, App::kMaxFPS / 2);
+    int sprite_no = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);
     SpriteEffect sprite_effect = {kEffectNone, 0};
     if (unit->IsDoneAction()) {
       stype = kSpriteStand;
