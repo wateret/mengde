@@ -11,9 +11,6 @@
 #include "core/unit.h"
 #include "core/magic.h"
 #include "util/path_tree.h"
-#include "view/ui/terrain_info_view.h"
-#include "view/ui/unit_info_view.h"
-#include "view/ui/modal_dialog_view.h"
 #include "view/drawer.h"
 
 // StateUI
