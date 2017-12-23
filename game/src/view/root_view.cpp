@@ -103,10 +103,10 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   { // Initialize unit_list_view_
     Rect frame(0, 0, 150, 150);
     unit_list_view_ = new UnitListView(frame, game_->GetCurrentUnits());
-    unit_list_view_ = new UnitListView(frame, game_->GetCurrentUnits());
     Rect scroll_frame(0, 0, 150, 100);
     View* scroll_view = new ScrollView(scroll_frame, unit_list_view_);
     ui_views_->AddChild(scroll_view);
+    unit_list_view_->SetVisible(false);
   }
 
   ui_views_->AddChild(unit_info_view_);

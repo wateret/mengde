@@ -36,8 +36,6 @@ class Logger {
   const char* color_cyan_;
 };
 
-#ifdef DEBUG
-
 #define LOGM_INFO(m, ...) Logger::GetInstance()->Log(Logger::LogLevel::kLogInfo, "[" #m "]", __VA_ARGS__)
 #define LOGM_DEBUG(m, ...) Logger::GetInstance()->Log(Logger::LogLevel::kLogDebug, "[" #m "]", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 #define LOGM_WARNING(m, ...) Logger::GetInstance()->Log(Logger::LogLevel::kLogWarning, "[" #m "]", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
@@ -49,21 +47,5 @@ class Logger {
 #define LOG_WARNING(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogWarning, "", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 #define LOG_ERROR(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogError, "", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 #define LOG_FATAL(...) Logger::GetInstance()->Log(Logger::LogLevel::kLogFatal, "", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
-
-#else // !DEBUG
-
-#define LOGM_INFO(m, ...) ((void) 0)
-#define LOGM_DEBUG(m, ...) ((void) 0)
-#define LOGM_WARNING(m, ...) ((void) 0)
-#define LOGM_ERROR(m, ...) ((void) 0)
-#define LOGM_FATAL(m, ...) ((void) 0)
-
-#define LOG_INFO(...) ((void) 0)
-#define LOG_DEBUG(...) ((void) 0)
-#define LOG_WARNING(...) ((void) 0)
-#define LOG_ERROR(...) ((void) 0)
-#define LOG_FATAL(...) ((void) 0)
-
-#endif // !DEBUG
 
 #endif // LOGGER_H_

@@ -8,10 +8,12 @@ ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, vie
   view_->SetCoords({0, 0});
 
   // XXX Remove this workaround for padding
+  /*
   SetPadding(view_->GetPadding());
   view_->SetPadding(0);
   SetBgColor(view_->GetBgColor());
   view_->SetBgColor({255, 255, 255, 0});
+  */
 }
 
 void ScrollView::Render(Drawer* drawer) {
@@ -21,13 +23,13 @@ void ScrollView::Render(Drawer* drawer) {
 }
 
 bool ScrollView::OnMouseButtonEvent(const MouseButtonEvent e) {
-  return view_->OnMouseButtonEvent(e);
+  return view_->DelegateMouseButtonEvent(e);
 }
 
 bool ScrollView::OnMouseMotionEvent(const MouseMotionEvent e) {
   MouseMotionEvent e_mod(e, -coords_);
 //  LOG_DEBUG("coords_ : %d %d / Coords Mod : %d %d", coords_.x, coords_.y, e_mod.GetCoords().x, e_mod.GetCoords().y);
-  return view_->OnMouseMotionEvent(e_mod);
+  return view_->DelegateMouseMotionEvent(e_mod);
 }
 
 bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {

@@ -61,7 +61,9 @@ void StateMachine<T>::PushState(T state) {
     GetCurrentState()->Exit();
   }
   stack_.push(state);
+#ifdef DEBUG
   LOG_INFO("StateMachine Pushed   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+#endif
   state->Enter();
 }
 
@@ -74,7 +76,9 @@ void StateMachine<T>::ChangeState(T state) {
   stack_.pop();
   stack_.push(state);
   state->Enter();
+#ifdef DEBUG
   LOG_INFO("StateMachine Replaced / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+#endif
 }
 
 template <typename T>
@@ -87,10 +91,14 @@ void StateMachine<T>::PopState() {
   if (!IsStackEmpty()) {
     cur_state = GetCurrentState();
     cur_state->Enter();
+#ifdef DEBUG
     LOG_INFO("StateMachine Popped   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+#endif
   }
   else {
+#ifdef DEBUG
     LOG_INFO("StateMachine Popped   / Stack is empty");
+#endif
   }
 }
 
