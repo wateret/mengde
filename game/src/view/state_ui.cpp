@@ -813,6 +813,7 @@ void StateUIDamaged::Update() {
                                unit_->GetOriginalXtat(),
                                damage_rem,
                                0);
+  rv_->SetUnitInfoViewCoordsByUnitCoords(unit_->GetCoords(), rv_->GetCameraCoords());
 }
 
 void StateUIDamaged::Render(Drawer*) {

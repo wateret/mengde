@@ -50,15 +50,17 @@ void GaugeView::Render(Drawer* drawer) {
   drawer->SetDrawColor(max_color_);
   drawer->FillRect(&frame);
 
+  int ext_x = CalcWidth(cur_val_ - ext_val_);
   if (ext_val_ > 0) {
     Rect ext_rect = frame;
-    ext_rect.SetW(CalcWidth(cur_val_));
+    ext_rect.SetX(ext_x);
+    ext_rect.SetW(CalcWidth(cur_val_) - ext_x);
     drawer->SetDrawColor(ext_color_);
     drawer->FillRect(&ext_rect);
   }
 
   Rect cur_rect = frame;
-  cur_rect.SetW(CalcWidth(cur_val_ - ext_val_));
+  cur_rect.SetW(ext_x);
   drawer->SetDrawColor(cur_color_);
   drawer->FillRect(&cur_rect);
 
