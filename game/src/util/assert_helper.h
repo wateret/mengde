@@ -80,6 +80,12 @@
 #else // DEBUG
 
 #define ASSERT(x) ((void) 0)
+#define ASSERT_EQ(A, B) ((void) 0)
+#define ASSERT_LT(A, B) ((void) 0)
+#define ASSERT_LE(A, B) ((void) 0)
+#define ASSERT_GT(A, B) ((void) 0)
+#define ASSERT_GE(A, B) ((void) 0)
+
 #define UNREACHABLE(x) ((void) 0)
 
 #endif // !DEBUG

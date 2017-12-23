@@ -136,6 +136,7 @@ CmdTwoUnits::CmdTwoUnits(Unit* atk, Unit* def) : atk_(atk), def_(def) {
   ASSERT(atk_ != nullptr); // def_(second unit) could be nullptr
 }
 
+#ifdef DEBUG
 void CmdTwoUnits::DebugPrint() const {
   string atk = (atk_ == nullptr) ? "N/A" : atk_->GetId();
   string def = (def_ == nullptr) ? "N/A" : def_->GetId();
@@ -144,6 +145,7 @@ void CmdTwoUnits::DebugPrint() const {
          atk.c_str(),
          def.c_str());
 }
+#endif
 
 // CmdAct
 
