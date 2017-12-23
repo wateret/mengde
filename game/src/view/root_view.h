@@ -35,6 +35,8 @@ class RootView : public View {
   void SetMaxCameraCoords(Vec2D c) { max_camera_coords_ = c; }
   void MoveCameraX(int d);
   void MoveCameraY(int d);
+
+  // View wrappers
   void ShowMagicListView(Unit* unit);
   void HideMagicListView();
   void SetControlViewTurnText(int, int);
@@ -53,6 +55,7 @@ class RootView : public View {
   void SetUnitDialogViewUnit(Unit*);
   void SetTerrainInfoViewVisible(bool);
   void SetTerrainInfoViewText(const string&);
+
   void CenterCamera(Vec2D);
   void EndGame();
   void NextFrame(NextFrameCallback);
