@@ -12,6 +12,8 @@ class CompositeView : public View {
   virtual ~CompositeView();
   int   AddChild(View*);
   void  RemoveChild(int);
+  void  RemoveChild(View*);
+  void  RemoveAllChildren();
   void  SetTransparent() { transparent_ = true; }
   void  SetOpaque() { transparent_ = false; }
 

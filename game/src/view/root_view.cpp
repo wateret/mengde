@@ -71,11 +71,11 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   dialog_view_ = new ModalDialogView(&dialog_frame, "Put your message here!");
   dialog_view_->SetVisible(false);
 
-  Rect magic_list_frame = {8, 8, 150, 200};
-  MagicListView* mlv = new MagicListView(&magic_list_frame);
-  mlv->SetMouseUpHandler(game, this);
+  Rect magic_list_frame = {8, 8, 170, 200};
+  MagicListView* mlv = new MagicListView(magic_list_frame, game, this);
   mlv->SetVisible(false);
   magic_list_view_ = mlv;
+  ui_views_->AddChild(magic_list_view_);
 
   { // Initalize unit_info_view_
     Rect unit_info_frame = LayoutHelper::CalcPosition(GetFrameSize(),
@@ -87,7 +87,6 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
     Rect unit_dialog_frame = *GetFrame();
     unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
     unit_dialog_view_->SetVisible(false);
-    ui_views_->AddChild(magic_list_view_);
   }
 
   { // Initialize terrain_info_view_
@@ -265,7 +264,7 @@ int RootView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
 }
 
 void RootView::ShowMagicListView(Unit* unit) {
-  magic_list_view_->SetUnitAndMagicList(unit, new MagicList(game_->GetMagicManager(), unit));
+  magic_list_view_->SetUnitAndMagicList(unit, std::make_shared<MagicList>(game_->GetMagicManager(), unit));
   magic_list_view_->SetVisible(true);
 }
 

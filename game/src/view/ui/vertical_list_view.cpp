@@ -3,8 +3,8 @@
 VerticalListView::VerticalListView(const Rect& frame) : CompositeView(frame) {
   SetPadding(0);
 
-  // Restriction : initial height must be zero
-  ASSERT_EQ(GetFrameSize().y, 0);
+  // Initial height must be zero, the height value from frame is ignored
+  SetSize({GetFrameSize().x , 0});
 }
 
 void VerticalListView::AddElement(View* e) {

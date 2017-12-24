@@ -1,35 +1,39 @@
 #ifndef MAGIC_LIST_VIEW_H_
 #define MAGIC_LIST_VIEW_H_
 
-#include "callback_view.h"
+#include "composite_view.h"
 #include "common.h"
 
-class Unit;
-class MagicList;
 class Game;
 class RootView;
+class Unit;
+class MagicList;
+class TextView;
+class VerticalListView;
 
-class MagicListView : public CallbackView {
+class MagicListView : public CompositeView {
  public:
-  MagicListView(const Rect*, Unit* = nullptr, MagicList* = nullptr);
+   static const int kTitleHeight = 24;
+
+ public:
+  MagicListView(const Rect&, Game* const, RootView* const);
   ~MagicListView();
-  int GetHoverIndex() { return hover_index_; }
-  void SetHoverIndex(int i) { hover_index_ = i; }
-  void SetUnitAndMagicList(Unit*, MagicList*);
-  void SetMouseUpHandler(Game* game, RootView* rv);
-  int GetItemHeight() { return item_height_; }
-  int NumItems();
-  std::string GetHoverItem();
-  virtual void Render(Drawer*) override;
+  void SetUnitAndMagicList(Unit*, shared_ptr<MagicList>);
 
  private:
   void Cleanup();
 
  private:
-  Unit* unit_;
-  MagicList* magic_list_;
+  Game*     const game_;
+  RootView* const rv_;
+
+ private:
   int item_height_;
-  int hover_index_;
+
+ private:
+  TextView*         tv_title_;
+  VerticalListView* lv_magics_;
+  View*             lv_magics_wrap_;
 };
 
 #endif // MAGIC_LIST_VIEW_H_

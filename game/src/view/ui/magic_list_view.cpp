@@ -1,95 +1,79 @@
 #include "magic_list_view.h"
-#include "app.h"
+#include "button_view.h"
 #include "drawer.h"
 #include "magic_list.h"
 #include "magic.h"
 #include "unit.h"
 #include "root_view.h"
+#include "text_view.h"
+#include "scroll_view.h"
+#include "vertical_list_view.h"
 #include "view/state_ui.h"
 
-MagicListView::MagicListView(const Rect* frame,
-                             Unit* unit,
-                             MagicList* magic_list)
-    : CallbackView(frame),
-      unit_(unit),
-      magic_list_(magic_list),
-      item_height_(20),
-      hover_index_(-1) {
-  ASSERT(unit_ || !magic_list_);
+MagicListView::MagicListView(const Rect& frame,
+                             Game* const game,
+                             RootView* const rv)
+    : CompositeView(frame),
+      game_(game),
+      rv_(rv),
+      item_height_(24),
+      lv_magics_(nullptr),
+      lv_magics_wrap_(nullptr) {
   SetBgColor(COLOR("darkgray"));
   SetPadding(LayoutHelper::kDefaultSpace);
 
-  SetMouseMotionHandler([this] (const MouseMotionEvent e) {
-    Rect actual_frame = *this->GetFrame();
-    actual_frame.SetPos({0, 0});
-    Vec2D mouse_coords = e.GetCoords();
-    if (actual_frame.Contains(mouse_coords)) {
-      Vec2D frame_coords = actual_frame.GetPos();
-      Vec2D coords = mouse_coords - frame_coords;
-      int idx = coords.y / this->GetItemHeight();
-      this->SetHoverIndex(idx);
-      return true;
-    } else {
-      this->SetHoverIndex(-1);
-    }
-    return false;
-  });
+  {
+    Rect frame(0, 0, GetActualFrameSize().x, kTitleHeight);
+    tv_title_ = new TextView(&frame, "Choose Magic", COLOR("yellow"), 15, LayoutHelper::kAlignCenter);
+    this->AddChild(tv_title_);
+  }
 }
 
 MagicListView::~MagicListView() {
-  Cleanup();
 }
 
-int MagicListView::NumItems() {
-  return magic_list_->NumMagics();
-}
+void MagicListView::SetUnitAndMagicList(Unit* unit, shared_ptr<MagicList> magic_list) {
+  ASSERT((unit == nullptr) == (magic_list == nullptr)); // Both should be null or non-null at the same time
 
-string MagicListView::GetHoverItem() {
-  ASSERT(hover_index_ < NumItems());
-  return magic_list_->GetMagic(hover_index_)->GetId();
-}
+  if (unit == nullptr || magic_list == nullptr) return;
 
-void MagicListView::SetUnitAndMagicList(Unit* unit, MagicList* ml) {
-  unit_ = unit;
-  Cleanup();
-  magic_list_ = ml;
-}
+  if (lv_magics_wrap_ != nullptr) {
+    this->RemoveChild(lv_magics_wrap_);
+  }
 
-void MagicListView::SetMouseUpHandler(Game* game, RootView* rv) {
-  SetMouseButtonHandler([game, rv, this] (const MouseButtonEvent e) {
-    if (e.IsLeftButtonUp()) {
-      if (0 <= this->GetHoverIndex() && this->GetHoverIndex()< this->NumItems()) {
-        std::string item_str = this->GetHoverItem();
-        rv->PushUIState(new StateUIAction({game, rv}, unit_, item_str));
+  Vec2D frame_size = GetActualFrameSize();
+
+  {
+    Rect frame(0, kTitleHeight, frame_size.x, 0);
+    lv_magics_ = new VerticalListView(frame);
+  }
+
+  {
+    const int kPositionFromTitle = kTitleHeight + LayoutHelper::kDefaultSpace;
+    Rect frame(0, kPositionFromTitle, frame_size.x, frame_size.y - kPositionFromTitle);
+    lv_magics_wrap_ = new ScrollView(frame, lv_magics_);
+    this->AddChild(lv_magics_wrap_);
+  }
+
+  for (int i = 0, sz = magic_list->NumMagics(); i < sz; i++) {
+    Magic* magic = magic_list->GetMagic(i);
+    string id    = magic->GetId();
+    string name  = magic->GetId();
+
+    // Variables to be captured for callback
+    Game*     game = game_;
+    RootView* rv   = rv_;
+
+    Rect button_frame({0, 0}, {frame_size.x, item_height_});
+    ButtonView* button = new ButtonView(&button_frame, name);
+    button->SetMouseButtonHandler([game, rv, unit, id] (const MouseButtonEvent e) {
+      if (e.IsLeftButtonUp()) {
+        rv->PushUIState(new StateUIAction({game, rv}, unit, id));
         return true;
       }
-    }
-    return false;
-  });
-}
-
-void MagicListView::Render(Drawer* drawer) {
-  ASSERT((unit_ && magic_list_) || (!unit_ && !magic_list_));
-  if (magic_list_ == nullptr) return;
-  // FIXME Remove this RENDER_BEGIN/END workaround
-  RENDER_BEGIN(this);
-  Rect item_frame(Vec2D(0, 0), GetActualFrameSize());
-  item_frame += {0, item_height_ - item_frame.GetH()};
-  for (int i = 0, sz = magic_list_->NumMagics(); i < sz; i++) {
-    if (i == hover_index_) {
-      Rect r = item_frame;
-      drawer->SetDrawColor(COLOR("gray"));
-      drawer->FillRect(&r);
-    }
-    Magic* magic = magic_list_->GetMagic(i);
-    drawer->DrawText(magic->GetId(), 14, COLOR("white"), &item_frame, LayoutHelper::kAlignCenter);
-    item_frame.Move(0, item_height_);
-  }
-  RENDER_END(this);
-}
-
-void MagicListView::Cleanup() {
-  if (magic_list_ != nullptr) {
-    delete magic_list_;
+      return false;
+    });
+    lv_magics_->AddElement(button);
   }
 }
+

@@ -22,7 +22,28 @@ int CompositeView::AddChild(View* child) {
 
 void CompositeView::RemoveChild(int index) {
   ASSERT(index >= 0 && index < (int)children_.size());
-  children_.erase(children_.begin() + index);
+  auto child = children_.begin() + index;
+  delete *child;
+  children_.erase(child);
+}
+
+void CompositeView::RemoveChild(View* view) {
+  auto child = std::find(children_.begin(), children_.end(), view);
+  if (child != children_.end()) {
+    delete *child;
+    children_.erase(child);
+    return;
+  }
+
+  LOG_ERROR("Given View object not found.");
+  UNREACHABLE("Given View object not found.");
+}
+
+void CompositeView::RemoveAllChildren() {
+  for (auto child : children_) {
+    delete child;
+  }
+  children_.clear();
 }
 
 void CompositeView::Render(Drawer* drawer) {
