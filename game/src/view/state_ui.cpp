@@ -965,7 +965,6 @@ void StateUINextTurn::Render(Drawer*) {
 }
 
 void StateUINextTurn::Enter() {
-  Rect frame = {0, 0, 800, 600};
   rv_->SetDialogViewText("End Turn");
   rv_->SetDialogViewVisible(true);
 }

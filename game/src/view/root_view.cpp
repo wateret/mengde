@@ -306,7 +306,7 @@ void RootView::SetUnitInfoViewContents(const std::string& name,
 }
 
 void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
-  unit_info_view_->SetCoordsByUnitCoords(unit, camera);
+  unit_info_view_->SetCoordsByUnitCoords(unit, camera, GetFrameSize());
 }
 
 void RootView::SetDialogViewVisible(bool b) {
