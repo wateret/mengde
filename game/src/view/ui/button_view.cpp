@@ -11,7 +11,7 @@ ButtonView::ButtonView(const Rect* frame, const std::string& text)
   AddChild(tv_label_);
   SetMouseMotionHandler([this] (const MouseMotionEvent e) -> bool {
     if (e.IsMotionOver()) {
-      SetBgColor(COLOR("black"));
+      SetBgColor(COLOR(32, 32, 32));
     } else {
       SetBgColor(COLOR("gray"));
     }

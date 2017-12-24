@@ -56,6 +56,8 @@ class RootView : public View {
   void SetUnitDialogViewUnit(Unit*);
   void SetTerrainInfoViewVisible(bool);
   void SetTerrainInfoViewText(const string&);
+  void SetUnitListViewVisible(bool);
+  void SetUnitListViewUnit(Unit* unit);
 
   void CenterCamera(Vec2D);
   void EndGame();

@@ -35,6 +35,7 @@ class ColorGen {
  public:
   static ColorGen* GetInstance();
   Color Generate(const std::string& /* name */, uint8_t /* alpha */ = 255);
+  Color Generate(uint8_t /* r */, uint8_t /* r */, uint8_t /* r */, uint8_t /* alpha */ = 255);
 
  private:
   ColorGen();

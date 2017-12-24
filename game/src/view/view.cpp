@@ -82,12 +82,12 @@ bool View::DelegateMouseButtonEvent(MouseButtonEvent e) {
 bool View::DelegateMouseMotionEvent(MouseMotionEvent e) {
   if (!visible_) return false;
   if (e.IsMotionOver()) {
-//    LOG_DEBUG("OnMouseOver (%d %d)", e.GetCoords().x, e.GetCoords().y);
     if (GetFrame()->Contains(e.GetCoords())) {
       Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
       MouseMotionEvent ec(MouseMotionEvent::Type::kOver, conv_coords, e.GetCoordsRel());
       return OnMouseMotionEvent(ec);
     } else {
+      // Not over the view but was over in previous event then generate MouseOut event
       if (GetFrame()->Contains(e.GetLastCoords())) {
         MouseMotionEvent ec(MouseMotionEvent::Type::kOut);
         OnMouseMotionEvent(ec);

@@ -60,22 +60,30 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
                                                LayoutHelper::kDefaultSpace);
   unit_view_ = new UnitView(&unit_frame);
 //  unit_view_->SetVisible(false);
+  ui_views_->AddChild(unit_view_);
 
-  Rect control_frame = LayoutHelper::CalcPosition(GetFrameSize(),
-                                                {300, 136},
-                                                LayoutHelper::kAlignRgtBot,
-                                                LayoutHelper::kDefaultSpace);
-  control_view_ = new ControlView(&control_frame, game_, this);
+  { // Initialize control_view_
+    Rect control_frame = LayoutHelper::CalcPosition(GetFrameSize(),
+                                                  {300, 136},
+                                                  LayoutHelper::kAlignRgtBot,
+                                                  LayoutHelper::kDefaultSpace);
+    control_view_ = new ControlView(&control_frame, game_, this);
+    ui_views_->AddChild(control_view_);
+  }
 
-  Rect dialog_frame = *GetFrame();
-  dialog_view_ = new ModalDialogView(&dialog_frame, "Put your message here!");
-  dialog_view_->SetVisible(false);
+  { // Initialize dialog_view_
+    Rect dialog_frame = *GetFrame();
+    dialog_view_ = new ModalDialogView(&dialog_frame, "Put your message here!");
+    dialog_view_->SetVisible(false);
+    ui_views_->AddChild(dialog_view_);
+  }
 
-  Rect magic_list_frame = {8, 8, 170, 200};
-  MagicListView* mlv = new MagicListView(magic_list_frame, game, this);
-  mlv->SetVisible(false);
-  magic_list_view_ = mlv;
-  ui_views_->AddChild(magic_list_view_);
+  { // Initialize magic_list_view_;
+    Rect magic_list_frame = {8, 8, 170, 200};
+    magic_list_view_ = new MagicListView(magic_list_frame, game, this);
+    magic_list_view_->SetVisible(false);
+    ui_views_->AddChild(magic_list_view_);
+  }
 
   { // Initalize unit_info_view_
     Rect unit_info_frame = LayoutHelper::CalcPosition(GetFrameSize(),
@@ -83,10 +91,14 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
                                                       LayoutHelper::kAlignLftBot,
                                                       LayoutHelper::kDefaultSpace);
     unit_info_view_ = new UnitInfoView(&unit_info_frame);
+    ui_views_->AddChild(unit_info_view_);
+  }
 
+  { // Initialize unit_dialog_view_
     Rect unit_dialog_frame = *GetFrame();
     unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
     unit_dialog_view_->SetVisible(false);
+    ui_views_->AddChild(unit_dialog_view_);
   }
 
   { // Initialize terrain_info_view_
@@ -100,19 +112,10 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   }
 
   { // Initialize unit_list_view_
-    Rect frame(0, 0, 150, 150);
+    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     unit_list_view_ = new UnitListView(frame, game_->GetCurrentUnits());
-    Rect scroll_frame(0, 0, 150, 100);
-    View* scroll_view = new ScrollView(scroll_frame, unit_list_view_);
-    ui_views_->AddChild(scroll_view);
-    unit_list_view_->SetVisible(false);
+    ui_views_->AddChild(unit_list_view_);
   }
-
-  ui_views_->AddChild(unit_info_view_);
-  ui_views_->AddChild(unit_view_);
-  ui_views_->AddChild(control_view_);
-  ui_views_->AddChild(dialog_view_);
-  ui_views_->AddChild(unit_dialog_view_);
 }
 
 RootView::~RootView() {
@@ -339,6 +342,14 @@ void RootView::SetUnitDialogViewText(const string& s) {
 
 void RootView::SetUnitDialogViewUnit(Unit* u) {
   unit_dialog_view_->SetUnit(u);
+}
+
+void RootView::SetUnitListViewVisible(bool b) {
+  unit_list_view_->SetVisible(b);
+}
+
+void RootView::SetUnitListViewUnit(Unit* unit) {
+  unit_list_view_->SetUnit(unit);
 }
 
 void RootView::EndGame() {

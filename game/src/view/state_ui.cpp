@@ -287,6 +287,14 @@ bool StateUIView::OnMouseButtonEvent(const MouseButtonEvent e) {
     } else {
       rv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
     }
+  } else if (e.IsRightButtonUp()) {
+    Vec2D pos = GetCursorCell();
+    Map* map = game_->GetMap();
+    if (map->UnitInCell(pos)) {
+      Unit* unit = map->GetUnit(pos);
+      rv_->SetUnitListViewUnit(unit);
+      rv_->SetUnitListViewVisible(true);
+    }
   }
   return true;
 }

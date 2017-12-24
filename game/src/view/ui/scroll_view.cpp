@@ -27,9 +27,7 @@ bool ScrollView::OnMouseButtonEvent(const MouseButtonEvent e) {
 }
 
 bool ScrollView::OnMouseMotionEvent(const MouseMotionEvent e) {
-  MouseMotionEvent e_mod(e, -coords_);
-//  LOG_DEBUG("coords_ : %d %d / Coords Mod : %d %d", coords_.x, coords_.y, e_mod.GetCoords().x, e_mod.GetCoords().y);
-  return view_->DelegateMouseMotionEvent(e_mod);
+  return view_->DelegateMouseMotionEvent(e);
 }
 
 bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
