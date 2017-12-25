@@ -16,7 +16,7 @@ void Money::Gain(const Money& money) {
 Assets::Assets() {
 }
 
-void Assets::AddHero(Hero* hero) {
+void Assets::AddHero(shared_ptr<Hero> hero) {
   string id = hero->GetId();
   auto found = heroes_.find(id);
   if (found == heroes_.end()) {
@@ -35,7 +35,7 @@ void Assets::RemoveHero(const string& id) {
   }
 }
 
-Hero* Assets::GetHero(const string& id) {
+shared_ptr<Hero> Assets::GetHero(const string& id) {
   auto found = heroes_.find(id);
   if (found == heroes_.end()) {
     UNREACHABLE("Hero does not exist.");
@@ -44,8 +44,8 @@ Hero* Assets::GetHero(const string& id) {
   }
 }
 
-vector<Hero*> Assets::GetHeroes() {
-  vector<Hero*> ret;
+vector<shared_ptr<Hero>> Assets::GetHeroes() {
+  vector<shared_ptr<Hero>> ret;
   for (auto kv : heroes_) {
     ret.push_back(kv.second);
   }

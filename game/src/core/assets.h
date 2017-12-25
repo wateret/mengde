@@ -32,10 +32,10 @@ class Assets {
  public:
   Assets();
 
-  void AddHero(Hero*);
+  void AddHero(shared_ptr<Hero>);
   void RemoveHero(const string&);
-  Hero* GetHero(const string&);
-  vector<Hero*> GetHeroes();
+  shared_ptr<Hero> GetHero(const string&);
+  vector<shared_ptr<Hero>> GetHeroes();
 
   void AddItem(Item*, uint32_t);
   void RemoveItem(const string&, uint32_t);
@@ -48,7 +48,7 @@ class Assets {
   uint32_t GetAmountMoney();
 
  private:
-  std::map<string, Hero*>         heroes_;
+  std::map<string, shared_ptr<Hero>> heroes_;
   std::map<string, Amount<Item*>> items_;
 //  std::map<string, Amount<Consumable*>>
   Money money_;

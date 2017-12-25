@@ -1,7 +1,7 @@
 #include "unit.h"
 #include "unit_class.h"
 
-Unit::Unit(Hero* hero, const Side side)
+Unit::Unit(shared_ptr<Hero> hero, const Side side)
     : hero_(hero),
       item_slot_weapon_(Item::kItemWeapon),
       item_slot_armor_(Item::kItemArmor),

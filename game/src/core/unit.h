@@ -24,7 +24,7 @@ class Unit : public IEvent {
   };
 
  public:
-  Unit(Hero*, const Side);
+  Unit(shared_ptr<Hero>, const Side);
   ~Unit();
 
  public:
@@ -75,7 +75,7 @@ class Unit : public IEvent {
   Item* GetAid();
 
  private:
-  Hero*     hero_;
+  shared_ptr<Hero> hero_;
   ItemSlot  item_slot_weapon_;
   ItemSlot  item_slot_armor_;
   ItemSlot  item_slot_aid_;

@@ -263,12 +263,12 @@ uint32_t Game::GetNumOwnsAlive() {
 
 void Game::AddHero(const string& id, uint16_t level) {
   LOG_INFO("Hero added '%s' with Lv %d", id.c_str(), level);
-  Hero* hero = new Hero(rc_.hero_tpl_manager->Get(id), level);
+  auto hero = std::make_shared<Hero>(rc_.hero_tpl_manager->Get(id), level);
   assets_->AddHero(hero);
 }
 
 uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
-  Hero* hero = assets_->GetHero(id);
+  shared_ptr<Hero> hero = assets_->GetHero(id);
   Unit* unit = new Unit(hero, Unit::kSideOwn);
   units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
@@ -277,7 +277,7 @@ uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
 
 uint32_t Game::GenerateUnit(const string& id, uint16_t level, Unit::Side side, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
-  Hero* hero = new Hero(hero_tpl, level); // FIXME This object is managed nowhere (mem leak)
+  auto hero = std::make_shared<Hero>(hero_tpl, level);
   Unit* unit = new Unit(hero, side);
   units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
