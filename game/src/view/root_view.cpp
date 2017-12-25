@@ -114,6 +114,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
   { // Initialize unit_list_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     unit_list_view_ = new UnitListView(frame, game_->GetCurrentUnits());
+    unit_list_view_->SetVisible(false);
     ui_views_->AddChild(unit_list_view_);
   }
 }

@@ -18,7 +18,7 @@ class ConfigLoader {
   void ParseUnitClassesAndTerrains();
   void ParseMagics();
   void ParseItems();
-  void ParseHeroes();
+  void ParseHeroTemplates();
   uint16_t StatStrToIdx(const string&);
   EventEffect* GenerateEventEffect(const string&, int);
 

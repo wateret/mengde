@@ -45,7 +45,7 @@ Game::~Game() {
   delete rc_.terrain_manager;
   delete rc_.magic_manager;
   delete rc_.item_manager;
-  delete rc_.hero_manager;
+  delete rc_.hero_tpl_manager;
 
   for (auto o : units_) delete o;
   for (auto o : dead_units_) delete o;
@@ -261,11 +261,26 @@ uint32_t Game::GetNumOwnsAlive() {
   return count;
 }
 
-int Game::GenerateUnit(const string& hero_id, Unit::Side side, Vec2D pos) {
-  Hero* hero = rc_.hero_manager->Get(hero_id);
+void Game::AddHero(const string& id, uint16_t level) {
+  LOG_INFO("Hero added '%s' with Lv %d", id.c_str(), level);
+  Hero* hero = new Hero(rc_.hero_tpl_manager->Get(id), level);
+  assets_->AddHero(hero);
+}
+
+uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
+  Hero* hero = assets_->GetHero(id);
+  Unit* unit = new Unit(hero, Unit::kSideOwn);
+  units_.push_back(unit);
+  map_->PlaceUnit(unit, pos);
+  return units_.size() - 1;
+}
+
+uint32_t Game::GenerateUnit(const string& id, uint16_t level, Unit::Side side, Vec2D pos) {
+  HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
+  Hero* hero = new Hero(hero_tpl, level); // FIXME This object is managed nowhere (mem leak)
   Unit* unit = new Unit(hero, side);
   units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
-  return (int)units_.size() - 1;
+  return units_.size() - 1;
 }
 

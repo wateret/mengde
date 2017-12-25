@@ -35,6 +35,15 @@ void Assets::RemoveHero(const string& id) {
   }
 }
 
+Hero* Assets::GetHero(const string& id) {
+  auto found = heroes_.find(id);
+  if (found == heroes_.end()) {
+    UNREACHABLE("Hero does not exist.");
+  } else {
+    return found->second;
+  }
+}
+
 vector<Hero*> Assets::GetHeroes() {
   vector<Hero*> ret;
   for (auto kv : heroes_) {

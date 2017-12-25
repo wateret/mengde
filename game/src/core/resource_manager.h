@@ -53,25 +53,25 @@ class ResourceManager {
 #include "terrain.h"
 #include "hero.h"
 
-typedef ResourceManager<Magic>     MagicManager;
-typedef ResourceManager<Item>      ItemManager;
-typedef ResourceManager<UnitClass> UnitClassManager;
-typedef ResourceManager<Terrain>   TerrainManager;
-typedef ResourceManager<Hero>      HeroManager;
+typedef ResourceManager<Magic>        MagicManager;
+typedef ResourceManager<Item>         ItemManager;
+typedef ResourceManager<UnitClass>    UnitClassManager;
+typedef ResourceManager<Terrain>      TerrainManager;
+typedef ResourceManager<HeroTemplate> HeroTemplateManager;
 
 struct ResourceManagers {
-  UnitClassManager* unit_class_manager;
-  TerrainManager*   terrain_manager;
-  MagicManager*     magic_manager;
-  ItemManager*      item_manager;
-  HeroManager*      hero_manager;
+  UnitClassManager*    unit_class_manager;
+  TerrainManager*      terrain_manager;
+  MagicManager*        magic_manager;
+  ItemManager*         item_manager;
+  HeroTemplateManager* hero_tpl_manager;
 
   ResourceManagers() :
       unit_class_manager(nullptr),
       terrain_manager(nullptr),
       magic_manager(nullptr),
       item_manager(nullptr),
-      hero_manager(nullptr)
+      hero_tpl_manager(nullptr)
   {
   }
 };

@@ -21,7 +21,7 @@ ConfigLoader::ConfigLoader(const string& filename)
   ParseUnitClassesAndTerrains();
   ParseMagics();
   ParseItems();
-  ParseHeroes();
+  ParseHeroTemplates();
 }
 
 ConfigLoader::~ConfigLoader() {
@@ -211,27 +211,22 @@ void ConfigLoader::ParseItems() {
   });
 }
 
-void ConfigLoader::ParseHeroes() {
-  rc_.hero_manager = new HeroManager();
+void ConfigLoader::ParseHeroTemplates() {
+  rc_.hero_tpl_manager = new HeroTemplateManager();
   lua_config_->ForEachTableEntry("$gconf.heroes", [this] () {
     string id         = this->lua_config_->Get<string>("id");
     string uclass     = this->lua_config_->Get<string>("class");
-    int    level      = this->lua_config_->GetOpt<int>("level");
     vector<int> statr = this->lua_config_->GetVector<int>("stat");
     string model      = this->lua_config_->GetOpt<string>("model");
     if (model == "nil") {
       model = "infantry-1-red"; // XXX hardcoded. Make this to find default model
     }
-    if (level == 0) {
-      level = 1; // XXX
-    }
     Stat stat = {statr[0], statr[1], statr[2], statr[3], statr[4]};
-    Hero* hero = new Hero(id,
-                          model,
-                          rc_.unit_class_manager->Get(uclass),
-                          level,
-                          stat);
-    rc_.hero_manager->Add(id, hero);
+    HeroTemplate* hero_tpl = new HeroTemplate(id,
+                                              model,
+                                              rc_.unit_class_manager->Get(uclass),
+                                              stat);
+    rc_.hero_tpl_manager->Add(id, hero_tpl);
   });
 }
 

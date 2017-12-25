@@ -19,13 +19,41 @@ static Vec2D GetVec2DFromLua(LuaScript* lua) {
 #define LUA_IMPL(cname) \
   int Game_##cname(lua_State* L)
 
+LUA_IMPL(AddHero) {
+  Game* game = lua_get_game_object(L);
+
+  LuaScript lua(L);
+  uint16_t level = lua.Get<uint16_t>();
+  string   id    = lua.Get<string>();
+
+  game->AddHero(id, level);
+  return 0;
+}
+
+LUA_IMPL(GenerateOwnUnit) {
+  Game* game = lua_get_game_object(L);
+
+  LuaScript lua(L);
+  Vec2D      pos   = GetVec2DFromLua(&lua);
+  string     id    = lua.Get<string>();
+
+  int unit_no = game->GenerateOwnUnit(id, pos);
+
+  lua.PushToStack(unit_no);
+  return 1;
+}
+
 LUA_IMPL(GenerateUnit) {
   Game* game = lua_get_game_object(L);
+
   LuaScript lua(L);
-  Vec2D pos = GetVec2DFromLua(&lua);
-  Unit::Side side = (Unit::Side)lua.Get<int>();
-  string id = lua.Get<string>();
-  int unit_no = game->GenerateUnit(id, side, pos);
+  Vec2D      pos   = GetVec2DFromLua(&lua);
+  Unit::Side side  = (Unit::Side)lua.Get<int>();
+  uint16_t   level = lua.Get<uint16_t>();
+  string     id    = lua.Get<string>();
+
+  int unit_no = game->GenerateUnit(id, level, side, pos);
+
   lua.PushToStack(unit_no);
   return 1;
 }

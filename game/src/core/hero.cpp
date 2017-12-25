@@ -1,30 +1,36 @@
 #include "hero.h"
 
-Hero::Hero(const std::string& id,
-           const std::string& bitmap_path,
-           const UnitClass* unit_class,
-           int level,
-           const Stat& hero_stat)
-    : id_(id),
-      bitmap_path_(bitmap_path),
-      unit_class_(unit_class),
-      level_(level),
-      hero_stat_(hero_stat),
-      unit_stat_(),
-      xtat_() {
+Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
+    : hero_tpl_(hero_tpl), level_(level), hero_stat_(*hero_tpl->GetHeroStat()), unit_stat_(), xtat_() {
   UpdateUnitStat();
 }
 
+string Hero::GetId() const {
+  return hero_tpl_->GetId();
+}
+
+string Hero::GetBitmapPath() const {
+  return hero_tpl_->GetBitmapPath();
+}
+
+const UnitClass* Hero::GetClass() const {
+  return hero_tpl_->GetClass();
+}
+
 int Hero::GetClassIndex() const {
-  return unit_class_->GetIndex();
+  return hero_tpl_->GetClassIndex();
 }
 
 int Hero::GetMove() const {
-  return unit_class_->GetMove();
+  return hero_tpl_->GetMove();
 }
 
 Vec2D* Hero::GetAttackRange() const {
-  return unit_class_->GetAttackRange();
+  return hero_tpl_->GetAttackRange();
+}
+
+const Stat* Hero::GetHeroStatBase() const {
+  return hero_tpl_->GetHeroStat();
 }
 
 void Hero::LevelUp() {
@@ -33,10 +39,10 @@ void Hero::LevelUp() {
 }
 
 void Hero::UpdateUnitStat() {
-#define UpdateXtat(x, xc) xtat_.x = unit_class_->GetBni##xc().base + \
-                                    unit_class_->GetBni##xc().incr * level_
+#define UpdateXtat(x, xc) xtat_.x = GetClass()->GetBni##xc().base + \
+                                    GetClass()->GetBni##xc().incr * level_
 #define UpdateStat(x) unit_stat_.x = ((hero_stat_.x / 2) + \
-                                      ((100 + 8 * (unit_class_->GetStatGrade()->x - 1)) * level_ * hero_stat_.x) / 3000)
+                                      ((100 + 8 * (GetClass()->GetStatGrade()->x - 1)) * level_ * hero_stat_.x) / 3000)
   // TODO UpdateStat(x) formula should depend on its unitclass grade
   UpdateXtat(hp, Hp);
   UpdateXtat(mp, Mp);
