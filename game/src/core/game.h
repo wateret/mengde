@@ -11,6 +11,7 @@
 #include <vector>
 #include <functional>
 
+class Assets;
 class LuaScript;
 class Magic;
 class ConfigLoader;
@@ -25,7 +26,7 @@ class Game {
   };
 
  public:
-  Game(ConfigLoader*);
+  Game(ConfigLoader*, Assets*);
   ~Game();
 
  public:
@@ -76,6 +77,7 @@ class Game {
 
  private:
   ResourceManagers   rc_;
+  Assets*            assets_;
   LuaScript*         lua_script_;
   Commander          commander_;
   Map*               map_;

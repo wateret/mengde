@@ -1,4 +1,5 @@
 #include "app.h"
+#include "assets.h"
 #include "common.h"
 #include "misc.h"
 #include "texture.h"
@@ -63,7 +64,9 @@ App::App(int width, int height, uint32_t max_frames_sec)
   main_view_ = new MainView(&main_rect, this);
 
   ConfigLoader loader("config.lua");
-  game_ = new Game(&loader);
+  Assets* assets = new Assets();
+
+  game_ = new Game(&loader, assets);
   window_ = new Window("Game", width, height);
   drawer_ = new Drawer(window_);
   root_view_ = new RootView(window_size_, game_, this);

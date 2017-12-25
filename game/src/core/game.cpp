@@ -1,4 +1,5 @@
 #include "game.h"
+#include "assets.h"
 #include "game_env.h"
 #include "magic.h"
 #include "config_loader.h"
@@ -11,8 +12,9 @@
 #include "event_effect.h"
 #include "lua_game.h"
 
-Game::Game(ConfigLoader* config_loader)
+Game::Game(ConfigLoader* config_loader, Assets* assets)
     : rc_(config_loader->GetResources()),
+      assets_(assets),
       lua_script_(nullptr),
       commander_(),
       map_(nullptr),
