@@ -67,7 +67,7 @@ UnitOverView::UnitOverView(const Rect* frame)
                                   1,
                                   1,
                                   colors[i],
-                                  {128, 128, 128, 255});
+                                  COLOR(128, 128, 128));
 
     gv->SetHelpTextType(GaugeView::kHelpTextCurMax);
     gv_stats_[i] = gv;
@@ -82,8 +82,8 @@ UnitOverView::UnitOverView(const Rect* frame)
                                   max_value,
                                   1,
                                   COLOR("gauge_stats"),
-                                  {128, 128, 128, 255},
-                                  {255, 242, 175, 255});
+                                  COLOR(128, 128, 128),
+                                  COLOR(255, 242, 175));
     gv->SetHelpTextType(GaugeView::kHelpTextCurOnly);
     gv->SetHelpTextAlign(LayoutHelper::kAlignRgtMid);
     gv_stats_[j] = gv;
