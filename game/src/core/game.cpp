@@ -50,25 +50,25 @@ void Game::InitLua(const string& stage_script_path) {
   // Register game object as lua global
   lua_script_->SetRawPointerToGlobal(LUA_GAME_OBJ_NAME, (void*)this);
 
-#define CAPI_OBJECT "$Game."
+#define GAME_PREFIX "$" LUA_GAME_TABLE_NAME "."
 
   // Register API functions
 #define MACRO_LUA_GAME(cname, luaname) \
-  lua_script_->Set(CAPI_OBJECT #luaname, Game_##cname);
+  lua_script_->Set(GAME_PREFIX #luaname, Game_##cname);
 
 #include "lua_game.inc.h"
 
 #undef MACRO_LUA_GAME
 
   // Register enum values
-  lua_script_->Set(CAPI_OBJECT "side.own", (int)Unit::kSideOwn);
-  lua_script_->Set(CAPI_OBJECT "side.ally", (int)Unit::kSideAlly);
-  lua_script_->Set(CAPI_OBJECT "side.enemy", (int)Unit::kSideEnemy);
-  lua_script_->Set(CAPI_OBJECT "end_type.undecided", (int)Status::kUndecided);
-  lua_script_->Set(CAPI_OBJECT "end_type.defeat", (int)Status::kDefeat);
-  lua_script_->Set(CAPI_OBJECT "end_type.victory", (int)Status::kVictory);
+  lua_script_->Set(GAME_PREFIX "side.own", (int)Unit::kSideOwn);
+  lua_script_->Set(GAME_PREFIX "side.ally", (int)Unit::kSideAlly);
+  lua_script_->Set(GAME_PREFIX "side.enemy", (int)Unit::kSideEnemy);
+  lua_script_->Set(GAME_PREFIX "end_type.undecided", (int)Status::kUndecided);
+  lua_script_->Set(GAME_PREFIX "end_type.defeat", (int)Status::kDefeat);
+  lua_script_->Set(GAME_PREFIX "end_type.victory", (int)Status::kVictory);
 
-#undef CAPI_OBJECT
+#undef GAME_PREFIX
 
   // Run the main script
   lua_script_->Run(stage_script_path);
@@ -253,7 +253,7 @@ uint32_t Game::GetNumOwnsAlive() {
   return count;
 }
 
-void Game::AddHero(const string& id, uint16_t level) {
+void Game::AppointHero(const string& id, uint16_t level) {
   LOG_INFO("Hero added to asset '%s' with Lv %d", id.c_str(), level);
   auto hero = std::make_shared<Hero>(rc_.hero_tpl_manager->Get(id), level);
   assets_->AddHero(hero);

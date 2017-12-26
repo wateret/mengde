@@ -62,7 +62,7 @@ class Game {
   Status GetStatus() { return status_; }
 
   // APIs for Lua //
-  void AddHero(const string&, uint16_t);
+  void AppointHero(const string&, uint16_t);
   uint32_t GenerateOwnUnit(const string&, Vec2D);
   uint32_t GenerateUnit(const string&, uint16_t, Unit::Side, Vec2D);
 

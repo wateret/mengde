@@ -19,14 +19,14 @@ static Vec2D GetVec2DFromLua(LuaScript* lua) {
 #define LUA_IMPL(cname) \
   int Game_##cname(lua_State* L)
 
-LUA_IMPL(AddHero) {
+LUA_IMPL(AppointHero) {
   Game* game = lua_get_game_object(L);
 
   LuaScript lua(L);
   uint16_t level = lua.Get<uint16_t>();
   string   id    = lua.Get<string>();
 
-  game->AddHero(id, level);
+  game->AppointHero(id, level);
   return 0;
 }
 

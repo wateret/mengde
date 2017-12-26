@@ -3,8 +3,8 @@
 
 // C API for Lua binding
 
-#define LUA_C_API_TABLE_NAME "C"
-#define LUA_GAME_OBJ_NAME    "game_object"
+#define LUA_GAME_TABLE_NAME "Game"
+#define LUA_GAME_OBJ_NAME   "game_object"
 
 extern "C" {
 

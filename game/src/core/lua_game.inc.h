@@ -2,7 +2,7 @@
 #error  Define MACRO_LUA_GAME before including this file.
 #endif
 
-MACRO_LUA_GAME(AddHero,            add_hero)
+MACRO_LUA_GAME(AppointHero,        appoint_hero)
 MACRO_LUA_GAME(GenerateOwnUnit,    generate_own_unit)
 MACRO_LUA_GAME(GenerateUnit,       generate_unit)
 MACRO_LUA_GAME(UnitPutItemsOn,     unit_put_items_on)
