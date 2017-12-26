@@ -507,8 +507,8 @@ void StateUIMagic::Render(Drawer* drawer) {
                      0,
                      {kEffectNone, 0},
                      unit_pos);
-  const SpriteType target_sprite_success = magic_->IsTypeDeal() ? kSpriteDamaged : kSpriteBuff; // This condition may not be accurate
-  const SpriteType target_sprite = hit_ ? target_sprite_success : kSpriteBlocked;
+  const SpriteType target_sprite_hit = magic_->IsTypeDeal() ? kSpriteDamaged : kSpriteBuff; // This condition may not be accurate
+  const SpriteType target_sprite = hit_ ? target_sprite_hit : kSpriteBlocked;
 
   drawer->CopySprite(def_->GetBitmapPath(),
                      target_sprite,
@@ -525,7 +525,11 @@ void StateUIMagic::Update() {
   if (animator_) {
     animator_->NextFrame();
     if (animator_->DoneAnimate()) {
-      rv_->PopUIState();
+      if (hit_) {
+        rv_->ChangeUIState(new StateUIDamaged(WrapBase(), def_, damage_));
+      } else {
+        rv_->PopUIState();
+      }
     }
   }
 }
