@@ -76,14 +76,14 @@ UnitOverView::UnitOverView(const Rect* frame)
   }
   for (int i = 0; i < kNumStats; i++) {
     int j = i + kNumXtats;
-    int max_value = 250; // FIXME max value of stat
+    int max_value = 300; // FIXME max value of stat
     GaugeView* gv = new GaugeView(&gv_frame,
                                   1,
                                   max_value,
                                   1,
                                   COLOR("gauge_stats"),
                                   COLOR(128, 128, 128),
-                                  COLOR(255, 242, 175));
+                                  COLOR(255, 232, 142));
     gv->SetHelpTextType(GaugeView::kHelpTextCurOnly);
     gv->SetHelpTextAlign(LayoutHelper::kAlignRgtMid);
     gv_stats_[j] = gv;
