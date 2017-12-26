@@ -7,7 +7,7 @@ GameEnv::GameEnv() {
   game_path_ = std::string(basepath);
   SDL_free(basepath);
   resource_path_ = game_path_ + "/res";
-  scenario_path_ = game_path_ + "/sce/example";
+  scenario_path_ = game_path_ + "/sce";
 }
 
 GameEnv* GameEnv::GetInstance() {

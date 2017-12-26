@@ -22,6 +22,7 @@ ConfigLoader::ConfigLoader(const string& filename)
   ParseMagics();
   ParseItems();
   ParseHeroTemplates();
+  ParseFirstStage();
 }
 
 ConfigLoader::~ConfigLoader() {
@@ -228,5 +229,9 @@ void ConfigLoader::ParseHeroTemplates() {
                                               stat);
     rc_.hero_tpl_manager->Add(id, hero_tpl);
   });
+}
+
+void ConfigLoader::ParseFirstStage() {
+  first_stage_ = lua_config_->Get<string>("$gconf.first_stage");
 }
 

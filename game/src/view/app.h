@@ -10,6 +10,7 @@
 class View;
 class Game;
 class Drawer;
+class Scenario;
 
 class FrameConfig {
  public:
@@ -71,14 +72,11 @@ class App {
   View*   main_view_;
   View*   root_view_;
   View*   target_view_;
-  Game*   game_;
+  Scenario* scenario_;
 
   // fps
   const FrameConfig frame_config_;
   FpsTimer fps_timer_;
-  int   frames_sec_;
-  int   frames_total_;
-  float fps_;
 
   bool quit_;
 };

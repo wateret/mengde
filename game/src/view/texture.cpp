@@ -61,7 +61,7 @@ void Texture::InitBitmap(Renderer* renderer,
                 bool use_key,
                 Color color) {
   std::string base_path = GameEnv::GetInstance()->GetScenarioPath();
-  surface_ = SDL_LoadBMP((base_path + "/" + path).c_str());
+  surface_ = SDL_LoadBMP((base_path + "/" + "example" +  "/" + path).c_str()); // FIXME path hardcoded
   if (surface_ == nullptr) {
     string msg = Misc::GetErrorMessage();
     LOG_FATAL("Unable to load image! : %s", msg.c_str());

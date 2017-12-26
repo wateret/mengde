@@ -11,7 +11,7 @@
 #include "main_view.h"
 #include "root_view.h"
 #include "game.h"
-#include "config_loader.h"
+#include "scenario.h"
 
 FrameConfig::FrameConfig(uint16_t max_frames_sec, float speed) : max_frames_sec_(max_frames_sec), speed_(speed) {
   ASSERT(0.125f <= speed_ && speed_ <= 4.0f);
@@ -46,12 +46,9 @@ App::App(int width, int height, uint32_t max_frames_sec)
       main_view_(nullptr),
       root_view_(nullptr),
       target_view_(nullptr),
-      game_(nullptr),
+      scenario_(nullptr),
       frame_config_(max_frames_sec, 2),
       fps_timer_(),
-      frames_sec_(0),
-      frames_total_(0),
-      fps_(0.0),
       quit_(false) {
   Misc::Init();
 
@@ -63,13 +60,11 @@ App::App(int width, int height, uint32_t max_frames_sec)
   Rect main_rect({0, 0}, window_size_);
   main_view_ = new MainView(&main_rect, this);
 
-  ConfigLoader loader("config.lua");
-  Assets* assets = new Assets();
+  scenario_ = new Scenario("example");
 
-  game_ = new Game(&loader, assets);
   window_ = new Window("Game", width, height);
   drawer_ = new Drawer(window_);
-  root_view_ = new RootView(window_size_, game_, this);
+  root_view_ = new RootView(window_size_, scenario_->GetGame(), this);
 //  target_view_ = main_view_;
   target_view_ = root_view_;
 }
@@ -84,8 +79,8 @@ App::~App() {
   delete main_view_;
   delete drawer_;
   delete window_;
-  if (game_ != nullptr) {
-    delete game_;
+  if (scenario_ != nullptr) {
+    delete scenario_;
   }
   Misc::Quit();
 }
@@ -177,8 +172,6 @@ bool App::HandleEvents() {
 
 void App::Update() {
   target_view_->Update();
-
-  frames_total_++;
 }
 
 void App::Render() {
@@ -207,8 +200,6 @@ void App::EndGame() {
 //  delete game_;
 
   root_view_ = nullptr;
-  game_ = nullptr;
-
   target_view_ = main_view_;
 }
 

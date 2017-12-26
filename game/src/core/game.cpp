@@ -2,7 +2,6 @@
 #include "assets.h"
 #include "game_env.h"
 #include "magic.h"
-#include "config_loader.h"
 #include "formulae.h"
 #include "cmd.h"
 #include "util/path_tree.h"
@@ -12,8 +11,8 @@
 #include "event_effect.h"
 #include "lua_game.h"
 
-Game::Game(ConfigLoader* config_loader, Assets* assets)
-    : rc_(config_loader->GetResources()),
+Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_script_path)
+    : rc_(rc),
       assets_(assets),
       lua_script_(nullptr),
       commander_(),
@@ -22,12 +21,12 @@ Game::Game(ConfigLoader* config_loader, Assets* assets)
       dead_units_(),
       turn_(),
       status_(Status::kUndecided) {
-  InitLua();
+  InitLua(stage_script_path);
 
   // Read map data
-  vector<uint32_t> rc = lua_script_->GetVector<uint32_t>("$gdata.map.size");
-  uint32_t cols = rc[0];
-  uint32_t rows = rc[1];
+  vector<uint32_t> map_size = lua_script_->GetVector<uint32_t>("$gdata.map.size");
+  uint32_t cols = map_size[0];
+  uint32_t rows = map_size[1];
   vector<string> map_input = lua_script_->GetVector<string>("$gdata.map.terrain");
   ASSERT(rows == map_input.size());
   for (auto e : map_input)
@@ -41,17 +40,11 @@ Game::~Game() {
   if (lua_script_ != nullptr) delete lua_script_;
   if (map_ != nullptr) delete map_;
 
-  delete rc_.unit_class_manager;
-  delete rc_.terrain_manager;
-  delete rc_.magic_manager;
-  delete rc_.item_manager;
-  delete rc_.hero_tpl_manager;
-
   for (auto o : units_) delete o;
   for (auto o : dead_units_) delete o;
 }
 
-void Game::InitLua() {
+void Game::InitLua(const string& stage_script_path) {
   lua_script_ = new LuaScript();
 
   // Register game object as lua global
@@ -78,8 +71,7 @@ void Game::InitLua() {
 #undef CAPI_OBJECT
 
   // Run the main script
-  string lua_script_path = GameEnv::GetInstance()->GetScenarioPath() + "/01.lua";
-  lua_script_->Run(lua_script_path);
+  lua_script_->Run(stage_script_path);
 }
 
 void Game::ForEachUnit(std::function<void(Unit*)> f) {
@@ -262,7 +254,7 @@ uint32_t Game::GetNumOwnsAlive() {
 }
 
 void Game::AddHero(const string& id, uint16_t level) {
-  LOG_INFO("Hero added '%s' with Lv %d", id.c_str(), level);
+  LOG_INFO("Hero added to asset '%s' with Lv %d", id.c_str(), level);
   auto hero = std::make_shared<Hero>(rc_.hero_tpl_manager->Get(id), level);
   assets_->AddHero(hero);
 }

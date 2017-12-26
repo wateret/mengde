@@ -14,7 +14,6 @@
 class Assets;
 class LuaScript;
 class Magic;
-class ConfigLoader;
 
 class Game {
  public:
@@ -26,7 +25,7 @@ class Game {
   };
 
  public:
-  Game(ConfigLoader*, Assets*);
+  Game(const ResourceManagers&, Assets*, const string&);
   ~Game();
 
  public:
@@ -74,7 +73,7 @@ class Game {
   Unit*         GetOneHostileInRange(Unit*, Vec2D);
 
  private:
-  void InitLua();
+  void InitLua(const string&);
   bool TryBasicAttack(Unit*, Unit*);
   bool TryMagic(Unit*, Unit*);
 
