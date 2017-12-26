@@ -58,6 +58,30 @@ LUA_IMPL(GenerateUnit) {
   return 1;
 }
 
+LUA_IMPL(ObtainEquipment) {
+  Game* game = lua_get_game_object(L);
+
+  LuaScript lua(L);
+  uint16_t amount = lua.Get<uint16_t>();
+  string   id     = lua.Get<string>();
+
+  game->ObtainEquipment(id, amount);
+  return 0;
+}
+
+LUA_IMPL(UnitPutWeaponOn) {
+  Game* game = lua_get_game_object(L);
+
+  LuaScript lua(L);
+  string equip_id = lua.Get<string>();
+  int    unit_id  = lua.Get<int>();
+
+  bool res = game->UnitPutWeaponOn(unit_id, equip_id);
+
+  lua.PushToStack(res);
+  return 1;
+}
+
 LUA_IMPL(UnitPutEquipmentsOn) {
   Game* game = lua_get_game_object(L);
   LuaScript lua(L);

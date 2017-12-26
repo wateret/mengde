@@ -17,7 +17,7 @@ UnitView::UnitView(const Rect* frame)
   unit_over_view_ = new UnitOverView(&subframe);
   unit_equipment_view_ = new UnitEquipmentView(&subframe);
   AddTab("Unit", unit_over_view_);
-  AddTab("Equipment", unit_equipment_view_);
+  AddTab("Equip", unit_equipment_view_);
 //  SetViewIndex(1);
 }
 
@@ -188,9 +188,9 @@ void EquipmentView::SetEquipment(Equipment* equipment) {
   string name = "No Equipment";
   string desc = "No Desc";
   if (equipment != NULL) {
-    image_path = "equipments/70-1.bmp";
+    image_path = "equipments/" + equipment->GetId() + ".bmp";
     name = equipment->GetId();
-    desc = "Equipment Description";
+    desc = equipment->GetId() + "_desc";
   }
 
   iv_image_->SetPath(image_path);

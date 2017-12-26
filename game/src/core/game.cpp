@@ -276,3 +276,16 @@ uint32_t Game::GenerateUnit(const string& id, uint16_t level, Unit::Side side, V
   return units_.size() - 1;
 }
 
+void Game::ObtainEquipment(const string& id, uint32_t amount) {
+  Equipment* eq = rc_.equipment_manager->Get(id);
+  assets_->AddEquipment(eq, amount);
+}
+
+bool Game::UnitPutWeaponOn(uint32_t unit_id, const string& weapon_id) {
+  Unit*      unit   = GetUnit(unit_id);
+  Equipment* weapon = assets_->GetEquipment(weapon_id);
+  if (weapon == nullptr) return false;
+  assets_->RemoveEquipment(weapon_id, 1);
+  unit->PutWeaponOn(weapon);
+  return true;
+}
