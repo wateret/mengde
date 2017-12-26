@@ -18,7 +18,7 @@ class ConfigLoader {
  private:
   void ParseUnitClassesAndTerrains();
   void ParseMagics();
-  void ParseItems();
+  void ParseEquipments();
   void ParseHeroTemplates();
   void ParseFirstStage();
   uint16_t StatStrToIdx(const string&);

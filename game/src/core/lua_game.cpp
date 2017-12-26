@@ -58,7 +58,7 @@ LUA_IMPL(GenerateUnit) {
   return 1;
 }
 
-LUA_IMPL(UnitPutItemsOn) {
+LUA_IMPL(UnitPutEquipmentsOn) {
   Game* game = lua_get_game_object(L);
   LuaScript lua(L);
   string aid_s = lua.GetOpt<string>();
@@ -68,15 +68,15 @@ LUA_IMPL(UnitPutItemsOn) {
 
   Unit* unit = game->GetUnit(no);
   if (weapon_s != "nil") {
-    Item* weapon = game->GetItem(weapon_s);
+    Equipment* weapon = game->GetEquipment(weapon_s);
     unit->PutWeaponOn(weapon);
   }
   if (armor_s != "nil") {
-    Item* armor = game->GetItem(armor_s);
+    Equipment* armor = game->GetEquipment(armor_s);
     unit->PutWeaponOn(armor);
   }
   if (aid_s != "nil") {
-    Item* aid = game->GetItem(aid_s);
+    Equipment* aid = game->GetEquipment(aid_s);
     unit->PutAidOn(aid);
   }
   return 0;

@@ -4,7 +4,7 @@
 #include "attack_range.h"
 #include "magic.h"
 #include "stat.h"
-#include "item.h"
+#include "equipment.h"
 #include "stat_modifier.h"
 #include "event_effect.h"
 #include "lua/lua_script.h"
@@ -20,7 +20,7 @@ ConfigLoader::ConfigLoader(const string& filename)
 
   ParseUnitClassesAndTerrains();
   ParseMagics();
-  ParseItems();
+  ParseEquipments();
   ParseHeroTemplates();
   ParseFirstStage();
 }
@@ -178,37 +178,37 @@ void ConfigLoader::ParseMagics() {
   });
 }
 
-void ConfigLoader::ParseItems() {
-  rc_.item_manager = new ItemManager();
-  lua_config_->ForEachTableEntry("$gconf.items", [this] () {
+void ConfigLoader::ParseEquipments() {
+  rc_.equipment_manager = new EquipmentManager();
+  lua_config_->ForEachTableEntry("$gconf.equipments", [this] () {
     string id        = this->lua_config_->Get<string>("id");
     string type_s    = this->lua_config_->Get<string>("type");
     string equipable = this->lua_config_->Get<string>("equipable");
     string desc      = this->lua_config_->Get<string>("description");
-    Item::ItemType type = [] (const string& type) {
-      if (type == "weapon") return Item::kItemWeapon;
-      if (type == "armor") return Item::kItemArmor;
-      if (type == "aid") return Item::kItemAid;
-      return Item::kItemNone;
+    Equipment::Type type = [] (const string& type) {
+      if (type == "weapon") return Equipment::Type::kWeapon;
+      if (type == "armor") return Equipment::Type::kArmor;
+      if (type == "aid") return Equipment::Type::kAid;
+      return Equipment::Type::kNone;
     }(type_s);
 
-    Item* item = new Item(id, type);
+    Equipment* equipment = new Equipment(id, type);
 
-    this->lua_config_->ForEachTableEntry("effects", [=, &item] () {
+    this->lua_config_->ForEachTableEntry("effects", [=, &equipment] () {
       string type = this->lua_config_->Get<string>("type");
       // XXX Fix generation of EventEffect : gets different by type
       int amount = this->lua_config_->Get<int>("amount");
       EventEffect* effect = GenerateEventEffect(type, amount);
-      item->AddEffect(effect);
+      equipment->AddEffect(effect);
     });
-    this->lua_config_->ForEachTableEntry("modifiers", [=, &item] () {
+    this->lua_config_->ForEachTableEntry("modifiers", [=, &equipment] () {
       string   stat_s     = this->lua_config_->Get<string>("stat");
       uint16_t addend     = this->lua_config_->GetOpt<uint16_t>("addend");
       uint16_t multiplier = this->lua_config_->GetOpt<uint16_t>("multiplier");
       StatModifier* mod = new StatModifier(id, StatStrToIdx(stat_s), addend, multiplier);
-      item->AddModifier(mod);
+      equipment->AddModifier(mod);
     });
-    this->rc_.item_manager->Add(id, item);
+    this->rc_.equipment_manager->Add(id, equipment);
   });
 }
 

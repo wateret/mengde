@@ -28,7 +28,7 @@ Scenario::~Scenario() {
   delete rc_.unit_class_manager;
   delete rc_.terrain_manager;
   delete rc_.magic_manager;
-  delete rc_.item_manager;
+  delete rc_.equipment_manager;
   delete rc_.hero_tpl_manager;
 
   delete assets_;

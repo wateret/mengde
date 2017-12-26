@@ -42,7 +42,7 @@ class Game {
   bool IsValidCoords(Vec2D);
   Magic* GetMagic(const std::string&);
   Unit* GetUnit(int);
-  Item* GetItem(const std::string&);
+  Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
   LuaScript* GetLuaScript() { return lua_script_; }
   bool EndSideTurn();

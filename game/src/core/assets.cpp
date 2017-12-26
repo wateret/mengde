@@ -1,6 +1,6 @@
 #include "assets.h"
 #include "hero.h"
-#include "item.h"
+#include "equipment.h"
 #include <limits.h>
 
 void Money::Pay(const Money& cost) {
@@ -52,46 +52,46 @@ vector<shared_ptr<Hero>> Assets::GetHeroes() {
   return ret;
 }
 
-void Assets::AddItem(Item* item, uint32_t amount) {
+void Assets::AddEquipment(Equipment* equipment, uint32_t amount) {
   ASSERT(amount > 0);
-  string id = item->GetId();
-  auto found = items_.find(id);
-  if (found == items_.end()) {
-    items_.insert(std::make_pair(id, Amount<Item*>(item, 0)));
-    found = items_.find(id);
+  string id = equipment->GetId();
+  auto found = equipments_.find(id);
+  if (found == equipments_.end()) {
+    equipments_.insert(std::make_pair(id, Amount<Equipment*>(equipment, 0)));
+    found = equipments_.find(id);
   }
   found->second.amount += amount;
 }
 
-void Assets::RemoveItem(const string& id, uint32_t amount) {
-  auto found = items_.find(id);
-  if (found == items_.end()) {
-    UNREACHABLE("Item does not exist.");
+void Assets::RemoveEquipment(const string& id, uint32_t amount) {
+  auto found = equipments_.find(id);
+  if (found == equipments_.end()) {
+    UNREACHABLE("Equipment does not exist.");
   } else {
     auto& r = found->second;
     ASSERT(r.amount >= amount);
     r.amount -= amount;
     if (r.HasNone()) {
-      items_.erase(found);
+      equipments_.erase(found);
     }
   }
 }
 
-Item* Assets::GetItem(const string& id) {
-  auto found = items_.find(id);
-  if (found == items_.end()) {
-    UNREACHABLE("Item does not exist.");
+Equipment* Assets::GetEquipment(const string& id) {
+  auto found = equipments_.find(id);
+  if (found == equipments_.end()) {
+    UNREACHABLE("Equipment does not exist.");
   } else {
     auto& r = found->second;
     ASSERT(!r.HasNone());
-    return r.object; // Return first one as all items in the vector are identical
+    return r.object; // Return first one as all equipments in the vector are identical
   }
 }
 
-uint32_t Assets::GetAmountItem(const string& id) {
-  auto found = items_.find(id);
-  if (found == items_.end()) {
-    UNREACHABLE("Item does not exist.");
+uint32_t Assets::GetAmountEquipment(const string& id) {
+  auto found = equipments_.find(id);
+  if (found == equipments_.end()) {
+    UNREACHABLE("Equipment does not exist.");
   } else {
     auto& r = found->second;
     ASSERT(!r.HasNone());
@@ -99,9 +99,9 @@ uint32_t Assets::GetAmountItem(const string& id) {
   }
 }
 
-vector<Item*> Assets::GetItems() {
-  vector<Item*> ret;
-  for (auto kv : items_) {
+vector<Equipment*> Assets::GetEquipments() {
+  vector<Equipment*> ret;
+  for (auto kv : equipments_) {
     ASSERT(!kv.second.HasNone());
     ret.push_back(kv.second.object);
   }

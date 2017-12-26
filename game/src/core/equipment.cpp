@@ -1,0 +1,24 @@
+#include "equipment.h"
+
+Equipment::Equipment(const std::string& id, Type type) : id_(id), type_(type) {
+}
+
+void Equipment::AddModifier(StatModifier* sm) {
+  unit_effect_list_.AddModifier(sm);
+}
+
+void Equipment::AddEffect(EventEffect* ee) {
+  unit_effect_list_.AddEffect(ee);
+}
+
+Stat Equipment::CalcModifierAddends() {
+  return unit_effect_list_.CalcModifierAddends();
+}
+
+Stat Equipment::CalcModifierMultipliers() {
+  return unit_effect_list_.CalcModifierMultipliers();
+}
+
+void Equipment::RaiseEvent(EventEffect::Type type, Unit* unit) {
+  unit_effect_list_.RaiseEvent(type, unit);
+}

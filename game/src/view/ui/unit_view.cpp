@@ -15,9 +15,9 @@ UnitView::UnitView(const Rect* frame)
   size -= {0, -28};
   Rect subframe({0, 28}, size);
   unit_over_view_ = new UnitOverView(&subframe);
-  unit_item_view_ = new UnitItemView(&subframe);
+  unit_equipment_view_ = new UnitEquipmentView(&subframe);
   AddTab("Unit", unit_over_view_);
-  AddTab("Item", unit_item_view_);
+  AddTab("Equipment", unit_equipment_view_);
 //  SetViewIndex(1);
 }
 
@@ -25,7 +25,7 @@ void UnitView::SetUnit(Unit* unit) {
   if (unit_ != unit) {
     unit_ = unit;
     unit_over_view_->SetUnit(unit);
-    unit_item_view_->SetUnit(unit);
+    unit_equipment_view_->SetUnit(unit);
   }
 }
 
@@ -123,55 +123,55 @@ void UnitOverView::OnUnitUpdate() {
   iv_portrait_->SetPath(portrait_path);
 }
 
-UnitItemView::UnitItemView(const Rect* frame)
+UnitEquipmentView::UnitEquipmentView(const Rect* frame)
     : CompositeView(frame), unit_(NULL) {
   const int kMargin = 80 + 8;
   Rect tv_frame = {0, 0, 200, 16};
-  tv_item_weapon_label_ = new TextView(&tv_frame, "Weapon");
+  tv_weapon_label_ = new TextView(&tv_frame, "Weapon");
   tv_frame.Move({0, kMargin});
-  tv_item_armor_label_  = new TextView(&tv_frame, "Armor");
+  tv_armor_label_  = new TextView(&tv_frame, "Armor");
   tv_frame.Move({0, kMargin});
-  tv_item_aid_label_    = new TextView(&tv_frame, "Aid");
-  AddChild(tv_item_weapon_label_);
-  AddChild(tv_item_armor_label_);
-  AddChild(tv_item_aid_label_);
+  tv_aid_label_    = new TextView(&tv_frame, "Aid");
+  AddChild(tv_weapon_label_);
+  AddChild(tv_armor_label_);
+  AddChild(tv_aid_label_);
 
-  Item* weapon = NULL;
-  Item* armor = NULL;
-  Item* aid = NULL;
+  Equipment* weapon = NULL;
+  Equipment* armor = NULL;
+  Equipment* aid = NULL;
   if (unit_ != NULL) {
     weapon = unit_->GetWeapon();
     armor = unit_->GetArmor();
     aid = unit_->GetAid();
   }
-  Rect item_view_frame = {0, 24, 204, 60};
-  itv_weapon_ = new ItemView(&item_view_frame, weapon);
-  item_view_frame.Move({0, item_view_frame.GetH() + 24});
-  itv_armor_ = new ItemView(&item_view_frame, armor);
-  item_view_frame.Move({0, item_view_frame.GetH() + 24});
-  itv_aid_ = new ItemView(&item_view_frame, aid);
-  AddChild(itv_weapon_);
-  AddChild(itv_armor_);
-  AddChild(itv_aid_);
+  Rect equipment_view_frame = {0, 24, 204, 60};
+  eqv_weapon_ = new EquipmentView(&equipment_view_frame, weapon);
+  equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
+  eqv_armor_ = new EquipmentView(&equipment_view_frame, armor);
+  equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
+  eqv_aid_ = new EquipmentView(&equipment_view_frame, aid);
+  AddChild(eqv_weapon_);
+  AddChild(eqv_armor_);
+  AddChild(eqv_aid_);
 }
 
-void UnitItemView::SetUnit(Unit* unit) {
+void UnitEquipmentView::SetUnit(Unit* unit) {
   unit_ = unit;
   OnUnitUpdate();
 }
 
-void UnitItemView::OnUnitUpdate() {
+void UnitEquipmentView::OnUnitUpdate() {
   ASSERT(unit_ != NULL);
-  itv_weapon_->SetItem(unit_->GetWeapon());
-  itv_armor_->SetItem(unit_->GetArmor());
-  itv_aid_->SetItem(unit_->GetAid());
+  eqv_weapon_->SetEquipment(unit_->GetWeapon());
+  eqv_armor_->SetEquipment(unit_->GetArmor());
+  eqv_aid_->SetEquipment(unit_->GetAid());
 }
 
-ItemView::ItemView(const Rect* frame, Item* item) : CompositeView(frame) {
+EquipmentView::EquipmentView(const Rect* frame, Equipment* equipment) : CompositeView(frame) {
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(),
                                              {32, 32},
                                              LayoutHelper::kAlignLftMid);
-  iv_image_ = new ImageView(&iv_frame, "items/50-1.bmp"); // FIXME path hardcoded
+  iv_image_ = new ImageView(&iv_frame, "equipments/50-1.bmp"); // FIXME path hardcoded
   Rect tv_name_frame = {32 + 8, 0, 164, 16};
   tv_name_  = new TextView(&tv_name_frame, "");
   Rect tv_desc_frame = {32 + 8, 16, 164, 52};
@@ -180,17 +180,17 @@ ItemView::ItemView(const Rect* frame, Item* item) : CompositeView(frame) {
   AddChild(tv_name_);
   AddChild(tv_desc_);
 
-  SetItem(item);
+  SetEquipment(equipment);
 }
 
-void ItemView::SetItem(Item* item) {
-  string image_path = "items/60-1.bmp";
-  string name = "No Item";
+void EquipmentView::SetEquipment(Equipment* equipment) {
+  string image_path = "equipments/60-1.bmp";
+  string name = "No Equipment";
   string desc = "No Desc";
-  if (item != NULL) {
-    image_path = "items/70-1.bmp";
-    name = item->GetId();
-    desc = "Item Description";
+  if (equipment != NULL) {
+    image_path = "equipments/70-1.bmp";
+    name = equipment->GetId();
+    desc = "Equipment Description";
   }
 
   iv_image_->SetPath(image_path);

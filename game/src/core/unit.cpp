@@ -3,9 +3,9 @@
 
 Unit::Unit(shared_ptr<Hero> hero, const Side side)
     : hero_(hero),
-      item_slot_weapon_(Item::kItemWeapon),
-      item_slot_armor_(Item::kItemArmor),
-      item_slot_aid_(Item::kItemAid),
+      equipment_slot_weapon_(Equipment::Type::kWeapon),
+      equipment_slot_armor_(Equipment::Type::kArmor),
+      equipment_slot_aid_(Equipment::Type::kAid),
       current_stat_(hero->GetUnitStat()),
       current_xtat_(hero->GetXtat()),
       position_(0, 0),
@@ -70,13 +70,13 @@ void Unit::RecalcStat() {
   current_stat_ = hero_->GetUnitStat();
 
   Stat addends = stat_modifier_list_.CalcAddends() +
-                 item_slot_weapon_.CalcModifierAddends() +
-                 item_slot_armor_.CalcModifierAddends() +
-                 item_slot_aid_.CalcModifierAddends();
+                 equipment_slot_weapon_.CalcModifierAddends() +
+                 equipment_slot_armor_.CalcModifierAddends() +
+                 equipment_slot_aid_.CalcModifierAddends();
   Stat multipliers = stat_modifier_list_.CalcMultipliers() +
-                     item_slot_weapon_.CalcModifierMultipliers() +
-                     item_slot_armor_.CalcModifierMultipliers() +
-                     item_slot_aid_.CalcModifierMultipliers();
+                     equipment_slot_weapon_.CalcModifierMultipliers() +
+                     equipment_slot_armor_.CalcModifierMultipliers() +
+                     equipment_slot_aid_.CalcModifierMultipliers();
 
   for (uint32_t i = 0; i < NUM_STATS; i++) {
     current_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));
@@ -153,31 +153,31 @@ void Unit::LevelUp() {
   LOG_INFO("'%s' Level Up! (Level : %d)", hero_->GetId().c_str(), hero_->GetLevel());
 }
 
-void Unit::PutWeaponOn(Item* item) {
-  item_slot_weapon_.PutItemOn(item);
+void Unit::PutWeaponOn(Equipment* equipment) {
+  equipment_slot_weapon_.PutEquipmentOn(equipment);
   RecalcStat();
 }
 
-void Unit::PutArmorOn(Item* item) {
-  item_slot_armor_.PutItemOn(item);
+void Unit::PutArmorOn(Equipment* equipment) {
+  equipment_slot_armor_.PutEquipmentOn(equipment);
   RecalcStat();
 }
 
-void Unit::PutAidOn(Item* item) {
-  item_slot_aid_.PutItemOn(item);
+void Unit::PutAidOn(Equipment* equipment) {
+  equipment_slot_aid_.PutEquipmentOn(equipment);
   RecalcStat();
 }
 
-Item* Unit::GetWeapon() {
-  return item_slot_weapon_.GetItem();
+Equipment* Unit::GetWeapon() {
+  return equipment_slot_weapon_.GetEquipment();
 }
 
-Item* Unit::GetArmor() {
-  return item_slot_armor_.GetItem();
+Equipment* Unit::GetArmor() {
+  return equipment_slot_armor_.GetEquipment();
 }
 
-Item* Unit::GetAid() {
-  return item_slot_aid_.GetItem();
+Equipment* Unit::GetAid() {
+  return equipment_slot_aid_.GetEquipment();
 }
 
 void Unit::EndAction() {
@@ -192,9 +192,9 @@ void Unit::ResetAction() {
 void Unit::RaiseEvent(EventEffect::Type type, Unit* unit) {
   ASSERT(unit == this);
 
-  Item* weapon = GetWeapon();
-  Item* armor = GetArmor();
-  Item* aid = GetAid();
+  Equipment* weapon = GetWeapon();
+  Equipment* armor = GetArmor();
+  Equipment* aid = GetAid();
   if (weapon != nullptr) weapon->RaiseEvent(type, unit);
   if (armor != nullptr) armor->RaiseEvent(type, unit);
   if (aid != nullptr) aid->RaiseEvent(type, unit);

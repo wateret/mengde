@@ -6,7 +6,7 @@
 #include "common.h"
 #include "hero.h"
 #include "stat_modifier_list.h"
-#include "item_slot.h"
+#include "equipment_slot.h"
 #include "i_event.h"
 
 class UnitClass;
@@ -67,18 +67,18 @@ class Unit : public IEvent {
   void LevelUp();
   void EndAction();
   void ResetAction();
-  void PutWeaponOn(Item*);
-  void PutArmorOn(Item*);
-  void PutAidOn(Item*);
-  Item* GetWeapon();
-  Item* GetArmor();
-  Item* GetAid();
+  void PutWeaponOn(Equipment*);
+  void PutArmorOn(Equipment*);
+  void PutAidOn(Equipment*);
+  Equipment* GetWeapon();
+  Equipment* GetArmor();
+  Equipment* GetAid();
 
  private:
   shared_ptr<Hero> hero_;
-  ItemSlot  item_slot_weapon_;
-  ItemSlot  item_slot_armor_;
-  ItemSlot  item_slot_aid_;
+  EquipmentSlot  equipment_slot_weapon_;
+  EquipmentSlot  equipment_slot_armor_;
+  EquipmentSlot  equipment_slot_aid_;
   Stat      current_stat_;
   Xtat      current_xtat_;
   Vec2D     position_;

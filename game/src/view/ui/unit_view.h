@@ -10,9 +10,9 @@ class ImageView;
 class ButtonView;
 class TextView;
 class UnitOverView;
-class UnitItemView;
-class ItemView;
-class Item;
+class UnitEquipmentView;
+class EquipmentView;
+class Equipment;
 
 class UnitView : public TabView {
  public:
@@ -22,7 +22,7 @@ class UnitView : public TabView {
  private:
   Unit* unit_;
   UnitOverView* unit_over_view_; // tab 0
-  UnitItemView* unit_item_view_; // tab 1
+  UnitEquipmentView* unit_equipment_view_; // tab 1
 };
 
 class UnitOverView : public CompositeView {
@@ -48,9 +48,9 @@ class UnitOverView : public CompositeView {
   GaugeView*  gv_stats_[kNumGVs];
 };
 
-class UnitItemView : public CompositeView {
+class UnitEquipmentView : public CompositeView {
  public:
-  UnitItemView(const Rect*);
+  UnitEquipmentView(const Rect*);
   void SetUnit(Unit* unit);
 
  private:
@@ -58,18 +58,18 @@ class UnitItemView : public CompositeView {
 
  private:
   Unit*     unit_;
-  TextView* tv_item_weapon_label_;
-  TextView* tv_item_armor_label_;
-  TextView* tv_item_aid_label_;
-  ItemView* itv_weapon_;
-  ItemView* itv_armor_;
-  ItemView* itv_aid_;
+  TextView* tv_weapon_label_;
+  TextView* tv_armor_label_;
+  TextView* tv_aid_label_;
+  EquipmentView* eqv_weapon_;
+  EquipmentView* eqv_armor_;
+  EquipmentView* eqv_aid_;
 };
 
-class ItemView : public CompositeView {
+class EquipmentView : public CompositeView {
  public:
-  ItemView(const Rect*, Item*);
-  void SetItem(Item*);
+  EquipmentView(const Rect*, Equipment*);
+  void SetEquipment(Equipment*);
 
  private:
   ImageView* iv_image_;

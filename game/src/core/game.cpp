@@ -119,8 +119,8 @@ Unit* Game::GetUnit(int id) {
   return units_[id];
 }
 
-Item* Game::GetItem(const std::string& id) {
-  return rc_.item_manager->Get(id);
+Equipment* Game::GetEquipment(const std::string& id) {
+  return rc_.equipment_manager->Get(id);
 }
 
 bool Game::EndSideTurn() {

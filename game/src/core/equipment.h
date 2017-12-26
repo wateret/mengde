@@ -1,5 +1,5 @@
-#ifndef ITEM_H_
-#define ITEM_H_
+#ifndef EQUIPMENT_H_
+#define EQUIPMENT_H_
 
 #include <string>
 #include "unit_effect_list.h"
@@ -9,22 +9,22 @@
 class EventEffect;
 class StatModifier;
 
-class Item : public IEvent {
+class Equipment : public IEvent {
  public:
-  enum ItemType {
-    kItemNone,
-    kItemWeapon,
-    kItemArmor,
-    kItemAid
+  enum class Type {
+    kNone,
+    kWeapon,
+    kArmor,
+    kAid
   };
 
  public:
   void RaiseEvent(EventEffect::Type, Unit*) override;
 
  public:
-  Item(const std::string&, ItemType);
+  Equipment(const std::string&, Type);
   string GetId() { return id_; }
-  ItemType GetType() { return type_; }
+  Type GetType() { return type_; }
   void AddModifier(StatModifier*);
   void AddEffect(EventEffect*);
   Stat CalcModifierAddends();
@@ -32,8 +32,8 @@ class Item : public IEvent {
 
  private:
   string id_;
-  ItemType type_;
+  Type type_;
   UnitEffectList unit_effect_list_;
 };
 
-#endif // ITEM_H_
+#endif // EQUIPMENT_H_

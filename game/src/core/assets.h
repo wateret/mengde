@@ -5,7 +5,7 @@
 #include "common.h"
 
 class Hero;
-class Item;
+class Equipment;
 
 class Money {
  public:
@@ -37,11 +37,11 @@ class Assets {
   shared_ptr<Hero> GetHero(const string&);
   vector<shared_ptr<Hero>> GetHeroes();
 
-  void AddItem(Item*, uint32_t);
-  void RemoveItem(const string&, uint32_t);
-  Item* GetItem(const string&);
-  uint32_t GetAmountItem(const string&);
-  vector<Item*> GetItems();
+  void AddEquipment(Equipment*, uint32_t);
+  void RemoveEquipment(const string&, uint32_t);
+  Equipment* GetEquipment(const string&);
+  uint32_t GetAmountEquipment(const string&);
+  vector<Equipment*> GetEquipments();
 
   void PayMoney(const Money&);
   void GainMoney(const Money&);
@@ -49,7 +49,7 @@ class Assets {
 
  private:
   std::map<string, shared_ptr<Hero>> heroes_;
-  std::map<string, Amount<Item*>> items_;
+  std::map<string, Amount<Equipment*>> equipments_;
 //  std::map<string, Amount<Consumable*>>
   Money money_;
 };
