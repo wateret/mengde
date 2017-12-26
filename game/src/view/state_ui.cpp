@@ -95,7 +95,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     case Cmd::Op::kCmdMove: {
       const CmdMove* c = DYNAMIC_CAST_CHECK(CmdMove);
       StateUIMoving::Flag flag = StateUIMoving::Flag::kNone;
-      if (c->GetUnit()->GetCoords() == c->GetDest()) {
+      if (c->GetUnit()->GetPosition() == c->GetDest()) {
         return no_state_ui;
       } else {
         return new StateUIMoving(WrapBase(), c->GetUnit(), c->GetDest(), flag);
@@ -249,7 +249,7 @@ void StateUIView::Update() {
     Cell* cell = map->GetCell(cursor_cell_);
     Unit* unit = map->GetUnit(cursor_cell_);
     rv_->SetUnitInfoViewUnitTerrainInfo(cell);
-    rv_->SetUnitInfoViewCoordsByUnitCoords(unit->GetCoords(), rv_->GetCameraCoords());
+    rv_->SetUnitInfoViewCoordsByUnitCoords(unit->GetPosition(), rv_->GetCameraCoords());
     rv_->SetUnitViewUnit(unit);
 
     rv_->SetUnitInfoViewVisible(true);
@@ -308,7 +308,7 @@ bool StateUIView::OnMouseMotionEvent(const MouseMotionEvent e) {
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base,
                                          Unit* unit,
                                          PathTree* pathtree)
-    : StateUIOperable(base), unit_(unit), pathtree_(pathtree), origin_coords_(unit_->GetCoords()) {
+    : StateUIOperable(base), unit_(unit), pathtree_(pathtree), origin_coords_(unit_->GetPosition()) {
 }
 
 StateUIUnitSelected::~StateUIUnitSelected() {
@@ -325,7 +325,7 @@ void StateUIUnitSelected::Exit() {
 
 void StateUIUnitSelected::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
-  drawer->BorderCell(unit_->GetCoords(), 4);
+  drawer->BorderCell(unit_->GetPosition(), 4);
 
   std::vector<Vec2D> movable_cells = pathtree_->GetNodeList();
   drawer->SetDrawColor(Color(0, 0, 192, 96));
@@ -488,14 +488,6 @@ void StateUIMagic::Enter() {
 void StateUIMagic::Exit() {
   atk_->SetNoRender(false);
   def_->SetNoRender(false);
-
-/*
-  Vec2D unit_pos = atk_->GetCoords();
-  Vec2D def_pos = def_->GetCoords();
-  Direction dir = Vec2DRelativePosition(unit_pos, def_pos);
-  atk_->SetDirection(dir);
-  def_->SetDirection(OppositeDirection(dir));
-*/
 }
 
 void StateUIMagic::Render(Drawer* drawer) {
@@ -506,8 +498,8 @@ void StateUIMagic::Render(Drawer* drawer) {
     animator_ = new TextureAnimator(texture, kFramesPerCut);
   }
 
-  Vec2D unit_pos = atk_->GetCoords();
-  Vec2D def_pos = def_->GetCoords();
+  Vec2D unit_pos = atk_->GetPosition();
+  Vec2D def_pos = def_->GetPosition();
   Direction dir = Vec2DRelativePosition(unit_pos, def_pos);
   drawer->CopySprite(atk_->GetBitmapPath(),
                      kSpriteStand,
@@ -569,7 +561,7 @@ void StateUIKilled::Render(Drawer* drawer) {
                      kDirNone,
                      0,
                      {kEffectShade, progress},
-                     unit_->GetCoords());
+                     unit_->GetPosition());
 }
 
 void StateUIKilled::Update() {
@@ -697,8 +689,8 @@ void StateUIAttack::Render(Drawer* drawer) {
   ASSERT(cut_no < kNumCuts);
   const CutInfo* cut_atk = &kCutInfoAtk[cut_no];
   const CutInfo* cut_def = hit_ ? &kCutInfoDefDamaged[cut_no] : &kCutInfoDefBlocked[cut_no];
-  Vec2D atk_pos = atk_->GetCoords();
-  Vec2D def_pos = def_->GetCoords();
+  Vec2D atk_pos = atk_->GetPosition();
+  Vec2D def_pos = def_->GetPosition();
   Vec2D atk_offset = GenerateVec2DOffset(atk_->GetDirection(), cut_atk->offset);
   Vec2D def_offset = GenerateVec2DOffset(def_->GetDirection(), cut_def->offset);
   Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
@@ -718,7 +710,7 @@ void StateUIAttack::Render(Drawer* drawer) {
     sprite_effect = {kEffectBright, progress};
   }
 
-  if (atk_->GetCoords().y > def_->GetCoords().y) {
+  if (atk_->GetPosition().y > def_->GetPosition().y) {
     drawer->CopySprite(def_->GetBitmapPath(),
                        cut_def->sprite,
                        OppositeDirection(dir),
@@ -818,7 +810,7 @@ void StateUIDamaged::Update() {
                                unit_->GetOriginalXtat(),
                                damage_rem,
                                0);
-  rv_->SetUnitInfoViewCoordsByUnitCoords(unit_->GetCoords(), rv_->GetCameraCoords());
+  rv_->SetUnitInfoViewCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords());
 }
 
 void StateUIDamaged::Render(Drawer*) {
@@ -872,7 +864,7 @@ void StateUIAction::Render(Drawer* drawer) {
   // Show Attack Range
   ASSERT(range_itr_ != NULL);
   Vec2D* range_itr = range_itr_;
-  Vec2D pos = unit_->GetCoords();
+  Vec2D pos = unit_->GetPosition();
   const Vec2D nil = {0, 0};
   for (; *range_itr != nil; range_itr++) {
     Vec2D cpos = pos + *range_itr;
@@ -900,7 +892,7 @@ bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
         if (atk->IsInRange(map_pos)) {
           if (atk->IsHostile(def)) {
             unique_ptr<CmdAction> action(new CmdAction());
-            action->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(atk, unit_->GetCoords())));
+            action->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(atk, unit_->GetPosition())));
             action->SetCmdAct(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk, def, CmdBasicAttack::Type::kActive)));
             game_->PushCmd(std::move(action));
             rv_->InitUIStateMachine();
@@ -913,7 +905,7 @@ bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
         if (atk->IsInRange(map_pos, magic->GetRange())) {
           if (atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
             unique_ptr<CmdAction> action(new CmdAction());
-            action->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(atk, unit_->GetCoords())));
+            action->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(atk, unit_->GetPosition())));
             action->SetCmdAct(unique_ptr<CmdMagic>(new CmdMagic(atk, def, magic)));
             game_->PushCmd(std::move(action));
             rv_->InitUIStateMachine();
@@ -950,7 +942,7 @@ bool StateUIAction::OnMouseMotionEvent(const MouseMotionEvent e) {
     else {
       rv_->SetUnitInfoViewUnitTerrainInfo(map->GetCell(cursor_cell));
     }
-    rv_->SetUnitInfoViewCoordsByUnitCoords(unit_target->GetCoords(), rv_->GetCameraCoords());
+    rv_->SetUnitInfoViewCoordsByUnitCoords(unit_target->GetPosition(), rv_->GetCameraCoords());
   }
   rv_->SetUnitInfoViewVisible(unit_in_cell);
   return true;

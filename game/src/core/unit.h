@@ -43,8 +43,8 @@ class Unit : public IEvent {
   void RecalcStat();
   void AddStatModifier(StatModifier*);
   int GetMaxExp() { return 100 + GetLevel() * 5; }
-  void SetCoords(Vec2D pos) { position_ = pos; }
-  Vec2D GetCoords() { return position_; }
+  void SetPosition(Vec2D pos) { position_ = pos; }
+  Vec2D GetPosition() { return position_; }
   void SetDirection(Direction direction) { direction_ = direction; }
   Direction GetDirection() { return direction_; }
   void SetNoRender(bool b) { no_render_ = b; }

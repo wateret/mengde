@@ -166,7 +166,7 @@ void RootView::Render(Drawer* drawer) {
                    unit->GetDirection(),
                    sprite_no,
                    sprite_effect,
-                   unit->GetCoords());
+                   unit->GetPosition());
   });
 
   drawer->SetOffset({0, 0});

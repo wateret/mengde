@@ -82,16 +82,16 @@ void Game::ForEachUnit(std::function<void(Unit*)> f) {
 }
 
 void Game::MoveUnit(Unit* unit, Vec2D dst) {
-  Vec2D src = unit->GetCoords();
+  Vec2D src = unit->GetPosition();
   if (src == dst) return;
   map_->MoveUnit(src, dst);
-  unit->SetCoords(dst);
+  unit->SetPosition(dst);
 }
 
 void Game::KillUnit(Unit* unit) {
   for (int i = 0, sz = units_.size(); i < sz; i++) {
     if (unit == units_[i]) {
-      map_->RemoveUnit(unit->GetCoords());
+      map_->RemoveUnit(unit->GetPosition());
       units_.erase(units_.begin() + i);
       dead_units_.push_back(unit);
       break;
@@ -185,12 +185,12 @@ PathTree* Game::FindMovablePath(Unit* unit) {
 }
 
 Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
-  Vec2D original_pos = unit->GetCoords();
+  Vec2D original_pos = unit->GetPosition();
   MoveUnit(unit, virtual_pos);
   Unit* target = nullptr;
   for (auto candidate : units_) {
     if (unit->IsHostile(candidate)) {
-      if (unit->IsInRange(candidate->GetCoords())) {
+      if (unit->IsInRange(candidate->GetPosition())) {
         target = candidate;
         break;
       }

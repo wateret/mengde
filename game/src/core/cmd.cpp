@@ -176,8 +176,8 @@ CmdBasicAttack::CmdBasicAttack(Unit* atk, Unit* def, Type type)
 unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   if (atk_->IsHPZero() || def_->IsHPZero()) return nullptr;
 
-  Vec2D atk_pos = atk_->GetCoords();
-  Vec2D def_pos = def_->GetCoords();
+  Vec2D atk_pos = atk_->GetPosition();
+  Vec2D def_pos = def_->GetPosition();
   Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
   atk_->SetDirection(dir);
   def_->SetDirection(OppositeDirection(dir));
@@ -212,7 +212,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   // atk_->GainExp(def_);
 
   bool is_last_attack = (reserve_second_attack == IsSecond());
-  if (is_last_attack && !IsCounter() && def_->IsInRange(atk_->GetCoords())) {
+  if (is_last_attack && !IsCounter() && def_->IsInRange(atk_->GetPosition())) {
     // Add counter attack command
     LOG_INFO("'%s's' counter-attack to '%s' is reserved.",
              def_->GetId().c_str(),
@@ -346,8 +346,8 @@ CmdMove::CmdMove(Unit* unit, Vec2D dest) : CmdOneUnit(unit), dest_(dest) {
 unique_ptr<Cmd> CmdMove::Do(Game* game) {
   LOG_INFO("Unit '%s' moved from (%d, %d) to (%d, %d)",
            unit_->GetId().c_str(),
-           unit_->GetCoords().x,
-           unit_->GetCoords().y,
+           unit_->GetPosition().x,
+           unit_->GetPosition().y,
            dest_.x,
            dest_.y);
   game->MoveUnit(unit_, dest_);
@@ -454,7 +454,7 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
   Vec2D move_pos = {-1, -1};
   Unit* target = nullptr;
   for (auto pos : movable_pos_list) {
-    if (!game->UnitInCell(pos) || unit->GetCoords() == pos) {
+    if (!game->UnitInCell(pos) || unit->GetPosition() == pos) {
       Unit* u = game->GetOneHostileInRange(unit, pos);
       if (u != nullptr) {
         move_pos = pos;

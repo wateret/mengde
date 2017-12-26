@@ -63,7 +63,7 @@ void MinimapUnitsView::Render(Drawer* drawer) {
         break;
       }
 
-    Rect rect(u->GetCoords(), {1, 1});
+    Rect rect(u->GetPosition(), {1, 1});
     rect.Magnify(unit_size_);
     rect -= 1;
     drawer->FillRect(&rect);

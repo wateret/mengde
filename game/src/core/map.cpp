@@ -78,7 +78,7 @@ PathTree* Map::FindPath(Unit* unit, Vec2D dest) {
   vector<int> dist(N, kInf);
   vector<bool> used(N, false);
   vector<PathTreeNode*> from(N, NULL);
-  Vec2D coords = unit->GetCoords();
+  Vec2D coords = unit->GetPosition();
   int sc = SerializeVec2D(coords);
   int stat_move = kInf;
   if (dest == Vec2D(-1, -1)) {
@@ -157,7 +157,7 @@ void Map::PlaceUnit(Unit* unit, Vec2D c) {
   ASSERT(IsValidCoords(c));
   ASSERT(!grid_[c.y][c.x]->IsUnitPlaced());
   grid_[c.y][c.x]->SetUnit(unit);
-  unit->SetCoords(c);
+  unit->SetPosition(c);
 
 }
 
@@ -202,7 +202,7 @@ bool Map::IsValidCoords(Vec2D c) const {
 }
 
 int Map::ApplyTerrainEffect(Unit* unit, int value) {
-  Vec2D v = unit->GetCoords();
+  Vec2D v = unit->GetPosition();
   return grid_[v.y][v.x]->ApplyTerrainEffect(unit->GetClassIndex(), value);
 }
 
