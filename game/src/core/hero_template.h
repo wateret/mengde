@@ -13,7 +13,7 @@ class HeroTemplate {
   const UnitClass* GetClass() const { return unit_class_; }
   int GetClassIndex() const;
   int GetMove() const;
-  const Stat* GetHeroStat() const { return &hero_stat_; }
+  const Stat& GetHeroStat() const { return hero_stat_; }
   Vec2D*      GetAttackRange() const;
 
  private:

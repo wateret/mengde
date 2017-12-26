@@ -36,10 +36,10 @@ class Unit : public IEvent {
   int GetLevel();
   int GetMove();
   std::string GetBitmapPath();
-  const Stat* GetOriginalStat() const;
-  const Xtat* GetOriginalXtat() const;
-  const Stat* GetCurrentStat() const { return &current_stat_; }
-  const Xtat* GetCurrentXtat() const { return &current_xtat_; }
+  const Stat& GetOriginalStat() const;
+  const Xtat& GetOriginalXtat() const;
+  const Stat& GetCurrentStat() const { return current_stat_; }
+  const Xtat& GetCurrentXtat() const { return current_xtat_; }
   void RecalcStat();
   void AddStatModifier(StatModifier*);
   int GetMaxExp() { return 100 + GetLevel() * 5; }

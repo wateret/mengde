@@ -1,7 +1,7 @@
 #include "hero.h"
 
 Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
-    : hero_tpl_(hero_tpl), level_(level), hero_stat_(*hero_tpl->GetHeroStat()), unit_stat_(), xtat_() {
+    : hero_tpl_(hero_tpl), level_(level), hero_stat_(hero_tpl->GetHeroStat()), unit_stat_(), xtat_() {
   UpdateUnitStat();
 }
 
@@ -29,7 +29,7 @@ Vec2D* Hero::GetAttackRange() const {
   return hero_tpl_->GetAttackRange();
 }
 
-const Stat* Hero::GetHeroStatBase() const {
+const Stat& Hero::GetHeroStatBase() const {
   return hero_tpl_->GetHeroStat();
 }
 

@@ -105,19 +105,19 @@ void UnitOverView::OnUnitUpdate() {
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
 
-  const Stat* ori_stat = unit_->GetOriginalStat();
-  const Stat* cur_stat = unit_->GetCurrentStat();
-  const Xtat* ori_xtat = unit_->GetOriginalXtat();
-  const Xtat* cur_xtat = unit_->GetCurrentXtat();
+  const Stat& ori_stat = unit_->GetOriginalStat();
+  const Stat& cur_stat = unit_->GetCurrentStat();
+  const Xtat& ori_xtat = unit_->GetOriginalXtat();
+  const Xtat& cur_xtat = unit_->GetCurrentXtat();
   for (int i = 0; i < kNumXtats; i++) {
-    int max_val = (i == 2) ? unit_->GetMaxExp() : ori_xtat->GetValueByIndex(i);
-    gv_stats_[i]->SetCurVal(cur_xtat->GetValueByIndex(i));
+    int max_val = (i == 2) ? unit_->GetMaxExp() : ori_xtat.GetValueByIndex(i);
+    gv_stats_[i]->SetCurVal(cur_xtat.GetValueByIndex(i));
     gv_stats_[i]->SetMaxVal(max_val);
   }
   for (int i = 0; i < kNumStats; i++) {
     int j = i + kNumXtats;
-    gv_stats_[j]->SetCurVal(cur_stat->GetValueByIndex(i));
-    gv_stats_[j]->SetExtVal(cur_stat->GetValueByIndex(i) - ori_stat->GetValueByIndex(i));
+    gv_stats_[j]->SetCurVal(cur_stat.GetValueByIndex(i));
+    gv_stats_[j]->SetExtVal(cur_stat.GetValueByIndex(i) - ori_stat.GetValueByIndex(i));
   }
   string portrait_path = "portrait/" + unit_->GetId() + ".bmp";
   iv_portrait_->SetPath(portrait_path);

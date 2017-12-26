@@ -779,7 +779,7 @@ void StateUIAttack::Update() {
 
 StateUIDamaged::StateUIDamaged(StateUI::Base base, Unit* unit, int damage)
    : StateUI(base), frames_(-1), unit_(unit), damage_(damage) {
-  damage_ = std::min(damage_, unit->GetCurrentXtat()->hp);
+  damage_ = std::min(damage_, unit->GetCurrentXtat().hp);
 }
 
 void StateUIDamaged::Enter() {
@@ -801,12 +801,12 @@ void StateUIDamaged::Update() {
   const int max_anim_frames = (kFrames - 1) * 1 / 2;
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
-  Xtat xtat_mod = *unit_->GetCurrentXtat();
+  Xtat xtat_mod = unit_->GetCurrentXtat();
   int damage_rem = damage_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
   xtat_mod.hp -= damage_ - damage_rem;
   rv_->SetUnitInfoViewContents(unit_->GetId(),
                                unit_->GetLevel(),
-                               &xtat_mod,
+                               xtat_mod,
                                unit_->GetOriginalXtat(),
                                damage_rem,
                                0);

@@ -45,7 +45,7 @@ class RootView : public View {
   void SetUnitViewUnit(Unit*);
   void SetUnitInfoViewUnitTerrainInfo(Cell* cell);
   void SetUnitInfoViewUnitAttackInfo(Unit* unit, int, int);
-  void SetUnitInfoViewContents(const std::string&, int, const Xtat*, const Xtat*, int, int);
+  void SetUnitInfoViewContents(const std::string&, int, const Xtat&, const Xtat&, int, int);
   void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
   void SetUnitInfoViewVisible(bool);
   void SetDialogViewVisible(bool);

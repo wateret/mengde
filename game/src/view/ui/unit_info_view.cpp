@@ -75,13 +75,13 @@ void UnitInfoView::SetUnitAttackInfo(Unit* unit, int accuracy, int expected_dama
 
 void UnitInfoView::SetUnit(Unit* unit) {
   unit_ = unit;
-  const Xtat* cur_xtat = unit_->GetCurrentXtat();
-  const Xtat* ori_xtat = unit_->GetOriginalXtat();
-  gv_hp_->SetCurVal(cur_xtat->hp);
-  gv_hp_->SetMaxVal(ori_xtat->hp);
+  const Xtat& cur_xtat = unit_->GetCurrentXtat();
+  const Xtat& ori_xtat = unit_->GetOriginalXtat();
+  gv_hp_->SetCurVal(cur_xtat.hp);
+  gv_hp_->SetMaxVal(ori_xtat.hp);
   gv_hp_->SetExtVal(0);
-  gv_mp_->SetCurVal(cur_xtat->mp);
-  gv_mp_->SetMaxVal(ori_xtat->mp);
+  gv_mp_->SetCurVal(cur_xtat.mp);
+  gv_mp_->SetMaxVal(ori_xtat.mp);
   gv_mp_->SetExtVal(0);
   tv_name_->SetText(unit_->GetId());
   tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
@@ -89,16 +89,16 @@ void UnitInfoView::SetUnit(Unit* unit) {
 
 void UnitInfoView::SetContents(const std::string& id,
                                int lv,
-                               const Xtat* xcur,
-                               const Xtat* xmax,
+                               const Xtat& xcur,
+                               const Xtat& xmax,
                                int damage,
                                int mp_cost) {
   unit_ = nullptr; // Reset cache
-  gv_hp_->SetCurVal(xcur->hp);
-  gv_hp_->SetMaxVal(xmax->hp);
+  gv_hp_->SetCurVal(xcur.hp);
+  gv_hp_->SetMaxVal(xmax.hp);
   gv_hp_->SetExtVal(damage);
-  gv_mp_->SetCurVal(xcur->mp);
-  gv_mp_->SetMaxVal(xmax->mp);
+  gv_mp_->SetCurVal(xcur.mp);
+  gv_mp_->SetMaxVal(xmax.mp);
   gv_mp_->SetExtVal(mp_cost);
   tv_name_->SetText(id);
   tv_lv_->SetText("Lv " + std::to_string(lv));

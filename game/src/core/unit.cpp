@@ -6,8 +6,8 @@ Unit::Unit(shared_ptr<Hero> hero, const Side side)
       item_slot_weapon_(Item::kItemWeapon),
       item_slot_armor_(Item::kItemArmor),
       item_slot_aid_(Item::kItemAid),
-      current_stat_(*hero->GetUnitStat()),
-      current_xtat_(*hero->GetXtat()),
+      current_stat_(hero->GetUnitStat()),
+      current_xtat_(hero->GetXtat()),
       position_(0, 0),
       direction_(kDirDown),
       stat_modifier_list_(),
@@ -30,10 +30,7 @@ void Unit::RestoreHP(int amount) {
 }
 
 void Unit::Heal(int amount) {
-  current_xtat_.hp += amount;
-  if (current_xtat_.hp > GetOriginalXtat()->hp) {
-    current_xtat_.hp = GetOriginalXtat()->hp;
-  }
+  current_xtat_.hp = std::min(current_xtat_.hp + amount, GetOriginalXtat().hp);
 }
 
 bool Unit::IsHostile(Unit* u) const {
@@ -61,16 +58,16 @@ std::string Unit::GetBitmapPath() {
   return hero_->GetBitmapPath();
 }
 
-const Stat* Unit::GetOriginalStat() const {
+const Stat& Unit::GetOriginalStat() const {
   return hero_->GetUnitStat();
 }
 
-const Xtat* Unit::GetOriginalXtat() const {
+const Xtat& Unit::GetOriginalXtat() const {
   return hero_->GetXtat();
 }
 
 void Unit::RecalcStat() {
-  current_stat_ = *hero_->GetUnitStat();
+  current_stat_ = hero_->GetUnitStat();
 
   Stat addends = stat_modifier_list_.CalcAddends() +
                  item_slot_weapon_.CalcModifierAddends() +
@@ -95,11 +92,11 @@ void Unit::AddStatModifier(StatModifier* sm) {
 }
 
 bool Unit::IsHPLow() const {
-  return GetCurrentXtat()->hp <= GetOriginalXtat()->hp * 3 / 10;
+  return GetCurrentXtat().hp <= GetOriginalXtat().hp * 3 / 10;
 }
 
 bool Unit::IsHPZero() const {
-  return GetCurrentXtat()->hp <= 0;
+  return GetCurrentXtat().hp <= 0;
 }
 
 const UnitClass* Unit::GetClass() const {
@@ -152,7 +149,7 @@ void Unit::GainExp(int exp) {
 void Unit::LevelUp() {
   // TODO check if Unit is alread in max level
   hero_->LevelUp();
-  current_stat_ = *hero_->GetUnitStat();
+  current_stat_ = hero_->GetUnitStat();
   LOG_INFO("'%s' Level Up! (Level : %d)", hero_->GetId().c_str(), hero_->GetLevel());
 }
 

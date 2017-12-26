@@ -14,13 +14,13 @@ class Hero {
   const UnitClass* GetClass() const;
   int GetClassIndex() const;
   int GetMove() const;
-  const Stat* GetHeroStat() const { return &hero_stat_; }
+  const Stat& GetHeroStat() const { return hero_stat_; }
   Vec2D*      GetAttackRange() const;
 
-  const Stat* GetHeroStatBase() const;
+  const Stat& GetHeroStatBase() const;
   uint16_t    GetLevel()    const { return level_; }
-  const Stat* GetUnitStat() const { return &unit_stat_; }
-  const Xtat* GetXtat()     const { return &xtat_; }
+  const Stat& GetUnitStat() const { return unit_stat_; }
+  const Xtat& GetXtat()     const { return xtat_; }
   void        LevelUp();
 
  private:
