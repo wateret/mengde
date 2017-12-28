@@ -146,6 +146,7 @@ class LuaScript {
   }
   void PushToStack(const string&);
   void PushToStack(lua_CFunction);
+  void PushToStack(void *);
 
   int GetToStack(const string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
@@ -217,15 +218,9 @@ class LuaScript {
     return ret;
   }
 
-  template<typename R, typename... Args>
-  R Call(unsigned argc, int arg, Args... args) {
-    lua_pushnumber(L, (double)arg);
-    return Call<R>(argc + 1, args...);
-  }
-
-  template<typename R, typename... Args>
-  R Call(unsigned argc, const string& arg, Args... args) {
-    lua_pushstring(L, arg.c_str());
+  template<typename R, typename A, typename... Args>
+  R Call(unsigned argc, A arg0, Args... args) {
+    PushToStack(arg0);
     return Call<R>(argc + 1, args...);
   }
 

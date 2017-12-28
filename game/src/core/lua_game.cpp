@@ -34,8 +34,8 @@ LUA_IMPL(GenerateOwnUnit) {
   Game* game = lua_get_game_object(L);
 
   LuaScript lua(L);
-  Vec2D      pos   = GetVec2DFromLua(&lua);
-  string     id    = lua.Get<string>();
+  Vec2D  pos = GetVec2DFromLua(&lua);
+  string id  = lua.Get<string>();
 
   int unit_no = game->GenerateOwnUnit(id, pos);
 

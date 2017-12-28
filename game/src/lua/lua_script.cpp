@@ -57,6 +57,10 @@ void LuaScript::PushToStack(lua_CFunction fn) {
   lua_pushcfunction(L, fn);
 }
 
+void LuaScript::PushToStack(void *ptr) {
+  lua_pushlightuserdata(L, ptr);
+}
+
 void LuaScript::SetRawPointerToGlobal(const string& name, void* p) {
   lua_pushlightuserdata(L, p);
   lua_setglobal(L, name.c_str());
@@ -90,12 +94,12 @@ void LuaScript::DumpStack() {
   }
   printf("--------------- Stack Dump Finished ---------------\n");
 #endif // DEBUG
-} 
+}
 
 template<>
 void LuaScript::Call<void>(unsigned argc) {
   if (lua_pcall(L, argc, 0, 0)) {
-    LogError("Error on Call.");
+    LogError("Error on Call(return type : void).");
   }
 }
 
@@ -109,12 +113,12 @@ bool LuaScript::GetDefault<bool>() {
   return false;
 }
 
-template<> 
+template<>
 bool LuaScript::GetTop<bool>() {
   return (bool)lua_toboolean(L, -1);
 }
 
-template<> 
+template<>
 bool LuaScript::GetTopOpt<bool>() {
   if (lua_isboolean(L, -1)) {
     return (bool)lua_toboolean(L, -1);
