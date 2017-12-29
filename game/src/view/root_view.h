@@ -6,12 +6,14 @@
 #include "state_machine.h"
 #include "app.h"
 
+class Assets;
 class Game;
 class StateUI;
 class Unit;
 class Cell;
 
 class CompositeView;
+class DeployView;
 class UnitView;
 class UnitDialogView;
 class ControlView;
@@ -27,7 +29,7 @@ class RootView : public View {
    typedef function<void()> NextFrameCallback;
 
  public:
-  RootView(const Vec2D, Game*, App*);
+  RootView(const Vec2D, Game*, App*, Assets*);
   ~RootView();
   Vec2D GetMouseCoords() { return mouse_coords_; }
   Vec2D GetCameraCoords() { return camera_coords_; }
@@ -86,6 +88,7 @@ class RootView : public View {
   Game*                  game_;
   App*                   app_;
   CompositeView*         ui_views_;
+  DeployView*            deploy_view_;
   UnitInfoView*          unit_info_view_;
   UnitView*              unit_view_;
   ControlView*           control_view_;

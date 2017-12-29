@@ -3,14 +3,14 @@
 #include "config_loader.h"
 #include "game.h"
 
-Scenario::Scenario(const string& id) : rc_(), assets_(nullptr), game_(nullptr) {
-  const string base_path = "/" + id;
+Scenario::Scenario(const string& scenario_id) : rc_(), assets_(nullptr), game_(nullptr) {
+  const string base_path = "/" + scenario_id;
   ConfigLoader loader(base_path + "/config.lua");
   rc_ = loader.GetResources();
 
   // For the case of NEW GAME
   assets_ = new Assets();
-  game_ = NewGame(id, loader.GetFirstStage());
+  game_ = NewGame(scenario_id, loader.GetFirstStage());
 }
 
 Game* Scenario::NewGame(const string& id, const string& first_stage_script) {
@@ -18,7 +18,7 @@ Game* Scenario::NewGame(const string& id, const string& first_stage_script) {
   return new Game(rc_, assets_, base_path + "/" + first_stage_script);
 }
 
-Game* Scenario::LoadGame(const string&, const string&) {
+Game* Scenario::LoadGame(const string& scenario_id, const string& save_file_path) {
   UNREACHABLE("NYI");
 //  return new Game(rc_, assets_, GameEnv::GetInstance()->GetScenarioPath() + "/" + base_path + "/" + first_stage_script);
   return nullptr;

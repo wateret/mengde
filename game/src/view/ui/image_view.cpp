@@ -4,6 +4,10 @@
 #include "../texture_manager.h"
 
 ImageView::ImageView(const Rect* frame, const string& path)
+    : ImageView(*frame, path) {
+}
+
+ImageView::ImageView(const Rect& frame, const string& path)
     : View(frame), path_(path), texture_(nullptr) {
   SetBgColor(COLOR("transparent"));
   SetPadding(0);
@@ -17,6 +21,10 @@ void ImageView::SetPath(const string& path) {
   texture_ = nullptr;
 }
 
+void ImageView::SetSourceRect(const Rect& rect) {
+  src_rect_ = rect;
+}
+
 void ImageView::Render(Drawer* drawer) {
   if (texture_ == nullptr) { // TODO better design?
     TextureManager* tm = drawer->GetTextureManager();
@@ -24,7 +32,11 @@ void ImageView::Render(Drawer* drawer) {
   }
   ASSERT(texture_ != nullptr);
   Rect frame = *GetFrame();
-  drawer->CopyTexture(texture_, nullptr, &frame);
+
+  if (src_rect_.GetSize() != Vec2D(0, 0))
+    drawer->CopyTexture(texture_, &src_rect_, &frame);
+  else
+    drawer->CopyTexture(texture_, nullptr, &frame);
 }
 
 bool ImageView::OnMouseButtonEvent(const MouseButtonEvent e) {
@@ -35,7 +47,7 @@ bool ImageView::OnMouseButtonEvent(const MouseButtonEvent e) {
   return true;
 }
 
-bool ImageView::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool ImageView::OnMouseMotionEvent(const MouseMotionEvent) {
   return false;
 }
 

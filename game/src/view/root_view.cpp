@@ -1,12 +1,12 @@
 #include "root_view.h"
 #include "app.h"
-#include "game.h"
 #include "state_ui.h"
 #include "layout_helper.h"
 #include "drawer.h"
 #include "texture_manager.h"
 #include "util/state_machine.h"
 #include "ui/composite_view.h"
+#include "ui/deploy_view.h"
 #include "ui/unit_info_view.h"
 #include "ui/unit_list_view.h"
 #include "ui/unit_view.h"
@@ -16,14 +16,17 @@
 #include "ui/magic_list_view.h"
 #include "ui/scroll_view.h"
 #include "ui/terrain_info_view.h"
-#include "core/magic_list.h"
+#include "core/assets.h"
 #include "core/cell.h"
+#include "core/game.h"
+#include "core/magic_list.h"
 
-RootView::RootView(const Vec2D size, Game* game, App* app)
+RootView::RootView(const Vec2D size, Game* game, App* app, Assets* assets)
     : View(),
       game_(game),
       app_(app),
       ui_views_(nullptr),
+      deploy_view_(nullptr),
       unit_info_view_(nullptr),
       unit_view_(nullptr),
       control_view_(nullptr),
@@ -42,6 +45,13 @@ RootView::RootView(const Vec2D size, Game* game, App* app)
 
   ui_views_ = new CompositeView(frame);
   ui_views_->SetTransparent();
+
+  { // Initialize deploy_view_
+    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
+    deploy_view_ = new DeployView(frame, assets->GetHeroes());
+    deploy_view_->SetVisible(true);
+    ui_views_->AddChild(deploy_view_);
+  }
 
   // Calculate max_camera_coords_
   const int kMapWidth     = game_->GetMapSize().x * App::kBlockSize;
