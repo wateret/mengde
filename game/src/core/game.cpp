@@ -6,6 +6,7 @@
 #include "event_effect.h"
 #include "magic.h"
 #include "formulae.h"
+#include "unit_supervisor.h"
 #include "util/game_env.h"
 #include "util/path_tree.h"
 #include "lua/lua_script.h"
@@ -80,9 +81,9 @@ void Game::InitLua(const string& stage_script_path) {
 #undef MACRO_LUA_GAME
 
   // Register enum values
-  lua_script_->Set(GAME_PREFIX "side.own", (int)Unit::kSideOwn);
-  lua_script_->Set(GAME_PREFIX "side.ally", (int)Unit::kSideAlly);
-  lua_script_->Set(GAME_PREFIX "side.enemy", (int)Unit::kSideEnemy);
+  lua_script_->Set(GAME_PREFIX "force.own", (int)Force::kOwn);
+  lua_script_->Set(GAME_PREFIX "force.ally", (int)Force::kAlly);
+  lua_script_->Set(GAME_PREFIX "force.enemy", (int)Force::kEnemy);
   lua_script_->Set(GAME_PREFIX "end_type.undecided", (int)Status::kUndecided);
   lua_script_->Set(GAME_PREFIX "end_type.defeat", (int)Status::kDefeat);
   lua_script_->Set(GAME_PREFIX "end_type.victory", (int)Status::kVictory);
@@ -142,7 +143,7 @@ Equipment* Game::GetEquipment(const std::string& id) {
   return rc_.equipment_manager->Get(id);
 }
 
-bool Game::EndSideTurn() {
+bool Game::EndForceTurn() {
   ForEachUnit([this] (Unit* u) {
     if (this->IsCurrentTurn(u)) {
       u->ResetAction();
@@ -165,7 +166,7 @@ bool Game::EndSideTurn() {
 }
 
 bool Game::IsUserTurn() const {
-  return turn_.GetSide() == Unit::kSideOwn;
+  return turn_.GetForce() == Force::kOwn;
 }
 
 bool Game::IsAITurn() const {
@@ -173,7 +174,7 @@ bool Game::IsAITurn() const {
 }
 
 bool Game::IsCurrentTurn(Unit* unit) const {
-  return unit->GetSide() == turn_.GetSide();
+  return unit->GetForce() == turn_.GetForce();
 }
 
 uint16_t Game::GetTurnCurrent() const {
@@ -255,7 +256,7 @@ bool Game::CheckStatus() {
 uint32_t Game::GetNumEnemiesAlive() {
   uint32_t count = 0;
   ForEachUnit([=, &count] (Unit* u) {
-    if (u->GetSide() == Unit::kSideEnemy) {
+    if (u->GetForce() == Force::kEnemy) {
       count++;
     }
   });
@@ -265,7 +266,7 @@ uint32_t Game::GetNumEnemiesAlive() {
 uint32_t Game::GetNumOwnsAlive() {
   uint32_t count = 0;
   ForEachUnit([=, &count] (Unit* u) {
-    if (u->GetSide() == Unit::kSideOwn) {
+    if (u->GetForce() == Force::kOwn) {
       count++;
     }
   });
@@ -293,16 +294,16 @@ uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
 }
 
 uint32_t Game::GenerateOwnUnit(shared_ptr<Hero> hero, Vec2D pos) {
-  Unit* unit = new Unit(hero, Unit::kSideOwn);
+  Unit* unit = new Unit(hero, Force::kOwn);
   units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
   return units_.size() - 1;
 }
 
-uint32_t Game::GenerateUnit(const string& id, uint16_t level, Unit::Side side, Vec2D pos) {
+uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
   auto hero = std::make_shared<Hero>(hero_tpl, level);
-  Unit* unit = new Unit(hero, side);
+  Unit* unit = new Unit(hero, force);
   units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
   return units_.size() - 1;

@@ -47,18 +47,18 @@ MinimapUnitsView::MinimapUnitsView(const Rect* frame, Game* game, Vec2D map_size
 
 void MinimapUnitsView::Render(Drawer* drawer) {
   game_->ForEachUnit([=] (Unit* u) {
-    switch (u->GetSide()) {
-      case Unit::kSideOwn:
+    switch (u->GetForce()) {
+      case Force::kOwn:
         drawer->SetDrawColor({192, 0, 0, 255});
         break;
-      case Unit::kSideAlly:
+      case Force::kAlly:
         drawer->SetDrawColor(COLOR("orange"));
         break;
-      case Unit::kSideEnemy:
+      case Force::kEnemy:
         drawer->SetDrawColor(COLOR("blue"));
         break;
       default:
-        LOG_FATAL("Unknown side for a unit.");
+        LOG_FATAL("Unknown force for a unit.");
         drawer->SetDrawColor(COLOR("gray"));
         break;
       }

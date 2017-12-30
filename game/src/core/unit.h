@@ -8,23 +8,13 @@
 #include "stat_modifier_list.h"
 #include "equipment_slot.h"
 #include "i_event.h"
+#include "force.h"
 
 class UnitClass;
 
 class Unit : public IEvent {
  public:
-  enum Side {
-    kSideNone     = 0x00,
-    kSideFirst    = 0x01,
-    kSideOwn      = 0x01,
-    kSideAlly     = 0x02,
-    kSideEnemy    = 0x04,
-    kSideFriendly = kSideOwn | kSideAlly,
-    kSideLast     = 0x08                   // Not a real value
-  };
-
- public:
-  Unit(shared_ptr<Hero>, const Side);
+  Unit(shared_ptr<Hero>, const Force);
   ~Unit();
 
  public:
@@ -50,7 +40,7 @@ class Unit : public IEvent {
   void SetNoRender(bool b) { no_render_ = b; }
   const UnitClass* GetClass() const;
   int GetClassIndex() const;
-  Side GetSide() const { return side_; }
+  Force GetForce() const { return force_; }
   Vec2D* GetAttackRange() const;
   bool IsNoRender() const { return no_render_; }
   bool IsHPLow() const;
@@ -85,7 +75,7 @@ class Unit : public IEvent {
   Direction direction_;
   StatModifierList stat_modifier_list_;
   EventEffectList  effect_list_;
-  Side      side_;
+  Force     force_;
   bool      no_render_;     // FIXME this should be moved to some View related module
   bool      done_action_;
 };

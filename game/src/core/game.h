@@ -17,6 +17,7 @@ class Commander;
 class LuaScript;
 class Magic;
 class Deployer;
+class UnitSupervisor;
 
 class Game : public IDeployHelper {
  public:
@@ -49,7 +50,7 @@ class Game : public IDeployHelper {
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
   LuaScript* GetLuaScript() { return lua_script_; }
-  bool EndSideTurn();
+  bool EndForceTurn();
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
   bool IsUserTurn() const;
@@ -75,7 +76,7 @@ class Game : public IDeployHelper {
   void AppointHero(const string&, uint16_t);
   uint32_t GenerateOwnUnit(const string&, Vec2D);
   uint32_t GenerateOwnUnit(shared_ptr<Hero>, Vec2D);
-  uint32_t GenerateUnit(const string&, uint16_t, Unit::Side, Vec2D);
+  uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
   bool UnitPutWeaponOn(uint32_t, const string&);
 

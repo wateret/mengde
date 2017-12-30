@@ -1,7 +1,7 @@
 #include "unit.h"
 #include "unit_class.h"
 
-Unit::Unit(shared_ptr<Hero> hero, const Side side)
+Unit::Unit(shared_ptr<Hero> hero, const Force force)
     : hero_(hero),
       equipment_slot_weapon_(Equipment::Type::kWeapon),
       equipment_slot_armor_(Equipment::Type::kArmor),
@@ -11,7 +11,7 @@ Unit::Unit(shared_ptr<Hero> hero, const Side side)
       position_(0, 0),
       direction_(kDirDown),
       stat_modifier_list_(),
-      side_(side),
+      force_(force),
       no_render_(false),
       done_action_(false) {
 }
@@ -34,10 +34,10 @@ void Unit::Heal(int amount) {
 }
 
 bool Unit::IsHostile(Unit* u) const {
-  Side uside = u->side_;
-  if ((side_ & kSideFriendly) && (uside & kSideEnemy))
+  Force uforce = u->force_;
+  if (((uint32_t)force_ & (uint32_t)Force::kFriendly) && ((uint32_t)uforce & (uint32_t)Force::kEnemy))
     return true;
-  if ((uside & kSideFriendly) && (side_ & kSideEnemy))
+  if (((uint32_t)uforce & (uint32_t)Force::kFriendly) && ((uint32_t)force_ & (uint32_t)Force::kEnemy))
     return true;
   return false;
 }

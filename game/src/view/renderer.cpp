@@ -27,7 +27,7 @@ Renderer::~Renderer() {
 void Renderer::DrawRect(const Rect* rect, const int border) {
   SDL_Rect raw_rect = *rect->GetRawRectPtr();
   for (int b = 0; b < border; b++) {
-    // border goes to inside
+    // border goes to inforce
     SDL_RenderDrawRect(handle_, &raw_rect);
     raw_rect.x++;
     raw_rect.y++;

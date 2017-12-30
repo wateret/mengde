@@ -1,15 +1,15 @@
 #include "turn.h"
 
-Turn::Turn() : current_(1), limit_(99), side_(Unit::kSideFirst) {
+Turn::Turn() : current_(1), limit_(99), force_(Force::kFirst) {
 }
 
 bool Turn::Next() {
-  Unit::Side next = static_cast<Unit::Side>(side_ << 1);
-  bool next_turn = (next == Unit::kSideLast);
+  Force next = static_cast<Force>((uint32_t)force_ << 1);
+  bool next_turn = (next == Force::kLast);
   if (next_turn) {
-    next = Unit::kSideFirst;
+    next = Force::kFirst;
     current_++;
   }
-  side_ = next;
+  force_ = next;
   return next_turn;
 }

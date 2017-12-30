@@ -48,11 +48,11 @@ LUA_IMPL(GenerateUnit) {
 
   LuaScript lua(L);
   Vec2D      pos   = GetVec2DFromLua(&lua);
-  Unit::Side side  = (Unit::Side)lua.Get<int>();
+  Force force  = (Force)lua.Get<int>();
   uint16_t   level = lua.Get<uint16_t>();
   string     id    = lua.Get<string>();
 
-  int unit_no = game->GenerateUnit(id, level, side, pos);
+  int unit_no = game->GenerateUnit(id, level, force, pos);
 
   lua.PushToStack(unit_no);
   return 1;

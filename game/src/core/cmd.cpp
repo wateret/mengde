@@ -415,7 +415,7 @@ CmdEndTurn::CmdEndTurn() : Cmd() {
 }
 
 unique_ptr<Cmd> CmdEndTurn::Do(Game* game) {
-  game->EndSideTurn();
+  game->EndForceTurn();
   return nullptr;
 }
 
@@ -425,7 +425,7 @@ CmdPlayAI::CmdPlayAI() : Cmd() {
 }
 
 unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
-//  const Unit::Side side = turn_.GetSide();
+//  const Force force = turn_.GetForce();
   vector<Unit*> units = game->GetCurrentUnits();
   LOG_DEBUG("units: %d", units.size());
   Unit* unit = nullptr;

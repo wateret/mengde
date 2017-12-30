@@ -9,12 +9,12 @@ class Turn {
   bool Next();
   uint16_t GetCurrent() const { return current_; }
   uint16_t GetLimit() const { return limit_; }
-  Unit::Side GetSide() const { return side_; }
+  Force GetForce() const { return force_; }
 
  private:
   uint16_t   current_;
   uint16_t   limit_;
-  Unit::Side side_;
+  Force force_;
 };
 
 #endif // TURN_H_
