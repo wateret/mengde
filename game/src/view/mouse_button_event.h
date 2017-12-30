@@ -1,7 +1,7 @@
 #ifndef MOUSE_BUTTON_EVENT_H_
 #define MOUSE_BUTTON_EVENT_H_
 
-#include "common.h"
+#include "util/common.h"
 
 class MouseButtonEvent {
  public:

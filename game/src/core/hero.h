@@ -1,7 +1,7 @@
 #ifndef HERO_H_
 #define HERO_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "stat.h"
 #include "unit_class.h"
 #include "hero_template.h"

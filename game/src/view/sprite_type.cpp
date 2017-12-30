@@ -1,17 +1,15 @@
 #include "sprite_type.h"
 
-#include "common.h"
-
 const char* kSpriteToString[] = {
 #define MACRO_SPRITE_TYPE(ename, bname, dir, ofs, snum, bsize) #ename,
 #include "sprite_type.inc.h"
-  NULL
+  nullptr
 };
 
 const char* kSpriteBitmapName[] = {
 #define MACRO_SPRITE_TYPE(ename, bname, dir, ofs, snum, bsize) bname,
 #include "sprite_type.inc.h"
-  NULL
+  nullptr
 };
 
 const bool kSpriteHasDir[] = {

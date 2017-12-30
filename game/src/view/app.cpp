@@ -1,17 +1,17 @@
 #include "app.h"
-#include "assets.h"
-#include "common.h"
+#include "core/assets.h"
+#include "core/game.h"
+#include "core/scenario.h"
+#include "core/unit.h"
+#include "util/common.h"
 #include "misc.h"
 #include "texture.h"
 #include "rect.h"
 #include "color.h"
-#include "unit.h"
 #include "timer.h"
 #include "drawer.h"
 #include "main_view.h"
 #include "root_view.h"
-#include "game.h"
-#include "scenario.h"
 
 FrameConfig::FrameConfig(uint16_t max_frames_sec, float speed) : max_frames_sec_(max_frames_sec), speed_(speed) {
   ASSERT(0.125f <= speed_ && speed_ <= 4.0f);

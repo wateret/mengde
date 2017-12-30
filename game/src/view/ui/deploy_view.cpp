@@ -1,10 +1,10 @@
 #include "deploy_view.h"
 #include "core/hero.h"
 #include "core/i_deploy_helper.h"
-#include "ui/button_view.h"
-#include "ui/image_view.h"
-#include "ui/text_view.h"
-#include "misc.h"
+#include "button_view.h"
+#include "image_view.h"
+#include "text_view.h"
+#include "../misc.h"
 
 HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHelper* deploy_helper)
     : CallbackView(frame), hero_(hero), deploy_no_(kUndeployed), tv_no_(nullptr) {

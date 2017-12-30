@@ -2,7 +2,7 @@
 #define ASSETS_H_
 
 #include <map>
-#include "common.h"
+#include "util/common.h"
 
 class Hero;
 class Equipment;

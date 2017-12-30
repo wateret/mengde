@@ -1,7 +1,7 @@
 #ifndef UNIT_DIALOG_VIEW_H_
 #define UNIT_DIALOG_VIEW_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "composite_view.h"
 
 class Unit;

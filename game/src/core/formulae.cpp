@@ -1,5 +1,5 @@
 #include "formulae.h"
-#include "common.h"
+#include "util/common.h"
 #include "unit.h"
 #include "map.h"
 

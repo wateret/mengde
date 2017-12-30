@@ -1,7 +1,7 @@
 #ifndef TAB_VIEW_H_
 #define TAB_VIEW_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "composite_view.h"
 
 class TabView : public CompositeView {

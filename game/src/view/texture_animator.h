@@ -1,7 +1,7 @@
 #ifndef TEXTURE_ANIMATOR_H_
 #define TEXTURE_ANIMATOR_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "rect.h"
 
 class Texture;

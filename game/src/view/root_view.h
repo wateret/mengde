@@ -2,8 +2,8 @@
 #define ROOT_VIEW_H_
 
 #include "view.h"
-#include "common.h"
-#include "state_machine.h"
+#include "util/common.h"
+#include "util/state_machine.h"
 #include "app.h"
 
 class Assets;

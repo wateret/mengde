@@ -3,7 +3,7 @@
 
 #include <string>
 #include "unit_effect_list.h"
-#include "common.h"
+#include "util/common.h"
 #include "i_event.h"
 
 class EventEffect;

@@ -1,5 +1,5 @@
 #include "config_loader.h"
-#include "common.h"
+#include "util/common.h"
 #include "unit_class.h"
 #include "attack_range.h"
 #include "magic.h"

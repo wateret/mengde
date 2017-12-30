@@ -1,7 +1,7 @@
 #ifndef UNIT_CLASS_H_
 #define UNIT_CLASS_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "attack_range.h"
 #include "stat.h"
 

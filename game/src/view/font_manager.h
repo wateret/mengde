@@ -3,7 +3,7 @@
 
 #include <SDL_ttf.h>
 #include <unordered_map>
-#include "common.h"
+#include "util/common.h"
 
 class FontManager {
  public:

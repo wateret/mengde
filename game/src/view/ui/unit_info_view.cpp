@@ -1,11 +1,11 @@
 #include "unit_info_view.h"
-#include "rect.h"
-#include "app.h"
-#include "unit.h"
-#include "cell.h"
+#include "../rect.h"
+#include "../app.h"
+#include "core/unit.h"
+#include "core/cell.h"
 #include "gauge_view.h"
 #include "text_view.h"
-#include "drawer.h"
+#include "../drawer.h"
 
 UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
     : CompositeView(frame),

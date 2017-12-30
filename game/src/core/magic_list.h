@@ -1,7 +1,7 @@
 #ifndef MAGIC_LIST_H_
 #define MAGIC_LIST_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "resource_manager.h"
 
 class Magic;

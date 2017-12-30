@@ -1,7 +1,7 @@
 #ifndef COMPOSITE_VIEW_H_
 #define COMPOSITE_VIEW_H_
 
-#include "view.h"
+#include "../view.h"
 #include <vector>
 
 class CompositeView : public View {

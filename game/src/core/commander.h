@@ -1,7 +1,7 @@
 #ifndef COMMANDER_H_
 #define COMMANDER_H_
 
-#include "common.h"
+#include "util/common.h"
 
 class Cmd;
 class CmdQueue;

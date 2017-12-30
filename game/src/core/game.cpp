@@ -1,10 +1,10 @@
 #include "game.h"
 #include "assets.h"
 #include "deployer.h"
-#include "game_env.h"
 #include "magic.h"
 #include "formulae.h"
 #include "cmd.h"
+#include "util/game_env.h"
 #include "util/path_tree.h"
 #include "lua/lua_script.h"
 

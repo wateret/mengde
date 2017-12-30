@@ -1,8 +1,8 @@
 #ifndef RECT_VIEW_H_
 #define RECT_VIEW_H_
 
-#include "view.h"
-#include "common.h"
+#include "../view.h"
+#include "util/common.h"
 
 class RectView : public View {
  public:

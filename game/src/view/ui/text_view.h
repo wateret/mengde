@@ -1,9 +1,9 @@
 #ifndef TEXT_VIEW_H_
 #define TEXT_VIEW_H_
 
-#include "view.h"
-#include "common.h"
-#include "layout_helper.h"
+#include "../view.h"
+#include "util/common.h"
+#include "../layout_helper.h"
 
 class TextView : public View {
  public:

@@ -5,7 +5,7 @@
 #include "i_deploy_helper.h"
 #include "map.h"
 #include "unit.h"
-#include "common.h"
+#include "util/common.h"
 #include "turn.h"
 #include "resource_manager.h"
 #include <string>

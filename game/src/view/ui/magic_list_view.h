@@ -2,7 +2,7 @@
 #define MAGIC_LIST_VIEW_H_
 
 #include "composite_view.h"
-#include "common.h"
+#include "util/common.h"
 
 class Game;
 class RootView;

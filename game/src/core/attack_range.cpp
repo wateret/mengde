@@ -1,5 +1,5 @@
 #include "attack_range.h"
-#include "common.h"
+#include "util/common.h"
 
 namespace Range {
 

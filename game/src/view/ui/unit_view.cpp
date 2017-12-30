@@ -1,6 +1,6 @@
 #include "unit_view.h"
-#include "color.h"
-#include "drawer.h"
+#include "../color.h"
+#include "../drawer.h"
 #include "gauge_view.h"
 #include "button_view.h"
 #include "text_view.h"

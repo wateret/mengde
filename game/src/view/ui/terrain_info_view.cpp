@@ -1,6 +1,6 @@
 #include "terrain_info_view.h"
-#include "app.h"
-#include "drawer.h"
+#include "../app.h"
+#include "../drawer.h"
 #include "text_view.h"
 
 TerrainInfoView::TerrainInfoView(const Rect& frame,

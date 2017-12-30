@@ -1,7 +1,7 @@
 #ifndef CONFIG_LOADER_H_
 #define CONFIG_LOADER_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "util/game_env.h"
 #include "resource_manager.h"
 

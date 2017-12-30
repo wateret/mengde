@@ -1,7 +1,7 @@
 #ifndef SCENARIO_H_
 #define SCENARIO_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "resource_manager.h"
 
 class Assets;

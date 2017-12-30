@@ -1,6 +1,6 @@
 #include "event_effect_list.h"
 #include "event_effect.h"
-#include "common.h"
+#include "util/common.h"
 
 EventEffectList::EventEffectList() {
 }

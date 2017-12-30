@@ -1,5 +1,5 @@
 #include "color.h"
-#include "logger.h"
+#include "util/logger.h"
 
 ColorGen::ColorGen() {
   colors_.insert(std::make_pair("transparent", Color(255, 255, 255, 0)));

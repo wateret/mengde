@@ -1,5 +1,5 @@
-#include <texture_manager.h>
-#include "common.h"
+#include "texture_manager.h"
+#include "util/common.h"
 
 TextureManager::TextureManager(Renderer* renderer) : renderer_(renderer) {
   // Create dummy texture : a big square fully filled white

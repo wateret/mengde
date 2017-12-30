@@ -1,6 +1,6 @@
 #include "tab_view.h"
 #include "button_view.h"
-#include "layout_helper.h"
+#include "../layout_helper.h"
 
 TabView::TabView(const Rect* frame)
     : CompositeView(frame), view_index_(0) {

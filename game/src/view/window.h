@@ -4,7 +4,7 @@
 #include <string>
 #include <SDL.h>
 #include "surface.h"
-#include "common.h"
+#include "util/common.h"
 
 class Window {
  public:

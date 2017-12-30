@@ -1,7 +1,7 @@
 #ifndef STATE_UI_H_
 #define STATE_UI_H_
 
-#include "state.h"
+#include "util/state.h"
 #include "i_view.h"
 
 // StateUI

@@ -1,6 +1,6 @@
 #include "stat_modifier_list.h"
 #include "stat_modifier.h"
-#include "common.h"
+#include "util/common.h"
 
 StatModifierList::StatModifierList() {
 }

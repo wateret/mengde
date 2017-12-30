@@ -4,7 +4,7 @@
 #include <functional>
 #include <vector>
 #include "window.h"
-#include "common.h"
+#include "util/common.h"
 #include "timer.h"
 
 class View;

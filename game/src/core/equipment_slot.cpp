@@ -1,5 +1,5 @@
 #include "equipment_slot.h"
-#include "common.h"
+#include "util/common.h"
 
 EquipmentSlot::EquipmentSlot(Equipment::Type type)
     : type_(type), equipment_(NULL) {

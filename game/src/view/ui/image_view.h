@@ -1,8 +1,8 @@
 #ifndef IMAGE_VIEW_H_
 #define IMAGE_VIEW_H_
 
-#include "view.h"
-#include "common.h"
+#include "../view.h"
+#include "util/common.h"
 #include <string>
 
 class Drawer;

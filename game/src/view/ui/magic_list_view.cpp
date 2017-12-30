@@ -1,14 +1,14 @@
 #include "magic_list_view.h"
+#include "../drawer.h"
+#include "../root_view.h"
+#include "../state_ui.h"
 #include "button_view.h"
-#include "drawer.h"
-#include "magic_list.h"
-#include "magic.h"
-#include "unit.h"
-#include "root_view.h"
+#include "core/magic_list.h"
+#include "core/magic.h"
+#include "core/unit.h"
 #include "text_view.h"
 #include "scroll_view.h"
 #include "vertical_list_view.h"
-#include "view/state_ui.h"
 
 MagicListView::MagicListView(const Rect& frame,
                              Game* const game,

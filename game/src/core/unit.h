@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "common.h"
+#include "util/common.h"
 #include "hero.h"
 #include "stat_modifier_list.h"
 #include "equipment_slot.h"

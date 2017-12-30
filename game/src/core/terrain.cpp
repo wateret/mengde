@@ -1,5 +1,5 @@
 #include "terrain.h"
-#include "common.h"
+#include "util/common.h"
 
 Terrain::Terrain(const std::string& name,
                  const std::vector<int>& move_costs,

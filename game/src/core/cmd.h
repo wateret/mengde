@@ -1,7 +1,7 @@
 #ifndef COMMAND_H_
 #define COMMAND_H_
 
-#include "common.h"
+#include "util/common.h"
 #include "unit.h"
 
 class Game;
