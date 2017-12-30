@@ -162,8 +162,7 @@ void RootView::Render(Drawer* drawer) {
 
   // Render units
   game_->ForEachUnit([this, drawer] (Unit* unit) {
-    if (unit == NULL) return;
-    if (unit->IsNoRender()) return;
+    if (unit->IsNoRender() || unit->IsDead()) return;
 
     SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
     int sprite_no = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);

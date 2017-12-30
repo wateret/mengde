@@ -95,8 +95,12 @@ bool Unit::IsHPLow() const {
   return GetCurrentXtat().hp <= GetOriginalXtat().hp * 3 / 10;
 }
 
-bool Unit::IsHPZero() const {
+bool Unit::IsDead() const {
   return GetCurrentXtat().hp <= 0;
+}
+
+void Unit::Kill() {
+  current_xtat_.hp = 0;
 }
 
 const UnitClass* Unit::GetClass() const {

@@ -17,6 +17,7 @@ class Commander;
 class LuaScript;
 class Magic;
 class Deployer;
+class StageUnitManager;
 class UnitSupervisor;
 
 class Game : public IDeployHelper {
@@ -46,7 +47,7 @@ class Game : public IDeployHelper {
   Cmd* BasicAttackUnit(Unit*, Unit*, bool);
   bool IsValidCoords(Vec2D);
   Magic* GetMagic(const std::string&);
-  Unit* GetUnit(int);
+  Unit* GetUnit(uint32_t);
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
   LuaScript* GetLuaScript() { return lua_script_; }
@@ -65,7 +66,6 @@ class Game : public IDeployHelper {
   uint32_t GetNumOwnsAlive();
   bool CheckStatus();
   Status GetStatus() { return status_; }
-  void Begin();
 
   // IDeployHelper interfaces
   void SubmitDeploy() override;
@@ -98,8 +98,7 @@ class Game : public IDeployHelper {
   Commander*         commander_;
   Deployer*          deployer_;
   Map*               map_;
-  std::vector<Unit*> units_;
-  std::vector<Unit*> dead_units_;
+  StageUnitManager*  stage_unit_manager_;
   Turn               turn_;
   Status             status_;
 };

@@ -174,7 +174,7 @@ CmdBasicAttack::CmdBasicAttack(Unit* atk, Unit* def, Type type)
 }
 
 unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
-  if (atk_->IsHPZero() || def_->IsHPZero()) return nullptr;
+  if (atk_->IsDead() || def_->IsDead()) return nullptr;
 
   Vec2D atk_pos = atk_->GetPosition();
   Vec2D def_pos = def_->GetPosition();

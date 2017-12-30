@@ -6,7 +6,7 @@
 #include "event_effect.h"
 #include "magic.h"
 #include "formulae.h"
-#include "unit_supervisor.h"
+#include "stage_unit_manager.h"
 #include "util/game_env.h"
 #include "util/path_tree.h"
 #include "lua/lua_script.h"
@@ -21,8 +21,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_scrip
       commander_(nullptr),
       deployer_(nullptr),
       map_(nullptr),
-      units_(),
-      dead_units_(),
+      stage_unit_manager_(nullptr),
       turn_(),
       status_(Status::kDeploying) {
   InitLua(stage_script_path);
@@ -52,16 +51,16 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_scrip
   }
 
   commander_ = new Commander();
+  stage_unit_manager_ = new StageUnitManager();
 }
 
 Game::~Game() {
+  // NOTE rc_ and assets_ are not deleted here
   delete lua_script_;
   delete map_;
   delete deployer_;
   delete commander_;
-
-  for (auto o : units_) delete o;
-  for (auto o : dead_units_) delete o;
+  delete stage_unit_manager_;
 }
 
 void Game::InitLua(const string& stage_script_path) {
@@ -84,9 +83,9 @@ void Game::InitLua(const string& stage_script_path) {
   lua_script_->Set(GAME_PREFIX "force.own", (int)Force::kOwn);
   lua_script_->Set(GAME_PREFIX "force.ally", (int)Force::kAlly);
   lua_script_->Set(GAME_PREFIX "force.enemy", (int)Force::kEnemy);
-  lua_script_->Set(GAME_PREFIX "end_type.undecided", (int)Status::kUndecided);
-  lua_script_->Set(GAME_PREFIX "end_type.defeat", (int)Status::kDefeat);
-  lua_script_->Set(GAME_PREFIX "end_type.victory", (int)Status::kVictory);
+  lua_script_->Set(GAME_PREFIX "status.undecided", (int)Status::kUndecided);
+  lua_script_->Set(GAME_PREFIX "status.defeat", (int)Status::kDefeat);
+  lua_script_->Set(GAME_PREFIX "status.victory", (int)Status::kVictory);
 
 #undef GAME_PREFIX
 
@@ -94,11 +93,8 @@ void Game::InitLua(const string& stage_script_path) {
   lua_script_->Run(stage_script_path);
 }
 
-void Game::ForEachUnit(std::function<void(Unit*)> f) {
-  for (auto o : units_) {
-    if (o != nullptr)
-      f(o);
-  }
+void Game::ForEachUnit(std::function<void(Unit*)> fn) {
+  stage_unit_manager_->ForEach(fn);
 }
 
 void Game::MoveUnit(Unit* unit, Vec2D dst) {
@@ -109,14 +105,8 @@ void Game::MoveUnit(Unit* unit, Vec2D dst) {
 }
 
 void Game::KillUnit(Unit* unit) {
-  for (int i = 0, sz = units_.size(); i < sz; i++) {
-    if (unit == units_[i]) {
-      map_->RemoveUnit(unit->GetPosition());
-      units_.erase(units_.begin() + i);
-      dead_units_.push_back(unit);
-      break;
-    }
-  }
+  map_->RemoveUnit(unit->GetPosition());
+  stage_unit_manager_->Kill(unit);
 }
 
 bool Game::TryBasicAttack(Unit* unit_atk, Unit* unit_def) {
@@ -135,8 +125,8 @@ Magic* Game::GetMagic(const std::string& id) {
   return rc_.magic_manager->Get(id);
 }
 
-Unit* Game::GetUnit(int id) {
-  return units_[id];
+Unit* Game::GetUnit(uint32_t id) {
+  return stage_unit_manager_->Get(id);
 }
 
 Equipment* Game::GetEquipment(const std::string& id) {
@@ -208,14 +198,13 @@ Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
   Vec2D original_pos = unit->GetPosition();
   MoveUnit(unit, virtual_pos);
   Unit* target = nullptr;
-  for (auto candidate : units_) {
+  stage_unit_manager_->ForEach([unit, target] (Unit* candidate) mutable {
     if (unit->IsHostile(candidate)) {
       if (unit->IsInRange(candidate->GetPosition())) {
         target = candidate;
-        break;
       }
     }
-  }
+  });
   MoveUnit(unit, original_pos);
   return target;
 }
@@ -273,15 +262,6 @@ uint32_t Game::GetNumOwnsAlive() {
   return count;
 }
 
-void Game::Begin() {
-  ASSERT(status_ == Status::kDeploying);
-  status_ = Status::kUndecided;
-
-  // TODO genreate own units deployed
-
-  lua_script_->Call<void>("$on_begin");
-}
-
 void Game::AppointHero(const string& id, uint16_t level) {
   LOG_INFO("Hero added to asset '%s' with Lv %d", id.c_str(), level);
   auto hero = std::make_shared<Hero>(rc_.hero_tpl_manager->Get(id), level);
@@ -295,18 +275,16 @@ uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
 
 uint32_t Game::GenerateOwnUnit(shared_ptr<Hero> hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Force::kOwn);
-  units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
-  return units_.size() - 1;
+  return stage_unit_manager_->Deploy(unit);
 }
 
 uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
   auto hero = std::make_shared<Hero>(hero_tpl, level);
   Unit* unit = new Unit(hero, force);
-  units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
-  return units_.size() - 1;
+  return stage_unit_manager_->Deploy(unit);
 }
 
 void Game::ObtainEquipment(const string& id, uint32_t amount) {
@@ -324,9 +302,14 @@ bool Game::UnitPutWeaponOn(uint32_t unit_id, const string& weapon_id) {
 }
 
 void Game::SubmitDeploy() {
+  ASSERT(status_ == Status::kDeploying);
+
   deployer_->ForEach([=] (const DeployElement& e) {
     this->GenerateOwnUnit(e.hero, deployer_->ConvertToPosition(e.no));
   });
+
+  status_ = Status::kUndecided;
+  lua_script_->Call<void>("$on_begin");
 }
 
 uint32_t Game::AssignDeploy(const shared_ptr<Hero>& hero) {

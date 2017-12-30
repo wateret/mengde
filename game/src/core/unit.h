@@ -44,10 +44,11 @@ class Unit : public IEvent {
   Vec2D* GetAttackRange() const;
   bool IsNoRender() const { return no_render_; }
   bool IsHPLow() const;
-  bool IsHPZero() const;
+  bool IsDead() const;
   bool DoDamage(int);
   void RestoreHP(int);
   void Heal(int);
+  void Kill();
   bool IsHostile(Unit*) const;
   bool IsInRange(Vec2D, Vec2D*) const;
   bool IsInRange(Vec2D) const;
