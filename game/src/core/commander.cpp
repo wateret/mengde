@@ -25,8 +25,8 @@ void Commander::PushCmd(unique_ptr<Cmd> cmd) {
   cmdq_current_->Append(std::move(cmd));
 }
 
-#ifdef DEBUG
 void Commander::DebugPrint() const {
+#ifdef DEBUG
   cmdq_current_->DebugPrint();
-}
 #endif // DEBUG
+}

@@ -15,9 +15,7 @@ class Commander {
   void DoNextCmd(Game*);
 //  void UnDo(Game*);
   void PushCmd(unique_ptr<Cmd>);
-#ifdef DEBUG
   void DebugPrint() const;
-#endif
 
  private:
   unique_ptr<CmdQueue> cmdq_current_;

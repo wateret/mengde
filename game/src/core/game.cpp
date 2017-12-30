@@ -1,22 +1,23 @@
 #include "game.h"
 #include "assets.h"
+#include "cmd.h"
+#include "commander.h"
 #include "deployer.h"
+#include "event_effect.h"
 #include "magic.h"
 #include "formulae.h"
-#include "cmd.h"
 #include "util/game_env.h"
 #include "util/path_tree.h"
 #include "lua/lua_script.h"
 
 // XXX temporary include
-#include "event_effect.h"
 #include "lua_game.h"
 
 Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_script_path)
     : rc_(rc),
       assets_(assets),
       lua_script_(nullptr),
-      commander_(),
+      commander_(nullptr),
       deployer_(nullptr),
       map_(nullptr),
       units_(),
@@ -48,11 +49,15 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_scrip
     });
     deployer_ = new Deployer(position_list);
   }
+
+  commander_ = new Commander();
 }
 
 Game::~Game() {
-  if (lua_script_ != nullptr) delete lua_script_;
-  if (map_ != nullptr) delete map_;
+  delete lua_script_;
+  delete map_;
+  delete deployer_;
+  delete commander_;
 
   for (auto o : units_) delete o;
   for (auto o : dead_units_) delete o;
@@ -215,12 +220,12 @@ Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
 }
 
 bool Game::HasPendingCmd() const {
-  return commander_.HasPendingCmd();
+  return commander_->HasPendingCmd();
 }
 
 const Cmd* Game::GetNextCmdConst() const {
   ASSERT(HasPendingCmd());
-  return commander_.GetNextCmdConst();
+  return commander_->GetNextCmdConst();
 }
 
 bool Game::UnitInCell(Vec2D c) const {
@@ -230,14 +235,14 @@ bool Game::UnitInCell(Vec2D c) const {
 void Game::DoPendingCmd() {
   ASSERT(HasPendingCmd());
 #ifdef DEBUG
-  commander_.DebugPrint();
+  commander_->DebugPrint();
 #endif
-  commander_.DoNextCmd(this);
+  commander_->DoNextCmd(this);
 }
 
 void Game::PushCmd(unique_ptr<Cmd> cmd) {
 ///  if (cmd == nullptr) return;
-  commander_.PushCmd(std::move(cmd));
+  commander_->PushCmd(std::move(cmd));
 }
 
 bool Game::CheckStatus() {

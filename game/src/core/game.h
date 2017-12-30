@@ -1,7 +1,6 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include "commander.h"
 #include "i_deploy_helper.h"
 #include "map.h"
 #include "unit.h"
@@ -13,6 +12,8 @@
 #include <functional>
 
 class Assets;
+class Cmd;
+class Commander;
 class LuaScript;
 class Magic;
 class Deployer;
@@ -93,7 +94,7 @@ class Game : public IDeployHelper {
   ResourceManagers   rc_;
   Assets*            assets_;
   LuaScript*         lua_script_;
-  Commander          commander_;
+  Commander*         commander_;
   Deployer*          deployer_;
   Map*               map_;
   std::vector<Unit*> units_;

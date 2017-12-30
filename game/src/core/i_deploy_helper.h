@@ -1,6 +1,8 @@
 #ifndef I_DEPLOY_HELPER_H_
 #define I_DEPLOY_HELPER_H_
 
+#include "util/common.h"
+
 class Hero;
 
 class IDeployHelper {
