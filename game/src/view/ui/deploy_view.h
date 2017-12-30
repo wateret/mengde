@@ -10,9 +10,6 @@ class TextView;
 
 class HeroModelView : public CallbackView {
  public:
-  static const uint32_t kUndeployed = 0;
-
- public:
   HeroModelView(const Rect&, shared_ptr<Hero>, IDeployHelper*);
   void UpdateViews();
   bool IsSelected() { return deploy_no_ != 0; }
@@ -20,6 +17,7 @@ class HeroModelView : public CallbackView {
  private:
   shared_ptr<Hero> hero_;
   uint32_t deploy_no_;
+  bool     required_unselectable_;
   TextView* tv_no_;
 };
 

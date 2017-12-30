@@ -25,6 +25,7 @@ void TextView::SetColor(Color c) {
 
 void TextView::Render(Drawer* drawer) {
   Rect frame(GetFrameCoords(), GetActualFrameSize());
+  // FIXME Do NOT calculate position every time
   drawer->DrawText(text_, size_, color_, &frame, align_);
 }
 

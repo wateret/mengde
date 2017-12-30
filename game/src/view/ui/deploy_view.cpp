@@ -7,7 +7,7 @@
 #include "../misc.h"
 
 HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHelper* deploy_helper)
-    : CallbackView(frame), hero_(hero), deploy_no_(kUndeployed), tv_no_(nullptr) {
+    : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
   SetPadding(4);
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.GetSize(), LayoutHelper::kAlignCenter);
@@ -25,12 +25,14 @@ HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHe
   tv_no_ = new TextView(&tv_no_frame, "", COLOR("orange"), 20, LayoutHelper::kAlignRgtTop);
   AddChild(tv_no_);
 
+  deploy_no_ = deploy_helper->FindDeploy(hero);
+  required_unselectable_ = (deploy_no_ != 0); // Assume unselectable if already deployed at this point(construction)
+  UpdateViews();
+
   SetMouseButtonHandler([this, hero, deploy_helper] (MouseButtonEvent e) -> bool {
     if (e.IsLeftButtonUp()) {
-      bool selected = IsSelected();
       if (IsSelected()) {
-        deploy_helper->UnassignDeploy(hero);
-        deploy_no_ = kUndeployed;
+        deploy_no_ = deploy_helper->UnassignDeploy(hero);
       } else {
         deploy_no_ = deploy_helper->AssignDeploy(hero);
       }
@@ -41,7 +43,11 @@ HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHe
 }
 
 void HeroModelView::UpdateViews() {
-  if (IsSelected()) {
+  if (required_unselectable_) {
+    ASSERT(IsSelected());
+    SetBgColor(COLOR("black"));
+    tv_no_->SetText("");
+  } else if (IsSelected()) {
     SetBgColor(COLOR("gray"));
     tv_no_->SetText(std::to_string(deploy_no_));
   } else {

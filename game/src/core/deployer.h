@@ -4,6 +4,7 @@
 #include "util/common.h"
 #include <unordered_set>
 #include <set>
+#include <utility>
 
 class Hero;
 
@@ -11,7 +12,7 @@ struct DeployElement {
   shared_ptr<Hero> hero;
   uint32_t no;
 
-  DeployElement(const shared_ptr<Hero> hero, uint32_t no) : hero(hero), no(no) {}
+  DeployElement(const shared_ptr<Hero>& hero, uint32_t no) : hero(hero), no(no) {}
 };
 
 struct DeployerComparer {
@@ -30,22 +31,48 @@ namespace std
   };
 }
 
+struct DeployInfoUnselectable {
+  Vec2D position;
+  shared_ptr<Hero> hero;
+
+  DeployInfoUnselectable(Vec2D position, const shared_ptr<Hero>& hero) : position(position), hero(hero) {}
+};
+
+struct DeployInfoSelectable {
+  Vec2D position;
+
+  DeployInfoSelectable(Vec2D position) : position(position) {}
+};
+
 class Deployer {
+ private:
+  enum class Type {
+    kNone,
+    kUnselectable,
+    kSelectable
+  };
+
  public:
   typedef std::unordered_set<DeployElement, std::hash<DeployElement>, DeployerComparer> AssignmentContainer;
   typedef function<void(const DeployElement&)> ForEachFn;
 
  public:
-  Deployer(const vector<Vec2D>&);
+  Deployer(const vector<DeployInfoUnselectable>&, const vector<DeployInfoSelectable>&);
   uint32_t Assign(const shared_ptr<Hero>& hero);
-  void     Unassign(const shared_ptr<Hero>& hero);
-  uint32_t PopNextNo();
+  uint32_t Unassign(const shared_ptr<Hero>& hero);
+  uint32_t Find(const shared_ptr<Hero>& hero);
+  uint32_t GetNextSelectableNo();
   void     ForEach(ForEachFn);
-  Vec2D    ConvertToPosition(uint32_t);
+  Vec2D    GetPosition(const shared_ptr<Hero>& hero);
 
  private:
-  vector<Vec2D> positions_;
-  AssignmentContainer assignment_;
+  std::pair<Type, DeployElement> FindImpl(const shared_ptr<Hero>& hero);
+
+ private:
+  vector<DeployInfoUnselectable> unselectable_info_list_;
+  vector<DeployInfoSelectable> selectable_info_list_;
+  AssignmentContainer unselectable_assignment_;
+  AssignmentContainer selectable_assignment_;
   std::set<uint32_t> available_no_;
 };
 

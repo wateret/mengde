@@ -10,6 +10,7 @@ class TextView : public View {
   TextView(const Rect*, const std::string& = "");
   TextView(const Rect*, const std::string&, Color, int, LayoutHelper::Align);
   void SetText(const std::string& text);
+  void SetTextSize(int size) { size_ = size; }
   void SetAlign(LayoutHelper::Align align);
   void SetColor(Color);
 

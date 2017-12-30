@@ -42,12 +42,22 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_scrip
   { // Initialize Deployment
     lua_script_->Call<void>("$on_deploy");
 
-    vector<Vec2D> position_list;
-    lua_script_->ForEachTableEntry("$gdata.deploy", [=, &position_list] () mutable {
+    vector<DeployInfoUnselectable> unselectable_info_list;
+    lua_script_->ForEachTableEntry("$gdata.deploy.unselectables", [=, &unselectable_info_list] () mutable {
       vector<int> pos_vec = lua_script_->GetVector<int>("position");
-      position_list.push_back({pos_vec[0], pos_vec[1]});
+      string hero_id = lua_script_->Get<string>("hero");
+      Vec2D position(pos_vec[0], pos_vec[1]);
+      shared_ptr<Hero> hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
+      unselectable_info_list.push_back({position, hero});
     });
-    deployer_ = new Deployer(position_list);
+
+    vector<DeployInfoSelectable> selectable_info_list;
+    lua_script_->ForEachTableEntry("$gdata.deploy.selectables", [=, &selectable_info_list] () mutable {
+      vector<int> pos_vec = lua_script_->GetVector<int>("position");
+      Vec2D position(pos_vec[0], pos_vec[1]);
+      selectable_info_list.push_back({position});
+    });
+    deployer_ = new Deployer(unselectable_info_list, selectable_info_list);
   }
 
   commander_ = new Commander();
@@ -305,7 +315,7 @@ void Game::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
 
   deployer_->ForEach([=] (const DeployElement& e) {
-    this->GenerateOwnUnit(e.hero, deployer_->ConvertToPosition(e.no));
+    this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero));
   });
 
   status_ = Status::kUndecided;
@@ -316,7 +326,11 @@ uint32_t Game::AssignDeploy(const shared_ptr<Hero>& hero) {
   return deployer_->Assign(hero);
 }
 
-void Game::UnassignDeploy(const shared_ptr<Hero>& hero) {
-  deployer_->Unassign(hero);
+uint32_t Game::UnassignDeploy(const shared_ptr<Hero>& hero) {
+  return deployer_->Unassign(hero);
+}
+
+uint32_t Game::FindDeploy(const shared_ptr<Hero>& hero) {
+  return deployer_->Find(hero);
 }
 
