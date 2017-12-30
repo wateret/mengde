@@ -20,10 +20,11 @@
 #include "core/cell.h"
 #include "core/game.h"
 #include "core/magic_list.h"
+#include "core/scenario.h"
 
-RootView::RootView(const Vec2D size, Game* game, App* app, Assets* assets)
+RootView::RootView(const Vec2D size, Scenario* scenario, App* app)
     : View(),
-      game_(game),
+      game_(scenario->GetGame()),
       app_(app),
       ui_views_(nullptr),
       deploy_view_(nullptr),
@@ -34,7 +35,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app, Assets* assets)
       magic_list_view_(nullptr),
       terrain_info_view_(nullptr),
       unit_list_view_(nullptr),
-      ui_state_machine_(new StateUIView({game, this})),
+      ui_state_machine_(new StateUIView({game_, this})),
       reserved_callbacks_(),
       mouse_coords_(-1, -1),
       camera_coords_(0, 0),
@@ -47,8 +48,9 @@ RootView::RootView(const Vec2D size, Game* game, App* app, Assets* assets)
   ui_views_->SetTransparent();
 
   { // Initialize deploy_view_
+    Assets* assets = scenario->GetAssets();
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
-    deploy_view_ = new DeployView(frame, assets->GetHeroes());
+    deploy_view_ = new DeployView(frame, assets->GetHeroes(), game_);
     deploy_view_->SetVisible(true);
     ui_views_->AddChild(deploy_view_);
   }
@@ -90,7 +92,7 @@ RootView::RootView(const Vec2D size, Game* game, App* app, Assets* assets)
 
   { // Initialize magic_list_view_;
     Rect magic_list_frame = {8, 8, 170, 200};
-    magic_list_view_ = new MagicListView(magic_list_frame, game, this);
+    magic_list_view_ = new MagicListView(magic_list_frame, game_, this);
     magic_list_view_->SetVisible(false);
     ui_views_->AddChild(magic_list_view_);
   }

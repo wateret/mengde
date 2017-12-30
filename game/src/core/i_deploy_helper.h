@@ -1,0 +1,13 @@
+#ifndef I_DEPLOY_HELPER_H_
+#define I_DEPLOY_HELPER_H_
+
+class Hero;
+
+class IDeployHelper {
+ public:
+  virtual void     SubmitDeploy() = 0;
+  virtual uint32_t AssignDeploy(const shared_ptr<Hero>&) = 0;
+  virtual void     UnassignDeploy(const shared_ptr<Hero>&) = 0;
+};
+
+#endif // I_DEPLOY_HELPER_H_

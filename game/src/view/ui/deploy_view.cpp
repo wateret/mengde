@@ -1,11 +1,13 @@
 #include "deploy_view.h"
 #include "core/hero.h"
+#include "core/i_deploy_helper.h"
 #include "ui/button_view.h"
 #include "ui/image_view.h"
 #include "ui/text_view.h"
 #include "misc.h"
 
-HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero) : CompositeView(frame), hero_(hero) {
+HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHelper* deploy_helper)
+    : CallbackView(frame), hero_(hero), deploy_no_(kUndeployed), tv_no_(nullptr) {
   SetPadding(4);
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.GetSize(), LayoutHelper::kAlignCenter);
@@ -14,17 +16,47 @@ HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero) : Composi
   iv_hero->SetSourceRect(img_src_rect);
   AddChild(iv_hero);
 
-  Rect tv_frame = GetActualFrame();
-  TextView* tv_hero = new TextView(&tv_frame, hero_->GetId(), COLOR("white"), 14, LayoutHelper::kAlignMidBot);
+  Rect tv_hero_frame = GetActualFrame();
+  TextView* tv_hero = new TextView(&tv_hero_frame, hero_->GetId(), COLOR("white"), 14, LayoutHelper::kAlignMidBot);
   AddChild(tv_hero);
+
+  Rect tv_no_frame = GetActualFrame();
+  tv_no_frame.SetW(tv_no_frame.GetW() - 8);
+  tv_no_ = new TextView(&tv_no_frame, "", COLOR("orange"), 20, LayoutHelper::kAlignRgtTop);
+  AddChild(tv_no_);
+
+  SetMouseButtonHandler([this, hero, deploy_helper] (MouseButtonEvent e) -> bool {
+    if (e.IsLeftButtonUp()) {
+      bool selected = IsSelected();
+      if (IsSelected()) {
+        deploy_helper->UnassignDeploy(hero);
+        deploy_no_ = kUndeployed;
+      } else {
+        deploy_no_ = deploy_helper->AssignDeploy(hero);
+      }
+      UpdateViews();
+    }
+    return true;
+  });
 }
 
-HeroModelListView::HeroModelListView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_list) : CompositeView(frame) {
+void HeroModelView::UpdateViews() {
+  if (IsSelected()) {
+    SetBgColor(COLOR("gray"));
+    tv_no_->SetText(std::to_string(deploy_no_));
+  } else {
+    SetBgColor(COLOR("transparent"));
+    tv_no_->SetText("");
+  }
+}
+
+HeroModelListView::HeroModelListView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_list, IDeployHelper* deploy_helper)
+    : CompositeView(frame) {
   SetBgColor(COLOR("navy"));
   static const Vec2D kHeroModelSize = {96, 80};
   Rect hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
-    HeroModelView* hero_model_view = new HeroModelView(hero_model_frame, hero);
+    HeroModelView* hero_model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
     AddChild(hero_model_view);
     hero_model_frame.SetX(hero_model_frame.GetX() + kHeroModelSize.x);
     if (hero_model_frame.GetRight() > GetActualFrameSize().x) {
@@ -34,16 +66,23 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<shared_ptr<
   }
 }
 
-DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_list)
+DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_list, IDeployHelper* deploy_helper)
     : CompositeView(frame), hero_list_(hero_list) {
   SetPadding(8);
   SetBgColor(COLOR("darkgray"));
   Rect hero_model_list_frame = GetActualFrame();
   hero_model_list_frame.SetW(5 * 96);
-  HeroModelListView* hero_model_list_view = new HeroModelListView(hero_model_list_frame, hero_list_);
+  HeroModelListView* hero_model_list_view = new HeroModelListView(hero_model_list_frame, hero_list_, deploy_helper);
   AddChild(hero_model_list_view);
 
   Rect btn_ok_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {100, 50}, LayoutHelper::kAlignRgtBot);
   ButtonView* btn_ok = new ButtonView(&btn_ok_frame, "To Battle");
+  btn_ok->SetMouseButtonHandler([this, deploy_helper] (MouseButtonEvent e) {
+    if (e.IsLeftButtonUp()) {
+      deploy_helper->SubmitDeploy();
+      this->SetVisible(false);
+    }
+    return true;
+  });
   AddChild(btn_ok);
 }

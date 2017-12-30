@@ -4,7 +4,10 @@ CallbackView::CallbackView() : CompositeView() {
   InitHandlers();
 }
 
-CallbackView::CallbackView(const Rect* rect) : CompositeView(rect) {
+CallbackView::CallbackView(const Rect* rect) : CallbackView(*rect) {
+}
+
+CallbackView::CallbackView(const Rect& rect) : CompositeView(rect) {
   InitHandlers();
 }
 

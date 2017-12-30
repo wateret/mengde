@@ -12,6 +12,7 @@ class CallbackView : public CompositeView {
  public:
   CallbackView();
   CallbackView(const Rect*);
+  CallbackView(const Rect&);
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override final;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override final;
   void SetMouseButtonHandler(MouseButtonHandler);

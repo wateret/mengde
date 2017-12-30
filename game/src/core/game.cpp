@@ -1,5 +1,6 @@
 #include "game.h"
 #include "assets.h"
+#include "deployer.h"
 #include "game_env.h"
 #include "magic.h"
 #include "formulae.h"
@@ -16,24 +17,37 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_scrip
       assets_(assets),
       lua_script_(nullptr),
       commander_(),
+      deployer_(nullptr),
       map_(nullptr),
       units_(),
       dead_units_(),
       turn_(),
-      status_(Status::kUndecided) {
+      status_(Status::kDeploying) {
   InitLua(stage_script_path);
 
-  // Read map data
-  vector<uint32_t> map_size = lua_script_->GetVector<uint32_t>("$gdata.map.size");
-  uint32_t cols = map_size[0];
-  uint32_t rows = map_size[1];
-  vector<string> map_input = lua_script_->GetVector<string>("$gdata.map.terrain");
-  ASSERT(rows == map_input.size());
-  for (auto e : map_input)
-    ASSERT(cols == e.size());
-  map_ = new Map(map_input, "map.bmp", rc_.terrain_manager);
+  { // Initalize map data
+    vector<uint32_t> size = lua_script_->GetVector<uint32_t>("$gdata.map.size");
+    uint32_t cols = size[0];
+    uint32_t rows = size[1];
+    vector<string> terrain = lua_script_->GetVector<string>("$gdata.map.terrain");
+    string file = lua_script_->Get<string>("$gdata.map.file");
+    ASSERT(rows == terrain.size());
+    for (auto e : terrain) {
+      ASSERT(cols == e.size());
+    }
+    map_ = new Map(terrain, file, rc_.terrain_manager);
+  }
 
-  lua_script_->Call<void>("$initialize");
+  { // Initialize Deployment
+    lua_script_->Call<void>("$on_deploy");
+
+    vector<Vec2D> position_list;
+    lua_script_->ForEachTableEntry("$gdata.deploy", [=, &position_list] () mutable {
+      vector<int> pos_vec = lua_script_->GetVector<int>("position");
+      position_list.push_back({pos_vec[0], pos_vec[1]});
+    });
+    deployer_ = new Deployer(position_list);
+  }
 }
 
 Game::~Game() {
@@ -253,6 +267,15 @@ uint32_t Game::GetNumOwnsAlive() {
   return count;
 }
 
+void Game::Begin() {
+  ASSERT(status_ == Status::kDeploying);
+  status_ = Status::kUndecided;
+
+  // TODO genreate own units deployed
+
+  lua_script_->Call<void>("$on_begin");
+}
+
 void Game::AppointHero(const string& id, uint16_t level) {
   LOG_INFO("Hero added to asset '%s' with Lv %d", id.c_str(), level);
   auto hero = std::make_shared<Hero>(rc_.hero_tpl_manager->Get(id), level);
@@ -261,6 +284,10 @@ void Game::AppointHero(const string& id, uint16_t level) {
 
 uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
   shared_ptr<Hero> hero = assets_->GetHero(id);
+  return GenerateOwnUnit(hero, pos);
+}
+
+uint32_t Game::GenerateOwnUnit(shared_ptr<Hero> hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Unit::kSideOwn);
   units_.push_back(unit);
   map_->PlaceUnit(unit, pos);
@@ -289,3 +316,18 @@ bool Game::UnitPutWeaponOn(uint32_t unit_id, const string& weapon_id) {
   unit->PutWeaponOn(weapon);
   return true;
 }
+
+void Game::SubmitDeploy() {
+  deployer_->ForEach([=] (const DeployElement& e) {
+    this->GenerateOwnUnit(e.hero, deployer_->ConvertToPosition(e.no));
+  });
+}
+
+uint32_t Game::AssignDeploy(const shared_ptr<Hero>& hero) {
+  return deployer_->Assign(hero);
+}
+
+void Game::UnassignDeploy(const shared_ptr<Hero>& hero) {
+  deployer_->Unassign(hero);
+}
+

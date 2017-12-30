@@ -29,7 +29,7 @@ class RootView : public View {
    typedef function<void()> NextFrameCallback;
 
  public:
-  RootView(const Vec2D, Game*, App*, Assets*);
+  RootView(const Vec2D, Scenario*, App*);
   ~RootView();
   Vec2D GetMouseCoords() { return mouse_coords_; }
   Vec2D GetCameraCoords() { return camera_coords_; }

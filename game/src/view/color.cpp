@@ -28,16 +28,21 @@ ColorGen* ColorGen::GetInstance() {
   return &color_gen;
 }
 
-Color ColorGen::Generate(const std::string& name, uint8_t alpha) {
+Color ColorGen::Generate(const std::string& name) {
   auto elem = colors_.find(name);
   if (elem == colors_.end()) {
     LOG_ERROR("Color name '%s' is not registered", name.c_str());
-    return {0, 0, 0, alpha}; // return black
+    return {0, 0, 0, 255}; // return black
   } else {
     Color color = elem->second;
-    color.a = alpha;
     return color;
   }
+}
+
+Color ColorGen::Generate(const std::string& name, uint8_t alpha) {
+  Color color = Generate(name);
+  color.a = alpha;
+  return color;
 }
 
 Color ColorGen::Generate(uint8_t r, uint8_t g, uint8_t b,  uint8_t alpha) {

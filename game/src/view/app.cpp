@@ -64,7 +64,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
 
   window_ = new Window("Game", width, height);
   drawer_ = new Drawer(window_);
-  root_view_ = new RootView(window_size_, scenario_->GetGame(), this, scenario_->GetAssets());
+  root_view_ = new RootView(window_size_, scenario_, this);
 //  target_view_ = main_view_;
   target_view_ = root_view_;
 }

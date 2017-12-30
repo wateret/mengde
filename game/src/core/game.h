@@ -2,6 +2,7 @@
 #define GAME_H_
 
 #include "commander.h"
+#include "i_deploy_helper.h"
 #include "map.h"
 #include "unit.h"
 #include "common.h"
@@ -14,11 +15,13 @@
 class Assets;
 class LuaScript;
 class Magic;
+class Deployer;
 
-class Game {
+class Game : public IDeployHelper {
  public:
   enum class Status {
     kNone,
+    kDeploying,
     kUndecided,
     kVictory,
     kDefeat
@@ -60,10 +63,17 @@ class Game {
   uint32_t GetNumOwnsAlive();
   bool CheckStatus();
   Status GetStatus() { return status_; }
+  void Begin();
+
+  // IDeployHelper interfaces
+  void SubmitDeploy() override;
+  uint32_t AssignDeploy(const shared_ptr<Hero>&) override;
+  void UnassignDeploy(const shared_ptr<Hero>&) override;
 
   // APIs for Lua //
   void AppointHero(const string&, uint16_t);
   uint32_t GenerateOwnUnit(const string&, Vec2D);
+  uint32_t GenerateOwnUnit(shared_ptr<Hero>, Vec2D);
   uint32_t GenerateUnit(const string&, uint16_t, Unit::Side, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
   bool UnitPutWeaponOn(uint32_t, const string&);
@@ -84,6 +94,7 @@ class Game {
   Assets*            assets_;
   LuaScript*         lua_script_;
   Commander          commander_;
+  Deployer*          deployer_;
   Map*               map_;
   std::vector<Unit*> units_;
   std::vector<Unit*> dead_units_;
