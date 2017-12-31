@@ -22,7 +22,7 @@ class ConfigLoader {
   void ParseHeroTemplates();
   void ParseFirstStage();
   uint16_t StatStrToIdx(const string&);
-  EventEffect* GenerateEventEffect(const string&, int);
+  EventEffect* GenerateEventEffect(const string&, const string&, int);
 
  private:
   LuaScript*       lua_config_;

@@ -32,11 +32,18 @@ ConfigLoader::~ConfigLoader() {
   delete lua_config_;
 }
 
-EventEffect* ConfigLoader::GenerateEventEffect(const string& type, int amount) {
-  if (type == "restore_hp_after_action") {
-    return new EERestoreHP(EventEffect::Type::kOnActionDone, amount);
-  } else if (type == "restore_hp_on_turn_begin") {
-    return new EERestoreHP(EventEffect::Type::kOnTurnBegin, amount);
+EventEffect* ConfigLoader::GenerateEventEffect(const string& type, const string& event, int amount) {
+  EventEffect::Type event_type = EventEffect::Type::kOnNone;
+  if (event == "on_action_done") {
+    event_type = EventEffect::Type::kOnActionDone;
+  }
+  else if (event == "on_turn_begin") {
+    event_type = EventEffect::Type::kOnTurnBegin;
+  }
+  ASSERT(event_type != EventEffect::Type::kOnNone);
+
+  if (type == "restore_hp") {
+    return new EERestoreHP(event_type, amount);
   }
   UNREACHABLE("Unknown ID");
   return nullptr;
@@ -196,9 +203,10 @@ void ConfigLoader::ParseEquipments() {
 
     this->lua_config_->ForEachTableEntry("effects", [=, &equipment] () {
       string type = this->lua_config_->Get<string>("type");
+      string event = this->lua_config_->Get<string>("event");
       // XXX Fix generation of EventEffect : gets different by type
       int amount = this->lua_config_->Get<int>("amount");
-      EventEffect* effect = GenerateEventEffect(type, amount);
+      EventEffect* effect = GenerateEventEffect(type, event, amount);
       equipment->AddEffect(effect);
     });
     this->lua_config_->ForEachTableEntry("modifiers", [=, &equipment] () {
