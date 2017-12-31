@@ -24,41 +24,10 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_scrip
       stage_unit_manager_(nullptr),
       turn_(),
       status_(Status::kDeploying) {
-  InitLua(stage_script_path);
-
-  { // Initalize map data
-    vector<uint32_t> size = lua_script_->GetVector<uint32_t>("$gdata.map.size");
-    uint32_t cols = size[0];
-    uint32_t rows = size[1];
-    vector<string> terrain = lua_script_->GetVector<string>("$gdata.map.terrain");
-    string file = lua_script_->Get<string>("$gdata.map.file");
-    ASSERT(rows == terrain.size());
-    for (auto e : terrain) {
-      ASSERT(cols == e.size());
-    }
-    map_ = new Map(terrain, file, rc_.terrain_manager);
-  }
-
-  { // Initialize Deployment
-    lua_script_->Call<void>("$on_deploy");
-
-    vector<DeployInfoUnselectable> unselectable_info_list;
-    lua_script_->ForEachTableEntry("$gdata.deploy.unselectables", [=, &unselectable_info_list] () mutable {
-      vector<int> pos_vec = lua_script_->GetVector<int>("position");
-      string hero_id = lua_script_->Get<string>("hero");
-      Vec2D position(pos_vec[0], pos_vec[1]);
-      shared_ptr<Hero> hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
-      unselectable_info_list.push_back({position, hero});
-    });
-
-    vector<DeployInfoSelectable> selectable_info_list;
-    lua_script_->ForEachTableEntry("$gdata.deploy.selectables", [=, &selectable_info_list] () mutable {
-      vector<int> pos_vec = lua_script_->GetVector<int>("position");
-      Vec2D position(pos_vec[0], pos_vec[1]);
-      selectable_info_list.push_back({position});
-    });
-    deployer_ = new Deployer(unselectable_info_list, selectable_info_list);
-  }
+  lua_script_ = CreateLua(stage_script_path);
+  map_        = CreateMap();
+  lua_script_->Call<void>("$on_deploy");
+  deployer_ = CreateDeployer();
 
   commander_ = new Commander();
   stage_unit_manager_ = new StageUnitManager();
@@ -73,34 +42,71 @@ Game::~Game() {
   delete stage_unit_manager_;
 }
 
-void Game::InitLua(const string& stage_script_path) {
-  lua_script_ = new LuaScript();
+LuaScript* Game::CreateLua(const string& stage_script_path) {
+  LuaScript* lua_script = new LuaScript();
 
   // Register game object as lua global
-  lua_script_->SetRawPointerToGlobal(LUA_GAME_OBJ_NAME, (void*)this);
+  lua_script->SetRawPointerToGlobal(LUA_GAME_OBJ_NAME, (void*)this);
 
 #define GAME_PREFIX "$" LUA_GAME_TABLE_NAME "."
 
   // Register API functions
 #define MACRO_LUA_GAME(cname, luaname) \
-  lua_script_->Set(GAME_PREFIX #luaname, Game_##cname);
+  lua_script->Set(GAME_PREFIX #luaname, Game_##cname);
 
 #include "lua_game.inc.h"
 
 #undef MACRO_LUA_GAME
 
   // Register enum values
-  lua_script_->Set(GAME_PREFIX "force.own", (int)Force::kOwn);
-  lua_script_->Set(GAME_PREFIX "force.ally", (int)Force::kAlly);
-  lua_script_->Set(GAME_PREFIX "force.enemy", (int)Force::kEnemy);
-  lua_script_->Set(GAME_PREFIX "status.undecided", (int)Status::kUndecided);
-  lua_script_->Set(GAME_PREFIX "status.defeat", (int)Status::kDefeat);
-  lua_script_->Set(GAME_PREFIX "status.victory", (int)Status::kVictory);
+  lua_script->Set(GAME_PREFIX "force.own", (int)Force::kOwn);
+  lua_script->Set(GAME_PREFIX "force.ally", (int)Force::kAlly);
+  lua_script->Set(GAME_PREFIX "force.enemy", (int)Force::kEnemy);
+  lua_script->Set(GAME_PREFIX "status.undecided", (int)Status::kUndecided);
+  lua_script->Set(GAME_PREFIX "status.defeat", (int)Status::kDefeat);
+  lua_script->Set(GAME_PREFIX "status.victory", (int)Status::kVictory);
 
 #undef GAME_PREFIX
 
   // Run the main script
-  lua_script_->Run(stage_script_path);
+  lua_script->Run(stage_script_path);
+  return lua_script;
+}
+
+Map* Game::CreateMap() {
+  ASSERT(lua_script_ != nullptr);
+
+  vector<uint32_t> size = lua_script_->GetVector<uint32_t>("$gdata.map.size");
+  uint32_t cols = size[0];
+  uint32_t rows = size[1];
+  vector<string> terrain = lua_script_->GetVector<string>("$gdata.map.terrain");
+  string file = lua_script_->Get<string>("$gdata.map.file");
+  ASSERT(rows == terrain.size());
+  for (auto e : terrain) {
+    ASSERT(cols == e.size());
+  }
+  return new Map(terrain, file, rc_.terrain_manager);
+}
+
+Deployer* Game::CreateDeployer() {
+  ASSERT(lua_script_ != nullptr);
+
+  vector<DeployInfoUnselectable> unselectable_info_list;
+  lua_script_->ForEachTableEntry("$gdata.deploy.unselectables", [=, &unselectable_info_list] () mutable {
+    vector<int> pos_vec = lua_script_->GetVector<int>("position");
+    string hero_id = lua_script_->Get<string>("hero");
+    Vec2D position(pos_vec[0], pos_vec[1]);
+    shared_ptr<Hero> hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
+    unselectable_info_list.push_back({position, hero});
+  });
+  uint32_t num_required = lua_script_->Get<uint32_t>("$gdata.deploy.num_required_selectables");
+  vector<DeployInfoSelectable> selectable_info_list;
+  lua_script_->ForEachTableEntry("$gdata.deploy.selectables", [=, &selectable_info_list] () mutable {
+    vector<int> pos_vec = lua_script_->GetVector<int>("position");
+    Vec2D position(pos_vec[0], pos_vec[1]);
+    selectable_info_list.push_back({position});
+  });
+  return new Deployer(unselectable_info_list, selectable_info_list, num_required);
 }
 
 void Game::ForEachUnit(std::function<void(Unit*)> fn) {
@@ -311,8 +317,10 @@ bool Game::UnitPutWeaponOn(uint32_t unit_id, const string& weapon_id) {
   return true;
 }
 
-void Game::SubmitDeploy() {
+bool Game::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
+
+  if (!deployer_->IsReady()) return false;
 
   deployer_->ForEach([=] (const DeployElement& e) {
     this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero));
@@ -320,6 +328,7 @@ void Game::SubmitDeploy() {
 
   status_ = Status::kUndecided;
   lua_script_->Call<void>("$on_begin");
+  return true;
 }
 
 uint32_t Game::AssignDeploy(const shared_ptr<Hero>& hero) {

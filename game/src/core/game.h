@@ -68,7 +68,7 @@ class Game : public IDeployHelper {
   Status GetStatus() { return status_; }
 
   // IDeployHelper interfaces
-  void SubmitDeploy() override;
+  bool     SubmitDeploy() override;
   uint32_t AssignDeploy(const shared_ptr<Hero>&) override;
   uint32_t UnassignDeploy(const shared_ptr<Hero>&) override;
   uint32_t FindDeploy(const shared_ptr<Hero>& hero) override;
@@ -88,7 +88,9 @@ class Game : public IDeployHelper {
   Unit*         GetOneHostileInRange(Unit*, Vec2D);
 
  private:
-  void InitLua(const string&);
+  LuaScript* CreateLua(const string&);
+  Map*       CreateMap();
+  Deployer*  CreateDeployer();
   bool TryBasicAttack(Unit*, Unit*);
   bool TryMagic(Unit*, Unit*);
 

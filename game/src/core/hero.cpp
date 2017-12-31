@@ -42,7 +42,7 @@ void Hero::UpdateUnitStat() {
 #define UpdateXtat(x, xc) xtat_.x = GetClass()->GetBni##xc().base + \
                                     GetClass()->GetBni##xc().incr * level_
 #define UpdateStat(x) unit_stat_.x = ((hero_stat_.x / 2) + \
-                                      ((100 + 8 * (GetClass()->GetStatGrade()->x - 1)) * level_ * hero_stat_.x) / 3000)
+                                      ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_ * hero_stat_.x) / 2000)
   // TODO UpdateStat(x) formula should depend on its unitclass grade
   UpdateXtat(hp, Hp);
   UpdateXtat(mp, Mp);

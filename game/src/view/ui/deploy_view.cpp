@@ -85,8 +85,9 @@ DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_l
   ButtonView* btn_ok = new ButtonView(&btn_ok_frame, "To Battle");
   btn_ok->SetMouseButtonHandler([this, deploy_helper] (MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      deploy_helper->SubmitDeploy();
-      this->SetVisible(false);
+      if (deploy_helper->SubmitDeploy()) {
+        this->SetVisible(false);
+      }
     }
     return true;
   });

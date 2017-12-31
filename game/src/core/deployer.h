@@ -57,13 +57,15 @@ class Deployer {
   typedef function<void(const DeployElement&)> ForEachFn;
 
  public:
-  Deployer(const vector<DeployInfoUnselectable>&, const vector<DeployInfoSelectable>&);
+  Deployer(const vector<DeployInfoUnselectable>&, const vector<DeployInfoSelectable>&, uint32_t);
   uint32_t Assign(const shared_ptr<Hero>& hero);
   uint32_t Unassign(const shared_ptr<Hero>& hero);
   uint32_t Find(const shared_ptr<Hero>& hero);
   uint32_t GetNextSelectableNo();
   void     ForEach(ForEachFn);
   Vec2D    GetPosition(const shared_ptr<Hero>& hero);
+  bool     IsReady();
+  uint32_t GetNumAssigned();
 
  private:
   std::pair<Type, DeployElement> FindImpl(const shared_ptr<Hero>& hero);
@@ -71,6 +73,7 @@ class Deployer {
  private:
   vector<DeployInfoUnselectable> unselectable_info_list_;
   vector<DeployInfoSelectable> selectable_info_list_;
+  uint32_t num_required_;
   AssignmentContainer unselectable_assignment_;
   AssignmentContainer selectable_assignment_;
   std::set<uint32_t> available_no_;

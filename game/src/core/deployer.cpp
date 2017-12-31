@@ -14,8 +14,9 @@ bool DeployerComparer::operator()(const DeployElement& lhs, const DeployElement&
 //
 
 Deployer::Deployer(const vector<DeployInfoUnselectable>& unselectable_info_list,
-                   const vector<DeployInfoSelectable>& selectable_info_list)
-    : unselectable_info_list_(unselectable_info_list), selectable_info_list_(selectable_info_list) {
+                   const vector<DeployInfoSelectable>& selectable_info_list, uint32_t num_required)
+    : unselectable_info_list_(unselectable_info_list),
+      selectable_info_list_(selectable_info_list), num_required_(num_required) {
   for (uint32_t idx = 0; idx < unselectable_info_list_.size(); idx++) {
     const DeployInfoUnselectable& deploy_info = unselectable_info_list_[idx];
     const uint32_t deploy_no = idx + 1;
@@ -110,4 +111,12 @@ std::pair<Deployer::Type, DeployElement> Deployer::FindImpl(const shared_ptr<Her
 
   shared_ptr<Hero> dummy_hero = nullptr;
   return std::make_pair(Type::kNone, DeployElement(dummy_hero, 0));
+}
+
+bool Deployer::IsReady() {
+  return num_required_ <= selectable_assignment_.size();
+}
+
+uint32_t Deployer::GetNumAssigned() {
+  return unselectable_assignment_.size() + selectable_assignment_.size();
 }
