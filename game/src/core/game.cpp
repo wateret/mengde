@@ -308,6 +308,7 @@ void Game::ObtainEquipment(const string& id, uint32_t amount) {
   assets_->AddEquipment(eq, amount);
 }
 
+/*
 bool Game::UnitPutWeaponOn(uint32_t unit_id, const string& weapon_id) {
   Unit*      unit   = GetUnit(unit_id);
   Equipment* weapon = assets_->GetEquipment(weapon_id);
@@ -316,6 +317,7 @@ bool Game::UnitPutWeaponOn(uint32_t unit_id, const string& weapon_id) {
   unit->PutWeaponOn(weapon);
   return true;
 }
+*/
 
 bool Game::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);

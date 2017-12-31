@@ -12,8 +12,8 @@ class UnitEffectList : public IEvent {
  public:
   UnitEffectList();
   void AddModifier(StatModifier*);
-  Stat CalcModifierAddends();
-  Stat CalcModifierMultipliers();
+  Stat CalcModifierAddends() const;
+  Stat CalcModifierMultipliers() const;
   void AddEffect(EventEffect*);
   void NextTurn();
 

@@ -5,9 +5,9 @@ EquipmentSlot::EquipmentSlot(Equipment::Type type)
     : type_(type), equipment_(NULL) {
 }
 
-Equipment* EquipmentSlot::PutEquipmentOn(Equipment* equipment) {
+const Equipment* EquipmentSlot::PutEquipmentOn(const Equipment* equipment) {
   if (equipment->GetType() == type_) {
-    Equipment* cur_equipment = equipment_;
+    const Equipment* cur_equipment = equipment_;
     equipment_ = equipment;
     return cur_equipment;
   } else {
@@ -16,7 +16,7 @@ Equipment* EquipmentSlot::PutEquipmentOn(Equipment* equipment) {
   }
 }
 
-Stat EquipmentSlot::CalcModifierAddends() {
+Stat EquipmentSlot::CalcModifierAddends() const {
   if (IsEquipmentOn()) {
     return equipment_->CalcModifierAddends();
   } else {
@@ -24,7 +24,7 @@ Stat EquipmentSlot::CalcModifierAddends() {
   }
 }
 
-Stat EquipmentSlot::CalcModifierMultipliers() {
+Stat EquipmentSlot::CalcModifierMultipliers() const {
   if (IsEquipmentOn()) {
     return equipment_->CalcModifierMultipliers();
   } else {

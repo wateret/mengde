@@ -1,18 +1,20 @@
-#ifndef UNIT_EQUIPMENT_VIEW_H_
-#define UNIT_EQUIPMENT_VIEW_H_
+#ifndef EQUIPMENT_SET_VIEW_H_
+#define EQUIPMENT_SET_VIEW_H_
 
 #include "view/uifw/composite_view.h"
 #include "view/foundation/layout_helper.h"
+#include "i_equipment_set_setter.h"
 
 class Unit;
 class ImageView;
 class TextView;;
 class Equipment;
+class EquipmentSet;
 
 class EquipmentView : public CompositeView {
  public:
-  EquipmentView(const Rect*, Equipment*);
-  void SetEquipment(Equipment*);
+  EquipmentView(const Rect*, const Equipment*);
+  void SetEquipment(const Equipment*);
 
  private:
   ImageView* iv_image_;
@@ -20,16 +22,16 @@ class EquipmentView : public CompositeView {
   TextView*  tv_desc_;
 };
 
-class UnitEquipmentView : public CompositeView {
+class EquipmentSetView : public CompositeView, public IEquipmentSetSetter {
  public:
-  UnitEquipmentView(const Rect*);
-  void SetUnit(Unit* unit);
+  EquipmentSetView(const Rect*);
+  void SetEquipmentSet(EquipmentSet*) override;
 
  private:
-  void OnUnitUpdate();
+  void OnUpdate();
 
  private:
-  Unit*     unit_;
+  EquipmentSet* equipment_set_;
   TextView* tv_weapon_label_;
   TextView* tv_armor_label_;
   TextView* tv_aid_label_;
@@ -38,4 +40,4 @@ class UnitEquipmentView : public CompositeView {
   EquipmentView* eqv_aid_;
 };
 
-#endif // UNIT_EQUIPMENT_VIEW_H_
+#endif // EQUIPMENT_SET_VIEW_H_

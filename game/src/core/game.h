@@ -79,7 +79,7 @@ class Game : public IDeployHelper {
   uint32_t GenerateOwnUnit(shared_ptr<Hero>, Vec2D);
   uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
-  bool UnitPutWeaponOn(uint32_t, const string&);
+//  bool UnitPutWeaponOn(uint32_t, const string&);
 
   // APIs for AI //
   vector<Unit*> GetCurrentUnits();

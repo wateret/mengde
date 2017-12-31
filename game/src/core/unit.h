@@ -6,15 +6,17 @@
 #include "util/common.h"
 #include "hero.h"
 #include "stat_modifier_list.h"
-#include "equipment_slot.h"
+#include "equipment_set.h"
 #include "i_event.h"
+#include "i_equipper.h"
 #include "force.h"
 
 class UnitClass;
+class EquipmentSet;
 
-class Unit : public IEvent {
+class Unit : public IEvent, public IEquipper {
  public:
-  Unit(shared_ptr<Hero>, const Force);
+  Unit(const shared_ptr<Hero>&, Force);
   ~Unit();
 
  public:
@@ -30,15 +32,17 @@ class Unit : public IEvent {
   const Xtat& GetOriginalXtat() const;
   const Stat& GetCurrentStat() const { return current_stat_; }
   const Xtat& GetCurrentXtat() const { return current_xtat_; }
-  void RecalcStat();
+  void SetStat();
+  void UpdateStat() override;
   void AddStatModifier(StatModifier*);
+  EquipmentSet* GetEquipmentSet() { return equipment_set_; }
   int GetMaxExp() { return 100 + GetLevel() * 5; }
   void SetPosition(Vec2D pos) { position_ = pos; }
   Vec2D GetPosition() { return position_; }
   void SetDirection(Direction direction) { direction_ = direction; }
   Direction GetDirection() { return direction_; }
   void SetNoRender(bool b) { no_render_ = b; }
-  const UnitClass* GetClass() const;
+  const UnitClass* GetClass() const override;
   int GetClassIndex() const;
   Force GetForce() const { return force_; }
   Vec2D* GetAttackRange() const;
@@ -58,18 +62,10 @@ class Unit : public IEvent {
   void LevelUp();
   void EndAction();
   void ResetAction();
-  void PutWeaponOn(Equipment*);
-  void PutArmorOn(Equipment*);
-  void PutAidOn(Equipment*);
-  Equipment* GetWeapon();
-  Equipment* GetArmor();
-  Equipment* GetAid();
 
  private:
   shared_ptr<Hero> hero_;
-  EquipmentSlot  equipment_slot_weapon_;
-  EquipmentSlot  equipment_slot_armor_;
-  EquipmentSlot  equipment_slot_aid_;
+  EquipmentSet* equipment_set_;
   Stat      current_stat_;
   Xtat      current_xtat_;
   Vec2D     position_;

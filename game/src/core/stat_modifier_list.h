@@ -12,8 +12,8 @@ class StatModifierList {
   ~StatModifierList();
   void AddModifier(StatModifier*);
   void NextTurn();
-  Stat CalcAddends();
-  Stat CalcMultipliers();
+  Stat CalcAddends() const;
+  Stat CalcMultipliers() const;
 
  private:
   std::vector<StatModifier*> elements_;

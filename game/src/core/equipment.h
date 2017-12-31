@@ -23,12 +23,12 @@ class Equipment : public IEvent {
 
  public:
   Equipment(const std::string&, Type);
-  string GetId() { return id_; }
-  Type GetType() { return type_; }
+  string GetId() const { return id_; }
+  Type GetType() const { return type_; }
   void AddModifier(StatModifier*);
   void AddEffect(EventEffect*);
-  Stat CalcModifierAddends();
-  Stat CalcModifierMultipliers();
+  Stat CalcModifierAddends() const;
+  Stat CalcModifierMultipliers() const;
 
  private:
   string id_;

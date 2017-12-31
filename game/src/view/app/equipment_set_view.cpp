@@ -1,6 +1,6 @@
-#include "unit_equipment_view.h"
+#include "equipment_set_view.h"
 #include "core/equipment.h"
-#include "core/unit.h"
+#include "core/equipment_set.h"
 #include "view/uifw/image_view.h"
 #include "view/uifw/text_view.h"
 
@@ -8,7 +8,7 @@
 // EquipmentView
 //
 
-EquipmentView::EquipmentView(const Rect* frame, Equipment* equipment) : CompositeView(frame) {
+EquipmentView::EquipmentView(const Rect* frame, const Equipment* equipment) : CompositeView(frame) {
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(),
                                              {32, 32},
                                              LayoutHelper::kAlignLftMid);
@@ -24,11 +24,11 @@ EquipmentView::EquipmentView(const Rect* frame, Equipment* equipment) : Composit
   SetEquipment(equipment);
 }
 
-void EquipmentView::SetEquipment(Equipment* equipment) {
+void EquipmentView::SetEquipment(const Equipment* equipment) {
   string image_path = "equipment/60-1.bmp";
   string name = "No Equipment";
   string desc = "No Desc";
-  if (equipment != NULL) {
+  if (equipment != nullptr) {
     image_path = "equipment/" + equipment->GetId() + ".bmp";
     name = equipment->GetId();
     desc = equipment->GetId() + "_desc";
@@ -40,11 +40,11 @@ void EquipmentView::SetEquipment(Equipment* equipment) {
 }
 
 //
-// UnitEquipmentView
+// EquipmentSetView
 //
 
-UnitEquipmentView::UnitEquipmentView(const Rect* frame)
-    : CompositeView(frame), unit_(NULL) {
+EquipmentSetView::EquipmentSetView(const Rect* frame)
+    : CompositeView(frame), equipment_set_(nullptr) {
   const int kMargin = 80 + 8;
   Rect tv_frame = {0, 0, 200, 16};
   tv_weapon_label_ = new TextView(&tv_frame, "Weapon");
@@ -56,13 +56,13 @@ UnitEquipmentView::UnitEquipmentView(const Rect* frame)
   AddChild(tv_armor_label_);
   AddChild(tv_aid_label_);
 
-  Equipment* weapon = NULL;
-  Equipment* armor = NULL;
-  Equipment* aid = NULL;
-  if (unit_ != NULL) {
-    weapon = unit_->GetWeapon();
-    armor = unit_->GetArmor();
-    aid = unit_->GetAid();
+  const Equipment* weapon = nullptr;
+  const Equipment* armor = nullptr;
+  const Equipment* aid = nullptr;
+  if (equipment_set_ != nullptr) {
+    weapon = equipment_set_->GetWeapon();
+    armor  = equipment_set_->GetArmor();
+    aid    = equipment_set_->GetAid();
   }
   Rect equipment_view_frame = {0, 24, 204, 60};
   eqv_weapon_ = new EquipmentView(&equipment_view_frame, weapon);
@@ -75,14 +75,15 @@ UnitEquipmentView::UnitEquipmentView(const Rect* frame)
   AddChild(eqv_aid_);
 }
 
-void UnitEquipmentView::SetUnit(Unit* unit) {
-  unit_ = unit;
-  OnUnitUpdate();
+void EquipmentSetView::SetEquipmentSet(EquipmentSet* equipment_set) {
+  equipment_set_ = equipment_set;
+  OnUpdate();
 }
 
-void UnitEquipmentView::OnUnitUpdate() {
-  ASSERT(unit_ != NULL);
-  eqv_weapon_->SetEquipment(unit_->GetWeapon());
-  eqv_armor_->SetEquipment(unit_->GetArmor());
-  eqv_aid_->SetEquipment(unit_->GetAid());
+void EquipmentSetView::OnUpdate() {
+  ASSERT(equipment_set_ != nullptr);
+  eqv_weapon_->SetEquipment(equipment_set_->GetWeapon());
+  eqv_armor_->SetEquipment(equipment_set_->GetArmor());
+  eqv_aid_->SetEquipment(equipment_set_->GetAid());
+  LOG_DEBUG("EquipmentSet Updated");
 }

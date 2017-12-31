@@ -10,7 +10,7 @@ class ImageView;
 class ButtonView;
 class TextView;
 class UnitOverView;
-class UnitEquipmentView;
+class EquipmentSetView;
 class EquipmentView;
 class Equipment;
 
@@ -22,7 +22,7 @@ class UnitView : public TabView {
  private:
   Unit* unit_;
   UnitOverView* unit_over_view_; // tab 0
-  UnitEquipmentView* unit_equipment_view_; // tab 1
+  EquipmentSetView* equipment_set_view_; // tab 1
 };
 
 class UnitOverView : public CompositeView {

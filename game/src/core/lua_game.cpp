@@ -69,43 +69,6 @@ LUA_IMPL(ObtainEquipment) {
   return 0;
 }
 
-LUA_IMPL(UnitPutWeaponOn) {
-  Game* game = lua_get_game_object(L);
-
-  LuaScript lua(L);
-  string equip_id = lua.Get<string>();
-  int    unit_id  = lua.Get<int>();
-
-  bool res = game->UnitPutWeaponOn(unit_id, equip_id);
-
-  lua.PushToStack(res);
-  return 1;
-}
-
-LUA_IMPL(UnitPutEquipmentsOn) {
-  Game* game = lua_get_game_object(L);
-  LuaScript lua(L);
-  string aid_s = lua.GetOpt<string>();
-  string armor_s = lua.GetOpt<string>();
-  string weapon_s = lua.GetOpt<string>();
-  int no = lua.Get<int>();
-
-  Unit* unit = game->GetUnit(no);
-  if (weapon_s != "nil") {
-    Equipment* weapon = game->GetEquipment(weapon_s);
-    unit->PutWeaponOn(weapon);
-  }
-  if (armor_s != "nil") {
-    Equipment* armor = game->GetEquipment(armor_s);
-    unit->PutWeaponOn(armor);
-  }
-  if (aid_s != "nil") {
-    Equipment* aid = game->GetEquipment(aid_s);
-    unit->PutAidOn(aid);
-  }
-  return 0;
-}
-
 LUA_IMPL(GetNumEnemiesAlive) {
   Game* game = lua_get_game_object(L);
   uint32_t ret = game->GetNumEnemiesAlive();

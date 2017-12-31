@@ -7,15 +7,15 @@
 class EquipmentSlot {
  public:
   EquipmentSlot(Equipment::Type);
-  Equipment* PutEquipmentOn(Equipment*);
-  Stat CalcModifierAddends();
-  Stat CalcModifierMultipliers();
-  bool IsEquipmentOn() { return equipment_ != NULL; }
-  Equipment* GetEquipment() { return equipment_; }
+  const Equipment* PutEquipmentOn(const Equipment*);
+  Stat CalcModifierAddends() const;
+  Stat CalcModifierMultipliers() const;
+  bool IsEquipmentOn() const { return equipment_ != NULL; }
+  const Equipment* GetEquipment() const { return equipment_; }
 
  private:
   Equipment::Type type_;
-  Equipment* equipment_;
+  const Equipment* equipment_;
 };
 
 #endif // EQUIPMENT_SLOT_H_

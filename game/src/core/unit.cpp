@@ -1,11 +1,10 @@
 #include "unit.h"
 #include "unit_class.h"
+#include "equipment_set.h"
 
-Unit::Unit(shared_ptr<Hero> hero, const Force force)
+Unit::Unit(const shared_ptr<Hero>& hero, Force force)
     : hero_(hero),
-      equipment_slot_weapon_(Equipment::Type::kWeapon),
-      equipment_slot_armor_(Equipment::Type::kArmor),
-      equipment_slot_aid_(Equipment::Type::kAid),
+      equipment_set_(new EquipmentSet(this)),
       current_stat_(hero->GetUnitStat()),
       current_xtat_(hero->GetXtat()),
       position_(0, 0),
@@ -17,6 +16,7 @@ Unit::Unit(shared_ptr<Hero> hero, const Force force)
 }
 
 Unit::~Unit() {
+  delete equipment_set_;
 }
 
 // Return true if alive, false if dead
@@ -66,29 +66,24 @@ const Xtat& Unit::GetOriginalXtat() const {
   return hero_->GetXtat();
 }
 
-void Unit::RecalcStat() {
-  current_stat_ = hero_->GetUnitStat();
+void Unit::UpdateStat() {
+  current_stat_ = hero_->CalcUnitStat();
+  {
+    Stat addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcModifierAddends();
+    Stat multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcModifierMultipliers();
 
-  Stat addends = stat_modifier_list_.CalcAddends() +
-                 equipment_slot_weapon_.CalcModifierAddends() +
-                 equipment_slot_armor_.CalcModifierAddends() +
-                 equipment_slot_aid_.CalcModifierAddends();
-  Stat multipliers = stat_modifier_list_.CalcMultipliers() +
-                     equipment_slot_weapon_.CalcModifierMultipliers() +
-                     equipment_slot_armor_.CalcModifierMultipliers() +
-                     equipment_slot_aid_.CalcModifierMultipliers();
-
-  for (uint32_t i = 0; i < NUM_STATS; i++) {
-    current_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));
-    int val = current_stat_.GetValueByIndex(i);
-    int val_mult = ((100 + multipliers.GetValueByIndex(i)) * val) / 100;
-    current_stat_.SetValueByIndex(i, val_mult);
+    for (uint32_t i = 0; i < NUM_STATS; i++) {
+      current_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));
+      int val = current_stat_.GetValueByIndex(i);
+      int val_mult = ((100 + multipliers.GetValueByIndex(i)) * val) / 100;
+      current_stat_.SetValueByIndex(i, val_mult);
+    }
   }
 }
 
 void Unit::AddStatModifier(StatModifier* sm) {
   stat_modifier_list_.AddModifier(sm);
-  RecalcStat();
+  UpdateStat();
 }
 
 bool Unit::IsHPLow() const {
@@ -157,33 +152,6 @@ void Unit::LevelUp() {
   LOG_INFO("'%s' Level Up! (Level : %d)", hero_->GetId().c_str(), hero_->GetLevel());
 }
 
-void Unit::PutWeaponOn(Equipment* equipment) {
-  equipment_slot_weapon_.PutEquipmentOn(equipment);
-  RecalcStat();
-}
-
-void Unit::PutArmorOn(Equipment* equipment) {
-  equipment_slot_armor_.PutEquipmentOn(equipment);
-  RecalcStat();
-}
-
-void Unit::PutAidOn(Equipment* equipment) {
-  equipment_slot_aid_.PutEquipmentOn(equipment);
-  RecalcStat();
-}
-
-Equipment* Unit::GetWeapon() {
-  return equipment_slot_weapon_.GetEquipment();
-}
-
-Equipment* Unit::GetArmor() {
-  return equipment_slot_armor_.GetEquipment();
-}
-
-Equipment* Unit::GetAid() {
-  return equipment_slot_aid_.GetEquipment();
-}
-
 void Unit::EndAction() {
   RaiseEvent(EventEffect::Type::kOnActionDone);
   done_action_ = true;
@@ -196,9 +164,10 @@ void Unit::ResetAction() {
 void Unit::RaiseEvent(EventEffect::Type type, Unit* unit) {
   ASSERT(unit == this);
 
-  Equipment* weapon = GetWeapon();
-  Equipment* armor = GetArmor();
-  Equipment* aid = GetAid();
+  // TODO Remove const_cast when RaiseEvent become const
+  Equipment* weapon = const_cast<Equipment*>(equipment_set_->GetWeapon());
+  Equipment* armor  = const_cast<Equipment*>(equipment_set_->GetArmor());
+  Equipment* aid    = const_cast<Equipment*>(equipment_set_->GetAid());
   if (weapon != nullptr) weapon->RaiseEvent(type, unit);
   if (armor != nullptr) armor->RaiseEvent(type, unit);
   if (aid != nullptr) aid->RaiseEvent(type, unit);

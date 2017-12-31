@@ -11,11 +11,11 @@ void Equipment::AddEffect(EventEffect* ee) {
   unit_effect_list_.AddEffect(ee);
 }
 
-Stat Equipment::CalcModifierAddends() {
+Stat Equipment::CalcModifierAddends() const {
   return unit_effect_list_.CalcModifierAddends();
 }
 
-Stat Equipment::CalcModifierMultipliers() {
+Stat Equipment::CalcModifierMultipliers() const {
   return unit_effect_list_.CalcModifierMultipliers();
 }
 

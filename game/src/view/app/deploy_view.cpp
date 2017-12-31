@@ -5,9 +5,12 @@
 #include "view/uifw/image_view.h"
 #include "view/uifw/text_view.h"
 #include "view/foundation/misc.h"
-#include "unit_equipment_view.h"
+#include "equipment_set_view.h"
 
-HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHelper* deploy_helper)
+HeroModelView::HeroModelView(const Rect& frame,
+                             shared_ptr<Hero> hero,
+                             IDeployHelper* deploy_helper,
+                             IEquipmentSetSetter* equipment_set_setter)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
   SetPadding(4);
   Rect img_src_rect(0, 0, 48, 48);
@@ -30,13 +33,14 @@ HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHe
   required_unselectable_ = (deploy_no_ != 0); // Assume unselectable if already deployed at this point(construction)
   UpdateViews();
 
-  SetMouseButtonHandler([this, hero, deploy_helper] (MouseButtonEvent e) -> bool {
+  SetMouseButtonHandler([this, hero, deploy_helper, equipment_set_setter] (MouseButtonEvent e) -> bool {
     if (e.IsLeftButtonUp()) {
       if (IsSelected()) {
         deploy_no_ = deploy_helper->UnassignDeploy(hero);
       } else {
         deploy_no_ = deploy_helper->AssignDeploy(hero);
       }
+      equipment_set_setter->SetEquipmentSet(hero->GetEquipmentSet());
       UpdateViews();
     }
     return true;
@@ -57,13 +61,16 @@ void HeroModelView::UpdateViews() {
   }
 }
 
-HeroModelListView::HeroModelListView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_list, IDeployHelper* deploy_helper)
+HeroModelListView::HeroModelListView(const Rect& frame,
+                                     const vector<shared_ptr<Hero>>& hero_list,
+                                     IDeployHelper* deploy_helper,
+                                     IEquipmentSetSetter* equipment_set_setter)
     : CompositeView(frame) {
   SetBgColor(COLOR("navy"));
   static const Vec2D kHeroModelSize = {96, 80};
   Rect hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
-    HeroModelView* hero_model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
+    HeroModelView* hero_model_view = new HeroModelView(hero_model_frame, hero, deploy_helper, equipment_set_setter);
     AddChild(hero_model_view);
     hero_model_frame.SetX(hero_model_frame.GetX() + kHeroModelSize.x);
     if (hero_model_frame.GetRight() > GetActualFrameSize().x) {
@@ -79,13 +86,14 @@ DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_l
   SetBgColor(COLOR("darkgray"));
 
   Rect unit_item_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
-  unit_equipment_view_ = new UnitEquipmentView(&unit_item_frame);
-  unit_equipment_view_->SetBgColor(COLOR("navy"));
-  AddChild(unit_equipment_view_);
+  equipment_set_view_ = new EquipmentSetView(&unit_item_frame);
+  equipment_set_view_->SetBgColor(COLOR("navy"));
+  AddChild(equipment_set_view_);
 
   Rect hero_model_list_frame = GetActualFrame();
   hero_model_list_frame.SetW(4 * 96);
-  HeroModelListView* hero_model_list_view = new HeroModelListView(hero_model_list_frame, hero_list_, deploy_helper);
+  HeroModelListView* hero_model_list_view =
+      new HeroModelListView(hero_model_list_frame, hero_list_, deploy_helper, equipment_set_view_);
   AddChild(hero_model_list_view);
 
   Rect btn_ok_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {100, 50}, LayoutHelper::kAlignRgtBot);

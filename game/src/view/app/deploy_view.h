@@ -3,15 +3,16 @@
 
 #include "view/uifw/composite_view.h"
 #include "view/uifw/callback_view.h"
+#include "i_equipment_set_setter.h"
 
 class Hero;
 class IDeployHelper;
 class TextView;
-class UnitEquipmentView;
+class EquipmentSetView;
 
 class HeroModelView : public CallbackView {
  public:
-  HeroModelView(const Rect&, shared_ptr<Hero>, IDeployHelper*);
+  HeroModelView(const Rect&, shared_ptr<Hero>, IDeployHelper*, IEquipmentSetSetter*);
   void UpdateViews();
   bool IsSelected() { return deploy_no_ != 0; }
 
@@ -24,7 +25,7 @@ class HeroModelView : public CallbackView {
 
 class HeroModelListView : public CompositeView {
  public:
-  HeroModelListView(const Rect&, const vector<shared_ptr<Hero>>&, IDeployHelper*);
+  HeroModelListView(const Rect&, const vector<shared_ptr<Hero>>&, IDeployHelper*, IEquipmentSetSetter*);
   vector<shared_ptr<Hero>> GetHeroesSelected() { return heroes_selected_; }
 
  private:
@@ -39,7 +40,7 @@ class DeployView : public CompositeView {
 
  private:
   vector<shared_ptr<Hero>> hero_list_;
-  UnitEquipmentView* unit_equipment_view_;
+  EquipmentSetView* equipment_set_view_;
 };
 
 #endif // DEPLOY_VIEW_H_
