@@ -1,5 +1,5 @@
 #include "core/game.h"
-#include "view/App/app.h"
+#include "view/app/app.h"
 #include "util/common.h"
 #include <iostream>
 
