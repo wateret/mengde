@@ -48,33 +48,4 @@ class UnitOverView : public CompositeView {
   GaugeView*  gv_stats_[kNumGVs];
 };
 
-class UnitEquipmentView : public CompositeView {
- public:
-  UnitEquipmentView(const Rect*);
-  void SetUnit(Unit* unit);
-
- private:
-  void OnUnitUpdate();
-
- private:
-  Unit*     unit_;
-  TextView* tv_weapon_label_;
-  TextView* tv_armor_label_;
-  TextView* tv_aid_label_;
-  EquipmentView* eqv_weapon_;
-  EquipmentView* eqv_armor_;
-  EquipmentView* eqv_aid_;
-};
-
-class EquipmentView : public CompositeView {
- public:
-  EquipmentView(const Rect*, Equipment*);
-  void SetEquipment(Equipment*);
-
- private:
-  ImageView* iv_image_;
-  TextView*  tv_name_;
-  TextView*  tv_desc_;
-};
-
 #endif // UNIT_VIEW_H_

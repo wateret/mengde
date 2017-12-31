@@ -5,6 +5,7 @@
 #include "view/UIFW/image_view.h"
 #include "view/UIFW/text_view.h"
 #include "view/Foundation/misc.h"
+#include "unit_equipment_view.h"
 
 HeroModelView::HeroModelView(const Rect& frame, shared_ptr<Hero> hero, IDeployHelper* deploy_helper)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
@@ -76,8 +77,14 @@ DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_l
     : CompositeView(frame), hero_list_(hero_list) {
   SetPadding(8);
   SetBgColor(COLOR("darkgray"));
+
+  Rect unit_item_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
+  unit_equipment_view_ = new UnitEquipmentView(&unit_item_frame);
+  unit_equipment_view_->SetBgColor(COLOR("navy"));
+  AddChild(unit_equipment_view_);
+
   Rect hero_model_list_frame = GetActualFrame();
-  hero_model_list_frame.SetW(5 * 96);
+  hero_model_list_frame.SetW(4 * 96);
   HeroModelListView* hero_model_list_view = new HeroModelListView(hero_model_list_frame, hero_list_, deploy_helper);
   AddChild(hero_model_list_view);
 
