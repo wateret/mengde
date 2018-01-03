@@ -6,6 +6,7 @@
 #include "view/uifw/text_view.h"
 #include "view/foundation/misc.h"
 #include "equipment_set_view.h"
+#include "equipment_select_view.h"
 
 HeroModelView::HeroModelView(const Rect& frame,
                              shared_ptr<Hero> hero,
@@ -88,6 +89,10 @@ DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_l
   Rect unit_item_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
   equipment_set_view_ = new EquipmentSetView(&unit_item_frame);
   equipment_set_view_->SetBgColor(COLOR("navy"));
+  equipment_set_view_->SetPadding(8);
+  // TODO Set mouse button handlers for each Equipment
+  //      - Show EquipmentSelectView with equipments we have in our Asset
+  //      - Asset should be passed with a parameter
   AddChild(equipment_set_view_);
 
   Rect hero_model_list_frame = GetActualFrame();
@@ -107,4 +112,10 @@ DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_l
     return true;
   });
   AddChild(btn_ok);
+
+  { // Initialize equipment_select_view_
+    equipment_select_view_ = new EquipmentSelectView(GetActualFrame());
+    equipment_select_view_->SetVisible(false);
+    AddChild(equipment_select_view_);
+  }
 }

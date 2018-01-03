@@ -16,6 +16,7 @@
 #include "control_view.h"
 #include "magic_list_view.h"
 #include "terrain_info_view.h"
+#include "equipment_select_view.h"
 #include "core/assets.h"
 #include "core/cell.h"
 #include "core/game.h"
@@ -35,6 +36,7 @@ RootView::RootView(const Vec2D size, Scenario* scenario, App* app)
       magic_list_view_(nullptr),
       terrain_info_view_(nullptr),
       unit_list_view_(nullptr),
+      equipment_select_view_(nullptr),
       ui_state_machine_(new StateUIView({game_, this})),
       reserved_callbacks_(),
       mouse_coords_(-1, -1),

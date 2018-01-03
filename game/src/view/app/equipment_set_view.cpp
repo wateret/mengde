@@ -8,11 +8,11 @@
 // EquipmentView
 //
 
-EquipmentView::EquipmentView(const Rect* frame, const Equipment* equipment) : CompositeView(frame) {
+EquipmentView::EquipmentView(const Rect* frame, const Equipment* equipment) : CallbackView(frame) {
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(),
                                              {32, 32},
                                              LayoutHelper::kAlignLftMid);
-  iv_image_ = new ImageView(&iv_frame, "equipments/50-1.bmp"); // FIXME path hardcoded
+  iv_image_ = new ImageView(&iv_frame, "equipment/60-1.bmp"); // FIXME path hardcoded
   Rect tv_name_frame = {32 + 8, 0, 164, 16};
   tv_name_  = new TextView(&tv_name_frame, "");
   Rect tv_desc_frame = {32 + 8, 16, 164, 52};
@@ -64,15 +64,38 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
     armor  = equipment_set_->GetArmor();
     aid    = equipment_set_->GetAid();
   }
+
   Rect equipment_view_frame = {0, 24, 204, 60};
   eqv_weapon_ = new EquipmentView(&equipment_view_frame, weapon);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
   eqv_armor_ = new EquipmentView(&equipment_view_frame, armor);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
   eqv_aid_ = new EquipmentView(&equipment_view_frame, aid);
-  AddChild(eqv_weapon_);
-  AddChild(eqv_armor_);
-  AddChild(eqv_aid_);
+
+  EquipmentView* equipment_views[] = {eqv_weapon_, eqv_armor_, eqv_aid_};
+
+  for (int i = 0; i < 3; i++) {
+    EquipmentView* eqv = equipment_views[i];
+
+    eqv->SetMouseButtonHandler([] (const MouseButtonEvent e) {
+      if (e.IsLeftButtonUp()) {
+        LOG_DEBUG("Show Equipment Info");
+      }
+      return true;
+    });
+
+    eqv->SetMouseMotionHandler([eqv] (const MouseMotionEvent e) {
+      if (e.IsMotionOver()) {
+        eqv->SetBgColor(COLOR("darkgray"));
+      } else {
+        ASSERT(e.IsMotionOut());
+        eqv->SetBgColor(COLOR("transparent"));
+      }
+      return true;
+    });
+
+    AddChild(eqv);
+  }
 }
 
 void EquipmentSetView::SetEquipmentSet(EquipmentSet* equipment_set) {

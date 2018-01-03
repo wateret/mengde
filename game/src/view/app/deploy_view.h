@@ -9,6 +9,7 @@ class Hero;
 class IDeployHelper;
 class TextView;
 class EquipmentSetView;
+class EquipmentSelectView;
 
 class HeroModelView : public CallbackView {
  public:
@@ -41,6 +42,7 @@ class DeployView : public CompositeView {
  private:
   vector<shared_ptr<Hero>> hero_list_;
   EquipmentSetView* equipment_set_view_;
+  EquipmentSelectView* equipment_select_view_;
 };
 
 #endif // DEPLOY_VIEW_H_

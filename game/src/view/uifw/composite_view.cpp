@@ -46,6 +46,14 @@ void CompositeView::RemoveAllChildren() {
   children_.clear();
 }
 
+void CompositeView::ReplaceChild(View* existing_view, View* new_view) {
+  auto child = std::find(children_.begin(), children_.end(), existing_view);
+  if (child != children_.end()) {
+    delete *child;
+    *child = new_view;
+  }
+}
+
 void CompositeView::Render(Drawer* drawer) {
   RENDER_BEGIN(this);
   for (auto child : children_) {

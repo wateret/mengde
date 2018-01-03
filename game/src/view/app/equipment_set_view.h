@@ -1,6 +1,7 @@
 #ifndef EQUIPMENT_SET_VIEW_H_
 #define EQUIPMENT_SET_VIEW_H_
 
+#include "view/uifw/callback_view.h"
 #include "view/uifw/composite_view.h"
 #include "view/foundation/layout_helper.h"
 #include "i_equipment_set_setter.h"
@@ -11,7 +12,7 @@ class TextView;;
 class Equipment;
 class EquipmentSet;
 
-class EquipmentView : public CompositeView {
+class EquipmentView : public CallbackView {
  public:
   EquipmentView(const Rect*, const Equipment*);
   void SetEquipment(const Equipment*);
