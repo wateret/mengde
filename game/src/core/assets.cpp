@@ -3,6 +3,9 @@
 #include "equipment.h"
 #include <limits.h>
 
+namespace mengde {
+namespace core {
+
 void Money::Pay(const Money& cost) {
   ASSERT(Affordable(cost));
   amount_ -= cost.amount_;
@@ -108,3 +111,5 @@ vector<Equipment*> Assets::GetEquipments() {
   return ret;
 }
 
+} // namespace core
+} // namespace mengde

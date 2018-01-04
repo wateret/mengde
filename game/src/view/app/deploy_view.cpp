@@ -9,8 +9,8 @@
 #include "equipment_select_view.h"
 
 HeroModelView::HeroModelView(const Rect& frame,
-                             shared_ptr<Hero> hero,
-                             IDeployHelper* deploy_helper,
+                             shared_ptr<mengde::core::Hero> hero,
+                             mengde::core::IDeployHelper* deploy_helper,
                              IEquipmentSetSetter* equipment_set_setter)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
   SetPadding(4);
@@ -63,8 +63,8 @@ void HeroModelView::UpdateViews() {
 }
 
 HeroModelListView::HeroModelListView(const Rect& frame,
-                                     const vector<shared_ptr<Hero>>& hero_list,
-                                     IDeployHelper* deploy_helper,
+                                     const vector<shared_ptr<mengde::core::Hero>>& hero_list,
+                                     mengde::core::IDeployHelper* deploy_helper,
                                      IEquipmentSetSetter* equipment_set_setter)
     : CompositeView(frame) {
   SetBgColor(COLOR("navy"));
@@ -81,7 +81,7 @@ HeroModelListView::HeroModelListView(const Rect& frame,
   }
 }
 
-DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_list, IDeployHelper* deploy_helper)
+DeployView::DeployView(const Rect& frame, const vector<shared_ptr<mengde::core::Hero>>& hero_list, mengde::core::IDeployHelper* deploy_helper)
     : CompositeView(frame), hero_list_(hero_list) {
   SetPadding(8);
   SetBgColor(COLOR("darkgray"));
@@ -90,7 +90,7 @@ DeployView::DeployView(const Rect& frame, const vector<shared_ptr<Hero>>& hero_l
   equipment_set_view_ = new EquipmentSetView(&unit_item_frame);
   equipment_set_view_->SetBgColor(COLOR("navy"));
   equipment_set_view_->SetPadding(8);
-  // TODO Set mouse button handlers for each Equipment
+  // TODO Set mouse button handlers for each mengde::core::Equipment
   //      - Show EquipmentSelectView with equipments we have in our Asset
   //      - Asset should be passed with a parameter
   AddChild(equipment_set_view_);

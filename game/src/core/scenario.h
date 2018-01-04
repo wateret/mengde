@@ -4,6 +4,9 @@
 #include "util/common.h"
 #include "resource_manager.h"
 
+namespace mengde {
+namespace core {
+
 class Assets;
 class Game;
 
@@ -27,5 +30,8 @@ class Scenario {
   Game* game_;
   // TODO Add Game
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // SCENARIO_H_

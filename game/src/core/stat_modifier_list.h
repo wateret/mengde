@@ -2,7 +2,11 @@
 #define STAT_MODIFIER_LIST_H_
 
 #include <vector>
+
 #include "stat.h"
+
+namespace mengde {
+namespace core {
 
 class StatModifier;
 
@@ -18,5 +22,8 @@ class StatModifierList {
  private:
   std::vector<StatModifier*> elements_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // STAT_MODIFIER_LIST_H_

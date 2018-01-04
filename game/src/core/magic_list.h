@@ -4,6 +4,9 @@
 #include "util/common.h"
 #include "resource_manager.h"
 
+namespace mengde {
+namespace core {
+
 class Magic;
 class Unit;
 
@@ -19,5 +22,8 @@ class MagicList {
  private:
   vector<Magic*> magics_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // MAGIC_LIST_H_

@@ -1,5 +1,9 @@
 #include "equipment_set.h"
+
 #include "i_equipper.h"
+
+namespace mengde {
+namespace core {
 
 EquipmentSet::EquipmentSet(IEquipper* equipper) : equipper_(equipper),
     slot_weapon_(Equipment::Type::kWeapon), slot_armor_(Equipment::Type::kArmor), slot_aid_(Equipment::Type::kAid) {
@@ -39,3 +43,6 @@ Stat EquipmentSet::CalcModifierAddends() const {
 Stat EquipmentSet::CalcModifierMultipliers() const {
   return slot_weapon_.CalcModifierMultipliers() + slot_weapon_.CalcModifierMultipliers() + slot_weapon_.CalcModifierMultipliers();
 }
+
+} // namespace core
+} // namespace mengde

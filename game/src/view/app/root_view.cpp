@@ -23,7 +23,7 @@
 #include "core/magic_list.h"
 #include "core/scenario.h"
 
-RootView::RootView(const Vec2D size, Scenario* scenario, App* app)
+RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
     : View(),
       game_(scenario->GetGame()),
       app_(app),
@@ -50,7 +50,7 @@ RootView::RootView(const Vec2D size, Scenario* scenario, App* app)
   ui_views_->SetTransparent();
 
   { // Initialize deploy_view_
-    Assets* assets = scenario->GetAssets();
+    mengde::core::Assets* assets = scenario->GetAssets();
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     deploy_view_ = new DeployView(frame, assets->GetHeroes(), game_);
     deploy_view_->SetVisible(true);
@@ -163,7 +163,7 @@ void RootView::Render(Drawer* drawer) {
   GetCurrentState()->Render(drawer);
 
   // Render units
-  game_->ForEachUnit([this, drawer] (Unit* unit) {
+  game_->ForEachUnit([this, drawer] (mengde::core::Unit* unit) {
     if (unit->IsNoRender() || unit->IsDead()) return;
 
     SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
@@ -280,8 +280,8 @@ int RootView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
   return (frame_count_ / frames_per_sprite) % num_sprites;
 }
 
-void RootView::ShowMagicListView(Unit* unit) {
-  magic_list_view_->SetUnitAndMagicList(unit, std::make_shared<MagicList>(game_->GetMagicManager(), unit));
+void RootView::ShowMagicListView(mengde::core::Unit* unit) {
+  magic_list_view_->SetUnitAndMagicList(unit, std::make_shared<mengde::core::MagicList>(game_->GetMagicManager(), unit));
   magic_list_view_->SetVisible(true);
 }
 
@@ -297,7 +297,7 @@ void RootView::SetUnitViewVisible(bool b) {
   unit_view_->SetVisible(b);
 }
 
-void RootView::SetUnitViewUnit(Unit* unit) {
+void RootView::SetUnitViewUnit(mengde::core::Unit* unit) {
   unit_view_->SetUnit(unit);
 }
 
@@ -305,18 +305,18 @@ void RootView::SetUnitInfoViewVisible(bool b) {
   unit_info_view_->SetVisible(b);
 }
 
-void RootView::SetUnitInfoViewUnitTerrainInfo(Cell* cell) {
+void RootView::SetUnitInfoViewUnitTerrainInfo(mengde::core::Cell* cell) {
   unit_info_view_->SetUnitTerrainInfo(cell);
 }
 
-void RootView::SetUnitInfoViewUnitAttackInfo(Unit* unit, int accuracy, int damage) {
+void RootView::SetUnitInfoViewUnitAttackInfo(mengde::core::Unit* unit, int accuracy, int damage) {
   unit_info_view_->SetUnitAttackInfo(unit, accuracy, damage);
 }
 
 void RootView::SetUnitInfoViewContents(const std::string& name,
                                    int id,
-                                   const Xtat& xcur,
-                                   const Xtat& xmax,
+                                   const mengde::core::Xtat& xcur,
+                                   const mengde::core::Xtat& xmax,
                                    int damage,
                                    int mp_cost) {
   unit_info_view_->SetContents(name, id, xcur, xmax, damage, mp_cost);
@@ -354,7 +354,7 @@ void RootView::SetUnitDialogViewText(const string& s) {
   unit_dialog_view_->SetText(s);
 }
 
-void RootView::SetUnitDialogViewUnit(Unit* u) {
+void RootView::SetUnitDialogViewUnit(mengde::core::Unit* u) {
   unit_dialog_view_->SetUnit(u);
 }
 
@@ -362,7 +362,7 @@ void RootView::SetUnitListViewVisible(bool b) {
   unit_list_view_->SetVisible(b);
 }
 
-void RootView::SetUnitListViewUnit(Unit* unit) {
+void RootView::SetUnitListViewUnit(mengde::core::Unit* unit) {
   unit_list_view_->SetUnit(unit);
 }
 

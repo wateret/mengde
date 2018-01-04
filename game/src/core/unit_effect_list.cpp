@@ -1,5 +1,8 @@
 #include "unit_effect_list.h"
 
+namespace mengde {
+namespace core {
+
 UnitEffectList::UnitEffectList() {
 }
 
@@ -27,3 +30,6 @@ void UnitEffectList::NextTurn() {
   sm_list_.NextTurn();
   ee_list_.NextTurn();
 }
+
+} // namespace core
+} // namespace mengde

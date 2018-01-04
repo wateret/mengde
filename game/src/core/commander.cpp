@@ -1,6 +1,9 @@
 #include "commander.h"
 #include "cmd.h"
 
+namespace mengde {
+namespace core {
+
 Commander::Commander() : cmdq_current_(new CmdQueue()), cmdq_history_(new CmdQueue()) {
 }
 
@@ -30,3 +33,6 @@ void Commander::DebugPrint() const {
   cmdq_current_->DebugPrint();
 #endif // DEBUG
 }
+
+} // namespace core
+} // namespace mengde

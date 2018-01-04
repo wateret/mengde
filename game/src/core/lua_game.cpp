@@ -1,7 +1,10 @@
 #include "lua_game.h"
+
 #include "lua/lua_script.h"
 #include "game.h"
 #include "cmd.h"
+
+using namespace mengde::core;
 
 static Game* lua_get_game_object(lua_State* L) {
   lua_getglobal(L, LUA_GAME_OBJ_NAME);
@@ -10,7 +13,7 @@ static Game* lua_get_game_object(lua_State* L) {
   return game;
 }
 
-static Vec2D GetVec2DFromLua(LuaScript* lua) {
+static Vec2D GetVec2DFromLua(lua::LuaScript* lua) {
   vector<int> vec = lua->GetVector<int>();
   lua->PopStack(1); // FIXME GetVector does not pop a element.
   return {vec[0], vec[1]};
@@ -22,7 +25,7 @@ static Vec2D GetVec2DFromLua(LuaScript* lua) {
 LUA_IMPL(AppointHero) {
   Game* game = lua_get_game_object(L);
 
-  LuaScript lua(L);
+  lua::LuaScript lua(L);
   uint16_t level = lua.Get<uint16_t>();
   string   id    = lua.Get<string>();
 
@@ -33,7 +36,7 @@ LUA_IMPL(AppointHero) {
 LUA_IMPL(GenerateOwnUnit) {
   Game* game = lua_get_game_object(L);
 
-  LuaScript lua(L);
+  lua::LuaScript lua(L);
   Vec2D  pos = GetVec2DFromLua(&lua);
   string id  = lua.Get<string>();
 
@@ -46,7 +49,7 @@ LUA_IMPL(GenerateOwnUnit) {
 LUA_IMPL(GenerateUnit) {
   Game* game = lua_get_game_object(L);
 
-  LuaScript lua(L);
+  lua::LuaScript lua(L);
   Vec2D      pos   = GetVec2DFromLua(&lua);
   Force force  = (Force)lua.Get<int>();
   uint16_t   level = lua.Get<uint16_t>();
@@ -61,7 +64,7 @@ LUA_IMPL(GenerateUnit) {
 LUA_IMPL(ObtainEquipment) {
   Game* game = lua_get_game_object(L);
 
-  LuaScript lua(L);
+  lua::LuaScript lua(L);
   uint16_t amount = lua.Get<uint16_t>();
   string   id     = lua.Get<string>();
 
@@ -85,7 +88,7 @@ LUA_IMPL(GetNumOwnsAlive) {
 
 LUA_IMPL(PushCmdMove) {
   Game* game = lua_get_game_object(L);
-  LuaScript lua(L);
+  lua::LuaScript lua(L);
   Vec2D pos = GetVec2DFromLua(&lua);
   int unit_id = lua.Get<int>();
   Unit* unit = game->GetUnit(unit_id);
@@ -95,7 +98,7 @@ LUA_IMPL(PushCmdMove) {
 
 LUA_IMPL(PushCmdSpeak) {
   Game* game = lua_get_game_object(L);
-  LuaScript lua(L);
+  lua::LuaScript lua(L);
   string words = lua.Get<string>();
   int unit_id = lua.Get<int>();
   Unit* unit = game->GetUnit(unit_id);

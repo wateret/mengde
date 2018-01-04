@@ -6,15 +6,24 @@
 
 // StateUI
 
+namespace mengde {
+namespace core {
+  class Game;
+  class Unit;
+  class Magic;
+}
+}
+
 class RootView;
-class Game;
 class Drawer;
-class Unit;
+class TextureAnimator;
+class MagicListView;
+class UnitInfoView;
 
 class StateUI : public State, IView {
  public:
   struct Base {
-    Game*     game;
+    mengde::core::Game*     game;
     RootView* rv;
   };
 
@@ -35,7 +44,7 @@ class StateUI : public State, IView {
 #endif
 
  protected:
-  Game*     game_;
+  mengde::core::Game*     game_;
   RootView* rv_;
 };
 
@@ -127,10 +136,10 @@ class PathTree;
 
 class StateUIUnitSelected : public StateUIOperable {
  public:
-  StateUIUnitSelected(StateUI::Base, Unit*, PathTree*);
+  StateUIUnitSelected(StateUI::Base, mengde::core::Unit*, PathTree*);
   ~StateUIUnitSelected();
   std::vector<Vec2D> GetPathToRoot(Vec2D pos);
-  Unit* GetUnit() { return unit_; }
+  mengde::core::Unit* GetUnit() { return unit_; }
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -142,14 +151,12 @@ class StateUIUnitSelected : public StateUIOperable {
 #endif
 
  private:
-  Unit* unit_;
+  mengde::core::Unit* unit_;
   PathTree* pathtree_;
   Vec2D origin_coords_;
 };
 
 // StateUIMoving
-
-class Unit;
 
 class StateUIMoving : public StateUI {
  public:
@@ -162,8 +169,8 @@ class StateUIMoving : public StateUI {
   static const int kFramesPerCell = 12;
 
  public:
-  StateUIMoving(StateUI::Base, Unit*, const std::vector<Vec2D>&, Flag = Flag::kInputActNext);
-  StateUIMoving(StateUI::Base, Unit*, Vec2D, Flag = Flag::kInputActNext);
+  StateUIMoving(StateUI::Base, mengde::core::Unit*, const std::vector<Vec2D>&, Flag = Flag::kInputActNext);
+  StateUIMoving(StateUI::Base, mengde::core::Unit*, Vec2D, Flag = Flag::kInputActNext);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -178,7 +185,7 @@ class StateUIMoving : public StateUI {
   bool LastFrame();
 
  private:
-  Unit*         unit_;
+  mengde::core::Unit*         unit_;
   Vec2D         dest_;
   vector<Vec2D> path_;
   int           frames_;
@@ -187,12 +194,9 @@ class StateUIMoving : public StateUI {
 
 // StateUIMagic
 
-class Magic;
-class TextureAnimator;
-
 class StateUIMagic : public StateUI {
  public:
-  StateUIMagic(StateUI::Base, Unit*, Unit*, Magic*, bool, int);
+  StateUIMagic(StateUI::Base, mengde::core::Unit*, mengde::core::Unit*, mengde::core::Magic*, bool, int);
   virtual ~StateUIMagic();
   virtual void Enter() override;
   virtual void Exit() override;
@@ -207,9 +211,9 @@ class StateUIMagic : public StateUI {
   static const int kFramesPerCut = 5;
 
  private:
-  Unit*  atk_;
-  Unit*  def_;
-  Magic* magic_;
+  mengde::core::Unit*  atk_;
+  mengde::core::Unit*  def_;
+  mengde::core::Magic* magic_;
   bool   hit_;
   int    damage_;
   TextureAnimator* animator_;
@@ -219,7 +223,7 @@ class StateUIMagic : public StateUI {
 
 class StateUIKilled : public StateUI {
  public:
-  StateUIKilled(StateUI::Base, Unit*);
+  StateUIKilled(StateUI::Base, mengde::core::Unit*);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -232,7 +236,7 @@ class StateUIKilled : public StateUI {
   static const int kStateDuration = 80;
 
  private:
-  Unit*    unit_;
+  mengde::core::Unit*    unit_;
   int      frames_;
 };
 
@@ -257,7 +261,7 @@ class StateUIEmptySelected : public StateUI {
 
 class StateUIAttack : public StateUI {
  public:
-  StateUIAttack(StateUI::Base, Unit*, Unit*, bool, bool, int);
+  StateUIAttack(StateUI::Base, mengde::core::Unit*, mengde::core::Unit*, bool, bool, int);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -275,8 +279,8 @@ class StateUIAttack : public StateUI {
   bool LastFrame() { return frames_ == kNumCuts * kFramesPerCut - 1; }
 
  private:
-  Unit* atk_;
-  Unit* def_;
+  mengde::core::Unit* atk_;
+  mengde::core::Unit* def_;
   bool  hit_;
   bool  critical_;
   int   damage_;
@@ -288,7 +292,7 @@ class StateUIDamaged : public StateUI {
   static const int kFrames = 90;
 
  public:
-  StateUIDamaged(StateUI::Base, Unit*, int);
+  StateUIDamaged(StateUI::Base, mengde::core::Unit*, int);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
@@ -301,19 +305,15 @@ class StateUIDamaged : public StateUI {
 
  private:
   int   frames_;
-  Unit* unit_;
+  mengde::core::Unit* unit_;
   int   damage_;
 };
 
 // StateUIAction
 
-class Unit;
-class MagicListView;
-class UnitInfoView;
-
 class StateUIAction : public StateUIOperable {
  public:
-  StateUIAction(StateUI::Base, Unit*, const string& = "basic_attack");
+  StateUIAction(StateUI::Base, mengde::core::Unit*, const string& = "basic_attack");
   ~StateUIAction();
   virtual void Enter() override;
   virtual void Exit() override;
@@ -326,7 +326,7 @@ class StateUIAction : public StateUIOperable {
 #endif
 
  private:
-  Unit* unit_;
+  mengde::core::Unit* unit_;
   string magic_id_;
   Vec2D* range_itr_;
   bool is_basic_attack_;
@@ -351,14 +351,14 @@ class StateUINextTurn : public StateUI {
 
 class StateUISpeak : public StateUI {
  public:
-  StateUISpeak(StateUI::Base, Unit*, const string&);
+  StateUISpeak(StateUI::Base, mengde::core::Unit*, const string&);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
 
  private:
-  Unit* unit_;
+  mengde::core::Unit* unit_;
   string words_;
 };
 

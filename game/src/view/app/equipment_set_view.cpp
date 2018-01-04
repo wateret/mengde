@@ -8,7 +8,7 @@
 // EquipmentView
 //
 
-EquipmentView::EquipmentView(const Rect* frame, const Equipment* equipment) : CallbackView(frame) {
+EquipmentView::EquipmentView(const Rect* frame, const mengde::core::Equipment* equipment) : CallbackView(frame) {
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(),
                                              {32, 32},
                                              LayoutHelper::kAlignLftMid);
@@ -24,7 +24,7 @@ EquipmentView::EquipmentView(const Rect* frame, const Equipment* equipment) : Ca
   SetEquipment(equipment);
 }
 
-void EquipmentView::SetEquipment(const Equipment* equipment) {
+void EquipmentView::SetEquipment(const mengde::core::Equipment* equipment) {
   string image_path = "equipment/60-1.bmp";
   string name = "No Equipment";
   string desc = "No Desc";
@@ -56,9 +56,9 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   AddChild(tv_armor_label_);
   AddChild(tv_aid_label_);
 
-  const Equipment* weapon = nullptr;
-  const Equipment* armor = nullptr;
-  const Equipment* aid = nullptr;
+  const mengde::core::Equipment* weapon = nullptr;
+  const mengde::core::Equipment* armor = nullptr;
+  const mengde::core::Equipment* aid = nullptr;
   if (equipment_set_ != nullptr) {
     weapon = equipment_set_->GetWeapon();
     armor  = equipment_set_->GetArmor();
@@ -98,7 +98,7 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   }
 }
 
-void EquipmentSetView::SetEquipmentSet(EquipmentSet* equipment_set) {
+void EquipmentSetView::SetEquipmentSet(mengde::core::EquipmentSet* equipment_set) {
   equipment_set_ = equipment_set;
   OnUpdate();
 }

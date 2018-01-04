@@ -1,7 +1,5 @@
-#include "core/game.h"
 #include "view/app/app.h"
 #include "util/common.h"
-#include <iostream>
 
 int main(int argc, char** argv) {
   UNUSED(argc);

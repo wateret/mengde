@@ -1,5 +1,9 @@
 #include "terrain.h"
+
 #include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 Terrain::Terrain(const std::string& name,
                  const std::vector<int>& move_costs,
@@ -26,3 +30,6 @@ int Terrain::GetEffect(int class_idx) {
   ASSERT(class_idx < (int)move_costs_.size());
   return effects_[class_idx];
 }
+
+} // namespace core
+} // namespace mengde

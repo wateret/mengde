@@ -3,6 +3,9 @@
 
 #include "util/common.h"
 
+namespace mengde {
+namespace core {
+
 class Unit;
 
 //
@@ -22,5 +25,8 @@ class StageUnitManager {
   vector<Unit*> units_;
 //  vector<bool>  units_status_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // STAGE_UNIT_MANAGER_H_

@@ -1,5 +1,8 @@
 #include "cell.h"
 
+namespace mengde {
+namespace core {
+
 Cell::Cell(Terrain* terrain) :
   terrain_(terrain),
   unit_(nullptr) {
@@ -41,3 +44,6 @@ Unit* Cell::GetUnit() {
 void Cell::SetUnit(Unit* unit) {
   unit_ = unit;
 }
+
+} // namespace core
+} // namespace mengde

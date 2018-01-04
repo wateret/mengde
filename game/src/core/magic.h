@@ -2,7 +2,11 @@
 #define MAGIC_H_
 
 #include <string>
+
 #include "attack_range.h"
+
+namespace mengde {
+namespace core {
 
 class Unit;
 
@@ -49,5 +53,8 @@ class Magic {
   uint16_t    amount_;
   uint16_t    turns_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // MAGIC_H_

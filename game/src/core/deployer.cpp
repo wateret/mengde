@@ -1,5 +1,8 @@
 #include "deployer.h"
 
+namespace mengde {
+namespace core {
+
 //
 // DeployerComparer
 //
@@ -120,3 +123,6 @@ bool Deployer::IsReady() {
 uint32_t Deployer::GetNumAssigned() {
   return unselectable_assignment_.size() + selectable_assignment_.size();
 }
+
+} // namespace mengde
+} // namespace core

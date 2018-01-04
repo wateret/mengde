@@ -1,8 +1,12 @@
 #include "magic.h"
+
 #include "unit.h"
 #include "stat_modifier_list.h"
 #include "stat_modifier.h"
 #include "formulae.h"
+
+namespace mengde {
+namespace core {
 
 Magic::Magic(const std::string& id,
              MagicType type,
@@ -77,3 +81,5 @@ Vec2D* Magic::GetRange() {
   return Range::kRanges[range_];
 }
 
+} // namespace core
+} // namespace mengde

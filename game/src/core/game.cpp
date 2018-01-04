@@ -1,4 +1,5 @@
 #include "game.h"
+
 #include "assets.h"
 #include "cmd.h"
 #include "commander.h"
@@ -13,6 +14,9 @@
 
 // XXX temporary include
 #include "lua_game.h"
+
+namespace mengde {
+namespace core {
 
 Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_script_path)
     : rc_(rc),
@@ -42,8 +46,8 @@ Game::~Game() {
   delete stage_unit_manager_;
 }
 
-LuaScript* Game::CreateLua(const string& stage_script_path) {
-  LuaScript* lua_script = new LuaScript();
+lua::LuaScript* Game::CreateLua(const string& stage_script_path) {
+  lua::LuaScript* lua_script = new lua::LuaScript();
 
   // Register game object as lua global
   lua_script->SetRawPointerToGlobal(LUA_GAME_OBJ_NAME, (void*)this);
@@ -345,3 +349,5 @@ uint32_t Game::FindDeploy(const shared_ptr<Hero>& hero) {
   return deployer_->Find(hero);
 }
 
+} // namespace core
+} // namespace mengde

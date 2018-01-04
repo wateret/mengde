@@ -1,5 +1,9 @@
 #include "equipment_slot.h"
+
 #include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 EquipmentSlot::EquipmentSlot(Equipment::Type type)
     : type_(type), equipment_(NULL) {
@@ -31,3 +35,6 @@ Stat EquipmentSlot::CalcModifierMultipliers() const {
     return {0, 0, 0, 0, 0};
   }
 }
+
+} // namespace core
+} // namespace mengde

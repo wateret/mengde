@@ -1,10 +1,11 @@
 #include "unit_dialog_view.h"
-#include "view/uifw/text_view.h"
-#include "view/uifw/image_view.h"
+
 #include "core/unit.h"
 #include "view/foundation/drawer.h"
+#include "view/uifw/text_view.h"
+#include "view/uifw/image_view.h"
 
-UnitDialogView::UnitDialogView(const Rect* frame, const string& message, Unit* unit)
+UnitDialogView::UnitDialogView(const Rect* frame, const string& message, mengde::core::Unit* unit)
     : CompositeView(frame),
       message_(message),
       unit_(unit),
@@ -45,7 +46,7 @@ void UnitDialogView::SetText(const string& s) {
   tv_message_->SetText(s);
 }
 
-void UnitDialogView::SetUnit(Unit* u) {
+void UnitDialogView::SetUnit(mengde::core::Unit* u) {
   unit_ = u;
   string portrait_path = "portrait/" + unit_->GetId() + ".bmp";
   iv_portrait_->SetPath(portrait_path);

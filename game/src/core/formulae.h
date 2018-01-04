@@ -1,6 +1,9 @@
 #ifndef FORMULAE_H_
 #define FORMULAE_H_
 
+namespace mengde {
+namespace core {
+
 class Unit;
 class Map;
 
@@ -23,5 +26,8 @@ class Formulae {
   static int ComputeDoubleCriticalBase(int, int);
   Formulae(); // Prevent instantiation
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // FORMULAE_H_

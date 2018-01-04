@@ -1,6 +1,10 @@
 #include "stat_modifier_list.h"
+
 #include "stat_modifier.h"
 #include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 StatModifierList::StatModifierList() {
 }
@@ -60,3 +64,6 @@ Stat StatModifierList::CalcMultipliers() const {
   }
   return calc_mods;
 }
+
+} // namespace core
+} // namespace mengde

@@ -5,6 +5,9 @@
 #include "event_effect_list.h"
 #include "i_event.h"
 
+namespace mengde {
+namespace core {
+
 class UnitEffectList : public IEvent {
  public:
   void RaiseEvent(EventEffect::Type, Unit*) override;
@@ -21,5 +24,8 @@ class UnitEffectList : public IEvent {
   StatModifierList sm_list_;
   EventEffectList  ee_list_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // UNIT_EFFECT_LIST_H_

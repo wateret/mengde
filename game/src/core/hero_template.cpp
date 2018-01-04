@@ -1,5 +1,8 @@
 #include "hero_template.h"
 
+namespace mengde {
+namespace core {
+
 HeroTemplate::HeroTemplate(const string& id,
                            const string& bitmap_path,
                            const UnitClass* unit_class,
@@ -22,3 +25,5 @@ Vec2D* HeroTemplate::GetAttackRange() const {
   return unit_class_->GetAttackRange();
 }
 
+} // namespace core
+} // namespace mengde

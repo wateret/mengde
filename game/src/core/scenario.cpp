@@ -1,7 +1,11 @@
 #include "scenario.h"
+
 #include "assets.h"
 #include "config_loader.h"
 #include "game.h"
+
+namespace mengde {
+namespace core {
 
 Scenario::Scenario(const string& scenario_id) : rc_(), assets_(nullptr), game_(nullptr) {
   const string base_path = "/" + scenario_id;
@@ -34,3 +38,6 @@ Scenario::~Scenario() {
   delete assets_;
   delete game_;
 }
+
+} // namespace core
+} // namespace mengde

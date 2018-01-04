@@ -7,7 +7,7 @@
 #include "root_view.h"
 #include "minimap_view.h"
 
-ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
+ControlView::ControlView(const Rect* rect, mengde::core::Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
   SetBgColor(COLOR("darkgray", 192));
   SetPadding(8);
@@ -21,7 +21,7 @@ ControlView::ControlView(const Rect* rect, Game* game, RootView* rv)
   ButtonView* button = new ButtonView(&button_coords, "EndTurn");
   button->SetMouseButtonHandler([this] (const MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      this->game_->PushCmd(unique_ptr<CmdEndTurn>(new CmdEndTurn()));
+      this->game_->PushCmd(unique_ptr<mengde::core::CmdEndTurn>(new mengde::core::CmdEndTurn()));
       return true;
     }
     return true;

@@ -2,9 +2,13 @@
 #define EQUIPMENT_H_
 
 #include <string>
+
 #include "unit_effect_list.h"
 #include "util/common.h"
 #include "i_event.h"
+
+namespace mengde {
+namespace core {
 
 class EventEffect;
 class StatModifier;
@@ -35,5 +39,8 @@ class Equipment : public IEvent {
   Type type_;
   UnitEffectList unit_effect_list_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // EQUIPMENT_H_

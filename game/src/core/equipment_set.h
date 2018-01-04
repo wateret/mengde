@@ -4,6 +4,9 @@
 #include "stat.h"
 #include "equipment_slot.h"
 
+namespace mengde {
+namespace core {
+
 class IEquipper;
 
 class EquipmentSet {
@@ -27,5 +30,8 @@ class EquipmentSet {
   EquipmentSlot slot_armor_;
   EquipmentSlot slot_aid_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // EQUIPMENT_SET_H_

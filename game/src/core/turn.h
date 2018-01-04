@@ -3,6 +3,9 @@
 
 #include "unit.h"
 
+namespace mengde {
+namespace core {
+
 class Turn {
  public:
   Turn();
@@ -16,5 +19,8 @@ class Turn {
   uint16_t   limit_;
   Force force_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // TURN_H_

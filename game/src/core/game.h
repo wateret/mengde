@@ -1,15 +1,23 @@
 #ifndef GAME_H_
 #define GAME_H_
 
+#include <string>
+#include <vector>
+#include <functional>
+
 #include "i_deploy_helper.h"
 #include "map.h"
 #include "unit.h"
 #include "util/common.h"
 #include "turn.h"
 #include "resource_manager.h"
-#include <string>
-#include <vector>
-#include <functional>
+
+namespace lua {
+  class LuaScript;
+}
+
+namespace mengde {
+namespace core {
 
 class Assets;
 class Cmd;
@@ -50,7 +58,7 @@ class Game : public IDeployHelper {
   Unit* GetUnit(uint32_t);
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
-  LuaScript* GetLuaScript() { return lua_script_; }
+  lua::LuaScript* GetLuaScript() { return lua_script_; }
   bool EndForceTurn();
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
@@ -88,7 +96,7 @@ class Game : public IDeployHelper {
   Unit*         GetOneHostileInRange(Unit*, Vec2D);
 
  private:
-  LuaScript* CreateLua(const string&);
+  lua::LuaScript* CreateLua(const string&);
   Map*       CreateMap();
   Deployer*  CreateDeployer();
   bool TryBasicAttack(Unit*, Unit*);
@@ -97,7 +105,7 @@ class Game : public IDeployHelper {
  private:
   ResourceManagers   rc_;
   Assets*            assets_;
-  LuaScript*         lua_script_;
+  lua::LuaScript*         lua_script_;
   Commander*         commander_;
   Deployer*          deployer_;
   Map*               map_;
@@ -105,5 +113,8 @@ class Game : public IDeployHelper {
   Turn               turn_;
   Status             status_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif

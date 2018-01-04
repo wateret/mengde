@@ -1,9 +1,13 @@
 #include "cmd.h"
+
 #include "formulae.h"
 #include "game.h"
 #include "magic.h"
 #include "util/path_tree.h"
 #include "lua/lua_script.h"
+
+namespace mengde {
+namespace core {
 
 const char* kCmdOpToString[] = {
 #define MACRO_CMD_OP(ename) #ename,
@@ -482,7 +486,7 @@ CmdGameVictory::CmdGameVictory() : Cmd() {
 }
 
 unique_ptr<Cmd> CmdGameVictory::Do(Game* game) {
-  LuaScript* lua_script = game->GetLuaScript();
+  lua::LuaScript* lua_script = game->GetLuaScript();
   lua_script->Call<void>("$on_victory");
   // Return a new CmdGameEnd just in case when user script does not specifies next scenario
   return unique_ptr<Cmd>(new CmdGameEnd());
@@ -506,3 +510,6 @@ CmdSpeak::CmdSpeak(Unit* unit, const string& words) : CmdOneUnit(unit), words_(w
 unique_ptr<Cmd> CmdSpeak::Do(Game*) {
   return nullptr;
 }
+
+} // namespace core
+} // namespace mengde

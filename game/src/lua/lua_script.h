@@ -5,9 +5,6 @@
 #include <vector>
 #include <functional>
 #include "util/common.h"
-using std::string;
-using std::vector;
-using std::function;
 
 extern "C" {
 
@@ -16,6 +13,8 @@ extern "C" {
 #include "lualib.h"
 
 }
+
+namespace lua {
 
 class LuaScript {
  public:
@@ -251,5 +250,7 @@ string LuaScript::GetTopOpt<string>();
 
 template<>
 void LuaScript::Call<void>(unsigned argc);
+
+} // namespace lua
 
 #endif // LUA_SCRIPT_H_

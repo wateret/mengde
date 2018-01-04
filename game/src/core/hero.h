@@ -7,6 +7,9 @@
 #include "hero_template.h"
 #include "i_equipper.h"
 
+namespace mengde {
+namespace core {
+
 class EquipmentSet;
 
 class Hero : public IEquipper {
@@ -40,5 +43,8 @@ class Hero : public IEquipper {
   Stat     unit_stat_;
   Xtat     xtat_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // HERO_H_

@@ -1,4 +1,5 @@
 #include "unit_view.h"
+
 #include "core/unit.h"
 #include "equipment_set_view.h"
 #include "unit_over_view.h"
@@ -15,7 +16,7 @@ UnitView::UnitView(const Rect* frame)
 //  SetViewIndex(1);
 }
 
-void UnitView::SetUnit(Unit* unit) {
+void UnitView::SetUnit(mengde::core::Unit* unit) {
   if (unit_ != unit) {
     unit_ = unit;
     unit_over_view_->SetUnit(unit);

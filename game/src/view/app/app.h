@@ -7,10 +7,15 @@
 #include "view/foundation/timer.h"
 #include "view/foundation/window.h"
 
+namespace mengde {
+namespace core {
+  class Game;
+  class Scenario;
+}
+}
+
 class View;
-class Game;
 class Drawer;
-class Scenario;
 
 class FrameConfig {
  public:
@@ -72,7 +77,7 @@ class App {
   View*   main_view_;
   View*   root_view_;
   View*   target_view_;
-  Scenario* scenario_;
+  mengde::core::Scenario* scenario_;
 
   // fps
   const FrameConfig frame_config_;

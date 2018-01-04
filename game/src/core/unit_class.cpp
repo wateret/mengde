@@ -1,5 +1,8 @@
 #include "unit_class.h"
 
+namespace mengde {
+namespace core {
+
 UnitClass::UnitClass(const string& id,
                      const int index,
                      const int num_promotions,
@@ -17,3 +20,6 @@ UnitClass::UnitClass(const string& id,
       bni_hp_(bni_hp),
       bni_mp_(bni_mp) {
 }
+
+} // namespace core
+} // namespace mengde

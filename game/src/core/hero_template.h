@@ -5,6 +5,9 @@
 #include "stat.h"
 #include "unit_class.h"
 
+namespace mengde {
+namespace core {
+
 class HeroTemplate {
  public:
   HeroTemplate(const string&, const string&, const UnitClass*, const Stat&);
@@ -22,5 +25,8 @@ class HeroTemplate {
   const UnitClass* unit_class_;
   Stat             hero_stat_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // HERO_TEMPLATE_H_

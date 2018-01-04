@@ -11,7 +11,7 @@
 #include "view/uifw/vertical_list_view.h"
 
 MagicListView::MagicListView(const Rect& frame,
-                             Game* const game,
+                             mengde::core::Game* const game,
                              RootView* const rv)
     : CompositeView(frame),
       game_(game),
@@ -32,7 +32,7 @@ MagicListView::MagicListView(const Rect& frame,
 MagicListView::~MagicListView() {
 }
 
-void MagicListView::SetUnitAndMagicList(Unit* unit, shared_ptr<MagicList> magic_list) {
+void MagicListView::SetUnitAndMagicList(mengde::core::Unit* unit, shared_ptr<mengde::core::MagicList> magic_list) {
   ASSERT((unit == nullptr) == (magic_list == nullptr)); // Both should be null or non-null at the same time
 
   if (unit == nullptr || magic_list == nullptr) return;
@@ -56,12 +56,12 @@ void MagicListView::SetUnitAndMagicList(Unit* unit, shared_ptr<MagicList> magic_
   }
 
   for (int i = 0, sz = magic_list->NumMagics(); i < sz; i++) {
-    Magic* magic = magic_list->GetMagic(i);
+    mengde::core::Magic* magic = magic_list->GetMagic(i);
     string id    = magic->GetId();
     string name  = magic->GetId();
 
     // Variables to be captured for callback
-    Game*     game = game_;
+    mengde::core::Game*     game = game_;
     RootView* rv   = rv_;
 
     Rect button_frame({0, 0}, {frame_size.x, item_height_});

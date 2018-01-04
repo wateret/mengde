@@ -3,17 +3,22 @@
 
 #include "view/uifw/tab_view.h"
 
-class Unit;
+namespace mengde {
+namespace core {
+  class Unit;
+}
+}
+
 class UnitOverView;
 class EquipmentSetView;
 
 class UnitView : public TabView {
  public:
   UnitView(const Rect*);
-  void SetUnit(Unit* unit);
+  void SetUnit(mengde::core::Unit* unit);
 
  private:
-  Unit* unit_;
+  mengde::core::Unit* unit_;
   UnitOverView* unit_over_view_; // tab 0
   EquipmentSetView* equipment_set_view_; // tab 1
 };

@@ -1,7 +1,11 @@
 #include "formulae.h"
+
 #include "util/common.h"
 #include "unit.h"
 #include "map.h"
+
+namespace mengde {
+namespace core {
 
 Formulae::Formulae() {
 }
@@ -86,3 +90,6 @@ int Formulae::ComputeAccuracyBase(int atk, int def, int cap) {
 int Formulae::ApplyRatio(int value, int ratio) {
   return value * ratio / 100;
 }
+
+} // namespace core
+} // namespace mengde

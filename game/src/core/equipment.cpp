@@ -1,5 +1,8 @@
 #include "equipment.h"
 
+namespace mengde {
+namespace core {
+
 Equipment::Equipment(const std::string& id, Type type) : id_(id), type_(type) {
 }
 
@@ -22,3 +25,6 @@ Stat Equipment::CalcModifierMultipliers() const {
 void Equipment::RaiseEvent(EventEffect::Type type, Unit* unit) {
   unit_effect_list_.RaiseEvent(type, unit);
 }
+
+} // namespace core
+} // namespace mengde

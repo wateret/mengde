@@ -1,6 +1,10 @@
 #include "event_effect_list.h"
+
 #include "event_effect.h"
 #include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 EventEffectList::EventEffectList() {
 }
@@ -37,3 +41,6 @@ void EventEffectList::NextTurn() {
     e->NextTurn();
   }
 }
+
+} // namespace core
+} // namespace mengde

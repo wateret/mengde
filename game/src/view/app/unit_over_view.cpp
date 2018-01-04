@@ -1,4 +1,5 @@
 #include "unit_over_view.h"
+
 #include "core/unit.h"
 #include "view/uifw/gauge_view.h"
 #include "view/uifw/image_view.h"
@@ -67,7 +68,7 @@ UnitOverView::UnitOverView(const Rect* frame)
   }
 }
 
-void UnitOverView::SetUnit(Unit* unit) {
+void UnitOverView::SetUnit(mengde::core::Unit* unit) {
   unit_ = unit;
   OnUnitUpdate();
 }
@@ -80,10 +81,10 @@ void UnitOverView::OnUnitUpdate() {
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
 
-  const Stat& ori_stat = unit_->GetOriginalStat();
-  const Stat& cur_stat = unit_->GetCurrentStat();
-  const Xtat& ori_xtat = unit_->GetOriginalXtat();
-  const Xtat& cur_xtat = unit_->GetCurrentXtat();
+  const mengde::core::Stat& ori_stat = unit_->GetOriginalStat();
+  const mengde::core::Stat& cur_stat = unit_->GetCurrentStat();
+  const mengde::core::Xtat& ori_xtat = unit_->GetOriginalXtat();
+  const mengde::core::Xtat& cur_xtat = unit_->GetCurrentXtat();
   for (int i = 0; i < kNumXtats; i++) {
     int max_val = (i == 2) ? unit_->GetMaxExp() : ori_xtat.GetValueByIndex(i);
     gv_stats_[i]->SetCurVal(cur_xtat.GetValueByIndex(i));

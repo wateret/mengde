@@ -5,6 +5,9 @@
 #include "attack_range.h"
 #include "stat.h"
 
+namespace mengde {
+namespace core {
+
 struct BaseAndIncr {
   int base;
   int incr;
@@ -40,5 +43,8 @@ class UnitClass {
   BaseAndIncr bni_hp_;
   BaseAndIncr bni_mp_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // UNIT_CLASS_H_

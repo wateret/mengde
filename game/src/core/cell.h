@@ -4,6 +4,9 @@
 #include "terrain.h"
 #include "unit.h"
 
+namespace mengde {
+namespace core {
+
 class Cell {
  public:
   Cell(Terrain*);
@@ -22,5 +25,8 @@ class Cell {
   Terrain* terrain_;
   Unit* unit_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // CELL_H_

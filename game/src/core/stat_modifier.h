@@ -3,6 +3,9 @@
 
 #include <string>
 
+namespace mengde {
+namespace core {
+
 class StatModifier {
  public:
   StatModifier(const std::string&, uint16_t, uint16_t, uint16_t, uint16_t = UINT16_MAX);
@@ -20,5 +23,8 @@ class StatModifier {
   uint16_t multiplier_;
   uint16_t turns_left_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // STAT_MODIFIER_H_

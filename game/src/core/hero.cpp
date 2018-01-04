@@ -1,5 +1,9 @@
 #include "hero.h"
+
 #include "equipment_set.h"
+
+namespace mengde {
+namespace core {
 
 Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
     : hero_tpl_(hero_tpl),
@@ -90,3 +94,5 @@ void Hero::UpdateStat() {
   }
 }
 
+} // namespace core
+} // namespace mengde

@@ -3,6 +3,8 @@
 
 #include "util/common.h"
 
+namespace mengde {
+namespace core {
 namespace Range {
 
 enum Type {
@@ -17,5 +19,7 @@ extern Vec2D* kRanges[kCount];
 Type StringToRange(const string&);
 
 } // namespace Range
+} // namespace core
+} // namespace mengde
 
 #endif // ATTACK_RANGE_H_

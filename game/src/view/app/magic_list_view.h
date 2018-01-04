@@ -4,10 +4,15 @@
 #include "view/uifw/composite_view.h"
 #include "util/common.h"
 
-class Game;
+namespace mengde {
+namespace core {
+  class Game;
+  class Unit;
+  class MagicList;
+}
+}
+
 class RootView;
-class Unit;
-class MagicList;
 class TextView;
 class VerticalListView;
 
@@ -16,15 +21,15 @@ class MagicListView : public CompositeView {
    static const int kTitleHeight = 24;
 
  public:
-  MagicListView(const Rect&, Game* const, RootView* const);
+  MagicListView(const Rect&, mengde::core::Game* const, RootView* const);
   ~MagicListView();
-  void SetUnitAndMagicList(Unit*, shared_ptr<MagicList>);
+  void SetUnitAndMagicList(mengde::core::Unit*, shared_ptr<mengde::core::MagicList>);
 
  private:
   void Cleanup();
 
  private:
-  Game*     const game_;
+  mengde::core::Game*     const game_;
   RootView* const rv_;
 
  private:

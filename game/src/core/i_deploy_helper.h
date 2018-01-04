@@ -3,6 +3,9 @@
 
 #include "util/common.h"
 
+namespace mengde {
+namespace core {
+
 class Hero;
 
 class IDeployHelper {
@@ -12,5 +15,9 @@ class IDeployHelper {
   virtual uint32_t UnassignDeploy(const shared_ptr<Hero>&) = 0;
   virtual uint32_t FindDeploy(const shared_ptr<Hero>&) = 0;
 };
+
+
+} // namespace core
+} // namespace mengde
 
 #endif // I_DEPLOY_HELPER_H_

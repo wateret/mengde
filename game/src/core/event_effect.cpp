@@ -2,6 +2,9 @@
 
 #include "unit.h"
 
+namespace mengde {
+namespace core {
+
 // class EventEffect
 
 EventEffect::~EventEffect() {
@@ -24,3 +27,5 @@ void EERestoreHP::OnEvent(Unit* unit) {
   LOG_INFO("EERestoreHP restores HP by %d", real_amount);
 }
 
+} // namespace core
+} // namespace mengde

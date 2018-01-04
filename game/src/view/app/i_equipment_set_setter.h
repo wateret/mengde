@@ -3,11 +3,15 @@
 
 #include "util/common.h"
 
-class EquipmentSet;
+namespace mengde {
+namespace core {
+  class EquipmentSet;
+}
+}
 
 class IEquipmentSetSetter {
  public:
-  virtual void SetEquipmentSet(EquipmentSet*) = 0;
+  virtual void SetEquipmentSet(mengde::core::EquipmentSet*) = 0;
 };
 
 #endif // I_EQUIPMENT_SET_SETTER_H_

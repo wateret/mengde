@@ -1,6 +1,10 @@
 #include "unit.h"
+
 #include "unit_class.h"
 #include "equipment_set.h"
+
+namespace mengde {
+namespace core {
 
 Unit::Unit(const shared_ptr<Hero>& hero, Force force)
     : hero_(hero),
@@ -177,3 +181,5 @@ void Unit::RaiseEvent(EventEffect::Type type) {
   RaiseEvent(type, this);
 }
 
+} // namespace core
+} // namespace mengde

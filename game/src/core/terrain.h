@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+namespace mengde {
+namespace core {
+
 class Terrain {
  public:
   Terrain(const std::string&, const std::vector<int>&, const std::vector<int>&);
@@ -19,5 +22,8 @@ class Terrain {
   std::vector<int> move_costs_;
   std::vector<int> effects_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif /* TERRAIN_H */

@@ -4,7 +4,12 @@
 #include "view/uifw/callback_view.h"
 #include "view/uifw/composite_view.h"
 
+namespace mengde {
+namespace core {
 class Equipment;
+}
+}
+
 class RowMajorListView;
 
 class ItemIconView : public CallbackView {
@@ -15,7 +20,7 @@ class ItemIconView : public CallbackView {
 class EquipmentSelectView : public CompositeView {
  public:
   EquipmentSelectView(const Rect&);
-  void SetEquipments(const vector<const Equipment*>&);
+  void SetEquipments(const vector<const mengde::core::Equipment*>&);
 
  private:
   RowMajorListView* equipment_list_view_;

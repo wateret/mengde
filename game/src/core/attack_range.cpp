@@ -1,5 +1,9 @@
 #include "attack_range.h"
+
 #include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 namespace Range {
 
@@ -31,4 +35,5 @@ Type StringToRange(const string& s) {
 }
 
 } // namespace Range
-
+} // namespace core
+} // namespace mengde

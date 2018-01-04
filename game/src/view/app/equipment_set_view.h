@@ -6,16 +6,21 @@
 #include "view/foundation/layout_helper.h"
 #include "i_equipment_set_setter.h"
 
-class Unit;
+namespace mengde {
+namespace core {
+  class Unit;
+  class Equipment;
+  class EquipmentSet;
+}
+}
+
 class ImageView;
 class TextView;;
-class Equipment;
-class EquipmentSet;
 
 class EquipmentView : public CallbackView {
  public:
-  EquipmentView(const Rect*, const Equipment*);
-  void SetEquipment(const Equipment*);
+  EquipmentView(const Rect*, const mengde::core::Equipment*);
+  void SetEquipment(const mengde::core::Equipment*);
 
  private:
   ImageView* iv_image_;
@@ -26,13 +31,13 @@ class EquipmentView : public CallbackView {
 class EquipmentSetView : public CompositeView, public IEquipmentSetSetter {
  public:
   EquipmentSetView(const Rect*);
-  void SetEquipmentSet(EquipmentSet*) override;
+  void SetEquipmentSet(mengde::core::EquipmentSet*) override;
 
  private:
   void OnUpdate();
 
  private:
-  EquipmentSet* equipment_set_;
+  mengde::core::EquipmentSet* equipment_set_;
   TextView* tv_weapon_label_;
   TextView* tv_armor_label_;
   TextView* tv_aid_label_;

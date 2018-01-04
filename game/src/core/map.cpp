@@ -1,10 +1,15 @@
 #include "map.h"
+
+#include <algorithm>
+
 #include "util/common.h"
 #include "util/path_tree.h"
 #include "unit_class.h"
 #include "cell.h"
 #include "unit.h"
-#include <algorithm>
+
+namespace mengde {
+namespace core {
 
 Map::Map(const vector<string>& input,
          const string& bitmap_path,
@@ -206,3 +211,5 @@ int Map::ApplyTerrainEffect(Unit* unit, int value) {
   return grid_[v.y][v.x]->ApplyTerrainEffect(unit->GetClassIndex(), value);
 }
 
+} // namespace core
+} // namespace mengde

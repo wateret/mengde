@@ -1,8 +1,6 @@
 #ifndef UNIT_H_
 #define UNIT_H_
 
-#include <string>
-#include <vector>
 #include "util/common.h"
 #include "hero.h"
 #include "stat_modifier_list.h"
@@ -10,6 +8,9 @@
 #include "i_event.h"
 #include "i_equipper.h"
 #include "force.h"
+
+namespace mengde {
+namespace core {
 
 class UnitClass;
 class EquipmentSet;
@@ -76,5 +77,8 @@ class Unit : public IEvent, public IEquipper {
   bool      no_render_;     // FIXME this should be moved to some View related module
   bool      done_action_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // UNIT_H_

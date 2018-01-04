@@ -5,13 +5,19 @@
 #include "util/common.h"
 #include "util/state_machine.h"
 
+namespace mengde {
+namespace core {
+  class Assets;
+  class Game;
+  class Unit;
+  class Cell;
+  class Scenario;
+  struct Xtat;
+}
+}
+
 class App;
-class Assets;
-class Game;
 class StateUI;
-class Unit;
-class Cell;
-class Scenario;
 
 class CompositeView;
 class DeployView;
@@ -24,14 +30,13 @@ class MagicListView;
 class UnitInfoView;
 class UnitListView;
 class TerrainInfoView;
-struct Xtat;
 
 class RootView : public View {
  public:
    typedef function<void()> NextFrameCallback;
 
  public:
-  RootView(const Vec2D, Scenario*, App*);
+  RootView(const Vec2D, mengde::core::Scenario*, App*);
   ~RootView();
   Vec2D GetMouseCoords() { return mouse_coords_; }
   Vec2D GetCameraCoords() { return camera_coords_; }
@@ -42,14 +47,14 @@ class RootView : public View {
   void MoveCameraY(int d);
 
   // View wrappers
-  void ShowMagicListView(Unit* unit);
+  void ShowMagicListView(mengde::core::Unit* unit);
   void HideMagicListView();
   void SetControlViewTurnText(int, int);
   void SetUnitViewVisible(bool);
-  void SetUnitViewUnit(Unit*);
-  void SetUnitInfoViewUnitTerrainInfo(Cell* cell);
-  void SetUnitInfoViewUnitAttackInfo(Unit* unit, int, int);
-  void SetUnitInfoViewContents(const std::string&, int, const Xtat&, const Xtat&, int, int);
+  void SetUnitViewUnit(mengde::core::Unit*);
+  void SetUnitInfoViewUnitTerrainInfo(mengde::core::Cell* cell);
+  void SetUnitInfoViewUnitAttackInfo(mengde::core::Unit* unit, int, int);
+  void SetUnitInfoViewContents(const std::string&, int, const mengde::core::Xtat&, const mengde::core::Xtat&, int, int);
   void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
   void SetUnitInfoViewVisible(bool);
   void SetDialogViewVisible(bool);
@@ -57,11 +62,11 @@ class RootView : public View {
   void SetUnitDialogViewVisible(bool);
   bool IsUnitDialogViewVisible();
   void SetUnitDialogViewText(const string&);
-  void SetUnitDialogViewUnit(Unit*);
+  void SetUnitDialogViewUnit(mengde::core::Unit*);
   void SetTerrainInfoViewVisible(bool);
   void SetTerrainInfoViewText(const string&);
   void SetUnitListViewVisible(bool);
-  void SetUnitListViewUnit(Unit* unit);
+  void SetUnitListViewUnit(mengde::core::Unit* unit);
 
   void CenterCamera(Vec2D);
   void EndGame();
@@ -87,7 +92,7 @@ class RootView : public View {
   void RaiseMouseMotionEvent();
 
  private:
-  Game*                  game_;
+  mengde::core::Game*                  game_;
   App*                   app_;
   CompositeView*         ui_views_;
   DeployView*            deploy_view_;

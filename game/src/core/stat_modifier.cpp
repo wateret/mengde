@@ -1,5 +1,9 @@
 #include "stat_modifier.h"
+
 #include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 StatModifier::StatModifier(const std::string& id,
                        uint16_t stat_id,
@@ -17,3 +21,6 @@ void StatModifier::NextTurn() {
   ASSERT(turns_left_ > 0);
   --turns_left_;
 }
+
+} // namespace core
+} // namespace mengde

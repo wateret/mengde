@@ -4,6 +4,9 @@
 #include "equipment.h"
 #include "stat.h"
 
+namespace mengde {
+namespace core {
+
 class EquipmentSlot {
  public:
   EquipmentSlot(Equipment::Type);
@@ -17,5 +20,8 @@ class EquipmentSlot {
   Equipment::Type type_;
   const Equipment* equipment_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // EQUIPMENT_SLOT_H_

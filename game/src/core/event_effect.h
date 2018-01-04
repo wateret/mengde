@@ -1,6 +1,9 @@
 #ifndef EVENT_EFFECT_H_
 #define EVENT_EFFECT_H_
 
+namespace mengde {
+namespace core {
+
 class Unit;
 
 // EventEffect class is an observer for game event handling
@@ -35,5 +38,8 @@ class EERestoreHP : public EventEffect {
  private:
   int amount_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // EVENT_EFFECT_H_

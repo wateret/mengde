@@ -1,4 +1,5 @@
 #include "app.h"
+
 #include "core/assets.h"
 #include "core/game.h"
 #include "core/scenario.h"
@@ -59,7 +60,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
   Rect main_rect({0, 0}, window_size_);
   main_view_ = new MainView(&main_rect, this);
 
-  scenario_ = new Scenario("example");
+  scenario_ = new mengde::core::Scenario("example");
 
   window_ = new Window("Game", width, height);
   drawer_ = new Drawer(window_);

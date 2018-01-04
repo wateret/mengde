@@ -1,6 +1,10 @@
 #include "magic_list.h"
+
 #include "magic.h"
 #include "unit.h"
+
+namespace mengde {
+namespace core {
 
 MagicList::MagicList() {
 }
@@ -30,3 +34,5 @@ Magic* MagicList::GetMagic(int index) {
   return magics_[index];
 }
 
+} // namespace core
+} // namespace mengde

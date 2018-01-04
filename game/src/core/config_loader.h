@@ -5,6 +5,13 @@
 #include "util/game_env.h"
 #include "resource_manager.h"
 
+namespace lua {
+  class LuaScript;
+}
+
+namespace mengde {
+namespace core {
+
 class LuaScript;
 class EventEffect;
 
@@ -25,9 +32,12 @@ class ConfigLoader {
   EventEffect* GenerateEventEffect(const string&, const string&, int);
 
  private:
-  LuaScript*       lua_config_;
+  ::lua::LuaScript*       lua_config_;
   ResourceManagers rc_;
   string           first_stage_;
 };
+
+} // namespace mengde
+} // namespace core
 
 #endif // CONFIG_LOADER_H_

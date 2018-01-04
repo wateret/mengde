@@ -1,4 +1,5 @@
 #include "unit_info_view.h"
+
 #include "core/unit.h"
 #include "core/cell.h"
 #include "view/uifw/gauge_view.h"
@@ -6,7 +7,7 @@
 #include "view/foundation/drawer.h"
 #include "view/foundation/rect.h"
 
-UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
+UnitInfoView::UnitInfoView(const Rect* frame, mengde::core::Unit* unit)
     : CompositeView(frame),
       unit_(unit),
       gv_hp_(nullptr),
@@ -53,10 +54,10 @@ UnitInfoView::UnitInfoView(const Rect* frame, Unit* unit)
 UnitInfoView::~UnitInfoView() {
 }
 
-void UnitInfoView::SetUnitTerrainInfo(Cell* cell) {
+void UnitInfoView::SetUnitTerrainInfo(mengde::core::Cell* cell) {
   ASSERT(cell->IsUnitPlaced());
 
-  Unit* unit = cell->GetUnit();
+  mengde::core::Unit* unit = cell->GetUnit();
   if (unit_ == unit) return;
   SetUnit(unit);
 
@@ -66,16 +67,16 @@ void UnitInfoView::SetUnitTerrainInfo(Cell* cell) {
   tv_rgtbot_->SetText(terrain_effect);
 }
 
-void UnitInfoView::SetUnitAttackInfo(Unit* unit, int accuracy, int expected_damage) {
+void UnitInfoView::SetUnitAttackInfo(mengde::core::Unit* unit, int accuracy, int expected_damage) {
   SetUnit(unit);
   gv_hp_->SetExtVal(expected_damage);
   tv_rgtbot_->SetText("Accuracy : " + std::to_string(accuracy) + "%");
 }
 
-void UnitInfoView::SetUnit(Unit* unit) {
+void UnitInfoView::SetUnit(mengde::core::Unit* unit) {
   unit_ = unit;
-  const Xtat& cur_xtat = unit_->GetCurrentXtat();
-  const Xtat& ori_xtat = unit_->GetOriginalXtat();
+  const mengde::core::Xtat& cur_xtat = unit_->GetCurrentXtat();
+  const mengde::core::Xtat& ori_xtat = unit_->GetOriginalXtat();
   gv_hp_->SetCurVal(cur_xtat.hp);
   gv_hp_->SetMaxVal(ori_xtat.hp);
   gv_hp_->SetExtVal(0);
@@ -88,8 +89,8 @@ void UnitInfoView::SetUnit(Unit* unit) {
 
 void UnitInfoView::SetContents(const std::string& id,
                                int lv,
-                               const Xtat& xcur,
-                               const Xtat& xmax,
+                               const mengde::core::Xtat& xcur,
+                               const mengde::core::Xtat& xmax,
                                int damage,
                                int mp_cost) {
   unit_ = nullptr; // Reset cache

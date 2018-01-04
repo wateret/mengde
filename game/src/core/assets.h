@@ -2,7 +2,11 @@
 #define ASSETS_H_
 
 #include <map>
+
 #include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 class Hero;
 class Equipment;
@@ -53,5 +57,8 @@ class Assets {
 //  std::map<string, Amount<Consumable*>>
   Money money_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // ASSETS_H_

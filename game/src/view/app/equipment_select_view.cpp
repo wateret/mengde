@@ -42,7 +42,7 @@ EquipmentSelectView::EquipmentSelectView(const Rect& frame)
   SetBgColor(COLOR("black"));
 }
 
-void EquipmentSelectView::SetEquipments(const vector<const Equipment*>& equipments) {
+void EquipmentSelectView::SetEquipments(const vector<const mengde::core::Equipment*>& equipments) {
   static const int kItemSize = 48;
 
   RowMajorListView* new_list_view = new RowMajorListView(GetActualFrame(), kItemSize);

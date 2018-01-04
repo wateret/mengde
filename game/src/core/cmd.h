@@ -4,6 +4,9 @@
 #include "util/common.h"
 #include "unit.h"
 
+namespace mengde {
+namespace core {
+
 class Game;
 class Map;
 
@@ -271,5 +274,8 @@ class CmdSpeak : public CmdOneUnit {
  private:
   string words_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // COMMAND_H_

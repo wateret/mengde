@@ -1,4 +1,5 @@
 #include "state_ui.h"
+
 #include "root_view.h"
 #include "view/app/app.h" // FIXME Remove this dependency
 #include "core/game.h"
@@ -56,7 +57,7 @@ void StateUIDoCmd::Enter() {
 // Returns nullptr when no UI needed
 StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
   ASSERT(game_->HasPendingCmd());
-  const Cmd* cmd = game_->GetNextCmdConst();
+  const mengde::core::Cmd* cmd = game_->GetNextCmdConst();
   StateUI* no_state_ui = nullptr;
 
 #define DYNAMIC_CAST_CHECK(type) \
@@ -64,27 +65,27 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
   ASSERT(c != nullptr);
 
   switch (cmd->GetOp()) {
-    case Cmd::Op::kCmdAction:
-    case Cmd::Op::kCmdPlayAI:
-    case Cmd::Op::kCmdGameVictory:
+    case mengde::core::Cmd::Op::kCmdAction:
+    case mengde::core::Cmd::Op::kCmdPlayAI:
+    case mengde::core::Cmd::Op::kCmdGameVictory:
       return no_state_ui;
 
-    case Cmd::Op::kCmdHit: {
-      const CmdHit* c = DYNAMIC_CAST_CHECK(CmdHit);
+    case mengde::core::Cmd::Op::kCmdHit: {
+      const mengde::core::CmdHit* c = DYNAMIC_CAST_CHECK(mengde::core::CmdHit);
       if (c->IsBasicAttack()) {
         return new StateUIAttack(WrapBase(),
                                  c->GetUnitAtk(),
                                  c->GetUnitDef(),
                                  true,
-                                 c->GetHitType() == CmdHit::HitType::kCritical,
+                                 c->GetHitType() == mengde::core::CmdHit::HitType::kCritical,
                                  c->GetDamage());
       } else {
         ASSERT(c->IsMagic());
         return new StateUIMagic(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), c->GetMagic(), true, c->GetDamage());
       }
     }
-    case Cmd::Op::kCmdMiss: {
-      const CmdMiss* c = DYNAMIC_CAST_CHECK(CmdMiss);
+    case mengde::core::Cmd::Op::kCmdMiss: {
+      const mengde::core::CmdMiss* c = DYNAMIC_CAST_CHECK(mengde::core::CmdMiss);
       if (c->IsBasicAttack()) {
         return new StateUIAttack(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), false, false, 0);
       } else {
@@ -92,8 +93,8 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
         return new StateUIMagic(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), c->GetMagic(), false, 0);
       }
     }
-    case Cmd::Op::kCmdMove: {
-      const CmdMove* c = DYNAMIC_CAST_CHECK(CmdMove);
+    case mengde::core::Cmd::Op::kCmdMove: {
+      const mengde::core::CmdMove* c = DYNAMIC_CAST_CHECK(mengde::core::CmdMove);
       StateUIMoving::Flag flag = StateUIMoving::Flag::kNone;
       if (c->GetUnit()->GetPosition() == c->GetDest()) {
         return no_state_ui;
@@ -101,19 +102,19 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
         return new StateUIMoving(WrapBase(), c->GetUnit(), c->GetDest(), flag);
       }
     }
-    case Cmd::Op::kCmdKilled: {
-      const CmdKilled* c = DYNAMIC_CAST_CHECK(CmdKilled);
+    case mengde::core::Cmd::Op::kCmdKilled: {
+      const mengde::core::CmdKilled* c = DYNAMIC_CAST_CHECK(mengde::core::CmdKilled);
       return new StateUIKilled(WrapBase(), c->GetUnit());
     }
-    case Cmd::Op::kCmdEndTurn:
+    case mengde::core::Cmd::Op::kCmdEndTurn:
       return new StateUINextTurn(WrapBase());
 
-    case Cmd::Op::kCmdSpeak: {
-      const CmdSpeak* c = DYNAMIC_CAST_CHECK(CmdSpeak);
+    case mengde::core::Cmd::Op::kCmdSpeak: {
+      const mengde::core::CmdSpeak* c = DYNAMIC_CAST_CHECK(mengde::core::CmdSpeak);
       return new StateUISpeak(WrapBase(), c->GetUnit(), c->GetWords());
     }
-    case Cmd::Op::kCmdGameEnd: {
-      const CmdGameEnd* c = DYNAMIC_CAST_CHECK(CmdGameEnd);
+    case mengde::core::Cmd::Op::kCmdGameEnd: {
+      const mengde::core::CmdGameEnd* c = DYNAMIC_CAST_CHECK(mengde::core::CmdGameEnd);
       return new StateUIEnd(WrapBase());
     }
 
@@ -244,10 +245,10 @@ StateUIView::StateUIView(Base base) : StateUIOperable(base) {
 void StateUIView::Update() {
   StateUIOperable::Update();
 
-  Map* map = game_->GetMap();
+  mengde::core::Map* map = game_->GetMap();
   if (map->UnitInCell(cursor_cell_)) {
-    Cell* cell = map->GetCell(cursor_cell_);
-    Unit* unit = map->GetUnit(cursor_cell_);
+    mengde::core::Cell* cell = map->GetCell(cursor_cell_);
+    mengde::core::Unit* unit = map->GetUnit(cursor_cell_);
     rv_->SetUnitInfoViewUnitTerrainInfo(cell);
     rv_->SetUnitInfoViewCoordsByUnitCoords(unit->GetPosition(), rv_->GetCameraCoords());
     rv_->SetUnitViewUnit(unit);
@@ -260,7 +261,7 @@ void StateUIView::Update() {
   }
 
   if (game_->IsAITurn()) {
-    game_->PushCmd(unique_ptr<CmdPlayAI>(new CmdPlayAI()));
+    game_->PushCmd(unique_ptr<mengde::core::CmdPlayAI>(new mengde::core::CmdPlayAI()));
   }
 
   if (game_->HasPendingCmd()) {
@@ -271,9 +272,9 @@ void StateUIView::Update() {
 bool StateUIView::OnMouseButtonEvent(const MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
     Vec2D pos = GetCursorCell();
-    Map* map = game_->GetMap();
+    mengde::core::Map* map = game_->GetMap();
     if (map->UnitInCell(pos)) {
-      Unit* unit = map->GetUnit(pos);
+      mengde::core::Unit* unit = map->GetUnit(pos);
       if (game_->IsCurrentTurn(unit)) {
         if (unit->IsDoneAction()) {
           LOG_INFO("The chosen unit is already done his action");
@@ -289,9 +290,9 @@ bool StateUIView::OnMouseButtonEvent(const MouseButtonEvent e) {
     }
   } else if (e.IsRightButtonUp()) {
     Vec2D pos = GetCursorCell();
-    Map* map = game_->GetMap();
+    mengde::core::Map* map = game_->GetMap();
     if (map->UnitInCell(pos)) {
-      Unit* unit = map->GetUnit(pos);
+      mengde::core::Unit* unit = map->GetUnit(pos);
       rv_->SetUnitListViewUnit(unit);
       rv_->SetUnitListViewVisible(true);
     }
@@ -306,7 +307,7 @@ bool StateUIView::OnMouseMotionEvent(const MouseMotionEvent e) {
 // StateUIUnitSelected
 
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base,
-                                         Unit* unit,
+                                         mengde::core::Unit* unit,
                                          PathTree* pathtree)
     : StateUIOperable(base), unit_(unit), pathtree_(pathtree), origin_coords_(unit_->GetPosition()) {
 }
@@ -329,7 +330,7 @@ void StateUIUnitSelected::Render(Drawer* drawer) {
 
   std::vector<Vec2D> movable_cells = pathtree_->GetNodeList();
   drawer->SetDrawColor(Color(0, 0, 192, 96));
-  Map* map = game_->GetMap();
+  mengde::core::Map* map = game_->GetMap();
   for (auto cell : movable_cells) {
     if (!map->UnitInCell(cell)) {
       drawer->FillCell(cell);
@@ -350,7 +351,7 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
     std::vector<Vec2D> movable_cells = pathtree_->GetNodeList();
     Vec2D pos = GetCursorCell();
-    Map* map = game_->GetMap();
+    mengde::core::Map* map = game_->GetMap();
     if (map->UnitInCell(pos) && map->GetUnit(pos) != unit_) {
       // XXX Other unit clicked
     } else if (std::find(movable_cells.begin(), movable_cells.end(), pos) !=
@@ -374,14 +375,14 @@ std::vector<Vec2D> StateUIUnitSelected::GetPathToRoot(Vec2D pos) {
 // StateUIMoving
 
 StateUIMoving::StateUIMoving(StateUI::Base base,
-                             Unit*         unit,
+                             mengde::core::Unit*         unit,
                              Vec2D         dest,
                              Flag          flag)
     : StateUI(base), unit_(unit), dest_(dest), path_(), frames_(-1), flag_(flag) {
 }
 
 StateUIMoving::StateUIMoving(StateUI::Base        base,
-                             Unit*                unit,
+                             mengde::core::Unit*                unit,
                              const vector<Vec2D>& path,
                              Flag                 flag)
     : StateUI(base), unit_(unit), dest_(), path_(path), frames_(-1), flag_(flag) {
@@ -411,7 +412,7 @@ void StateUIMoving::Enter() {
 
   if (path_.empty()) {
     // Lazy path generation
-    Map* m = game_->GetMap();
+    mengde::core::Map* m = game_->GetMap();
     path_ = m->FindPathTo(unit_, dest_);
     ASSERT(dest_ == path_[0]);
   }
@@ -465,7 +466,7 @@ void StateUIMoving::Render(Drawer* drawer) {
 
 // StateUIMagic
 
-StateUIMagic::StateUIMagic(StateUI::Base base, Unit* atk, Unit* def, Magic* magic, bool hit, int damage)
+StateUIMagic::StateUIMagic(StateUI::Base base, mengde::core::Unit* atk, mengde::core::Unit* def, mengde::core::Magic* magic, bool hit, int damage)
     : StateUI(base),
       atk_(atk),
       def_(def),
@@ -536,7 +537,7 @@ void StateUIMagic::Update() {
 
 // StateUIKilled
 
-StateUIKilled::StateUIKilled(StateUI::Base base, Unit* unit)
+StateUIKilled::StateUIKilled(StateUI::Base base, mengde::core::Unit* unit)
     : StateUI(base),
       unit_(unit),
       frames_(0) {
@@ -582,7 +583,7 @@ StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords)
 }
 
 void StateUIEmptySelected::Enter() {
-  Map* map = game_->GetMap();
+  mengde::core::Map* map = game_->GetMap();
   std::string name = map->GetTerrain(coords_)->GetName();
   rv_->SetTerrainInfoViewText(name);
   rv_->SetTerrainInfoViewVisible(true);
@@ -607,8 +608,8 @@ bool StateUIEmptySelected::OnMouseButtonEvent(const MouseButtonEvent e) {
 // StateUIAttack
 
 StateUIAttack::StateUIAttack(StateUI::Base base,
-                             Unit* atk,
-                             Unit* def,
+                             mengde::core::Unit* atk,
+                             mengde::core::Unit* def,
                              bool hit,
                              bool critical,
                              int damage)
@@ -781,7 +782,7 @@ void StateUIAttack::Update() {
 
 // StateUIDamaged
 
-StateUIDamaged::StateUIDamaged(StateUI::Base base, Unit* unit, int damage)
+StateUIDamaged::StateUIDamaged(StateUI::Base base, mengde::core::Unit* unit, int damage)
    : StateUI(base), frames_(-1), unit_(unit), damage_(damage) {
   damage_ = std::min(damage_, unit->GetCurrentXtat().hp);
 }
@@ -805,7 +806,7 @@ void StateUIDamaged::Update() {
   const int max_anim_frames = (kFrames - 1) * 1 / 2;
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
-  Xtat xtat_mod = unit_->GetCurrentXtat();
+  mengde::core::Xtat xtat_mod = unit_->GetCurrentXtat();
   int damage_rem = damage_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
   xtat_mod.hp -= damage_ - damage_rem;
   rv_->SetUnitInfoViewContents(unit_->GetId(),
@@ -823,7 +824,7 @@ void StateUIDamaged::Render(Drawer*) {
 // StateUIAction
 
 StateUIAction::StateUIAction(StateUI::Base base,
-                             Unit* unit,
+                             mengde::core::Unit* unit,
                              const string& magic_id)
     : StateUIOperable(base),
       unit_(unit),
@@ -835,7 +836,7 @@ StateUIAction::StateUIAction(StateUI::Base base,
     range_itr_ = unit_->GetAttackRange();
   } else {
     is_basic_attack_ = false;
-    Magic* magic = game_->GetMagic(magic_id_);
+    mengde::core::Magic* magic = game_->GetMagic(magic_id_);
     range_itr_ = magic->GetRange(); // FIXME
   }
   Rect frame = LayoutHelper::CalcPosition(rv_->GetFrameSize(),
@@ -888,16 +889,16 @@ void StateUIAction::Update() {
 bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
     Vec2D map_pos = GetCursorCell();
-    Map* map = game_->GetMap();
+    mengde::core::Map* map = game_->GetMap();
     if (map->UnitInCell(map_pos)) {
-      Unit* atk = unit_;
-      Unit* def = map->GetUnit(map_pos);
+      mengde::core::Unit* atk = unit_;
+      mengde::core::Unit* def = map->GetUnit(map_pos);
       if (is_basic_attack_) {
         if (atk->IsInRange(map_pos)) {
           if (atk->IsHostile(def)) {
-            unique_ptr<CmdAction> action(new CmdAction());
-            action->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(atk, unit_->GetPosition())));
-            action->SetCmdAct(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk, def, CmdBasicAttack::Type::kActive)));
+            unique_ptr<mengde::core::CmdAction> action(new mengde::core::CmdAction());
+            action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(atk, unit_->GetPosition())));
+            action->SetCmdAct(unique_ptr<mengde::core::CmdBasicAttack>(new mengde::core::CmdBasicAttack(atk, def, mengde::core::CmdBasicAttack::Type::kActive)));
             game_->PushCmd(std::move(action));
             rv_->InitUIStateMachine();
           } else {
@@ -905,12 +906,12 @@ bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
           }
         }
       } else {
-        Magic* magic = game_->GetMagic(magic_id_);
+        mengde::core::Magic* magic = game_->GetMagic(magic_id_);
         if (atk->IsInRange(map_pos, magic->GetRange())) {
           if (atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
-            unique_ptr<CmdAction> action(new CmdAction());
-            action->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(atk, unit_->GetPosition())));
-            action->SetCmdAct(unique_ptr<CmdMagic>(new CmdMagic(atk, def, magic)));
+            unique_ptr<mengde::core::CmdAction> action(new mengde::core::CmdAction());
+            action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(atk, unit_->GetPosition())));
+            action->SetCmdAct(unique_ptr<mengde::core::CmdMagic>(new mengde::core::CmdMagic(atk, def, magic)));
             game_->PushCmd(std::move(action));
             rv_->InitUIStateMachine();
           } else {
@@ -929,17 +930,17 @@ bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
 bool StateUIAction::OnMouseMotionEvent(const MouseMotionEvent e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
-  Map* map = game_->GetMap();
+  mengde::core::Map* map = game_->GetMap();
   Vec2D cursor_cell = GetCursorCell();
   bool unit_in_cell = map->UnitInCell(cursor_cell);
   if (unit_in_cell) {
-    Unit* unit_target = map->GetUnit(cursor_cell);
+    mengde::core::Unit* unit_target = map->GetUnit(cursor_cell);
     bool hostile = unit_->IsHostile(unit_target);
     if (hostile) {
-      int damage = is_basic_attack_ ? Formulae::ComputeBasicAttackDamage(map, unit_, unit_target) :
-                                      Formulae::ComputeMagicDamage(map, unit_, unit_target);
-      int accuracy = is_basic_attack_ ? Formulae::ComputeBasicAttackAccuracy(unit_, unit_target) :
-                                        Formulae::ComputeMagicAccuracy(unit_, unit_target);
+      int damage = is_basic_attack_ ? mengde::core::Formulae::ComputeBasicAttackDamage(map, unit_, unit_target) :
+                                      mengde::core::Formulae::ComputeMagicDamage(map, unit_, unit_target);
+      int accuracy = is_basic_attack_ ? mengde::core::Formulae::ComputeBasicAttackAccuracy(unit_, unit_target) :
+                                        mengde::core::Formulae::ComputeMagicAccuracy(unit_, unit_target);
 
       rv_->SetUnitInfoViewUnitAttackInfo(unit_target, accuracy, damage);
     }
@@ -976,7 +977,7 @@ void StateUINextTurn::Enter() {
 void StateUINextTurn::Exit() {
   rv_->SetDialogViewVisible(false);
   RootView* rv = rv_;
-  Game* game = game_;
+  mengde::core::Game* game = game_;
   rv_->NextFrame([rv, game] () {
     rv->SetControlViewTurnText(game->GetTurnCurrent(), game->GetTurnLimit());
   });
@@ -984,7 +985,7 @@ void StateUINextTurn::Exit() {
 
 // StateUISpeak
 
-StateUISpeak::StateUISpeak(StateUI::Base base, Unit* unit, const string& words)
+StateUISpeak::StateUISpeak(StateUI::Base base, mengde::core::Unit* unit, const string& words)
     : StateUI(base), unit_(unit), words_(words) {
 }
 

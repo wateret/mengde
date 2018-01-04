@@ -3,6 +3,9 @@
 
 #include "util/common.h"
 
+namespace mengde {
+namespace core {
+
 class Cmd;
 class CmdQueue;
 class Game;
@@ -21,5 +24,8 @@ class Commander {
   unique_ptr<CmdQueue> cmdq_current_;
   unique_ptr<CmdQueue> cmdq_history_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // COMMANDER_H_

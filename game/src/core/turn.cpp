@@ -1,5 +1,8 @@
 #include "turn.h"
 
+namespace mengde {
+namespace core {
+
 Turn::Turn() : current_(1), limit_(99), force_(Force::kFirst) {
 }
 
@@ -13,3 +16,6 @@ bool Turn::Next() {
   force_ = next;
   return next_turn;
 }
+
+} // namespace core
+} // namespace mengde

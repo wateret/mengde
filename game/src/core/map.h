@@ -1,12 +1,14 @@
 #ifndef MAP_H_
 #define MAP_H_
 
-#include <vector>
-#include <string>
 #include "util/common.h"
 #include "resource_manager.h"
 
 class PathTree;
+
+namespace mengde {
+namespace core {
+
 class Terrain;
 class Cell;
 class Unit;
@@ -45,5 +47,8 @@ class Map {
   vector< vector<Cell*> > grid_;
   string bitmap_path_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // MAP_H_

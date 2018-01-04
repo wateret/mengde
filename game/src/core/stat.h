@@ -1,6 +1,9 @@
 #ifndef STAT_H_
 #define STAT_H_
 
+namespace mengde {
+namespace core {
+
 struct Stat {
   enum {
     kStatIdAtk,
@@ -66,5 +69,8 @@ struct Xtat {
     return *((int*)(this) + index);
   }
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // STAT_H_

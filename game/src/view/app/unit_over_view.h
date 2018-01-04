@@ -3,7 +3,12 @@
 
 #include "view/uifw/composite_view.h"
 
-class Unit;
+namespace mengde {
+namespace core {
+  class Unit;
+}
+}
+
 class ImageView;
 class TextView;
 class GaugeView;
@@ -11,7 +16,7 @@ class GaugeView;
 class UnitOverView : public CompositeView {
  public:
   UnitOverView(const Rect*);
-  void SetUnit(Unit* unit);
+  void SetUnit(mengde::core::Unit* unit);
 
  private:
   void OnUnitUpdate();
@@ -23,7 +28,7 @@ class UnitOverView : public CompositeView {
   static const int kNumTabs  = 3;
 
  private:
-  Unit*       unit_;
+  mengde::core::Unit*       unit_;
   ImageView*  iv_portrait_;
   TextView*   tv_name_;
   TextView*   tv_lv_;

@@ -6,6 +6,9 @@
 #include "event_effect.h"
 #include "i_event.h"
 
+namespace mengde {
+namespace core {
+
 class EventEffectList : public IEvent {
  public:
   void RaiseEvent(EventEffect::Type, Unit*) override;
@@ -19,5 +22,8 @@ class EventEffectList : public IEvent {
  private:
   std::vector<EventEffect*> elements_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // EVENT_EFFECT_LIST_H_

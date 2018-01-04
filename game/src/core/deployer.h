@@ -1,10 +1,14 @@
 #ifndef DEPLOYER_H_
 #define DEPLOYER_H_
 
-#include "util/common.h"
 #include <unordered_set>
 #include <set>
 #include <utility>
+
+#include "util/common.h"
+
+namespace mengde {
+namespace core {
 
 class Hero;
 
@@ -19,17 +23,23 @@ struct DeployerComparer {
   bool operator()(const DeployElement& lhs, const DeployElement& rhs);
 };
 
+} // namespace core
+} // namespace mengde
+
 namespace std
 {
   template<>
-  struct hash<DeployElement>
+  struct hash<mengde::core::DeployElement>
   {
-    std::size_t operator()(DeployElement const& o) const noexcept
+    size_t operator()(mengde::core::DeployElement const& o) const noexcept
     {
-      return std::hash<shared_ptr<Hero>>{}(o.hero);
+      return hash<shared_ptr<mengde::core::Hero>>{}(o.hero);
     }
   };
 }
+
+namespace mengde {
+namespace core {
 
 struct DeployInfoUnselectable {
   Vec2D position;
@@ -78,5 +88,8 @@ class Deployer {
   AssignmentContainer selectable_assignment_;
   std::set<uint32_t> available_no_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // DEPLOYER_H_

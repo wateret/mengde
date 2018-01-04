@@ -1,5 +1,8 @@
 #include "lua_script.h"
+
 #include <stdio.h>
+
+namespace lua {
 
 LuaScript::LuaScript() : L(nullptr), destroy_(true) {
   L = luaL_newstate();
@@ -151,3 +154,5 @@ string LuaScript::GetTopOpt<string>() {
     return GetDefault<string>();
   }
 }
+
+} // namespace lua

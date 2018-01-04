@@ -1,4 +1,5 @@
 #include "config_loader.h"
+
 #include "util/common.h"
 #include "unit_class.h"
 #include "attack_range.h"
@@ -11,11 +12,14 @@
 #include "terrain.h"
 #include "hero.h"
 
+namespace mengde {
+namespace core {
+
 ConfigLoader::ConfigLoader(const string& filename)
     : lua_config_(nullptr),
       rc_() {
   string path = GameEnv::GetInstance()->GetScenarioPath() + "/" + filename;
-  lua_config_ = new LuaScript();
+  lua_config_ = new ::lua::LuaScript();
   lua_config_->Run(path);
 
   ParseUnitClassesAndTerrains();
@@ -243,3 +247,5 @@ void ConfigLoader::ParseFirstStage() {
   first_stage_ = lua_config_->Get<string>("$gconf.first_stage");
 }
 
+} // namespace core
+} // namespace mengde

@@ -1,8 +1,17 @@
 #ifndef RESOURCE_MANAGER_H_
 #define RESOURCE_MANAGER_H_
 
-#include "util/common.h"
 #include <unordered_map>
+
+#include "util/common.h"
+#include "magic.h"
+#include "equipment.h"
+#include "unit_class.h"
+#include "terrain.h"
+#include "hero.h"
+
+namespace mengde {
+namespace core {
 
 template<typename T>
 class ResourceManager {
@@ -47,12 +56,6 @@ class ResourceManager {
   std::unordered_map<string, T*> container_;
 };
 
-#include "magic.h"
-#include "equipment.h"
-#include "unit_class.h"
-#include "terrain.h"
-#include "hero.h"
-
 typedef ResourceManager<Magic>        MagicManager;
 typedef ResourceManager<Equipment>    EquipmentManager;
 typedef ResourceManager<UnitClass>    UnitClassManager;
@@ -75,5 +78,8 @@ struct ResourceManagers {
   {
   }
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif // RESOURCE_MANAGER_H_

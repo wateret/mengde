@@ -1,4 +1,5 @@
 #include "unit_list_view.h"
+
 #include "core/unit.h"
 #include "view/uifw/vertical_list_view.h"
 #include "view/uifw/button_view.h"
@@ -12,14 +13,14 @@ UnitListView::UnitDetailView::UnitDetailView(const Rect& frame)
   AddChild(tv_name_);
 }
 
-void UnitListView::UnitDetailView::SetUnit(Unit* unit) {
+void UnitListView::UnitDetailView::SetUnit(mengde::core::Unit* unit) {
   unit_ = unit;
 
   string name = unit->GetId();
   tv_name_->SetText(name);
 }
 
-UnitListView::UnitListView(const Rect& frame, const vector<Unit*>& unit_list)
+UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>& unit_list)
     : CompositeView(frame), unit_list_(unit_list), unit_detail_view_(nullptr) {
   SetPadding(8);
   SetBgColor(COLOR("darkgray"));

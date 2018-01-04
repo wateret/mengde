@@ -3,17 +3,22 @@
 
 #include "view/uifw/composite_view.h"
 
-class Game;
+namespace mengde {
+namespace core {
+  class Game;
+}
+}
+
 class RootView;
 class TextView;
 
 class ControlView : public CompositeView {
  public:
-  ControlView(const Rect*, Game*, RootView*);
+  ControlView(const Rect*, mengde::core::Game*, RootView*);
   void SetTurnText(int, int);
 
  private:
-  Game* game_;
+  mengde::core::Game* game_;
   RootView* rv_;
   TextView* tv_turn_;
 };

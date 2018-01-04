@@ -4,26 +4,31 @@
 #include "view/uifw/composite_view.h"
 #include <string>
 
-class Unit;
-class Cell;
+namespace mengde {
+namespace core {
+  class Unit;
+  class Cell;
+  struct Xtat;
+}
+}
+
 class GaugeView;
 class TextView;
-struct Xtat;
 
 class UnitInfoView : public CompositeView {
  public:
-  UnitInfoView(const Rect*, Unit* = NULL);
+  UnitInfoView(const Rect*, mengde::core::Unit* = NULL);
   virtual ~UnitInfoView();
-  void SetUnitTerrainInfo(Cell* cell);
-  void SetUnitAttackInfo(Unit*, int, int);
-  void SetUnit(Unit*);
-  void SetContents(const std::string&, int, const Xtat&, const Xtat&, int = 0, int = 0);
+  void SetUnitTerrainInfo(mengde::core::Cell* cell);
+  void SetUnitAttackInfo(mengde::core::Unit*, int, int);
+  void SetUnit(mengde::core::Unit*);
+  void SetContents(const std::string&, int, const mengde::core::Xtat&, const mengde::core::Xtat&, int = 0, int = 0);
   void SetCoordsByUnitCoords(Vec2D, Vec2D, Vec2D);
 
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 
  private:
-  Unit*      unit_;
+  mengde::core::Unit*      unit_;
   GaugeView* gv_hp_;
   GaugeView* gv_mp_;
   TextView*  tv_name_;

@@ -1,5 +1,9 @@
 #include "stage_unit_manager.h"
+
 #include "unit.h"
+
+namespace mengde {
+namespace core {
 
 StageUnitManager::StageUnitManager() : units_() {
 }
@@ -22,3 +26,6 @@ Unit* StageUnitManager::Get(uint32_t id) {
 void StageUnitManager::ForEach(function<void(Unit*)> fn) {
   std::for_each(units_.begin(), units_.end(), fn);
 }
+
+} // namespace core
+} // namespace mengde
