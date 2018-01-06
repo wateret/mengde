@@ -1,4 +1,9 @@
 #include "deploy_view.h"
+
+#include <algorithm>
+
+#include "core/equipment.h"
+#include "core/assets.h"
 #include "core/hero.h"
 #include "core/i_deploy_helper.h"
 #include "view/uifw/button_view.h"
@@ -9,7 +14,7 @@
 #include "equipment_select_view.h"
 
 HeroModelView::HeroModelView(const Rect& frame,
-                             shared_ptr<mengde::core::Hero> hero,
+                             shared_ptr<const mengde::core::Hero> hero,
                              mengde::core::IDeployHelper* deploy_helper,
                              IEquipmentSetSetter* equipment_set_setter)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
@@ -33,19 +38,6 @@ HeroModelView::HeroModelView(const Rect& frame,
   deploy_no_ = deploy_helper->FindDeploy(hero);
   required_unselectable_ = (deploy_no_ != 0); // Assume unselectable if already deployed at this point(construction)
   UpdateViews();
-
-  SetMouseButtonHandler([this, hero, deploy_helper, equipment_set_setter] (MouseButtonEvent e) -> bool {
-    if (e.IsLeftButtonUp()) {
-      if (IsSelected()) {
-        deploy_no_ = deploy_helper->UnassignDeploy(hero);
-      } else {
-        deploy_no_ = deploy_helper->AssignDeploy(hero);
-      }
-      equipment_set_setter->SetEquipmentSet(hero->GetEquipmentSet());
-      UpdateViews();
-    }
-    return true;
-  });
 }
 
 void HeroModelView::UpdateViews() {
@@ -63,16 +55,30 @@ void HeroModelView::UpdateViews() {
 }
 
 HeroModelListView::HeroModelListView(const Rect& frame,
-                                     const vector<shared_ptr<mengde::core::Hero>>& hero_list,
+                                     const vector<shared_ptr<const mengde::core::Hero>>& hero_list,
                                      mengde::core::IDeployHelper* deploy_helper,
-                                     IEquipmentSetSetter* equipment_set_setter)
+                                     IEquipmentSetSetter* equipment_set_setter,
+                                     EquipmentSelectView* equipment_select_view)
     : CompositeView(frame) {
   SetBgColor(COLOR("navy"));
   static const Vec2D kHeroModelSize = {96, 80};
   Rect hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
-    HeroModelView* hero_model_view = new HeroModelView(hero_model_frame, hero, deploy_helper, equipment_set_setter);
-    AddChild(hero_model_view);
+    HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper, equipment_set_setter);
+    model_view->SetMouseButtonHandler([this, model_view, hero, deploy_helper, equipment_set_setter, equipment_select_view] (const MouseButtonEvent e) -> bool {
+      if (e.IsLeftButtonUp()) {
+        if (model_view->IsSelected()) {
+          model_view->SetDeployNo(deploy_helper->UnassignDeploy(hero));
+        } else {
+          model_view->SetDeployNo(deploy_helper->AssignDeploy(hero));
+        }
+        equipment_select_view->SetHero(hero);
+        equipment_set_setter->SetEquipmentSet(hero->GetEquipmentSet());
+        model_view->UpdateViews();
+      }
+      return true;
+    });
+    AddChild(model_view);
     hero_model_frame.SetX(hero_model_frame.GetX() + kHeroModelSize.x);
     if (hero_model_frame.GetRight() > GetActualFrameSize().x) {
       hero_model_frame.SetX(0);
@@ -81,24 +87,54 @@ HeroModelListView::HeroModelListView(const Rect& frame,
   }
 }
 
-DeployView::DeployView(const Rect& frame, const vector<shared_ptr<mengde::core::Hero>>& hero_list, mengde::core::IDeployHelper* deploy_helper)
-    : CompositeView(frame), hero_list_(hero_list) {
+DeployView::DeployView(const Rect& frame, mengde::core::Assets* assets, mengde::core::IDeployHelper* deploy_helper)
+    : CompositeView(frame) {
   SetPadding(8);
   SetBgColor(COLOR("darkgray"));
 
-  Rect unit_item_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
-  equipment_set_view_ = new EquipmentSetView(&unit_item_frame);
-  equipment_set_view_->SetBgColor(COLOR("navy"));
-  equipment_set_view_->SetPadding(8);
-  // TODO Set mouse button handlers for each mengde::core::Equipment
-  //      - Show EquipmentSelectView with equipments we have in our Asset
-  //      - Asset should be passed with a parameter
-  AddChild(equipment_set_view_);
+  Rect equipment_set_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
+  equipment_set_view_ = new EquipmentSetView(&equipment_set_frame);
+  Rect equipment_select_frame = GetActualFrame();
+  equipment_select_frame.SetW(4 * 96);
+  equipment_select_view_ = new EquipmentSelectView(equipment_select_frame, equipment_set_view_);
+
+  { // Initialize equipment_select_view_
+    equipment_select_view_->SetVisible(false);
+  }
+
+  { // Initialize equipment_set_view_
+    EquipmentSelectView* select_view = equipment_select_view_;
+    equipment_set_view_->SetBgColor(COLOR("navy"));
+    equipment_set_view_->SetPadding(8);
+
+    auto mouse_handler_gen = [select_view, assets] (mengde::core::Equipment::Type type) {
+      return [select_view, assets, type] (const MouseButtonEvent e) {
+        if (e.IsLeftButtonUp()) {
+          if (select_view->IsVisible()) {
+            select_view->SetVisible(false);
+          } else {
+            vector<mengde::core::EquipmentWithAmount> equipments = assets->GetEquipmentsWithAmount();
+            vector<mengde::core::EquipmentWithAmount> equipments_filtered;
+            std::copy_if(equipments.begin(), equipments.end(), std::back_inserter(equipments_filtered),
+                         [type] (const mengde::core::EquipmentWithAmount& eq) { return eq.object->GetType() == type; });
+            select_view->SetEquipments(equipments_filtered, assets);
+
+            select_view->SetVisible(true);
+          }
+        }
+        return true;
+      };
+    };
+    equipment_set_view_->SetWeaponMouseButtonHandler(mouse_handler_gen(mengde::core::Equipment::Type::kWeapon));
+    equipment_set_view_->SetArmorMouseButtonHandler(mouse_handler_gen(mengde::core::Equipment::Type::kArmor));
+    equipment_set_view_->SetAidMouseButtonHandler(mouse_handler_gen(mengde::core::Equipment::Type::kAid));
+    AddChild(equipment_set_view_);
+  }
 
   Rect hero_model_list_frame = GetActualFrame();
   hero_model_list_frame.SetW(4 * 96);
   HeroModelListView* hero_model_list_view =
-      new HeroModelListView(hero_model_list_frame, hero_list_, deploy_helper, equipment_set_view_);
+      new HeroModelListView(hero_model_list_frame, assets->GetHeroes(), deploy_helper, equipment_set_view_, equipment_select_view_);
   AddChild(hero_model_list_view);
 
   Rect btn_ok_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {100, 50}, LayoutHelper::kAlignRgtBot);
@@ -113,9 +149,5 @@ DeployView::DeployView(const Rect& frame, const vector<shared_ptr<mengde::core::
   });
   AddChild(btn_ok);
 
-  { // Initialize equipment_select_view_
-    equipment_select_view_ = new EquipmentSelectView(GetActualFrame());
-    equipment_select_view_->SetVisible(false);
-    AddChild(equipment_select_view_);
-  }
+  AddChild(equipment_select_view_);
 }

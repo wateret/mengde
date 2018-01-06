@@ -1,4 +1,5 @@
 #include "equipment_set_view.h"
+
 #include "core/equipment.h"
 #include "core/equipment_set.h"
 #include "view/uifw/image_view.h"
@@ -21,7 +22,7 @@ EquipmentView::EquipmentView(const Rect* frame, const mengde::core::Equipment* e
   AddChild(tv_name_);
   AddChild(tv_desc_);
 
-  SetEquipment(equipment);
+  if (equipment != nullptr) SetEquipment(equipment);
 }
 
 void EquipmentView::SetEquipment(const mengde::core::Equipment* equipment) {
@@ -98,9 +99,21 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   }
 }
 
-void EquipmentSetView::SetEquipmentSet(mengde::core::EquipmentSet* equipment_set) {
+void EquipmentSetView::SetEquipmentSet(const mengde::core::EquipmentSet* equipment_set) {
   equipment_set_ = equipment_set;
   OnUpdate();
+}
+
+void EquipmentSetView::SetWeaponMouseButtonHandler(const CallbackView::MouseButtonHandler& fn) {
+  eqv_weapon_->SetMouseButtonHandler(fn);
+}
+
+void EquipmentSetView::SetArmorMouseButtonHandler(const CallbackView::MouseButtonHandler& fn) {
+  eqv_armor_->SetMouseButtonHandler(fn);
+}
+
+void EquipmentSetView::SetAidMouseButtonHandler(const CallbackView::MouseButtonHandler& fn) {
+  eqv_aid_->SetMouseButtonHandler(fn);
 }
 
 void EquipmentSetView::OnUpdate() {

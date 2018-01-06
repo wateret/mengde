@@ -24,22 +24,22 @@ Deployer::Deployer(const vector<DeployInfoUnselectable>& unselectable_info_list,
     const DeployInfoUnselectable& deploy_info = unselectable_info_list_[idx];
     const uint32_t deploy_no = idx + 1;
     uint32_t assigned_no = unselectable_assignment_.size() + 1;
-    unselectable_assignment_.insert({deploy_info.hero, deploy_no});
     ASSERT_EQ(assigned_no, deploy_no);
+    unselectable_assignment_.insert({deploy_info.hero, deploy_no});
   }
 }
 
 // returns 0 if fail to assign
 // returns the deploy number otherwise
 
-uint32_t Deployer::Assign(const shared_ptr<Hero>& hero) {
+uint32_t Deployer::Assign(const shared_ptr<const Hero>& hero) {
   // TODO check if already exists
   uint32_t no = GetNextSelectableNo();
   if (no != 0) selectable_assignment_.insert({hero, no}); // Assigned successfuly
   return no;
 }
 
-uint32_t Deployer::Unassign(const shared_ptr<Hero>& hero) {
+uint32_t Deployer::Unassign(const shared_ptr<const Hero>& hero) {
   auto found = FindImpl(hero);
   const Type type = found.first;
   const DeployElement& deploy_element = found.second;
@@ -54,7 +54,7 @@ uint32_t Deployer::Unassign(const shared_ptr<Hero>& hero) {
   }
 }
 
-uint32_t Deployer::Find(const shared_ptr<Hero>& hero) {
+uint32_t Deployer::Find(const shared_ptr<const Hero>& hero) {
   auto found = FindImpl(hero);
   const Type type = found.first;
   const DeployElement& deploy_element = found.second;
@@ -81,7 +81,7 @@ void Deployer::ForEach(ForEachFn fn) {
   std::for_each(selectable_assignment_.begin(), selectable_assignment_.end(), fn);
 }
 
-Vec2D Deployer::GetPosition(const shared_ptr<Hero>& hero) {
+Vec2D Deployer::GetPosition(const shared_ptr<const Hero>& hero) {
   auto found = FindImpl(hero);
   const Type type = found.first;
   const DeployElement& deploy_element = found.second;
@@ -93,7 +93,7 @@ Vec2D Deployer::GetPosition(const shared_ptr<Hero>& hero) {
   }
 }
 
-std::pair<Deployer::Type, DeployElement> Deployer::FindImpl(const shared_ptr<Hero>& hero) {
+std::pair<Deployer::Type, DeployElement> Deployer::FindImpl(const shared_ptr<const Hero>& hero) {
   DeployElement element(hero, 0 /* Just a dummy number, it is not used for entry comparison */);
 
   // Find from unselectables first
@@ -112,7 +112,7 @@ std::pair<Deployer::Type, DeployElement> Deployer::FindImpl(const shared_ptr<Her
     }
   }
 
-  shared_ptr<Hero> dummy_hero = nullptr;
+  shared_ptr<const Hero> dummy_hero = nullptr;
   return std::make_pair(Type::kNone, DeployElement(dummy_hero, 0));
 }
 

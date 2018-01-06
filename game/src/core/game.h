@@ -77,9 +77,9 @@ class Game : public IDeployHelper {
 
   // IDeployHelper interfaces
   bool     SubmitDeploy() override;
-  uint32_t AssignDeploy(const shared_ptr<Hero>&) override;
-  uint32_t UnassignDeploy(const shared_ptr<Hero>&) override;
-  uint32_t FindDeploy(const shared_ptr<Hero>& hero) override;
+  uint32_t AssignDeploy(const shared_ptr<const Hero>&) override;
+  uint32_t UnassignDeploy(const shared_ptr<const Hero>&) override;
+  uint32_t FindDeploy(const shared_ptr<const Hero>& hero) override;
 
   // APIs for Lua //
   void AppointHero(const string&, uint16_t);

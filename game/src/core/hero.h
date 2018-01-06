@@ -11,6 +11,7 @@ namespace mengde {
 namespace core {
 
 class EquipmentSet;
+class Equipment;
 
 class Hero : public IEquipper {
  public:
@@ -23,13 +24,14 @@ class Hero : public IEquipper {
   int GetMove() const;
   const Stat& GetHeroStat() const { return hero_stat_; }
   Vec2D*      GetAttackRange() const;
-  EquipmentSet* GetEquipmentSet() { return equipment_set_; }
+  const EquipmentSet* GetEquipmentSet() const { return equipment_set_; }
 
   const Stat& GetHeroStatBase() const;
   uint16_t    GetLevel()    const { return level_; }
   const Stat& GetUnitStat() const { return unit_stat_; }
   const Xtat& GetXtat()     const { return xtat_; }
   void        LevelUp();
+  void        PutOn(const Equipment*);
 
   Xtat CalcXtat() const;
   Stat CalcUnitStat() const;

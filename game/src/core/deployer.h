@@ -13,10 +13,10 @@ namespace core {
 class Hero;
 
 struct DeployElement {
-  shared_ptr<Hero> hero;
+  shared_ptr<const Hero> hero;
   uint32_t no;
 
-  DeployElement(const shared_ptr<Hero>& hero, uint32_t no) : hero(hero), no(no) {}
+  DeployElement(const shared_ptr<const Hero>& hero, uint32_t no) : hero(hero), no(no) {}
 };
 
 struct DeployerComparer {
@@ -33,7 +33,7 @@ namespace std
   {
     size_t operator()(mengde::core::DeployElement const& o) const noexcept
     {
-      return hash<shared_ptr<mengde::core::Hero>>{}(o.hero);
+      return hash<shared_ptr<const mengde::core::Hero>>{}(o.hero);
     }
   };
 }
@@ -43,9 +43,9 @@ namespace core {
 
 struct DeployInfoUnselectable {
   Vec2D position;
-  shared_ptr<Hero> hero;
+  shared_ptr<const Hero> hero;
 
-  DeployInfoUnselectable(Vec2D position, const shared_ptr<Hero>& hero) : position(position), hero(hero) {}
+  DeployInfoUnselectable(Vec2D position, const shared_ptr<const Hero>& hero) : position(position), hero(hero) {}
 };
 
 struct DeployInfoSelectable {
@@ -68,17 +68,17 @@ class Deployer {
 
  public:
   Deployer(const vector<DeployInfoUnselectable>&, const vector<DeployInfoSelectable>&, uint32_t);
-  uint32_t Assign(const shared_ptr<Hero>& hero);
-  uint32_t Unassign(const shared_ptr<Hero>& hero);
-  uint32_t Find(const shared_ptr<Hero>& hero);
+  uint32_t Assign(const shared_ptr<const Hero>& hero);
+  uint32_t Unassign(const shared_ptr<const Hero>& hero);
+  uint32_t Find(const shared_ptr<const Hero>& hero);
   uint32_t GetNextSelectableNo();
   void     ForEach(ForEachFn);
-  Vec2D    GetPosition(const shared_ptr<Hero>& hero);
+  Vec2D    GetPosition(const shared_ptr<const Hero>& hero);
   bool     IsReady();
   uint32_t GetNumAssigned();
 
  private:
-  std::pair<Type, DeployElement> FindImpl(const shared_ptr<Hero>& hero);
+  std::pair<Type, DeployElement> FindImpl(const shared_ptr<const Hero>& hero);
 
  private:
   vector<DeployInfoUnselectable> unselectable_info_list_;

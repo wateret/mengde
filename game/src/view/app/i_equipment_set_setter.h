@@ -11,7 +11,7 @@ namespace core {
 
 class IEquipmentSetSetter {
  public:
-  virtual void SetEquipmentSet(mengde::core::EquipmentSet*) = 0;
+  virtual void SetEquipmentSet(const mengde::core::EquipmentSet*) = 0;
 };
 
 #endif // I_EQUIPMENT_SET_SETTER_H_

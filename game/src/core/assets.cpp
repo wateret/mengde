@@ -1,7 +1,10 @@
 #include "assets.h"
+
+#include <limits.h>
+
 #include "hero.h"
 #include "equipment.h"
-#include <limits.h>
+#include "core/equipment_set.h"
 
 namespace mengde {
 namespace core {
@@ -47,20 +50,20 @@ shared_ptr<Hero> Assets::GetHero(const string& id) {
   }
 }
 
-vector<shared_ptr<Hero>> Assets::GetHeroes() {
-  vector<shared_ptr<Hero>> ret;
+vector<shared_ptr<const Hero>> Assets::GetHeroes() {
+  vector<shared_ptr<const Hero>> ret;
   for (auto kv : heroes_) {
     ret.push_back(kv.second);
   }
   return ret;
 }
 
-void Assets::AddEquipment(Equipment* equipment, uint32_t amount) {
+void Assets::AddEquipment(const Equipment* equipment, uint32_t amount) {
   ASSERT(amount > 0);
   string id = equipment->GetId();
   auto found = equipments_.find(id);
   if (found == equipments_.end()) {
-    equipments_.insert(std::make_pair(id, Amount<Equipment*>(equipment, 0)));
+    equipments_.insert(std::make_pair(id, EquipmentWithAmount(equipment, 0)));
     found = equipments_.find(id);
   }
   found->second.amount += amount;
@@ -80,14 +83,15 @@ void Assets::RemoveEquipment(const string& id, uint32_t amount) {
   }
 }
 
-Equipment* Assets::GetEquipment(const string& id) {
+const Equipment* Assets::GetEquipment(const string& id) {
   auto found = equipments_.find(id);
   if (found == equipments_.end()) {
     UNREACHABLE("Equipment does not exist.");
+    return nullptr;
   } else {
     auto& r = found->second;
     ASSERT(!r.HasNone());
-    return r.object; // Return first one as all equipments in the vector are identical
+    return r.object;
   }
 }
 
@@ -102,13 +106,35 @@ uint32_t Assets::GetAmountEquipment(const string& id) {
   }
 }
 
-vector<Equipment*> Assets::GetEquipments() {
-  vector<Equipment*> ret;
+vector<EquipmentWithAmount> Assets::GetEquipmentsWithAmount() {
+  vector<EquipmentWithAmount> ret;
+  for (auto kv : equipments_) {
+    ASSERT(!kv.second.HasNone());
+    ret.push_back(kv.second);
+  }
+  return ret;
+}
+
+vector<const Equipment*> Assets::GetEquipments() {
+  vector<const Equipment*> ret;
   for (auto kv : equipments_) {
     ASSERT(!kv.second.HasNone());
     ret.push_back(kv.second.object);
   }
   return ret;
+}
+
+void Assets::HeroPutEquipmentOn(const shared_ptr<Hero>& hero, const Equipment* equipment) {
+  const Equipment* equipment_new = GetEquipment(equipment->GetId());
+  if (equipment == nullptr) return;
+
+  const Equipment* equipment_current = hero->GetEquipmentSet()->GetEquipment(equipment->GetType());
+  if (equipment_current != nullptr) {
+    AddEquipment(equipment_current, 1);
+  }
+  RemoveEquipment(equipment_new->GetId(), 1);
+
+  hero->PutOn(equipment_new);
 }
 
 } // namespace core

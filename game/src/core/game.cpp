@@ -329,7 +329,12 @@ bool Game::SubmitDeploy() {
   if (!deployer_->IsReady()) return false;
 
   deployer_->ForEach([=] (const DeployElement& e) {
-    this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero));
+    // FIXME Remove const_pointer_cast
+    //       However currently we may update Hero. For example, level up.
+    //       ==== Solution(Redesign) ====
+    //       1. Clone Hero object and unit holds cloned (non-const) Hero
+    //       2. Update the hero after the scenario ends. Assets class should provide API for that.
+    this->GenerateOwnUnit(std::const_pointer_cast<Hero>(e.hero), deployer_->GetPosition(e.hero));
   });
 
   status_ = Status::kUndecided;
@@ -337,15 +342,15 @@ bool Game::SubmitDeploy() {
   return true;
 }
 
-uint32_t Game::AssignDeploy(const shared_ptr<Hero>& hero) {
+uint32_t Game::AssignDeploy(const shared_ptr<const Hero>& hero) {
   return deployer_->Assign(hero);
 }
 
-uint32_t Game::UnassignDeploy(const shared_ptr<Hero>& hero) {
+uint32_t Game::UnassignDeploy(const shared_ptr<const Hero>& hero) {
   return deployer_->Unassign(hero);
 }
 
-uint32_t Game::FindDeploy(const shared_ptr<Hero>& hero) {
+uint32_t Game::FindDeploy(const shared_ptr<const Hero>& hero) {
   return deployer_->Find(hero);
 }
 

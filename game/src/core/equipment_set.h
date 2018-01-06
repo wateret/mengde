@@ -12,9 +12,11 @@ class IEquipper;
 class EquipmentSet {
  public:
   EquipmentSet(IEquipper*);
-  void SetWeapon(Equipment*);
-  void SetArmor(Equipment*);
-  void SetAid(Equipment*);
+  void SetEquipment(const Equipment*);
+  void SetWeapon(const Equipment*);
+  void SetArmor(const Equipment*);
+  void SetAid(const Equipment*);
+  const Equipment* GetEquipment(Equipment::Type) const;
   const Equipment* GetWeapon() const;
   const Equipment* GetArmor() const;
   const Equipment* GetAid() const;

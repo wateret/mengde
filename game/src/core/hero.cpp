@@ -1,6 +1,7 @@
 #include "hero.h"
 
 #include "equipment_set.h"
+#include "equipment.h"
 
 namespace mengde {
 namespace core {
@@ -53,6 +54,10 @@ void Hero::LevelUp() {
   level_++;
   unit_stat_ = CalcUnitStat();
   xtat_ = CalcXtat();
+}
+
+void Hero::PutOn(const Equipment* equipment) {
+  equipment_set_->SetEquipment(equipment);
 }
 
 Xtat Hero::CalcXtat() const {

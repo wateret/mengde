@@ -52,7 +52,7 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
   { // Initialize deploy_view_
     mengde::core::Assets* assets = scenario->GetAssets();
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
-    deploy_view_ = new DeployView(frame, assets->GetHeroes(), game_);
+    deploy_view_ = new DeployView(frame, assets, game_);
     deploy_view_->SetVisible(true);
     ui_views_->AddChild(deploy_view_);
   }

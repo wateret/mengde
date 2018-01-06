@@ -32,6 +32,8 @@ struct Amount {
   bool HasNone() { return amount == 0; }
 };
 
+typedef Amount<const Equipment*> EquipmentWithAmount;
+
 class Assets {
  public:
   Assets();
@@ -39,21 +41,24 @@ class Assets {
   void AddHero(shared_ptr<Hero>);
   void RemoveHero(const string&);
   shared_ptr<Hero> GetHero(const string&);
-  vector<shared_ptr<Hero>> GetHeroes();
+  vector<shared_ptr<const Hero>> GetHeroes();
 
-  void AddEquipment(Equipment*, uint32_t);
+  void AddEquipment(const Equipment*, uint32_t);
   void RemoveEquipment(const string&, uint32_t);
-  Equipment* GetEquipment(const string&);
+  const Equipment* GetEquipment(const string&);
   uint32_t GetAmountEquipment(const string&);
-  vector<Equipment*> GetEquipments();
+  vector<EquipmentWithAmount> GetEquipmentsWithAmount();
+  vector<const Equipment*> GetEquipments();
 
   void PayMoney(const Money&);
   void GainMoney(const Money&);
   uint32_t GetAmountMoney();
 
+  void HeroPutEquipmentOn(const shared_ptr<Hero>&, const Equipment*);
+
  private:
   std::map<string, shared_ptr<Hero>> heroes_;
-  std::map<string, Amount<Equipment*>> equipments_;
+  std::map<string, EquipmentWithAmount> equipments_;
 //  std::map<string, Amount<Consumable*>>
   Money money_;
 };
