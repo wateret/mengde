@@ -12,6 +12,7 @@ class IEquipper;
 class EquipmentSet {
  public:
   EquipmentSet(IEquipper*);
+  void CopyEquipmentSet(const EquipmentSet&);
   void SetEquipment(const Equipment*);
   void SetWeapon(const Equipment*);
   void SetArmor(const Equipment*);

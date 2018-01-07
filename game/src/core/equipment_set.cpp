@@ -9,6 +9,12 @@ EquipmentSet::EquipmentSet(IEquipper* equipper) : equipper_(equipper),
     slot_weapon_(Equipment::Type::kWeapon), slot_armor_(Equipment::Type::kArmor), slot_aid_(Equipment::Type::kAid) {
 }
 
+void EquipmentSet::CopyEquipmentSet(const EquipmentSet& eqset) {
+  SetWeapon(eqset.GetWeapon());
+  SetArmor(eqset.GetArmor());
+  SetAid(eqset.GetAid());
+}
+
 void EquipmentSet::SetEquipment(const Equipment* e) {
   switch (e->GetType()) {
     case Equipment::Type::kWeapon:

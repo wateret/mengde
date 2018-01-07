@@ -10,7 +10,7 @@ EquipmentSlot::EquipmentSlot(Equipment::Type type)
 }
 
 const Equipment* EquipmentSlot::PutEquipmentOn(const Equipment* equipment) {
-  if (equipment->GetType() == type_) {
+  if (equipment == nullptr || equipment->GetType() == type_) {
     const Equipment* cur_equipment = equipment_;
     equipment_ = equipment;
     return cur_equipment;
