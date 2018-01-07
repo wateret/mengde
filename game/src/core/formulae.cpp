@@ -11,8 +11,8 @@ Formulae::Formulae() {
 }
 
 int Formulae::ComputeBasicAttackDamage(Map* m, Unit* unit_atk, Unit* unit_def, int force) {
-  const Stat& a = unit_atk->GetCurrentStat();
-  const Stat& d = unit_def->GetCurrentStat();
+  const Attribute& a = unit_atk->GetCurrentStat();
+  const Attribute& d = unit_def->GetCurrentStat();
   int atk = m->ApplyTerrainEffect(unit_atk, a.atk);
   int def = m->ApplyTerrainEffect(unit_def, d.def);
   return ComputeDamageBase(atk, def, unit_atk->GetLevel(), force);
@@ -20,34 +20,34 @@ int Formulae::ComputeBasicAttackDamage(Map* m, Unit* unit_atk, Unit* unit_def, i
 
 int Formulae::ComputeMagicDamage(Map* m, Unit* unit_atk, Unit* unit_def, int force) {
   UNUSED(m);
-  const Stat& a = unit_atk->GetCurrentStat();
-  const Stat& d = unit_def->GetCurrentStat();
+  const Attribute& a = unit_atk->GetCurrentStat();
+  const Attribute& d = unit_def->GetCurrentStat();
   int atk = a.itl;
   int def = d.itl;
   return ComputeDamageBase(atk, def, unit_atk->GetLevel(), force);
 }
 
 int Formulae::ComputeBasicAttackAccuracy(Unit* unit_atk, Unit* unit_def, int cap) {
-  const Stat& a = unit_atk->GetCurrentStat();
-  const Stat& d = unit_def->GetCurrentStat();
+  const Attribute& a = unit_atk->GetCurrentStat();
+  const Attribute& d = unit_def->GetCurrentStat();
   return ComputeAccuracyBase(a.dex, d.dex, cap);
 }
 
 int Formulae::ComputeMagicAccuracy(Unit* unit_atk, Unit* unit_def, int cap) {
-  const Stat& a = unit_atk->GetCurrentStat();
-  const Stat& d = unit_def->GetCurrentStat();
+  const Attribute& a = unit_atk->GetCurrentStat();
+  const Attribute& d = unit_def->GetCurrentStat();
   return ComputeAccuracyBase(a.itl + a.mor, d.itl + d.mor, cap);
 }
 
 int Formulae::ComputeBasicAttackDouble(Unit* unit_atk, Unit* unit_def) {
-  const Stat& a = unit_atk->GetCurrentStat();
-  const Stat& d = unit_def->GetCurrentStat();
+  const Attribute& a = unit_atk->GetCurrentStat();
+  const Attribute& d = unit_def->GetCurrentStat();
   return ComputeDoubleCriticalBase(a.dex, d.dex);
 }
 
 int Formulae::ComputeBasicAttackCritical(Unit* unit_atk, Unit* unit_def) {
-  const Stat& a = unit_atk->GetCurrentStat();
-  const Stat& d = unit_def->GetCurrentStat();
+  const Attribute& a = unit_atk->GetCurrentStat();
+  const Attribute& d = unit_def->GetCurrentStat();
   return ComputeDoubleCriticalBase(a.mor, d.mor);
 }
 

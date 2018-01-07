@@ -20,7 +20,7 @@ const Equipment* EquipmentSlot::PutEquipmentOn(const Equipment* equipment) {
   }
 }
 
-Stat EquipmentSlot::CalcAddends() const {
+Attribute EquipmentSlot::CalcAddends() const {
   if (IsEquipmentOn()) {
     return equipment_->CalcAddends();
   } else {
@@ -28,7 +28,7 @@ Stat EquipmentSlot::CalcAddends() const {
   }
 }
 
-Stat EquipmentSlot::CalcMultipliers() const {
+Attribute EquipmentSlot::CalcMultipliers() const {
   if (IsEquipmentOn()) {
     return equipment_->CalcMultipliers();
   } else {

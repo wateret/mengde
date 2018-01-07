@@ -75,8 +75,8 @@ void UnitInfoView::SetUnitAttackInfo(mengde::core::Unit* unit, int accuracy, int
 
 void UnitInfoView::SetUnit(mengde::core::Unit* unit) {
   unit_ = unit;
-  const mengde::core::Xtat& cur_xtat = unit_->GetCurrentXtat();
-  const mengde::core::Xtat& ori_xtat = unit_->GetOriginalXtat();
+  const mengde::core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
+  const mengde::core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
   gv_hp_->SetCurVal(cur_xtat.hp);
   gv_hp_->SetMaxVal(ori_xtat.hp);
   gv_hp_->SetExtVal(0);
@@ -89,8 +89,8 @@ void UnitInfoView::SetUnit(mengde::core::Unit* unit) {
 
 void UnitInfoView::SetContents(const std::string& id,
                                int lv,
-                               const mengde::core::Xtat& xcur,
-                               const mengde::core::Xtat& xmax,
+                               const mengde::core::HpMp& xcur,
+                               const mengde::core::HpMp& xmax,
                                int damage,
                                int mp_cost) {
   unit_ = nullptr; // Reset cache

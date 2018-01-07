@@ -4,7 +4,7 @@
 namespace mengde {
 namespace core {
 
-struct Stat {
+struct Attribute {
   enum {
     kStatIdAtk,
     kStatIdDef,
@@ -19,11 +19,11 @@ struct Stat {
   int itl;
   int mor;
 
-  Stat()
+  Attribute()
       : atk(0), def(0), dex(0), itl(0), mor(0) {
   }
 
-  Stat(int atk, int def, int dex, int itl, int mor)
+  Attribute(int atk, int def, int dex, int itl, int mor)
       : atk(atk), def(def), dex(dex), itl(itl), mor(mor) {
   }
 
@@ -42,7 +42,7 @@ struct Stat {
     ((int*)(this))[index] = value;
   }
 
-  Stat operator+(const Stat& o) {
+  Attribute operator+(const Attribute& o) {
     return {atk + o.atk,
             def + o.def,
             dex + o.dex,
@@ -51,17 +51,17 @@ struct Stat {
   }
 };
 
-#define NUM_STATS (sizeof(Stat) / sizeof(int))
+#define NUM_STATS (sizeof(Attribute) / sizeof(int))
 
-struct Xtat {
+struct HpMp {
   int hp;
   int mp;
   int exp;
 
-  Xtat() : hp(0), mp(0), exp(0) {
+  HpMp() : hp(0), mp(0), exp(0) {
   }
 
-  Xtat(int hp, int mp, int exp) : hp(hp), mp(mp), exp(exp) {
+  HpMp(int hp, int mp, int exp) : hp(hp), mp(mp), exp(exp) {
   }
 
   int GetValueByIndex(int index) const {

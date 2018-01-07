@@ -6,7 +6,7 @@ namespace core {
 HeroTemplate::HeroTemplate(const string& id,
                            const string& bitmap_path,
                            const UnitClass* unit_class,
-                           const Stat& hero_stat)
+                           const Attribute& hero_stat)
     : id_(id),
       bitmap_path_(bitmap_path),
       unit_class_(unit_class),

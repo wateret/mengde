@@ -34,11 +34,11 @@ UnitOverView::UnitOverView(const Rect* frame)
   }
 
   Rect gv_frame = {kLabelWidth, 92, 220-16-kLabelWidth, kLabelHeight};
-  static const Color colors[kNumXtats] = {COLOR("gauge_hp"),
+  static const Color colors[kNumHpMps] = {COLOR("gauge_hp"),
                                           COLOR("gauge_mp"),
                                           COLOR("gauge_exp")};
 
-  for (int i = 0; i < kNumXtats; i++) {
+  for (int i = 0; i < kNumHpMps; i++) {
     GaugeView* gv = new GaugeView(&gv_frame,
                                   1,
                                   1,
@@ -51,7 +51,7 @@ UnitOverView::UnitOverView(const Rect* frame)
     gv_frame.Move(frame_space);
   }
   for (int i = 0; i < kNumStats; i++) {
-    int j = i + kNumXtats;
+    int j = i + kNumHpMps;
     int max_value = 300; // FIXME max value of stat
     GaugeView* gv = new GaugeView(&gv_frame,
                                   1,
@@ -81,17 +81,17 @@ void UnitOverView::OnUnitUpdate() {
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
 
-  const mengde::core::Stat& ori_stat = unit_->GetOriginalStat();
-  const mengde::core::Stat& cur_stat = unit_->GetCurrentStat();
-  const mengde::core::Xtat& ori_xtat = unit_->GetOriginalXtat();
-  const mengde::core::Xtat& cur_xtat = unit_->GetCurrentXtat();
-  for (int i = 0; i < kNumXtats; i++) {
+  const mengde::core::Attribute& ori_stat = unit_->GetOriginalStat();
+  const mengde::core::Attribute& cur_stat = unit_->GetCurrentStat();
+  const mengde::core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
+  const mengde::core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
+  for (int i = 0; i < kNumHpMps; i++) {
     int max_val = (i == 2) ? unit_->GetMaxExp() : ori_xtat.GetValueByIndex(i);
     gv_stats_[i]->SetCurVal(cur_xtat.GetValueByIndex(i));
     gv_stats_[i]->SetMaxVal(max_val);
   }
   for (int i = 0; i < kNumStats; i++) {
-    int j = i + kNumXtats;
+    int j = i + kNumHpMps;
     gv_stats_[j]->SetCurVal(cur_stat.GetValueByIndex(i));
     gv_stats_[j]->SetExtVal(cur_stat.GetValueByIndex(i) - ori_stat.GetValueByIndex(i));
   }

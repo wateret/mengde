@@ -6,7 +6,7 @@ namespace core {
 UnitClass::UnitClass(const string& id,
                      const int index,
                      const int num_promotions,
-                     const Stat& stat_grade,
+                     const Attribute& stat_grade,
                      const Range::Type range,
                      const int move,
                      const BaseAndIncr bni_hp,

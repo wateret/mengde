@@ -8,7 +8,7 @@ namespace mengde {
 namespace core {
   class Unit;
   class Cell;
-  struct Xtat;
+  struct HpMp;
 }
 }
 
@@ -22,7 +22,7 @@ class UnitInfoView : public CompositeView {
   void SetUnitTerrainInfo(mengde::core::Cell* cell);
   void SetUnitAttackInfo(mengde::core::Unit*, int, int);
   void SetUnit(mengde::core::Unit*);
-  void SetContents(const std::string&, int, const mengde::core::Xtat&, const mengde::core::Xtat&, int = 0, int = 0);
+  void SetContents(const std::string&, int, const mengde::core::HpMp&, const mengde::core::HpMp&, int = 0, int = 0);
   void SetCoordsByUnitCoords(Vec2D, Vec2D, Vec2D);
 
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;

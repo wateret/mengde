@@ -12,7 +12,7 @@ namespace core {
   class Unit;
   class Cell;
   class Scenario;
-  struct Xtat;
+  struct HpMp;
 }
 }
 
@@ -54,7 +54,7 @@ class RootView : public View {
   void SetUnitViewUnit(mengde::core::Unit*);
   void SetUnitInfoViewUnitTerrainInfo(mengde::core::Cell* cell);
   void SetUnitInfoViewUnitAttackInfo(mengde::core::Unit* unit, int, int);
-  void SetUnitInfoViewContents(const std::string&, int, const mengde::core::Xtat&, const mengde::core::Xtat&, int, int);
+  void SetUnitInfoViewContents(const std::string&, int, const mengde::core::HpMp&, const mengde::core::HpMp&, int, int);
   void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
   void SetUnitInfoViewVisible(bool);
   void SetDialogViewVisible(bool);

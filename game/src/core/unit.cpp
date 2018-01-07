@@ -10,7 +10,7 @@ Unit::Unit(const shared_ptr<Hero>& hero, Force force)
     : hero_(hero),
       equipment_set_(new EquipmentSet(this)),
       current_stat_(hero->GetUnitStat()),
-      current_xtat_(hero->GetXtat()),
+      current_xtat_(hero->GetHpMp()),
       position_(0, 0),
       direction_(kDirDown),
       stat_modifier_list_(),
@@ -35,7 +35,7 @@ void Unit::RestoreHP(int amount) {
 }
 
 void Unit::Heal(int amount) {
-  current_xtat_.hp = std::min(current_xtat_.hp + amount, GetOriginalXtat().hp);
+  current_xtat_.hp = std::min(current_xtat_.hp + amount, GetOriginalHpMp().hp);
 }
 
 bool Unit::IsHostile(Unit* u) const {
@@ -63,19 +63,19 @@ std::string Unit::GetBitmapPath() {
   return hero_->GetBitmapPath();
 }
 
-const Stat& Unit::GetOriginalStat() const {
+const Attribute& Unit::GetOriginalStat() const {
   return hero_->GetUnitStat();
 }
 
-const Xtat& Unit::GetOriginalXtat() const {
-  return hero_->GetXtat();
+const HpMp& Unit::GetOriginalHpMp() const {
+  return hero_->GetHpMp();
 }
 
 void Unit::UpdateStat() {
   current_stat_ = hero_->CalcUnitStat();
   {
-    Stat addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
-    Stat multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
+    Attribute addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
+    Attribute multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
     for (uint32_t i = 0; i < NUM_STATS; i++) {
       current_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));
@@ -92,11 +92,11 @@ void Unit::AddStatModifier(StatModifier* sm) {
 }
 
 bool Unit::IsHPLow() const {
-  return GetCurrentXtat().hp <= GetOriginalXtat().hp * 3 / 10;
+  return GetCurrentHpMp().hp <= GetOriginalHpMp().hp * 3 / 10;
 }
 
 bool Unit::IsDead() const {
-  return GetCurrentXtat().hp <= 0;
+  return GetCurrentHpMp().hp <= 0;
 }
 
 void Unit::Kill() {

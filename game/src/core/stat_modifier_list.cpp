@@ -49,16 +49,16 @@ void StatModifierList::NextTurn() {
   }
 }
 
-Stat StatModifierList::CalcAddends() const {
-  Stat calc_mods = {0, 0, 0, 0, 0};
+Attribute StatModifierList::CalcAddends() const {
+  Attribute calc_mods = {0, 0, 0, 0, 0};
   for (auto e : elements_) {
     calc_mods.AddValueByIndex(e->GetStatId(), e->GetAddend());
   }
   return calc_mods;
 }
 
-Stat StatModifierList::CalcMultipliers() const {
-  Stat calc_mods = {0, 0, 0, 0, 0};
+Attribute StatModifierList::CalcMultipliers() const {
+  Attribute calc_mods = {0, 0, 0, 0, 0};
   for (auto e : elements_) {
     calc_mods.AddValueByIndex(e->GetStatId(), e->GetMultiplier());
   }

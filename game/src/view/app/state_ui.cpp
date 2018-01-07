@@ -786,7 +786,7 @@ void StateUIAttack::Update() {
 
 StateUIDamaged::StateUIDamaged(StateUI::Base base, mengde::core::Unit* unit, int damage)
    : StateUI(base), frames_(-1), unit_(unit), damage_(damage) {
-  damage_ = std::min(damage_, unit->GetCurrentXtat().hp);
+  damage_ = std::min(damage_, unit->GetCurrentHpMp().hp);
 }
 
 void StateUIDamaged::Enter() {
@@ -808,13 +808,13 @@ void StateUIDamaged::Update() {
   const int max_anim_frames = (kFrames - 1) * 1 / 2;
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
-  mengde::core::Xtat xtat_mod = unit_->GetCurrentXtat();
+  mengde::core::HpMp xtat_mod = unit_->GetCurrentHpMp();
   int damage_rem = damage_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
   xtat_mod.hp -= damage_ - damage_rem;
   rv_->SetUnitInfoViewContents(unit_->GetId(),
                                unit_->GetLevel(),
                                xtat_mod,
-                               unit_->GetOriginalXtat(),
+                               unit_->GetOriginalHpMp(),
                                damage_rem,
                                0);
   rv_->SetUnitInfoViewCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords());

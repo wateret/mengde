@@ -73,11 +73,11 @@ const Equipment* EquipmentSet::GetAid() const {
   return slot_aid_.GetEquipment();
 }
 
-Stat EquipmentSet::CalcAddends() const {
+Attribute EquipmentSet::CalcAddends() const {
   return slot_weapon_.CalcAddends() + slot_armor_.CalcAddends() + slot_aid_.CalcAddends();
 }
 
-Stat EquipmentSet::CalcMultipliers() const {
+Attribute EquipmentSet::CalcMultipliers() const {
   return slot_weapon_.CalcMultipliers() + slot_armor_.CalcMultipliers() + slot_aid_.CalcMultipliers();
 }
 

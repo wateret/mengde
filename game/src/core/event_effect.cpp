@@ -21,7 +21,7 @@ EERestoreHP::EERestoreHP(Type type, int amount)
 }
 
 void EERestoreHP::OnEvent(Unit* unit) {
-  int maxhp = unit->GetOriginalXtat().hp;
+  int maxhp = unit->GetOriginalHpMp().hp;
   int real_amount = maxhp * amount_ / 100;
   unit->RestoreHP(real_amount);
   LOG_INFO("EERestoreHP restores HP by %d", real_amount);

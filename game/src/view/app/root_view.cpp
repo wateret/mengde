@@ -315,8 +315,8 @@ void RootView::SetUnitInfoViewUnitAttackInfo(mengde::core::Unit* unit, int accur
 
 void RootView::SetUnitInfoViewContents(const std::string& name,
                                    int id,
-                                   const mengde::core::Xtat& xcur,
-                                   const mengde::core::Xtat& xmax,
+                                   const mengde::core::HpMp& xcur,
+                                   const mengde::core::HpMp& xmax,
                                    int damage,
                                    int mp_cost) {
   unit_info_view_->SetContents(name, id, xcur, xmax, damage, mp_cost);

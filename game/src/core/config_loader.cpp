@@ -85,7 +85,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
       if (grade == 'D') return 1;
       return 0;
     };
-    Stat stat_grades = {GradeCharToInt(grades[0]),
+    Attribute stat_grades = {GradeCharToInt(grades[0]),
                         GradeCharToInt(grades[1]),
                         GradeCharToInt(grades[2]),
                         GradeCharToInt(grades[3]),
@@ -234,7 +234,7 @@ void ConfigLoader::ParseHeroTemplates() {
     if (model == "nil") {
       model = "infantry-1-red"; // XXX hardcoded. Make this to find default model
     }
-    Stat stat = {statr[0], statr[1], statr[2], statr[3], statr[4]};
+    Attribute stat = {statr[0], statr[1], statr[2], statr[3], statr[4]};
     HeroTemplate* hero_tpl = new HeroTemplate(id,
                                               model,
                                               rc_.unit_class_manager->Get(uclass),

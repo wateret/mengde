@@ -10,20 +10,20 @@ namespace core {
 
 class HeroTemplate {
  public:
-  HeroTemplate(const string&, const string&, const UnitClass*, const Stat&);
+  HeroTemplate(const string&, const string&, const UnitClass*, const Attribute&);
   string GetId() const { return id_; }
   string GetBitmapPath() const { return bitmap_path_; }
   const UnitClass* GetClass() const { return unit_class_; }
   int GetClassIndex() const;
   int GetMove() const;
-  const Stat& GetHeroStat() const { return hero_stat_; }
+  const Attribute& GetHeroStat() const { return hero_stat_; }
   Vec2D*      GetAttackRange() const;
 
  private:
   string           id_;
   string           bitmap_path_;
   const UnitClass* unit_class_;
-  Stat             hero_stat_;
+  Attribute             hero_stat_;
 };
 
 } // namespace core

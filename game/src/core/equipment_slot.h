@@ -11,8 +11,8 @@ class EquipmentSlot {
  public:
   EquipmentSlot(Equipment::Type);
   const Equipment* PutEquipmentOn(const Equipment*);
-  Stat CalcAddends() const;
-  Stat CalcMultipliers() const;
+  Attribute CalcAddends() const;
+  Attribute CalcMultipliers() const;
   bool IsEquipmentOn() const { return equipment_ != NULL; }
   const Equipment* GetEquipment() const { return equipment_; }
 

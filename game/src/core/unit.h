@@ -29,10 +29,10 @@ class Unit : public IEvent, public IEquipper {
   int GetLevel();
   int GetMove();
   std::string GetBitmapPath();
-  const Stat& GetOriginalStat() const;
-  const Xtat& GetOriginalXtat() const;
-  const Stat& GetCurrentStat() const { return current_stat_; }
-  const Xtat& GetCurrentXtat() const { return current_xtat_; }
+  const Attribute& GetOriginalStat() const;
+  const HpMp& GetOriginalHpMp() const;
+  const Attribute& GetCurrentStat() const { return current_stat_; }
+  const HpMp& GetCurrentHpMp() const { return current_xtat_; }
   void SetStat();
   void UpdateStat() override;
   void AddStatModifier(StatModifier*);
@@ -67,8 +67,8 @@ class Unit : public IEvent, public IEquipper {
  private:
   shared_ptr<Hero> hero_;
   EquipmentSet* equipment_set_;
-  Stat      current_stat_;
-  Xtat      current_xtat_;
+  Attribute      current_stat_;
+  HpMp      current_xtat_;
   Vec2D     position_;
   Direction direction_;
   StatModifierList stat_modifier_list_;

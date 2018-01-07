@@ -22,9 +22,9 @@ class UnitOverView : public CompositeView {
   void OnUnitUpdate();
 
  private:
-  static const int kNumXtats = 3;
+  static const int kNumHpMps = 3;
   static const int kNumStats = 5;
-  static const int kNumGVs   = kNumXtats + kNumStats;
+  static const int kNumGVs   = kNumHpMps + kNumStats;
   static const int kNumTabs  = 3;
 
  private:

@@ -14,7 +14,7 @@ Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
       unit_stat_(),
       xtat_() {
   unit_stat_ = CalcUnitStat();
-  xtat_ = CalcXtat();
+  xtat_ = CalcHpMp();
   UpdateStat();
 }
 
@@ -46,22 +46,22 @@ Vec2D* Hero::GetAttackRange() const {
   return hero_tpl_->GetAttackRange();
 }
 
-const Stat& Hero::GetHeroStatBase() const {
+const Attribute& Hero::GetHeroStatBase() const {
   return hero_tpl_->GetHeroStat();
 }
 
 void Hero::LevelUp() {
   level_++;
   unit_stat_ = CalcUnitStat();
-  xtat_ = CalcXtat();
+  xtat_ = CalcHpMp();
 }
 
 void Hero::PutOn(const Equipment* equipment) {
   equipment_set_->SetEquipment(equipment);
 }
 
-Xtat Hero::CalcXtat() const {
-  Xtat xtat;
+HpMp Hero::CalcHpMp() const {
+  HpMp xtat;
 #define UPDATE_XTAT(x, xc) xtat.x = GetClass()->GetBni##xc().base + \
                                     GetClass()->GetBni##xc().incr * level_
   UPDATE_XTAT(hp, Hp);
@@ -70,8 +70,8 @@ Xtat Hero::CalcXtat() const {
   return xtat;
 }
 
-Stat Hero::CalcUnitStat() const {
-  Stat unit_stat;
+Attribute Hero::CalcUnitStat() const {
+  Attribute unit_stat;
 #define UPDATE_STAT(x) unit_stat.x = ((hero_stat_.x / 2) + \
                                       ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_ * hero_stat_.x) / 2000)
   UPDATE_STAT(atk);
@@ -86,8 +86,8 @@ Stat Hero::CalcUnitStat() const {
 void Hero::UpdateStat() {
   unit_stat_ = CalcUnitStat();
   { // FIXME code copied from Unit
-    Stat addends = equipment_set_->CalcAddends();
-    Stat multipliers = equipment_set_->CalcMultipliers();
+    Attribute addends = equipment_set_->CalcAddends();
+    Attribute multipliers = equipment_set_->CalcMultipliers();
 
     for (uint32_t i = 0; i < NUM_STATS; i++) {
       unit_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));

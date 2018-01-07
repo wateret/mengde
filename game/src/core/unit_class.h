@@ -19,7 +19,7 @@ class UnitClass {
   UnitClass(const string&,
             const int,
             const int,
-            const Stat&,
+            const Attribute&,
             const Range::Type,
             const int,
             const BaseAndIncr,
@@ -31,13 +31,13 @@ class UnitClass {
   int GetMove() const { return move_; }
   BaseAndIncr GetBniHp() const { return bni_hp_; }
   BaseAndIncr GetBniMp() const { return bni_mp_; }
-  const Stat* GetStatGrade() const { return &stat_grade_; }
+  const Attribute* GetStatGrade() const { return &stat_grade_; }
 
  private:
   string      id_;
   int         index_;
   int         num_promotions_;
-  Stat        stat_grade_;
+  Attribute        stat_grade_;
   Range::Type attack_range_;
   int         move_;
   BaseAndIncr bni_hp_;
