@@ -121,5 +121,4 @@ void EquipmentSetView::OnUpdate() {
   eqv_weapon_->SetEquipment(equipment_set_->GetWeapon());
   eqv_armor_->SetEquipment(equipment_set_->GetArmor());
   eqv_aid_->SetEquipment(equipment_set_->GetAid());
-  LOG_DEBUG("EquipmentSet Updated");
 }

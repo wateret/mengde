@@ -73,12 +73,12 @@ const Equipment* EquipmentSet::GetAid() const {
   return slot_aid_.GetEquipment();
 }
 
-Stat EquipmentSet::CalcModifierAddends() const {
-  return slot_weapon_.CalcModifierAddends() + slot_weapon_.CalcModifierAddends() + slot_weapon_.CalcModifierAddends();
+Stat EquipmentSet::CalcAddends() const {
+  return slot_weapon_.CalcAddends() + slot_armor_.CalcAddends() + slot_aid_.CalcAddends();
 }
 
-Stat EquipmentSet::CalcModifierMultipliers() const {
-  return slot_weapon_.CalcModifierMultipliers() + slot_weapon_.CalcModifierMultipliers() + slot_weapon_.CalcModifierMultipliers();
+Stat EquipmentSet::CalcMultipliers() const {
+  return slot_weapon_.CalcMultipliers() + slot_armor_.CalcMultipliers() + slot_aid_.CalcMultipliers();
 }
 
 } // namespace core

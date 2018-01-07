@@ -31,8 +31,8 @@ class Equipment : public IEvent {
   Type GetType() const { return type_; }
   void AddModifier(StatModifier*);
   void AddEffect(EventEffect*);
-  Stat CalcModifierAddends() const;
-  Stat CalcModifierMultipliers() const;
+  Stat CalcAddends() const;
+  Stat CalcMultipliers() const;
 
  private:
   string id_;

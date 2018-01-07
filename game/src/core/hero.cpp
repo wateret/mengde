@@ -66,6 +66,7 @@ Xtat Hero::CalcXtat() const {
                                     GetClass()->GetBni##xc().incr * level_
   UPDATE_XTAT(hp, Hp);
   UPDATE_XTAT(mp, Mp);
+#undef UPDATE_XTAT
   return xtat;
 }
 
@@ -73,13 +74,11 @@ Stat Hero::CalcUnitStat() const {
   Stat unit_stat;
 #define UPDATE_STAT(x) unit_stat.x = ((hero_stat_.x / 2) + \
                                       ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_ * hero_stat_.x) / 2000)
-  // TODO UPDATE_STAT(x) formula should depend on its unitclass grade
   UPDATE_STAT(atk);
   UPDATE_STAT(def);
   UPDATE_STAT(dex);
   UPDATE_STAT(itl);
   UPDATE_STAT(mor);
-#undef UPDATE_XTAT
 #undef UPDATE_STAT
   return unit_stat;
 }
@@ -87,8 +86,8 @@ Stat Hero::CalcUnitStat() const {
 void Hero::UpdateStat() {
   unit_stat_ = CalcUnitStat();
   { // FIXME code copied from Unit
-    Stat addends = equipment_set_->CalcModifierAddends();
-    Stat multipliers = equipment_set_->CalcModifierMultipliers();
+    Stat addends = equipment_set_->CalcAddends();
+    Stat multipliers = equipment_set_->CalcMultipliers();
 
     for (uint32_t i = 0; i < NUM_STATS; i++) {
       unit_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));

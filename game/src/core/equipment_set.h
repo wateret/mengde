@@ -21,8 +21,8 @@ class EquipmentSet {
   const Equipment* GetWeapon() const;
   const Equipment* GetArmor() const;
   const Equipment* GetAid() const;
-  Stat CalcModifierAddends() const;
-  Stat CalcModifierMultipliers() const;
+  Stat CalcAddends() const;
+  Stat CalcMultipliers() const;
 
  private:
   // NOTE We have equipper_ as a raw pointer but the some actual instances(Hero) is always treated with shared_ptr

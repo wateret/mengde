@@ -74,8 +74,8 @@ const Xtat& Unit::GetOriginalXtat() const {
 void Unit::UpdateStat() {
   current_stat_ = hero_->CalcUnitStat();
   {
-    Stat addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcModifierAddends();
-    Stat multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcModifierMultipliers();
+    Stat addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
+    Stat multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
     for (uint32_t i = 0; i < NUM_STATS; i++) {
       current_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));

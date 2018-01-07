@@ -14,12 +14,12 @@ void Equipment::AddEffect(EventEffect* ee) {
   unit_effect_list_.AddEffect(ee);
 }
 
-Stat Equipment::CalcModifierAddends() const {
-  return unit_effect_list_.CalcModifierAddends();
+Stat Equipment::CalcAddends() const {
+  return unit_effect_list_.CalcAddends();
 }
 
-Stat Equipment::CalcModifierMultipliers() const {
-  return unit_effect_list_.CalcModifierMultipliers();
+Stat Equipment::CalcMultipliers() const {
+  return unit_effect_list_.CalcMultipliers();
 }
 
 void Equipment::RaiseEvent(EventEffect::Type type, Unit* unit) {

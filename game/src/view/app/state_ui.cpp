@@ -502,12 +502,14 @@ void StateUIMagic::Render(Drawer* drawer) {
   Vec2D unit_pos = atk_->GetPosition();
   Vec2D def_pos = def_->GetPosition();
   Direction dir = Vec2DRelativePosition(unit_pos, def_pos);
+
   drawer->CopySprite(atk_->GetBitmapPath(),
-                     kSpriteStand,
+                     kSpriteAttack,
                      dir,
                      0,
                      {kEffectNone, 0},
                      unit_pos);
+
   const SpriteType target_sprite_hit = magic_->IsTypeDeal() ? kSpriteDamaged : kSpriteBuff; // This condition may not be accurate
   const SpriteType target_sprite = hit_ ? target_sprite_hit : kSpriteBlocked;
 

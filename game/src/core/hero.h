@@ -35,6 +35,7 @@ class Hero : public IEquipper {
 
   Xtat CalcXtat() const;
   Stat CalcUnitStat() const;
+  Stat CalcPureUnitStat() const;
   void UpdateStat() override;
 
  private:

@@ -20,17 +20,17 @@ const Equipment* EquipmentSlot::PutEquipmentOn(const Equipment* equipment) {
   }
 }
 
-Stat EquipmentSlot::CalcModifierAddends() const {
+Stat EquipmentSlot::CalcAddends() const {
   if (IsEquipmentOn()) {
-    return equipment_->CalcModifierAddends();
+    return equipment_->CalcAddends();
   } else {
     return {0, 0, 0, 0, 0};
   }
 }
 
-Stat EquipmentSlot::CalcModifierMultipliers() const {
+Stat EquipmentSlot::CalcMultipliers() const {
   if (IsEquipmentOn()) {
-    return equipment_->CalcModifierMultipliers();
+    return equipment_->CalcMultipliers();
   } else {
     return {0, 0, 0, 0, 0};
   }

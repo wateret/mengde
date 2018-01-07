@@ -14,11 +14,11 @@ void UnitEffectList::AddEffect(EventEffect* ee) {
   ee_list_.AddEffect(ee);
 }
 
-Stat UnitEffectList::CalcModifierAddends() const {
+Stat UnitEffectList::CalcAddends() const {
   return sm_list_.CalcAddends();
 }
 
-Stat UnitEffectList::CalcModifierMultipliers() const {
+Stat UnitEffectList::CalcMultipliers() const {
   return sm_list_.CalcMultipliers();
 }
 
