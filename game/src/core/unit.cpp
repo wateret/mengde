@@ -8,7 +8,7 @@ namespace core {
 
 Unit::Unit(const shared_ptr<Hero>& hero, Force force)
     : hero_(hero),
-      equipment_set_(new EquipmentSet(this)),
+      equipment_set_(new EquipmentSet(hero.get())),
       current_stat_(hero->GetUnitStat()),
       current_xtat_(hero->GetXtat()),
       position_(0, 0),

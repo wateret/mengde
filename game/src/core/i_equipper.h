@@ -5,6 +5,7 @@ namespace mengde {
 namespace core {
 
 class UnitClass;
+class EquipmentSet;
 
 class IEquipper {
  public:

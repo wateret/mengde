@@ -36,7 +36,7 @@ class Unit : public IEvent, public IEquipper {
   void SetStat();
   void UpdateStat() override;
   void AddStatModifier(StatModifier*);
-  EquipmentSet* GetEquipmentSet() { return equipment_set_; }
+  const EquipmentSet* GetEquipmentSet() const { return equipment_set_; }
   int GetMaxExp() { return 100 + GetLevel() * 5; }
   void SetPosition(Vec2D pos) { position_ = pos; }
   Vec2D GetPosition() { return position_; }
