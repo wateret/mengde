@@ -22,7 +22,7 @@ class Hero : public IEquipper {
   const UnitClass* GetClass() const override;
   int GetClassIndex() const;
   int GetMove() const;
-  const Attribute& GetHeroStat() const { return hero_stat_; }
+  const Attribute& GetHeroStat() const { return hero_attr_; }
   Vec2D*      GetAttackRange() const;
   const EquipmentSet* GetEquipmentSet() const { return equipment_set_; }
 
@@ -30,8 +30,8 @@ class Hero : public IEquipper {
   uint16_t GetLevel() const { return level_.level; }
   uint16_t GetExp()   const { return level_.exp; }
   void     GainExp(uint16_t exp) { level_.exp += exp; }
-  const Attribute& GetUnitStat() const { return unit_stat_; }
-  const HpMp& GetHpMp()     const { return xtat_; }
+  const Attribute& GetUnitStat() const { return unit_attr_; }
+  const HpMp& GetHpMp()     const { return hpmp_; }
   void        LevelUp();
   void        PutOn(const Equipment*);
 
@@ -44,9 +44,9 @@ class Hero : public IEquipper {
   const HeroTemplate* hero_tpl_;
   EquipmentSet* equipment_set_;
   Level     level_;
-  Attribute hero_stat_;
-  Attribute unit_stat_;
-  HpMp      xtat_;
+  Attribute hero_attr_;
+  Attribute unit_attr_;
+  HpMp      hpmp_;
 };
 
 } // namespace core

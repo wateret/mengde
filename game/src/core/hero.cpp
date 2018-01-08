@@ -10,11 +10,11 @@ Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
     : hero_tpl_(hero_tpl),
       equipment_set_(new EquipmentSet(this)),
       level_(level, 0),
-      hero_stat_(hero_tpl->GetHeroStat()),
-      unit_stat_(),
-      xtat_() {
-  unit_stat_ = CalcUnitStat();
-  xtat_ = CalcHpMp();
+      hero_attr_(hero_tpl->GetHeroStat()),
+      unit_attr_(),
+      hpmp_() {
+  unit_attr_ = CalcUnitStat();
+  hpmp_ = CalcHpMp();
   UpdateStat();
 }
 
@@ -52,8 +52,8 @@ const Attribute& Hero::GetHeroStatBase() const {
 
 void Hero::LevelUp() {
   level_.level++;
-  unit_stat_ = CalcUnitStat();
-  xtat_ = CalcHpMp();
+  unit_attr_ = CalcUnitStat();
+  hpmp_ = CalcHpMp();
 }
 
 void Hero::PutOn(const Equipment* equipment) {
@@ -72,8 +72,8 @@ HpMp Hero::CalcHpMp() const {
 
 Attribute Hero::CalcUnitStat() const {
   Attribute unit_stat;
-#define UPDATE_ABILITIES(x) unit_stat.x = ((hero_stat_.x / 2) + \
-                                      ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_.level * hero_stat_.x) / 2000)
+#define UPDATE_ABILITIES(x) unit_stat.x = ((hero_attr_.x / 2) + \
+                                      ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_.level * hero_attr_.x) / 2000)
   UPDATE_ABILITIES(atk);
   UPDATE_ABILITIES(def);
   UPDATE_ABILITIES(dex);
@@ -84,14 +84,14 @@ Attribute Hero::CalcUnitStat() const {
 }
 
 void Hero::UpdateStat() {
-  unit_stat_ = CalcUnitStat();
+  unit_attr_ = CalcUnitStat();
   { // FIXME code copied from Unit
     Attribute addends = equipment_set_->CalcAddends();
     Attribute multipliers = equipment_set_->CalcMultipliers();
 
-    unit_stat_ += addends;
-    unit_stat_ *= multipliers + 100;
-    unit_stat_ /= 100;
+    unit_attr_ += addends;
+    unit_attr_ *= multipliers + 100;
+    unit_attr_ /= 100;
   }
 }
 

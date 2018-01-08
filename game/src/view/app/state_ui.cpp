@@ -808,12 +808,12 @@ void StateUIDamaged::Update() {
   const int max_anim_frames = (kFrames - 1) * 1 / 2;
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
-  mengde::core::HpMp xtat_mod = unit_->GetCurrentHpMp();
+  mengde::core::HpMp hpmp_mod = unit_->GetCurrentHpMp();
   int damage_rem = damage_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
-  xtat_mod.hp -= damage_ - damage_rem;
+  hpmp_mod.hp -= damage_ - damage_rem;
   rv_->SetUnitInfoViewContents(unit_->GetId(),
                                unit_->GetLevel(),
-                               xtat_mod,
+                               hpmp_mod,
                                unit_->GetOriginalHpMp(),
                                damage_rem,
                                0);

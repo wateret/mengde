@@ -9,8 +9,8 @@ namespace core {
 Unit::Unit(const shared_ptr<Hero>& hero, Force force)
     : hero_(hero),
       equipment_set_(new EquipmentSet(this)),
-      current_stat_(hero->GetUnitStat()),
-      current_xtat_(hero->GetHpMp()),
+      current_attr_(hero->GetUnitStat()),
+      current_hpmp_(hero->GetHpMp()),
       position_(0, 0),
       direction_(kDirDown),
       stat_modifier_list_(),
@@ -26,8 +26,8 @@ Unit::~Unit() {
 
 // Return true if alive, false if dead
 bool Unit::DoDamage(int damage) {
-  current_xtat_.hp -= damage;
-  return current_xtat_.hp > 0;
+  current_hpmp_.hp -= damage;
+  return current_hpmp_.hp > 0;
 }
 
 void Unit::RestoreHP(int amount) {
@@ -35,7 +35,7 @@ void Unit::RestoreHP(int amount) {
 }
 
 void Unit::Heal(int amount) {
-  current_xtat_.hp = std::min(current_xtat_.hp + amount, GetOriginalHpMp().hp);
+  current_hpmp_.hp = std::min(current_hpmp_.hp + amount, GetOriginalHpMp().hp);
 }
 
 bool Unit::IsHostile(Unit* u) const {
@@ -72,14 +72,14 @@ const HpMp& Unit::GetOriginalHpMp() const {
 }
 
 void Unit::UpdateStat() {
-  current_stat_ = hero_->CalcUnitStat();
+  current_attr_ = hero_->CalcUnitStat();
   {
     Attribute addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
     Attribute multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
-    current_stat_ += addends;
-    current_stat_ *= multipliers + 100;
-    current_stat_ /= 100;
+    current_attr_ += addends;
+    current_attr_ *= multipliers + 100;
+    current_attr_ /= 100;
   }
 }
 
@@ -97,7 +97,7 @@ bool Unit::IsDead() const {
 }
 
 void Unit::Kill() {
-  current_xtat_.hp = 0;
+  current_hpmp_.hp = 0;
 }
 
 const UnitClass* Unit::GetClass() const {
@@ -145,7 +145,7 @@ void Unit::GainExp(uint16_t exp) {
 void Unit::LevelUp() {
   // TODO check if Unit is alread in max level
   hero_->LevelUp();
-  current_stat_ = hero_->GetUnitStat();
+  current_attr_ = hero_->GetUnitStat();
   LOG_INFO("'%s' Level Up! (Level : %d)", hero_->GetId().c_str(), hero_->GetLevel());
 }
 

@@ -10,7 +10,7 @@ HeroTemplate::HeroTemplate(const string& id,
     : id_(id),
       bitmap_path_(bitmap_path),
       unit_class_(unit_class),
-      hero_stat_(hero_stat) {
+      hero_attr_(hero_stat) {
 }
 
 int HeroTemplate::GetClassIndex() const {

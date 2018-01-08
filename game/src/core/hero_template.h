@@ -16,14 +16,14 @@ class HeroTemplate {
   const UnitClass* GetClass() const { return unit_class_; }
   int GetClassIndex() const;
   int GetMove() const;
-  const Attribute& GetHeroStat() const { return hero_stat_; }
+  const Attribute& GetHeroStat() const { return hero_attr_; }
   Vec2D*      GetAttackRange() const;
 
  private:
   string           id_;
   string           bitmap_path_;
   const UnitClass* unit_class_;
-  Attribute             hero_stat_;
+  Attribute             hero_attr_;
 };
 
 } // namespace core
