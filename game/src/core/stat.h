@@ -1,6 +1,8 @@
 #ifndef STAT_H_
 #define STAT_H_
 
+#include <stdint.h>
+
 namespace mengde {
 namespace core {
 
@@ -41,33 +43,39 @@ struct Attribute {
     // Fragile but fast implementation
     ((int*)(this))[index] = value;
   }
-
-  Attribute operator+(const Attribute& o) {
-    return {atk + o.atk,
-            def + o.def,
-            dex + o.dex,
-            itl + o.itl,
-            mor + o.mor};
-  }
 };
+
+Attribute operator+(const Attribute& lhs, const Attribute& rhs);
+Attribute operator+(const Attribute& lhs, int rhs);
+Attribute& operator+=(Attribute& lhs, const Attribute& rhs);
+Attribute& operator*=(Attribute& lhs, const Attribute& rhs);
+Attribute& operator/=(Attribute& lhs, int rhs);
 
 #define NUM_STATS (sizeof(Attribute) / sizeof(int))
 
 struct HpMp {
   int hp;
   int mp;
-  int exp;
 
-  HpMp() : hp(0), mp(0), exp(0) {
+  HpMp() : hp(0), mp(0) {
   }
 
-  HpMp(int hp, int mp, int exp) : hp(hp), mp(mp), exp(exp) {
+  HpMp(int hp, int mp) : hp(hp), mp(mp) {
   }
 
   int GetValueByIndex(int index) const {
     // Fragile but fast implementation
     return *((int*)(this) + index);
   }
+};
+
+struct Level {
+  static const uint16_t kExpLimit = 100;
+
+  uint16_t level;
+  uint16_t exp;
+
+  Level(uint16_t level, uint16_t exp) : level(level), exp(exp) {}
 };
 
 } // namespace core

@@ -37,7 +37,7 @@ class Unit : public IEvent, public IEquipper {
   void UpdateStat() override;
   void AddStatModifier(StatModifier*);
   const EquipmentSet* GetEquipmentSet() const { return equipment_set_; }
-  int GetMaxExp() { return 100 + GetLevel() * 5; }
+  uint16_t GetMaxExp() { return Level::kExpLimit; }
   void SetPosition(Vec2D pos) { position_ = pos; }
   Vec2D GetPosition() { return position_; }
   void SetDirection(Direction direction) { direction_ = direction; }
@@ -59,7 +59,7 @@ class Unit : public IEvent, public IEquipper {
   bool IsInRange(Vec2D) const;
   bool IsDoneAction() const { return done_action_; }
   void GainExp(Unit*);
-  void GainExp(int exp);
+  void GainExp(uint16_t exp);
   void LevelUp();
   void EndAction();
   void ResetAction();

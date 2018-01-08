@@ -27,7 +27,9 @@ class Hero : public IEquipper {
   const EquipmentSet* GetEquipmentSet() const { return equipment_set_; }
 
   const Attribute& GetHeroStatBase() const;
-  uint16_t    GetLevel()    const { return level_; }
+  uint16_t GetLevel() const { return level_.level; }
+  uint16_t GetExp()   const { return level_.exp; }
+  void     GainExp(uint16_t exp) { level_.exp += exp; }
   const Attribute& GetUnitStat() const { return unit_stat_; }
   const HpMp& GetHpMp()     const { return xtat_; }
   void        LevelUp();
@@ -41,10 +43,10 @@ class Hero : public IEquipper {
  private:
   const HeroTemplate* hero_tpl_;
   EquipmentSet* equipment_set_;
-  uint16_t level_;
-  Attribute     hero_stat_;
-  Attribute     unit_stat_;
-  HpMp     xtat_;
+  Level     level_;
+  Attribute hero_stat_;
+  Attribute unit_stat_;
+  HpMp      xtat_;
 };
 
 } // namespace core

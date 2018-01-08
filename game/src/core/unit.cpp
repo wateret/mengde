@@ -77,12 +77,9 @@ void Unit::UpdateStat() {
     Attribute addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
     Attribute multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
-    for (uint32_t i = 0; i < NUM_STATS; i++) {
-      current_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));
-      int val = current_stat_.GetValueByIndex(i);
-      int val_mult = ((100 + multipliers.GetValueByIndex(i)) * val) / 100;
-      current_stat_.SetValueByIndex(i, val_mult);
-    }
+    current_stat_ += addends;
+    current_stat_ *= multipliers + 100;
+    current_stat_ /= 100;
   }
 }
 
@@ -132,7 +129,7 @@ bool Unit::IsInRange(Vec2D c) const {
 
 void Unit::GainExp(Unit* object) {
   int level_diff = object->GetLevel() - this->GetLevel();
-  int exp = 0;
+  uint16_t exp = 0;
   if (level_diff < 0) {
     exp = std::max(1, 8 + level_diff);
   } else {
@@ -141,13 +138,8 @@ void Unit::GainExp(Unit* object) {
   GainExp(exp);
 }
 
-void Unit::GainExp(int exp) {
-  // TODO check if Unit is alread in max level
-  current_xtat_.exp += exp;
-  while (current_xtat_.exp >= GetMaxExp()) {
-    current_xtat_.exp -= GetMaxExp();
-    LevelUp();
-  }
+void Unit::GainExp(uint16_t exp) {
+  hero_->GainExp(exp);
 }
 
 void Unit::LevelUp() {

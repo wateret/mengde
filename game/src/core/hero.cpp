@@ -9,7 +9,7 @@ namespace core {
 Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
     : hero_tpl_(hero_tpl),
       equipment_set_(new EquipmentSet(this)),
-      level_(level),
+      level_(level, 0),
       hero_stat_(hero_tpl->GetHeroStat()),
       unit_stat_(),
       xtat_() {
@@ -51,7 +51,7 @@ const Attribute& Hero::GetHeroStatBase() const {
 }
 
 void Hero::LevelUp() {
-  level_++;
+  level_.level++;
   unit_stat_ = CalcUnitStat();
   xtat_ = CalcHpMp();
 }
@@ -62,24 +62,24 @@ void Hero::PutOn(const Equipment* equipment) {
 
 HpMp Hero::CalcHpMp() const {
   HpMp xtat;
-#define UPDATE_XTAT(x, xc) xtat.x = GetClass()->GetBni##xc().base + \
-                                    GetClass()->GetBni##xc().incr * level_
-  UPDATE_XTAT(hp, Hp);
-  UPDATE_XTAT(mp, Mp);
-#undef UPDATE_XTAT
+#define UPDATE_HPMP(x, xc) xtat.x = GetClass()->GetBni##xc().base + \
+                                    GetClass()->GetBni##xc().incr * level_.level
+  UPDATE_HPMP(hp, Hp);
+  UPDATE_HPMP(mp, Mp);
+#undef UPDATE_HPMP
   return xtat;
 }
 
 Attribute Hero::CalcUnitStat() const {
   Attribute unit_stat;
-#define UPDATE_STAT(x) unit_stat.x = ((hero_stat_.x / 2) + \
-                                      ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_ * hero_stat_.x) / 2000)
-  UPDATE_STAT(atk);
-  UPDATE_STAT(def);
-  UPDATE_STAT(dex);
-  UPDATE_STAT(itl);
-  UPDATE_STAT(mor);
-#undef UPDATE_STAT
+#define UPDATE_ABILITIES(x) unit_stat.x = ((hero_stat_.x / 2) + \
+                                      ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_.level * hero_stat_.x) / 2000)
+  UPDATE_ABILITIES(atk);
+  UPDATE_ABILITIES(def);
+  UPDATE_ABILITIES(dex);
+  UPDATE_ABILITIES(itl);
+  UPDATE_ABILITIES(mor);
+#undef UPDATE_ABILITIES
   return unit_stat;
 }
 
@@ -89,12 +89,9 @@ void Hero::UpdateStat() {
     Attribute addends = equipment_set_->CalcAddends();
     Attribute multipliers = equipment_set_->CalcMultipliers();
 
-    for (uint32_t i = 0; i < NUM_STATS; i++) {
-      unit_stat_.AddValueByIndex(i, addends.GetValueByIndex(i));
-      int val = unit_stat_.GetValueByIndex(i);
-      int val_mult = ((100 + multipliers.GetValueByIndex(i)) * val) / 100;
-      unit_stat_.SetValueByIndex(i, val_mult);
-    }
+    unit_stat_ += addends;
+    unit_stat_ *= multipliers + 100;
+    unit_stat_ /= 100;
   }
 }
 
