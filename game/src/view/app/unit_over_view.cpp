@@ -72,25 +72,25 @@ void UnitOverView::OnUnitUpdate() {
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
 
-  const mengde::core::Attribute& ori_stat = unit_->GetOriginalStat();
-  const mengde::core::Attribute& cur_stat = unit_->GetCurrentStat();
-  const mengde::core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
-  const mengde::core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
+  const mengde::core::Attribute& ori_attr = unit_->GetOriginalStat();
+  const mengde::core::Attribute& cur_attr = unit_->GetCurrentStat();
+  const mengde::core::HpMp& ori_hpmp = unit_->GetOriginalHpMp();
+  const mengde::core::HpMp& cur_hpmp = unit_->GetCurrentHpMp();
 
   gv_stats_[0]->SetCurVal(unit_->GetExp());
   gv_stats_[0]->SetMaxVal(mengde::core::Level::kExpLimit);
 
   for (int i = 0; i < kNumHpMp; i++) {
     int j = i + 1;
-    int max_val = (i == 0) ? ori_xtat.hp : ori_xtat.mp;
-    gv_stats_[j]->SetCurVal(cur_xtat.GetValueByIndex(i));
+    int max_val = (i == 0) ? ori_hpmp.hp : ori_hpmp.mp;
+    gv_stats_[j]->SetCurVal(cur_hpmp.GetValueByIndex(i));
     gv_stats_[j]->SetMaxVal(max_val);
   }
   for (int i = 0; i < kNumStats; i++) {
     int j = i + 1 + kNumHpMp;
-    gv_stats_[j]->SetCurVal(cur_stat.GetValueByIndex(i));
+    gv_stats_[j]->SetCurVal(cur_attr.GetValueByIndex(i));
     gv_stats_[j]->SetMaxVal(400);
-    gv_stats_[j]->SetExtVal(cur_stat.GetValueByIndex(i) - ori_stat.GetValueByIndex(i));
+    gv_stats_[j]->SetExtVal(cur_attr.GetValueByIndex(i) - ori_attr.GetValueByIndex(i));
   }
   string portrait_path = "portrait/" + unit_->GetId() + ".bmp";
   iv_portrait_->SetPath(portrait_path);
