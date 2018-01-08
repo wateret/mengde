@@ -26,8 +26,9 @@ class Unit : public IEvent, public IEquipper {
 
  public:
   std::string GetId();
-  int GetLevel();
+  uint16_t GetLevel() const;
   int GetMove();
+  uint16_t GetExp() const;
   std::string GetBitmapPath();
   const Attribute& GetOriginalStat() const;
   const HpMp& GetOriginalHpMp() const;

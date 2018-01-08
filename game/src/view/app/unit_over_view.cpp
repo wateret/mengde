@@ -25,7 +25,7 @@ UnitOverView::UnitOverView(const Rect* frame)
 
   Rect tv_frame = {0, 92, kLabelWidth, kLabelHeight};
 
-  static const char* kStatNames[kNumGVs] = {"HP", "MP", "Exp", "Atk", "Def", "Dex", "Itl", "Mor"};
+  static const char* kStatNames[kNumGVs] = {"Exp", "HP", "MP", "Atk", "Def", "Dex", "Itl", "Mor"};
   for (int i = 0; i < kNumGVs; i++) {
     TextView* tv = new TextView(&tv_frame, kStatNames[i]);
     tv_stats_[i] = tv;
@@ -34,35 +34,26 @@ UnitOverView::UnitOverView(const Rect* frame)
   }
 
   Rect gv_frame = {kLabelWidth, 92, 220-16-kLabelWidth, kLabelHeight};
-  static const Color colors[kNumHpMps] = {COLOR("gauge_hp"),
-                                          COLOR("gauge_mp"),
-                                          COLOR("gauge_exp")};
 
-  for (int i = 0; i < kNumHpMps; i++) {
-    GaugeView* gv = new GaugeView(&gv_frame,
-                                  1,
-                                  1,
-                                  colors[i],
-                                  COLOR(128, 128, 128));
+  static const Color colors[kNumGVs] = {COLOR("gauge_exp"),
+                                        COLOR("gauge_hp"),
+                                        COLOR("gauge_mp"),
+                                        COLOR("gauge_stats"),
+                                        COLOR("gauge_stats"),
+                                        COLOR("gauge_stats"),
+                                        COLOR("gauge_stats"),
+                                        COLOR("gauge_stats")};
 
-    gv->SetHelpTextType(GaugeView::kHelpTextCurMax);
+  for (int i = 0; i < kNumGVs; i++) {
+    GaugeView* gv = new GaugeView(&gv_frame, 0, 1, 0, colors[i], COLOR(128, 128, 128), COLOR(255, 232, 142));
+    if (i < kNumExp + kNumHpMp) {
+      gv->SetHelpTextType(GaugeView::kHelpTextCurMax);
+      gv->SetHelpTextAlign(LayoutHelper::kAlignCenter);
+    } else {
+      gv->SetHelpTextType(GaugeView::kHelpTextCurOnly);
+      gv->SetHelpTextAlign(LayoutHelper::kAlignRgtMid);
+    }
     gv_stats_[i] = gv;
-    AddChild(gv);
-    gv_frame.Move(frame_space);
-  }
-  for (int i = 0; i < kNumStats; i++) {
-    int j = i + kNumHpMps;
-    int max_value = 300; // FIXME max value of stat
-    GaugeView* gv = new GaugeView(&gv_frame,
-                                  1,
-                                  max_value,
-                                  1,
-                                  COLOR("gauge_stats"),
-                                  COLOR(128, 128, 128),
-                                  COLOR(255, 232, 142));
-    gv->SetHelpTextType(GaugeView::kHelpTextCurOnly);
-    gv->SetHelpTextAlign(LayoutHelper::kAlignRgtMid);
-    gv_stats_[j] = gv;
     AddChild(gv);
     gv_frame.Move(frame_space);
   }
@@ -85,14 +76,20 @@ void UnitOverView::OnUnitUpdate() {
   const mengde::core::Attribute& cur_stat = unit_->GetCurrentStat();
   const mengde::core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
   const mengde::core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
-  for (int i = 0; i < kNumHpMps; i++) {
-    int max_val = (i == 2) ? unit_->GetMaxExp() : ori_xtat.GetValueByIndex(i);
-    gv_stats_[i]->SetCurVal(cur_xtat.GetValueByIndex(i));
-    gv_stats_[i]->SetMaxVal(max_val);
+
+  gv_stats_[0]->SetCurVal(unit_->GetExp());
+  gv_stats_[0]->SetMaxVal(mengde::core::Level::kExpLimit);
+
+  for (int i = 0; i < kNumHpMp; i++) {
+    int j = i + 1;
+    int max_val = (i == 0) ? ori_xtat.hp : ori_xtat.mp;
+    gv_stats_[j]->SetCurVal(cur_xtat.GetValueByIndex(i));
+    gv_stats_[j]->SetMaxVal(max_val);
   }
   for (int i = 0; i < kNumStats; i++) {
-    int j = i + kNumHpMps;
+    int j = i + 1 + kNumHpMp;
     gv_stats_[j]->SetCurVal(cur_stat.GetValueByIndex(i));
+    gv_stats_[j]->SetMaxVal(400);
     gv_stats_[j]->SetExtVal(cur_stat.GetValueByIndex(i) - ori_stat.GetValueByIndex(i));
   }
   string portrait_path = "portrait/" + unit_->GetId() + ".bmp";

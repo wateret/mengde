@@ -51,8 +51,12 @@ std::string Unit::GetId() {
   return hero_->GetId();
 }
 
-int Unit::GetLevel() {
+uint16_t Unit::GetLevel() const {
   return hero_->GetLevel();
+}
+
+uint16_t Unit::GetExp() const {
+  return hero_->GetExp();
 }
 
 int Unit::GetMove() {
