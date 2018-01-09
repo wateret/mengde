@@ -18,6 +18,11 @@ Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
   UpdateStat();
 }
 
+Hero::Hero(const Hero& hero)
+    : hero_tpl_(hero.hero_tpl_), equipment_set_(hero.GetEquipmentSet()->Clone(this)), level_(hero.level_),
+      hero_attr_(hero.hero_attr_), unit_attr_(hero.unit_attr_), hpmp_(hero.hpmp_) {
+}
+
 Hero::~Hero() {
   delete equipment_set_;
 }
