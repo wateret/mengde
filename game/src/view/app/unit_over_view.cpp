@@ -80,12 +80,11 @@ void UnitOverView::OnUnitUpdate() {
   gv_stats_[0]->SetCurVal(unit_->GetExp());
   gv_stats_[0]->SetMaxVal(mengde::core::Level::kExpLimit);
 
-  for (int i = 0; i < kNumHpMp; i++) {
-    int j = i + 1;
-    int max_val = (i == 0) ? ori_hpmp.hp : ori_hpmp.mp;
-    gv_stats_[j]->SetCurVal(cur_hpmp.GetValueByIndex(i));
-    gv_stats_[j]->SetMaxVal(max_val);
-  }
+  gv_stats_[1]->SetCurVal(cur_hpmp.hp);
+  gv_stats_[1]->SetMaxVal(ori_hpmp.hp);
+  gv_stats_[2]->SetCurVal(cur_hpmp.mp);
+  gv_stats_[2]->SetMaxVal(ori_hpmp.mp);
+
   for (int i = 0; i < kNumStats; i++) {
     int j = i + 1 + kNumHpMp;
     gv_stats_[j]->SetCurVal(cur_attr.GetValueByIndex(i));

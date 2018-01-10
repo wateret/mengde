@@ -45,13 +45,43 @@ struct Attribute {
   }
 };
 
-Attribute operator+(const Attribute& lhs, const Attribute& rhs);
-Attribute operator+(const Attribute& lhs, int rhs);
-Attribute& operator+=(Attribute& lhs, const Attribute& rhs);
-Attribute& operator*=(Attribute& lhs, const Attribute& rhs);
-Attribute& operator/=(Attribute& lhs, int rhs);
+#define ATTRIBUTE_BIN_OP_DECL(OP) \
+  Attribute operator OP (const Attribute& lhs, const Attribute& rhs);
 
-#define NUM_STATS (sizeof(Attribute) / sizeof(int))
+#define ATTRIBUTE_BIN_OP_NUMERIC_DECL(OP, TYPE) \
+  Attribute operator OP (const Attribute& lhs, TYPE rhs); \
+  Attribute operator OP (TYPE lhs, const Attribute& rhs);
+
+#define ATTRIBUTE_ASSIGN_OP_DECL(OP) \
+  Attribute& operator OP (Attribute& lhs, const Attribute& rhs);
+
+#define ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(OP, TYPE) \
+  Attribute& operator OP (Attribute& lhs, TYPE rhs); \
+
+ATTRIBUTE_BIN_OP_DECL(+)
+ATTRIBUTE_BIN_OP_DECL(-)
+ATTRIBUTE_BIN_OP_DECL(*)
+ATTRIBUTE_BIN_OP_DECL(/)
+
+ATTRIBUTE_BIN_OP_NUMERIC_DECL(+, int)
+ATTRIBUTE_BIN_OP_NUMERIC_DECL(-, int)
+ATTRIBUTE_BIN_OP_NUMERIC_DECL(*, int)
+ATTRIBUTE_BIN_OP_NUMERIC_DECL(/, int)
+
+ATTRIBUTE_ASSIGN_OP_DECL(+=)
+ATTRIBUTE_ASSIGN_OP_DECL(-=)
+ATTRIBUTE_ASSIGN_OP_DECL(*=)
+ATTRIBUTE_ASSIGN_OP_DECL(/=)
+
+ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(+=, int)
+ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(-=, int)
+ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(*=, int)
+ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(/=, int)
+
+#undef ATTRIBUTE_BIN_OP_DECL
+#undef ATTRIBUTE_BIN_OP_NUMERIC_DECL
+#undef ATTRIBUTE_ASSIGN_OP_DECL
+#undef ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL
 
 struct HpMp {
   int hp;
@@ -61,11 +91,6 @@ struct HpMp {
   }
 
   HpMp(int hp, int mp) : hp(hp), mp(mp) {
-  }
-
-  int GetValueByIndex(int index) const {
-    // Fragile but fast implementation
-    return *((int*)(this) + index);
   }
 };
 

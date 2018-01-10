@@ -76,15 +76,7 @@ HpMp Hero::CalcHpMp() const {
 }
 
 Attribute Hero::CalcUnitStat() const {
-  Attribute unit_stat;
-#define UPDATE_ABILITIES(x) unit_stat.x = ((hero_attr_.x / 2) + \
-                                      ((100 + 10 * (GetClass()->GetStatGrade()->x - 1)) * level_.level * hero_attr_.x) / 2000)
-  UPDATE_ABILITIES(atk);
-  UPDATE_ABILITIES(def);
-  UPDATE_ABILITIES(dex);
-  UPDATE_ABILITIES(itl);
-  UPDATE_ABILITIES(mor);
-#undef UPDATE_ABILITIES
+  Attribute unit_stat = ((hero_attr_ / 2) + ((100 + 10 * (GetClass()->GetStatGrade() - 1)) * level_.level * hero_attr_) / 2000);
   return unit_stat;
 }
 

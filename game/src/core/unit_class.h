@@ -31,7 +31,7 @@ class UnitClass {
   int GetMove() const { return move_; }
   BaseAndIncr GetBniHp() const { return bni_hp_; }
   BaseAndIncr GetBniMp() const { return bni_mp_; }
-  const Attribute* GetStatGrade() const { return &stat_grade_; }
+  const Attribute& GetStatGrade() const { return stat_grade_; }
 
  private:
   string      id_;
