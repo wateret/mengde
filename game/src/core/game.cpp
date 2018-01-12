@@ -10,6 +10,7 @@
 #include "stage_unit_manager.h"
 #include "util/game_env.h"
 #include "util/path_tree.h"
+#include "util/path.h"
 #include "lua/lua_script.h"
 
 // XXX temporary include
@@ -18,7 +19,7 @@
 namespace mengde {
 namespace core {
 
-Game::Game(const ResourceManagers& rc, Assets* assets, const string& stage_script_path)
+Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_path)
     : rc_(rc),
       assets_(assets),
       lua_script_(nullptr),
@@ -46,7 +47,7 @@ Game::~Game() {
   delete stage_unit_manager_;
 }
 
-lua::LuaScript* Game::CreateLua(const string& stage_script_path) {
+lua::LuaScript* Game::CreateLua(const Path& stage_script_path) {
   lua::LuaScript* lua_script = new lua::LuaScript();
 
   // Register game object as lua global
@@ -73,7 +74,7 @@ lua::LuaScript* Game::CreateLua(const string& stage_script_path) {
 #undef GAME_PREFIX
 
   // Run the main script
-  lua_script->Run(stage_script_path);
+  lua_script->Run(stage_script_path.ToString());
   return lua_script;
 }
 

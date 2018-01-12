@@ -28,13 +28,14 @@ FontManager::~FontManager() {
 TTF_Font* FontManager::FetchFont(const string& name, int size) {
   UNUSED(name);
 
-  std::string base_path = GameEnv::GetInstance()->GetResourcePath();
-  std::string full_path = base_path + "/" + default_font_name_ + ".ttf";
+  // FIXME Do not use Path class(remove base path and get full path from caller instead)
+  Path base_path = GameEnv::GetInstance()->GetResourcePath();
+  Path full_path = base_path / (default_font_name_ + ".ttf");
   std::string key = default_font_name_ + ":" + std::to_string(size);
 
   auto iter = container_.find(key);
   if (iter == container_.end()) {
-    TTF_Font* font = TTF_OpenFont(full_path.c_str(), size);
+    TTF_Font* font = TTF_OpenFont(full_path.ToString().c_str(), size);
     container_[key] = font;
     return font;
   } else {

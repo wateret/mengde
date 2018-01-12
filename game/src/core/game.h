@@ -12,6 +12,8 @@
 #include "turn.h"
 #include "resource_manager.h"
 
+class Path;
+
 namespace lua {
   class LuaScript;
 }
@@ -39,7 +41,7 @@ class Game : public IDeployHelper {
   };
 
  public:
-  Game(const ResourceManagers&, Assets*, const string&);
+  Game(const ResourceManagers&, Assets*, const Path&);
   ~Game();
 
  public:
@@ -96,7 +98,7 @@ class Game : public IDeployHelper {
   Unit*         GetOneHostileInRange(Unit*, Vec2D);
 
  private:
-  lua::LuaScript* CreateLua(const string&);
+  lua::LuaScript* CreateLua(const Path&);
   Map*       CreateMap();
   Deployer*  CreateDeployer();
   bool TryBasicAttack(Unit*, Unit*);

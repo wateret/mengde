@@ -60,7 +60,8 @@ void Texture::InitBitmap(Renderer* renderer,
                 const std::string& path,
                 bool use_key,
                 Color color) {
-  std::string base_path = GameEnv::GetInstance()->GetScenarioPath();
+  // FIXME Do not use Path class(remove base path and get full path from caller instead)
+  std::string base_path = GameEnv::GetInstance()->GetScenarioPath().ToString();
   surface_ = SDL_LoadBMP((base_path + "/" + "example" +  "/" + path).c_str()); // FIXME path hardcoded
   if (surface_ == nullptr) {
     string msg = Misc::GetErrorMessage();

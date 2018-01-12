@@ -5,6 +5,8 @@
 #include "util/game_env.h"
 #include "resource_manager.h"
 
+class Path;
+
 namespace lua {
   class LuaScript;
 }
@@ -17,7 +19,7 @@ class EventEffect;
 
 class ConfigLoader {
  public:
-  ConfigLoader(const string&);
+  ConfigLoader(const Path&);
   ~ConfigLoader();
   const ResourceManagers& GetResources() const { return rc_; }
   const string& GetFirstStage() const { return first_stage_; }

@@ -1,6 +1,7 @@
 #include "config_loader.h"
 
 #include "util/common.h"
+#include "util/path.h"
 #include "unit_class.h"
 #include "attack_range.h"
 #include "magic.h"
@@ -15,12 +16,12 @@
 namespace mengde {
 namespace core {
 
-ConfigLoader::ConfigLoader(const string& filename)
+ConfigLoader::ConfigLoader(const Path& filename)
     : lua_config_(nullptr),
       rc_() {
-  string path = GameEnv::GetInstance()->GetScenarioPath() + "/" + filename;
+  Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
   lua_config_ = new ::lua::LuaScript();
-  lua_config_->Run(path);
+  lua_config_->Run(path.ToString());
 
   ParseUnitClassesAndTerrains();
   ParseMagics();

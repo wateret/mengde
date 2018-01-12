@@ -8,8 +8,8 @@ namespace mengde {
 namespace core {
 
 Scenario::Scenario(const string& scenario_id) : rc_(), assets_(nullptr), game_(nullptr) {
-  const string base_path = "/" + scenario_id;
-  ConfigLoader loader(base_path + "/config.lua");
+  const Path base_path(scenario_id);
+  ConfigLoader loader(base_path / "config.lua");
   rc_ = loader.GetResources();
 
   // For the case of NEW GAME
@@ -18,8 +18,8 @@ Scenario::Scenario(const string& scenario_id) : rc_(), assets_(nullptr), game_(n
 }
 
 Game* Scenario::NewGame(const string& id, const string& first_stage_script) {
-  const string base_path = GameEnv::GetInstance()->GetScenarioPath() + "/" + id;
-  return new Game(rc_, assets_, base_path + "/" + first_stage_script);
+  const Path path = GameEnv::GetInstance()->GetScenarioPath() / id / first_stage_script;
+  return new Game(rc_, assets_, path);
 }
 
 Game* Scenario::LoadGame(const string& scenario_id, const string& save_file_path) {
