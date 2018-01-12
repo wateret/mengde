@@ -23,9 +23,11 @@ elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 endif()
 
 # Look up required packages and add the include directory to our include path
+find_package(Boost 1.55.0 COMPONENTS filesystem)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(Lua REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_TTF_INCLUDE_DIR})
 include_directories(${LUA_INCLUDE_DIR})
