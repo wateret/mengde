@@ -6,11 +6,16 @@
 #include "texture.h"
 
 using std::string;
-using std::unordered_map;
+
+class FontManager;
+
+// TextureManager manages all kind of textures like sprites and rendered texts
+// It acts like a cache for textures. A texture can be found with string key.
+// FIXME Caching text textures may cause memory explosion
 
 class TextureManager {
  public:
-  TextureManager(Renderer* renderer);
+  TextureManager(Renderer* renderer, const string& scenario_path, const string& font_path);
   ~TextureManager();
 
  public:
@@ -19,7 +24,9 @@ class TextureManager {
   Texture* FetchTextTexture(const string&, int, Color, uint32_t = 0);
 
  private:
-  unordered_map<string, Texture*> container_;
+  string base_path_;
+  FontManager* font_manager_;
+  std::unordered_map<string, Texture*> container_;
   Texture*  dummy_texture_;
   Renderer* renderer_;
 };

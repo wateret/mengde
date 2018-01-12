@@ -5,6 +5,7 @@
 #include "core/scenario.h"
 #include "core/unit.h"
 #include "util/common.h"
+#include "util/game_env.h"
 #include "view/foundation/misc.h"
 #include "view/foundation/texture.h"
 #include "view/foundation/rect.h"
@@ -15,7 +16,8 @@
 
 FrameConfig::FrameConfig(uint16_t max_frames_sec, float speed) : max_frames_sec_(max_frames_sec), speed_(speed) {
   ASSERT(0.125f <= speed_ && speed_ <= 4.0f);
-  LOG_DEBUG("fps:%d speed:%f", max_frames_sec_, speed_);
+  LOG_DEBUG("FPS CAP : %d");
+  LOG_DEBUG("SPEED   : %fx", max_frames_sec_, speed_);
 }
 
 uint32_t FrameConfig::MsecToFrame(uint32_t ms) const {
@@ -60,10 +62,12 @@ App::App(int width, int height, uint32_t max_frames_sec)
   Rect main_rect({0, 0}, window_size_);
   main_view_ = new MainView(&main_rect, this);
 
-  scenario_ = new mengde::core::Scenario("example");
+  const string scenario_id = "example";
 
+  scenario_ = new mengde::core::Scenario(scenario_id);
   window_ = new Window("Game", width, height);
-  drawer_ = new Drawer(window_);
+  drawer_ = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString(),
+                                GameEnv::GetInstance()->GetResourcePath().ToString());
   root_view_ = new RootView(window_size_, scenario_, this);
 //  target_view_ = main_view_;
   target_view_ = root_view_;

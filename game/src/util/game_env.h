@@ -5,10 +5,10 @@
 
 class GameEnv {
  public:
-  static GameEnv* GetInstance();
-  Path GetGamePath() { return game_path_; }
-  Path GetResourcePath() { return resource_path_; }
-  Path GetScenarioPath() { return scenario_path_; }
+  static const GameEnv* GetInstance();
+  const Path& GetGamePath() const { return game_path_; }
+  const Path& GetResourcePath() const { return resource_path_; }
+  const Path& GetScenarioPath() const { return scenario_path_; }
 
  private:
   GameEnv();

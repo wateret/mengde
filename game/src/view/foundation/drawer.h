@@ -21,7 +21,7 @@ class TextureManager;
 
 class Drawer {
  public:
-  Drawer(Window* window);
+  Drawer(Window* window, const string& scenario_path, const string& resource_path);
   ~Drawer();
   Vec2D GetWindowSize() { return window_size_; }
   TextureManager* GetTextureManager() { return texture_manager_; }
@@ -31,7 +31,6 @@ class Drawer {
   void SetViewport(const Rect*);
   void ResetViewport();
   void SetOffset(Vec2D offset) { offset_ = offset; }
-  Vec2D GetOffset() { return offset_; } // FIXME Remove this method
 
   // Draw Functions
   void SetDrawColor(Color c);

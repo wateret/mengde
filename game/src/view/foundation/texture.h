@@ -2,6 +2,7 @@
 #define TEXTURE_H
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <string>
 #include "window.h"
 #include "rect.h"
@@ -14,7 +15,7 @@ class Texture {
  public:
   Texture(Renderer*, const std::string&);             // bitmap
   Texture(Renderer*, const std::string&, Color);      // bitmap with colorkey
-  Texture(Renderer*, const std::string&, int, Color, uint32_t = 0, uint32_t = 0); // string
+  Texture(Renderer*, const std::string&, TTF_Font*, Color, uint32_t = 0, uint32_t = 0); // string
   Texture(Renderer*, SDL_Surface*);
   Texture(SDL_Texture*, int, int);
   ~Texture();

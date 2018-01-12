@@ -7,16 +7,15 @@
 
 class FontManager {
  public:
+  FontManager(const string& base_path);
   ~FontManager();
   static FontManager* GetInstance();
   TTF_Font* FetchDefaultFont(int);
   TTF_Font* FetchFont(const string&, int);
 
  private:
-  FontManager(); // FontManager is a singleton
-
- private:
-  std::string default_font_name_;
+  string base_path_;
+  string default_font_name_;
   std::unordered_map<std::string, TTF_Font*> container_;
 };
 

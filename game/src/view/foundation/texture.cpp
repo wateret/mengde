@@ -1,9 +1,8 @@
 #include "texture.h"
+
 #include "misc.h"
-#include "font_manager.h"
 #include "renderer.h"
 #include "util/game_env.h"
-#include <SDL_ttf.h>
 
 Texture::Texture(Renderer* renderer, const std::string& path) {
   InitBitmap(renderer, path, false, Color(0, 0, 0));
@@ -24,14 +23,12 @@ Texture::Texture(SDL_Texture* texture, int width, int height)
 
 Texture::Texture(Renderer* renderer,
                  const std::string& text,
-                 int size,
+                 TTF_Font* font,
                  Color color,
                  uint32_t wrap,
                  uint32_t style_flags) : surface_(nullptr) {
   // Create a text texture
   // We do not keep surface_ for text textures
-  TTF_Font* font = FontManager::GetInstance()->FetchDefaultFont(size);
-
   int raw_style = style_flags;
 
   TTF_SetFontStyle(font, raw_style);
@@ -60,9 +57,7 @@ void Texture::InitBitmap(Renderer* renderer,
                 const std::string& path,
                 bool use_key,
                 Color color) {
-  // FIXME Do not use Path class(remove base path and get full path from caller instead)
-  std::string base_path = GameEnv::GetInstance()->GetScenarioPath().ToString();
-  surface_ = SDL_LoadBMP((base_path + "/" + "example" +  "/" + path).c_str()); // FIXME path hardcoded
+  surface_ = SDL_LoadBMP(path.c_str());
   if (surface_ == nullptr) {
     string msg = Misc::GetErrorMessage();
     LOG_FATAL("Unable to load image! : %s", msg.c_str());

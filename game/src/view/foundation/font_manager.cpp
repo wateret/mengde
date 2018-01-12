@@ -2,14 +2,7 @@
 #include "util/common.h"
 #include "util/game_env.h"
 
-#include <iostream>
-
-FontManager* FontManager::GetInstance() {
-  static FontManager instance;
-  return &instance;
-}
-
-FontManager::FontManager() {
+FontManager::FontManager(const string& base_path) : base_path_(base_path) {
   TTF_Init();
 
   default_font_name_ = "Literation Mono Powerline";
@@ -26,16 +19,12 @@ FontManager::~FontManager() {
 }
 
 TTF_Font* FontManager::FetchFont(const string& name, int size) {
-  UNUSED(name);
-
-  // FIXME Do not use Path class(remove base path and get full path from caller instead)
-  Path base_path = GameEnv::GetInstance()->GetResourcePath();
-  Path full_path = base_path / (default_font_name_ + ".ttf");
-  std::string key = default_font_name_ + ":" + std::to_string(size);
+  string full_path = base_path_ + "/" + name + ".ttf";
+  string key = name + ":" + std::to_string(size);
 
   auto iter = container_.find(key);
   if (iter == container_.end()) {
-    TTF_Font* font = TTF_OpenFont(full_path.ToString().c_str(), size);
+    TTF_Font* font = TTF_OpenFont(full_path.c_str(), size);
     container_[key] = font;
     return font;
   } else {

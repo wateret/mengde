@@ -1,7 +1,11 @@
 #include "texture_manager.h"
-#include "util/common.h"
 
-TextureManager::TextureManager(Renderer* renderer) : renderer_(renderer) {
+#include "util/common.h"
+#include "font_manager.h"
+
+TextureManager::TextureManager(Renderer* renderer, const string& scenario_path, const string& font_path)
+    : base_path_(scenario_path), font_manager_(new FontManager(font_path)),
+      dummy_texture_(nullptr), renderer_(renderer) {
   // Create dummy texture : a big square fully filled white
   SDL_Surface* s = SDL_CreateRGBSurface(0, 1024, 1024, 32, 0, 0, 0, 0);
   SDL_FillRect(s, NULL, SDL_MapRGB(s->format, 255, 255, 255));
@@ -14,12 +18,13 @@ TextureManager::~TextureManager() {
     delete texture;
   }
   delete dummy_texture_;
+  delete font_manager_;
 }
 
 Texture* TextureManager::FetchTexture(const string& key) {
   auto iter = container_.find(key);
   if (iter == container_.end()) {
-    Texture* texture = new Texture(renderer_, key, Color(247, 0, 255)); // XXX colorkey hardcoded
+    Texture* texture = new Texture(renderer_, base_path_ + "/" + key, Color(247, 0, 255)); // XXX colorkey hardcoded
     if (texture->Loaded()) {
       container_[key] = texture;
       return texture;
@@ -58,7 +63,7 @@ Texture* TextureManager::FetchTextTexture(const string& text,
                     string(":") + color.ToHexString();
   auto iter = container_.find(key);
   if (iter == container_.end()) {
-    Texture* texture = new Texture(renderer_, text, size, color, wrap);
+    Texture* texture = new Texture(renderer_, text, font_manager_->FetchDefaultFont(size), color, wrap);
     container_[key] = texture;
     return texture;
   } else {

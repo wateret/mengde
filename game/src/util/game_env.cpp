@@ -10,7 +10,7 @@ GameEnv::GameEnv() {
   scenario_path_ = game_path_ / "sce";
 }
 
-GameEnv* GameEnv::GetInstance() {
+const GameEnv* GameEnv::GetInstance() {
   static GameEnv instance;
   return &instance;
 }

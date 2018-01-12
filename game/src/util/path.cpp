@@ -8,7 +8,6 @@ Path::Path() : Path(string()) {
 }
 
 Path::Path(const string& path) : path_(path) {
-  LOG_DEBUG("%s", boost::filesystem::current_path().string().c_str());
 }
 
 Path::Path(const boost::filesystem::path& path) : path_(path) {

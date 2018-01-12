@@ -6,18 +6,18 @@
 #include "texture_manager.h"
 #include "view/app/app.h" // XXX Remove this depenency
 
-Drawer::Drawer(Window* window)
+Drawer::Drawer(Window* window, const string& scenario_path, const string& font_path)
     : window_size_(window->GetSize()),
       offset_(0, 0),
       viewports_() {
   renderer_ = new Renderer(window);
-  texture_manager_ = new TextureManager(renderer_);
+  texture_manager_ = new TextureManager(renderer_, scenario_path, font_path);
   viewports_.push(Viewport(Rect(0, 0, window_size_.x, window_size_.y), {0, 0}));
 }
 
 Drawer::~Drawer() {
-  delete renderer_;
   delete texture_manager_;
+  delete renderer_;
 }
 
 void Drawer::Start() {
