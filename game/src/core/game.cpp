@@ -219,7 +219,7 @@ Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
   Vec2D original_pos = unit->GetPosition();
   MoveUnit(unit, virtual_pos);
   Unit* target = nullptr;
-  stage_unit_manager_->ForEach([unit, target] (Unit* candidate) mutable {
+  stage_unit_manager_->ForEach([unit, &target] (Unit* candidate) {
     if (unit->IsHostile(candidate)) {
       if (unit->IsInRange(candidate->GetPosition())) {
         target = candidate;
