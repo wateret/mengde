@@ -6,7 +6,7 @@
 
 UnitActionView::UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv) : CompositeView(frame), game_(game), rv_(rv) {
   SetPadding(8);
-  SetBgColor(COLOR("darkgray"));
+  SetBgColor(COLOR("darkgray", 160));
   Rect btn_frame = GetActualFrame();
   btn_frame.SetH(24);
 

@@ -106,26 +106,6 @@ void UnitInfoView::SetContents(const std::string& id,
   tv_rgtbot_->SetText("");
 }
 
-void UnitInfoView::SetCoordsByUnitCoords(Vec2D unit_cell, Vec2D camera_coords, Vec2D game_frame_size) {
-  const int kCellSize = 48;
-  const Vec2D frame_size = GetFrameSize();
-  Vec2D cands[] = {(unit_cell + Vec2D(1, 0)) * kCellSize,
-                   (unit_cell + Vec2D(0, 1)) * kCellSize,
-                   (unit_cell * kCellSize - Vec2D(frame_size.x, frame_size.y - kCellSize)),
-                   (unit_cell * kCellSize - Vec2D(frame_size.x - kCellSize, frame_size.y))};
-  Rect game_frame({0, 0}, game_frame_size);
-  Vec2D res(0, 0);
-  for (auto e : cands) {
-    Vec2D calc_lt = e - camera_coords;
-    Vec2D calc_rb = calc_lt + GetFrameSize();;
-    if (game_frame.Contains(calc_lt) && game_frame.Contains(calc_rb)) {
-      res = calc_lt;
-      break;
-    }
-  }
-  SetCoords(res);
-}
-
 bool UnitInfoView::OnMouseMotionEvent(const MouseMotionEvent) {
   return false;
 }

@@ -19,7 +19,7 @@ MagicListView::MagicListView(const Rect& frame,
       item_height_(24),
       lv_magics_(nullptr),
       lv_magics_wrap_(nullptr) {
-  SetBgColor(COLOR("darkgray"));
+  SetBgColor(COLOR("darkgray", 160));
   SetPadding(LayoutHelper::kDefaultSpace);
 
   {

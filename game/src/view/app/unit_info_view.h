@@ -23,7 +23,6 @@ class UnitInfoView : public CompositeView {
   void SetUnitAttackInfo(mengde::core::Unit*, int, int);
   void SetUnit(mengde::core::Unit*);
   void SetContents(const std::string&, int, const mengde::core::HpMp&, const mengde::core::HpMp&, int = 0, int = 0);
-  void SetCoordsByUnitCoords(Vec2D, Vec2D, Vec2D);
 
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 

@@ -34,6 +34,15 @@ Vec2D View::GetActualFrameCoords() const {
   return {frame_.GetX() + padding_, frame_.GetY() + padding_};
 }
 
+void View::SetVisible(bool b) {
+  visible_ = b;
+
+  if (visible_) {
+    // To reset if there was hovered objects
+    OnMouseMotionEvent({MouseMotionEvent::Type::kOut});
+  }
+}
+
 /*
 void View::Render(Drawer* drawer) {
   if (!visible_) return;

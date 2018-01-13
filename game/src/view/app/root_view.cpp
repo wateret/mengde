@@ -23,6 +23,7 @@
 #include "core/game.h"
 #include "core/magic_list.h"
 #include "core/scenario.h"
+#include "layout_helper.h"
 
 RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
     : View(),
@@ -323,7 +324,7 @@ void RootView::SetUnitInfoViewContents(const std::string& name,
 }
 
 void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
-  unit_info_view_->SetCoordsByUnitCoords(unit, camera, GetFrameSize());
+  unit_info_view_->SetCoords(::layout::CalcPositionNearUnit(unit_info_view_->GetFrameSize(), GetFrameSize(), camera, unit));
 }
 
 void RootView::SetDialogViewVisible(bool b) {

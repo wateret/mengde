@@ -29,7 +29,7 @@ class View : public IView {
   void SetBgColor(Color c) { bg_color_ = c; }
   Color GetBgColor() { return bg_color_; }
   void SetPadding(int p) { padding_ = p; }
-  void SetVisible(bool b) { visible_ = b; }
+  void SetVisible(bool b);
   bool DelegateMouseButtonEvent(const MouseButtonEvent);
   bool DelegateMouseMotionEvent(const MouseMotionEvent);
   bool DelegateMouseWheelEvent(const MouseWheelEvent);

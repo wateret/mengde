@@ -3,6 +3,7 @@
 #include "root_view.h"
 #include "unit_action_view.h"
 #include "magic_list_view.h"
+#include "layout_helper.h"
 #include "view/app/app.h" // FIXME Remove this dependency
 #include "core/game.h"
 #include "core/cmd.h"
@@ -958,8 +959,10 @@ StateUIAction::StateUIAction(StateUI::Base base, mengde::core::Unit* unit)
 
 void StateUIAction::Enter() {
   StateUIOperable::Enter();
-  rv_->unit_action_view()->SetUnit(unit_);
-  rv_->unit_action_view()->SetVisible(true);
+  UnitActionView* unit_action_view = rv_->unit_action_view();
+  unit_action_view->SetUnit(unit_);
+  unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
+  unit_action_view->SetVisible(true);
 }
 
 void StateUIAction::Exit() {
@@ -989,8 +992,10 @@ StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, mengde::core::U
 void StateUIMagicSelection::Enter() {
   StateUIOperable::Enter();
   auto magic_list = std::make_shared<mengde::core::MagicList>(game_->GetMagicManager(), unit_);
-  rv_->magic_list_view()->SetUnitAndMagicList(unit_, magic_list);
-  rv_->magic_list_view()->SetVisible(true);
+  MagicListView* mlv = rv_->magic_list_view();
+  mlv->SetUnitAndMagicList(unit_, magic_list);
+  mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
+  mlv->SetVisible(true);
 }
 
 void StateUIMagicSelection::Exit() {
