@@ -1,7 +1,7 @@
 #ifndef UNIT_ACTION_VIEW_H_
 #define UNIT_ACTION_VIEW_H_
 
-#include "view/uifw/composite_view.h"
+#include "view/uifw/vertical_list_view.h"
 
 namespace mengde {
 namespace core {
@@ -13,7 +13,7 @@ namespace core {
 class ButtonView;
 class RootView;
 
-class UnitActionView : public CompositeView {
+class UnitActionView : public VerticalListView {
  public:
   UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv);
   void SetUnit(mengde::core::Unit* unit);
@@ -23,6 +23,7 @@ class UnitActionView : public CompositeView {
   RootView*   rv_;
   ButtonView* btn_attack_;
   ButtonView* btn_magic_;
+  ButtonView* btn_stay_;
 };
 
 #endif // UNIT_ACTION_VIEW_H_

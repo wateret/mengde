@@ -1,8 +1,6 @@
 #include "vertical_list_view.h"
 
-VerticalListView::VerticalListView(const Rect& frame) : CompositeView(frame), margin_(0) {
-  SetPadding(0);
-
+VerticalListView::VerticalListView(const Rect& frame) : CompositeView(frame), margin_(0), total_element_height_(0) {
   // Initial height must be zero, the height value from frame is ignored
   SetSize({GetFrameSize().x , 0});
 }
@@ -13,10 +11,11 @@ void VerticalListView::AddElement(View* e) {
 
   // Restriction : element's height must be equal to frame
   // TODO remove the restriction
-  ASSERT_EQ(frame_size.x, element_size.x);
+  ASSERT_EQ(GetActualFrameSize().x, element_size.x);
 
-  e->SetCoords({0, frame_size.y + margin_});   // Move the coords of frame by the element's height
-  frame_size += {0, element_size.y + margin_}; // Increment size of the frame by the element's height
+  e->SetCoords({0, total_element_height_ + margin_});   // Move the coords of frame by the element's height
+  total_element_height_ += element_size.y + margin_;
+  frame_size = {frame_size.x, total_element_height_ + GetPadding() * 2}; // Increment size of the frame by the element's height
   this->SetSize(frame_size);
 
   AddChild(e);

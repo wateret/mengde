@@ -3,20 +3,23 @@
 #include "root_view.h"
 #include "state_ui.h"
 #include "view/uifw/button_view.h"
+#include "core/cmd.h"
+#include "core/game.h"
 
-UnitActionView::UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv) : CompositeView(frame), game_(game), rv_(rv) {
-  SetPadding(8);
+UnitActionView::UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv)
+    : VerticalListView(frame), game_(game), rv_(rv) {
   SetBgColor(COLOR("darkgray", 160));
+  SetPadding(8);
   Rect btn_frame = GetActualFrame();
   btn_frame.SetH(24);
 
   btn_attack_ = new ButtonView(&btn_frame, "Attack");
-  btn_frame.SetY(btn_frame.GetY() + btn_frame.GetH());
-  AddChild(btn_attack_);
-
+  AddElement(btn_attack_);
+  SetMargin(4);
   btn_magic_ = new ButtonView(&btn_frame, "Magic");
-  btn_frame.SetY(btn_frame.GetY() + btn_frame.GetH());
-  AddChild(btn_magic_);
+  AddElement(btn_magic_);
+  btn_stay_ = new ButtonView(&btn_frame, "Stay");
+  AddElement(btn_stay_);
 }
 
 void UnitActionView::SetUnit(mengde::core::Unit* unit) {
@@ -30,6 +33,14 @@ void UnitActionView::SetUnit(mengde::core::Unit* unit) {
     if (e.IsLeftButtonUp()) {
       rv_->PushUIState(new StateUIMagicSelection({game_, rv_}, unit));
     }
+    return true;
+  });
+  btn_stay_->SetMouseButtonHandler([=] (const MouseButtonEvent e) {
+    unique_ptr<mengde::core::CmdAction> action(new mengde::core::CmdAction());
+    action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(unit, unit->GetPosition())));
+    action->SetCmdAct(unique_ptr<mengde::core::CmdStay>(new mengde::core::CmdStay(unit)));
+    game_->PushCmd(std::move(action));
+    rv_->InitUIStateMachine();
     return true;
   });
 }

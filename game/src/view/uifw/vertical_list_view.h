@@ -11,6 +11,7 @@ class VerticalListView : public CompositeView {
 
  private:
   int margin_;
+  int total_element_height_;
 };
 
 #endif // VERTICAL_LIST_VIEW_H_

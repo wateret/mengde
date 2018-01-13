@@ -894,7 +894,7 @@ bool StateUITargeting::OnMouseButtonEvent(const MouseButtonEvent e) {
         if (atk->IsInRange(map_pos)) {
           if (atk->IsHostile(def)) {
             unique_ptr<mengde::core::CmdAction> action(new mengde::core::CmdAction());
-            action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(atk, unit_->GetPosition())));
+            action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(atk, atk->GetPosition())));
             action->SetCmdAct(unique_ptr<mengde::core::CmdBasicAttack>(new mengde::core::CmdBasicAttack(atk, def, mengde::core::CmdBasicAttack::Type::kActive)));
             game_->PushCmd(std::move(action));
             rv_->InitUIStateMachine();
@@ -907,7 +907,7 @@ bool StateUITargeting::OnMouseButtonEvent(const MouseButtonEvent e) {
         if (atk->IsInRange(map_pos, magic->GetRange())) {
           if (atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
             unique_ptr<mengde::core::CmdAction> action(new mengde::core::CmdAction());
-            action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(atk, unit_->GetPosition())));
+            action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(atk, atk->GetPosition())));
             action->SetCmdAct(unique_ptr<mengde::core::CmdMagic>(new mengde::core::CmdMagic(atk, def, magic)));
             game_->PushCmd(std::move(action));
             rv_->InitUIStateMachine();
