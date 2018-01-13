@@ -953,12 +953,11 @@ bool StateUITargeting::OnMouseMotionEvent(const MouseMotionEvent e) {
 // StateUIAction
 
 StateUIAction::StateUIAction(StateUI::Base base, mengde::core::Unit* unit)
-    : StateUIOperable(base),
+    : StateUI(base),
       unit_(unit) {
 }
 
 void StateUIAction::Enter() {
-  StateUIOperable::Enter();
   UnitActionView* unit_action_view = rv_->unit_action_view();
   unit_action_view->SetUnit(unit_);
   unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
@@ -967,7 +966,6 @@ void StateUIAction::Enter() {
 
 void StateUIAction::Exit() {
   rv_->unit_action_view()->SetVisible(false);
-  StateUIOperable::Exit();
 }
 
 void StateUIAction::Render(Drawer* drawer) {
@@ -985,12 +983,11 @@ bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
 // StateUIMagicSelection
 
 StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, mengde::core::Unit* unit)
-    : StateUIOperable(base),
+    : StateUI(base),
       unit_(unit) {
 }
 
 void StateUIMagicSelection::Enter() {
-  StateUIOperable::Enter();
   auto magic_list = std::make_shared<mengde::core::MagicList>(game_->GetMagicManager(), unit_);
   MagicListView* mlv = rv_->magic_list_view();
   mlv->SetUnitAndMagicList(unit_, magic_list);
@@ -1000,7 +997,6 @@ void StateUIMagicSelection::Enter() {
 
 void StateUIMagicSelection::Exit() {
   rv_->magic_list_view()->SetVisible(false);
-  StateUIOperable::Exit();
 }
 
 void StateUIMagicSelection::Render(Drawer* drawer) {

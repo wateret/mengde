@@ -310,7 +310,7 @@ class StateUIDamaged : public StateUI {
 
 // StateUIAction
 
-class StateUIAction : public StateUIOperable {
+class StateUIAction : public StateUI {
  public:
   StateUIAction(StateUI::Base, mengde::core::Unit*);
   virtual void Enter() override;
@@ -327,7 +327,7 @@ class StateUIAction : public StateUIOperable {
 
 // StateUIMagicSelection
 
-class StateUIMagicSelection : public StateUIOperable {
+class StateUIMagicSelection : public StateUI {
  public:
   StateUIMagicSelection(StateUI::Base, mengde::core::Unit*);
   virtual void Enter() override;
