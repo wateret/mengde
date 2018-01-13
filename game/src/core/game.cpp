@@ -9,7 +9,7 @@
 #include "formulae.h"
 #include "stage_unit_manager.h"
 #include "util/game_env.h"
-#include "util/path_tree.h"
+#include "core/path_tree.h"
 #include "util/path.h"
 #include "lua/lua_script.h"
 

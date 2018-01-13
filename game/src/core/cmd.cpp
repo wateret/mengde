@@ -3,7 +3,7 @@
 #include "formulae.h"
 #include "game.h"
 #include "magic.h"
-#include "util/path_tree.h"
+#include "core/path_tree.h"
 #include "lua/lua_script.h"
 
 namespace mengde {

@@ -1,17 +1,12 @@
 #ifndef PATH_TREE_H_
 #define PATH_TREE_H_
 
-#include "common.h"
 #include <vector>
 
+#include "util/common.h"
 
-// PathTree - a tree data structure for saving path
-//
-// Each PathTree node has a pointer to its parent but no children list.
-// PathTree class has a node list that contains the entire nodes
-// which is used for iterating all nodes and freeing when destruction.
-// This is a useful data structure for saving path
-// from Dijkstra's shortest path algorithm.
+namespace mengde {
+namespace core {
 
 class PathTreeNode {
  public:
@@ -25,6 +20,14 @@ class PathTreeNode {
   PathTreeNode* parent_;
 };
 
+
+// PathTree is a tree data structure for saving unit's path
+//
+// Each PathTree node has a pointer to its parent but no children list.
+// PathTree class has a node list that contains the entire nodes
+// which is used for iterating all nodes and freeing when destruction.
+// This is a useful data structure for saving path
+// from Dijkstra's shortest path algorithm.
 
 class PathTree {
  public:
@@ -42,5 +45,8 @@ class PathTree {
   PathTreeNode* root_;
   std::vector<PathTreeNode*> node_list_;
 };
+
+} // namespace core
+} // namespace mengde
 
 #endif

@@ -4,14 +4,13 @@
 #include "util/common.h"
 #include "resource_manager.h"
 
-class PathTree;
-
 namespace mengde {
 namespace core {
 
 class Terrain;
 class Cell;
 class Unit;
+class PathTree;
 
 class Map {
  public:

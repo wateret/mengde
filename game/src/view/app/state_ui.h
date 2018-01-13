@@ -9,8 +9,9 @@
 namespace mengde {
 namespace core {
   class Game;
-  class Unit;
   class Magic;
+  class PathTree;
+  class Unit;
 }
 }
 
@@ -132,11 +133,9 @@ class StateUIView : public StateUIOperable {
 
 // StateUIUnitSelected
 
-class PathTree;
-
 class StateUIUnitSelected : public StateUIOperable {
  public:
-  StateUIUnitSelected(StateUI::Base, mengde::core::Unit*, PathTree*);
+  StateUIUnitSelected(StateUI::Base, mengde::core::Unit*, mengde::core::PathTree*);
   ~StateUIUnitSelected();
   std::vector<Vec2D> GetPathToRoot(Vec2D pos);
   mengde::core::Unit* GetUnit() { return unit_; }
@@ -152,7 +151,7 @@ class StateUIUnitSelected : public StateUIOperable {
 
  private:
   mengde::core::Unit* unit_;
-  PathTree* pathtree_;
+  mengde::core::PathTree* pathtree_;
   Vec2D origin_coords_;
 };
 

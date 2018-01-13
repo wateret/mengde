@@ -1,5 +1,8 @@
 #include "path_tree.h"
 
+namespace mengde {
+namespace core {
+
 // PathTreeNode
 
 PathTreeNode::PathTreeNode(Vec2D data, PathTreeNode* parent)
@@ -14,7 +17,7 @@ PathTree::PathTree(Vec2D root_data) {
   node_list_.push_back(root_);
 }
 
-PathTree::~PathTree() 
+PathTree::~PathTree()
 {
   for (auto itr : node_list_) {
     delete itr;
@@ -56,3 +59,5 @@ PathTreeNode* PathTree::FindNode(Vec2D vec) {
   return NULL;
 }
 
+} // namespace core
+} // namespace mengde

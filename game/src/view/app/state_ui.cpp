@@ -8,7 +8,7 @@
 #include "core/map.h"
 #include "core/unit.h"
 #include "core/magic.h"
-#include "util/path_tree.h"
+#include "core/path_tree.h"
 #include "view/foundation/drawer.h"
 #include "view/foundation/misc.h"
 #include "view/foundation/texture_manager.h"
@@ -279,7 +279,7 @@ bool StateUIView::OnMouseButtonEvent(const MouseButtonEvent e) {
         if (unit->IsDoneAction()) {
           LOG_INFO("The chosen unit is already done his action");
         } else {
-          PathTree* pathtree = map->FindMovablePath(unit);
+          mengde::core::PathTree* pathtree = map->FindMovablePath(unit);
           rv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit, pathtree));
         }
       } else {
@@ -308,7 +308,7 @@ bool StateUIView::OnMouseMotionEvent(const MouseMotionEvent e) {
 
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base,
                                          mengde::core::Unit* unit,
-                                         PathTree* pathtree)
+                                         mengde::core::PathTree* pathtree)
     : StateUIOperable(base), unit_(unit), pathtree_(pathtree), origin_coords_(unit_->GetPosition()) {
 }
 
