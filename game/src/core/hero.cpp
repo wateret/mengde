@@ -12,15 +12,14 @@ Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
       level_(level, 0),
       hero_attr_(hero_tpl->GetHeroStat()),
       unit_attr_(),
+      unit_pure_attr_(),
       hpmp_() {
-  unit_attr_ = CalcUnitStat();
-  hpmp_ = CalcHpMp();
   UpdateStat();
 }
 
 Hero::Hero(const Hero& hero)
     : hero_tpl_(hero.hero_tpl_), equipment_set_(hero.GetEquipmentSet()->Clone(this)), level_(hero.level_),
-      hero_attr_(hero.hero_attr_), unit_attr_(hero.unit_attr_), hpmp_(hero.hpmp_) {
+      hero_attr_(hero.hero_attr_), unit_attr_(hero.unit_attr_), unit_pure_attr_(hero.unit_pure_attr_),  hpmp_(hero.hpmp_) {
 }
 
 Hero::~Hero() {
@@ -57,8 +56,7 @@ const Attribute& Hero::GetHeroStatBase() const {
 
 void Hero::LevelUp() {
   level_.level++;
-  unit_attr_ = CalcUnitStat();
-  hpmp_ = CalcHpMp();
+  UpdateStat();
 }
 
 void Hero::PutOn(const Equipment* equipment) {
@@ -75,13 +73,15 @@ HpMp Hero::CalcHpMp() const {
   return xtat;
 }
 
-Attribute Hero::CalcUnitStat() const {
+Attribute Hero::CalcUnitPureStat() const {
   Attribute unit_stat = ((hero_attr_ / 2) + ((100 + 10 * (GetClass()->GetStatGrade() - 1)) * level_.level * hero_attr_) / 2000);
   return unit_stat;
 }
 
 void Hero::UpdateStat() {
-  unit_attr_ = CalcUnitStat();
+  hpmp_ = CalcHpMp();
+  unit_pure_attr_ = CalcUnitPureStat();
+  unit_attr_ = unit_pure_attr_;
   { // FIXME code copied from Unit
     Attribute addends = equipment_set_->CalcAddends();
     Attribute multipliers = equipment_set_->CalcMultipliers();

@@ -68,7 +68,7 @@ std::string Unit::GetBitmapPath() {
 }
 
 const Attribute& Unit::GetOriginalStat() const {
-  return hero_->GetUnitStat();
+  return hero_->GetUnitPureStat();
 }
 
 const HpMp& Unit::GetOriginalHpMp() const {
@@ -76,7 +76,7 @@ const HpMp& Unit::GetOriginalHpMp() const {
 }
 
 void Unit::UpdateStat() {
-  current_attr_ = hero_->CalcUnitStat();
+  current_attr_ = hero_->GetUnitPureStat();
   {
     Attribute addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
     Attribute multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();

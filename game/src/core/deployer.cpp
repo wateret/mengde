@@ -76,9 +76,19 @@ uint32_t Deployer::GetNextSelectableNo() {
   return next;
 }
 
+vector<DeployElement> Deployer::AsOrderedVector(AssignmentContainer& container) {
+  vector<DeployElement> ordered(container.size());
+  std::for_each(container.begin(), container.end(), [&] (const DeployElement& e) {
+    ordered[e.no - 1] = e;
+  });
+  return ordered;
+}
+
 void Deployer::ForEach(ForEachFn fn) {
-  std::for_each(unselectable_assignment_.begin(), unselectable_assignment_.end(), fn);
-  std::for_each(selectable_assignment_.begin(), selectable_assignment_.end(), fn);
+  auto unselectables_ordered = AsOrderedVector(unselectable_assignment_);
+  auto selectables_ordered = AsOrderedVector(selectable_assignment_);
+  std::for_each(unselectables_ordered.begin(), unselectables_ordered.end(), fn);
+  std::for_each(selectables_ordered.begin(), selectables_ordered.end(), fn);
 }
 
 Vec2D Deployer::GetPosition(const shared_ptr<const Hero>& hero) {

@@ -16,6 +16,7 @@ struct DeployElement {
   shared_ptr<const Hero> hero;
   uint32_t no;
 
+  DeployElement() : hero(nullptr), no(0) {}
   DeployElement(const shared_ptr<const Hero>& hero, uint32_t no) : hero(hero), no(no) {}
 };
 
@@ -79,6 +80,7 @@ class Deployer {
 
  private:
   std::pair<Type, DeployElement> FindImpl(const shared_ptr<const Hero>& hero);
+  static vector<DeployElement> AsOrderedVector(AssignmentContainer&);
 
  private:
   vector<DeployInfoUnselectable> unselectable_info_list_;

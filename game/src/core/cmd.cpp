@@ -430,13 +430,13 @@ CmdPlayAI::CmdPlayAI() : Cmd() {
 
 unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
 //  const Force force = turn_.GetForce();
-  vector<Unit*> units = game->GetCurrentUnits();
+  vector<Unit*> units = game->GetCurrentTurnUnits();
   LOG_DEBUG("units: %d", units.size());
   Unit* unit = nullptr;
   // Find first availible unit
   for (vector<Unit*>::iterator itr = units.begin(); itr != units.end(); itr++) {
     Unit* u = *itr;
-    if (!u->IsDoneAction()) {
+    if (!u->IsDead() && !u->IsDoneAction()) {
       unit = u;
       break;
     }

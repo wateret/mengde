@@ -196,7 +196,7 @@ uint16_t Game::GetTurnLimit() const {
   return turn_.GetLimit();
 }
 
-vector<Unit*> Game::GetCurrentUnits() {
+vector<Unit*> Game::GetCurrentTurnUnits() {
   vector<Unit*> units;
   ForEachUnit([this, &units] (Unit* u) {
     if (this->IsCurrentTurn(u)) {
@@ -266,7 +266,7 @@ bool Game::CheckStatus() {
 uint32_t Game::GetNumEnemiesAlive() {
   uint32_t count = 0;
   ForEachUnit([=, &count] (Unit* u) {
-    if (u->GetForce() == Force::kEnemy) {
+    if (!u->IsDead() && u->GetForce() == Force::kEnemy) {
       count++;
     }
   });
@@ -276,7 +276,7 @@ uint32_t Game::GetNumEnemiesAlive() {
 uint32_t Game::GetNumOwnsAlive() {
   uint32_t count = 0;
   ForEachUnit([=, &count] (Unit* u) {
-    if (u->GetForce() == Force::kOwn) {
+    if (!u->IsDead() && u->GetForce() == Force::kOwn) {
       count++;
     }
   });

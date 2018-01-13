@@ -1,6 +1,7 @@
 #include "unit_over_view.h"
 
 #include "core/unit.h"
+#include "util/path.h"
 #include "view/uifw/gauge_view.h"
 #include "view/uifw/image_view.h"
 #include "view/uifw/text_view.h"
@@ -91,6 +92,6 @@ void UnitOverView::OnUnitUpdate() {
     gv_stats_[j]->SetMaxVal(400);
     gv_stats_[j]->SetExtVal(cur_attr.GetValueByIndex(i) - ori_attr.GetValueByIndex(i));
   }
-  string portrait_path = "portrait/" + unit_->GetId() + ".bmp";
-  iv_portrait_->SetPath(portrait_path);
+  Path portrait_path = Path("portrait") / (unit_->GetId() + ".bmp");
+  iv_portrait_->SetPath(portrait_path.ToString());
 }

@@ -32,13 +32,13 @@ class Hero : public IEquipper {
   uint16_t GetExp()   const { return level_.exp; }
   void     GainExp(uint16_t exp) { level_.exp += exp; }
   const Attribute& GetUnitStat() const { return unit_attr_; }
+  const Attribute& GetUnitPureStat() const { return unit_pure_attr_; }
   const HpMp& GetHpMp()     const { return hpmp_; }
   void        LevelUp();
   void        PutOn(const Equipment*);
 
   HpMp CalcHpMp() const;
-  Attribute CalcUnitStat() const;
-  Attribute CalcPureUnitStat() const;
+  Attribute CalcUnitPureStat() const;
   void UpdateStat() override;
 
  private:
@@ -47,6 +47,7 @@ class Hero : public IEquipper {
   Level     level_;
   Attribute hero_attr_;
   Attribute unit_attr_;
+  Attribute unit_pure_attr_;
   HpMp      hpmp_;
 };
 
