@@ -9,6 +9,7 @@
 #include "view/uifw/modal_dialog_view.h"
 #include "view/uifw/scroll_view.h"
 #include "deploy_view.h"
+#include "unit_action_view.h"
 #include "unit_info_view.h"
 #include "unit_list_view.h"
 #include "unit_view.h"
@@ -37,6 +38,7 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
       terrain_info_view_(nullptr),
       unit_list_view_(nullptr),
       equipment_select_view_(nullptr),
+      unit_action_view_(nullptr),
       ui_state_machine_(new StateUIView({game_, this})),
       reserved_callbacks_(),
       mouse_coords_(-1, -1),
@@ -130,6 +132,13 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
     unit_list_view_ = new UnitListView(frame, game_->GetCurrentUnits());
     unit_list_view_->SetVisible(false);
     ui_views_->AddChild(unit_list_view_);
+  }
+
+  { // Initialize unit_action_view_
+    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {150, 150}, LayoutHelper::kAlignLftTop);
+    unit_action_view_ = new UnitActionView(frame, game_, this);
+    unit_action_view_->SetVisible(false);
+    ui_views_->AddChild(unit_action_view_);
   }
 }
 
@@ -278,15 +287,6 @@ void RootView::InitUIStateMachine() {
 
 int RootView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
   return (frame_count_ / frames_per_sprite) % num_sprites;
-}
-
-void RootView::ShowMagicListView(mengde::core::Unit* unit) {
-  magic_list_view_->SetUnitAndMagicList(unit, std::make_shared<mengde::core::MagicList>(game_->GetMagicManager(), unit));
-  magic_list_view_->SetVisible(true);
-}
-
-void RootView::HideMagicListView() {
-  magic_list_view_->SetVisible(false);
 }
 
 void RootView::SetControlViewTurnText(int turn_current, int turn_limit) {

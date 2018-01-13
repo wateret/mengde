@@ -68,7 +68,7 @@ void MagicListView::SetUnitAndMagicList(mengde::core::Unit* unit, shared_ptr<men
     ButtonView* button = new ButtonView(&button_frame, name);
     button->SetMouseButtonHandler([game, rv, unit, id] (const MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
-        rv->PushUIState(new StateUIAction({game, rv}, unit, id));
+        rv->PushUIState(new StateUITargeting({game, rv}, unit, id));
         return true;
       }
       return false;

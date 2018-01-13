@@ -27,6 +27,7 @@ class UnitDialogView;
 class ControlView;
 class ModalDialogView;
 class MagicListView;
+class UnitActionView;
 class UnitInfoView;
 class UnitListView;
 class TerrainInfoView;
@@ -47,8 +48,6 @@ class RootView : public View {
   void MoveCameraY(int d);
 
   // View wrappers
-  void ShowMagicListView(mengde::core::Unit* unit);
-  void HideMagicListView();
   void SetControlViewTurnText(int, int);
   void SetUnitViewVisible(bool);
   void SetUnitViewUnit(mengde::core::Unit*);
@@ -67,6 +66,8 @@ class RootView : public View {
   void SetTerrainInfoViewText(const string&);
   void SetUnitListViewVisible(bool);
   void SetUnitListViewUnit(mengde::core::Unit* unit);
+  MagicListView* magic_list_view() { return magic_list_view_; }
+  UnitActionView* unit_action_view() { return unit_action_view_; }
 
   void CenterCamera(Vec2D);
   void EndGame();
@@ -105,6 +106,7 @@ class RootView : public View {
   TerrainInfoView*       terrain_info_view_;
   UnitListView*          unit_list_view_;
   EquipmentSelectView*   equipment_select_view_;
+  UnitActionView*        unit_action_view_;
   StateMachine<StateUI*> ui_state_machine_;
   queue<NextFrameCallback> reserved_callbacks_;
   Vec2D mouse_coords_;

@@ -312,8 +312,41 @@ class StateUIDamaged : public StateUI {
 
 class StateUIAction : public StateUIOperable {
  public:
-  StateUIAction(StateUI::Base, mengde::core::Unit*, const string& = "basic_attack");
-  ~StateUIAction();
+  StateUIAction(StateUI::Base, mengde::core::Unit*);
+  virtual void Enter() override;
+  virtual void Exit() override;
+  virtual void Render(Drawer*) override;
+  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
+#ifdef DEBUG
+  virtual string GetStateID() const override { return "StateUIAction"; }
+#endif
+
+ private:
+  mengde::core::Unit* unit_;
+};
+
+// StateUIMagicSelection
+
+class StateUIMagicSelection : public StateUIOperable {
+ public:
+  StateUIMagicSelection(StateUI::Base, mengde::core::Unit*);
+  virtual void Enter() override;
+  virtual void Exit() override;
+  virtual void Render(Drawer*) override;
+  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
+#ifdef DEBUG
+  virtual string GetStateID() const override { return "StateUIMagicSelection"; }
+#endif
+
+ private:
+  mengde::core::Unit* unit_;
+};
+
+// StateUITargeting
+
+class StateUITargeting : public StateUIOperable {
+ public:
+  StateUITargeting(StateUI::Base, mengde::core::Unit*, const string& = "basic_attack");
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -321,7 +354,7 @@ class StateUIAction : public StateUIOperable {
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 #ifdef DEBUG
-  virtual string GetStateID() const override { return "StateUIAction"; }
+  virtual string GetStateID() const override { return "StateUITargeting"; }
 #endif
 
  private:

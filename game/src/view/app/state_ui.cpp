@@ -1,6 +1,8 @@
 #include "state_ui.h"
 
 #include "root_view.h"
+#include "unit_action_view.h"
+#include "magic_list_view.h"
 #include "view/app/app.h" // FIXME Remove this dependency
 #include "core/game.h"
 #include "core/cmd.h"
@@ -8,6 +10,7 @@
 #include "core/map.h"
 #include "core/unit.h"
 #include "core/magic.h"
+#include "core/magic_list.h"
 #include "core/path_tree.h"
 #include "view/foundation/drawer.h"
 #include "view/foundation/misc.h"
@@ -823,9 +826,9 @@ void StateUIDamaged::Update() {
 void StateUIDamaged::Render(Drawer*) {
 }
 
-// StateUIAction
+// StateUITargeting
 
-StateUIAction::StateUIAction(StateUI::Base base,
+StateUITargeting::StateUITargeting(StateUI::Base base,
                              mengde::core::Unit* unit,
                              const string& magic_id)
     : StateUIOperable(base),
@@ -848,25 +851,16 @@ StateUIAction::StateUIAction(StateUI::Base base,
   frame.Move(frame.GetW() + LayoutHelper::kDefaultSpace, 0);
 }
 
-StateUIAction::~StateUIAction() {
-}
-
-void StateUIAction::Enter() {
+void StateUITargeting::Enter() {
   StateUIOperable::Enter();
-  if (is_basic_attack_) {
-    rv_->ShowMagicListView(unit_);
-  }
 }
 
-void StateUIAction::Exit() {
-  if (is_basic_attack_) {
-    rv_->HideMagicListView();
-  }
+void StateUITargeting::Exit() {
   rv_->SetUnitInfoViewVisible(false);
   StateUIOperable::Exit();
 }
 
-void StateUIAction::Render(Drawer* drawer) {
+void StateUITargeting::Render(Drawer* drawer) {
 
   // Show Attack Range
   ASSERT(range_itr_ != NULL);
@@ -884,11 +878,11 @@ void StateUIAction::Render(Drawer* drawer) {
   StateUIOperable::Render(drawer);
 }
 
-void StateUIAction::Update() {
+void StateUITargeting::Update() {
   StateUIOperable::Update();
 }
 
-bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool StateUITargeting::OnMouseButtonEvent(const MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
     Vec2D map_pos = GetCursorCell();
     mengde::core::Map* map = game_->GetMap();
@@ -929,7 +923,7 @@ bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
   return true;
 }
 
-bool StateUIAction::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool StateUITargeting::OnMouseMotionEvent(const MouseMotionEvent e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
   mengde::core::Map* map = game_->GetMap();
@@ -952,6 +946,67 @@ bool StateUIAction::OnMouseMotionEvent(const MouseMotionEvent e) {
     rv_->SetUnitInfoViewCoordsByUnitCoords(unit_target->GetPosition(), rv_->GetCameraCoords());
   }
   rv_->SetUnitInfoViewVisible(unit_in_cell);
+  return true;
+}
+
+// StateUIAction
+
+StateUIAction::StateUIAction(StateUI::Base base, mengde::core::Unit* unit)
+    : StateUIOperable(base),
+      unit_(unit) {
+}
+
+void StateUIAction::Enter() {
+  StateUIOperable::Enter();
+  rv_->unit_action_view()->SetUnit(unit_);
+  rv_->unit_action_view()->SetVisible(true);
+}
+
+void StateUIAction::Exit() {
+  rv_->unit_action_view()->SetVisible(false);
+  StateUIOperable::Exit();
+}
+
+void StateUIAction::Render(Drawer* drawer) {
+  drawer->SetDrawColor(Color(0, 255, 0, 128));
+  drawer->BorderCell(unit_->GetPosition(), 4);
+}
+
+bool StateUIAction::OnMouseButtonEvent(const MouseButtonEvent e) {
+  if (e.IsRightButtonUp()) {
+    rv_->PopUIState();
+  }
+  return true;
+}
+
+// StateUIMagicSelection
+
+StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, mengde::core::Unit* unit)
+    : StateUIOperable(base),
+      unit_(unit) {
+}
+
+void StateUIMagicSelection::Enter() {
+  StateUIOperable::Enter();
+  auto magic_list = std::make_shared<mengde::core::MagicList>(game_->GetMagicManager(), unit_);
+  rv_->magic_list_view()->SetUnitAndMagicList(unit_, magic_list);
+  rv_->magic_list_view()->SetVisible(true);
+}
+
+void StateUIMagicSelection::Exit() {
+  rv_->magic_list_view()->SetVisible(false);
+  StateUIOperable::Exit();
+}
+
+void StateUIMagicSelection::Render(Drawer* drawer) {
+  drawer->SetDrawColor(Color(0, 255, 0, 128));
+  drawer->BorderCell(unit_->GetPosition(), 4);
+}
+
+bool StateUIMagicSelection::OnMouseButtonEvent(const MouseButtonEvent e) {
+  if (e.IsRightButtonUp()) {
+    rv_->PopUIState();
+  }
   return true;
 }
 
