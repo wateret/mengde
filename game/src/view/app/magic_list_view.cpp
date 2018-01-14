@@ -77,3 +77,10 @@ void MagicListView::SetUnitAndMagicList(mengde::core::Unit* unit, shared_ptr<men
   }
 }
 
+bool MagicListView::OnMouseButtonEvent(const MouseButtonEvent e) {
+  // Refuse to handle RightButtonUp
+  if (e.IsRightButtonUp()) {
+    return false;
+  }
+  return CompositeView::OnMouseButtonEvent(e);
+}

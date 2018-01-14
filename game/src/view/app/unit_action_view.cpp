@@ -44,3 +44,11 @@ void UnitActionView::SetUnit(mengde::core::Unit* unit) {
     return true;
   });
 }
+
+bool UnitActionView::OnMouseButtonEvent(const MouseButtonEvent e) {
+  // Refuse to handle RightButtonUp
+  if (e.IsRightButtonUp()) {
+    return false;
+  }
+  return CompositeView::OnMouseButtonEvent(e);
+}

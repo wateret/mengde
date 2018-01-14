@@ -56,14 +56,11 @@ class RootView : public View {
   void SetUnitInfoViewContents(const std::string&, int, const mengde::core::HpMp&, const mengde::core::HpMp&, int, int);
   void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
   void SetUnitInfoViewVisible(bool);
-  void SetUnitDialogViewVisible(bool);
-  bool IsUnitDialogViewVisible();
-  void SetUnitDialogViewText(const string&);
-  void SetUnitDialogViewUnit(mengde::core::Unit*);
   void SetTerrainInfoViewVisible(bool);
   void SetTerrainInfoViewText(const string&);
   void SetUnitListViewVisible(bool);
   void SetUnitListViewUnit(mengde::core::Unit* unit);
+  UnitDialogView* unit_dialog_view() { return unit_dialog_view_; }
   ModalDialogView* dialog_view() { return dialog_view_; }
   MagicListView* magic_list_view() { return magic_list_view_; }
   UnitActionView* unit_action_view() { return unit_action_view_; }

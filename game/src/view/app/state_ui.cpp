@@ -2,6 +2,7 @@
 
 #include "root_view.h"
 #include "unit_action_view.h"
+#include "unit_dialog_view.h"
 #include "magic_list_view.h"
 #include "layout_helper.h"
 #include "view/app/app.h" // FIXME Remove this dependency
@@ -1050,17 +1051,20 @@ StateUISpeak::StateUISpeak(StateUI::Base base, mengde::core::Unit* unit, const s
 }
 
 void StateUISpeak::Enter() {
-  rv_->SetUnitDialogViewUnit(unit_);
-  rv_->SetUnitDialogViewText(words_);
-  rv_->SetUnitDialogViewVisible(true);
+  UnitDialogView* unit_dialog_view = rv_->unit_dialog_view();
+  unit_dialog_view->SetUnit(unit_);
+  unit_dialog_view->SetText(words_);
+  /* FIXME Introduce ModalView as a decorator then we can uncomment this */
+//  unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(unit_dialog_view->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
+  unit_dialog_view->SetVisible(true);
 }
 
 void StateUISpeak::Exit() {
-  rv_->SetUnitDialogViewVisible(false);
+  rv_->unit_dialog_view()->SetVisible(false);
 }
 
 void StateUISpeak::Update() {
-  if (!rv_->IsUnitDialogViewVisible()) {
+  if (!rv_->unit_dialog_view()->IsVisible()) {
     rv_->PopUIState();
   }
 }

@@ -327,28 +327,12 @@ void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
   unit_info_view_->SetCoords(::layout::CalcPositionNearUnit(unit_info_view_->GetFrameSize(), GetFrameSize(), camera, unit));
 }
 
-void RootView::SetUnitDialogViewVisible(bool b) {
-  unit_dialog_view_->SetVisible(b);
-}
-
 void RootView::SetTerrainInfoViewVisible(bool b) {
   terrain_info_view_->SetVisible(b);
 }
 
 void RootView::SetTerrainInfoViewText(const string& s) {
   terrain_info_view_->SetText(s);
-}
-
-bool RootView::IsUnitDialogViewVisible() {
-  return unit_dialog_view_->IsVisible();
-}
-
-void RootView::SetUnitDialogViewText(const string& s) {
-  unit_dialog_view_->SetText(s);
-}
-
-void RootView::SetUnitDialogViewUnit(mengde::core::Unit* u) {
-  unit_dialog_view_->SetUnit(u);
 }
 
 void RootView::SetUnitListViewVisible(bool b) {

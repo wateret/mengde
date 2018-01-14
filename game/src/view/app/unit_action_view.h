@@ -17,6 +17,7 @@ class UnitActionView : public VerticalListView {
  public:
   UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv);
   void SetUnit(mengde::core::Unit* unit);
+  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
 
  private:
   mengde::core::Game* game_;

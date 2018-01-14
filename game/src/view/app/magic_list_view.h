@@ -24,6 +24,7 @@ class MagicListView : public CompositeView {
   MagicListView(const Rect&, mengde::core::Game* const, RootView* const);
   ~MagicListView();
   void SetUnitAndMagicList(mengde::core::Unit*, shared_ptr<mengde::core::MagicList>);
+  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
 
  private:
   void Cleanup();
