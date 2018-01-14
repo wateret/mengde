@@ -396,8 +396,12 @@ class StateUISpeak : public StateUI {
 
 class StateUIEnd : public StateUI {
  public:
-  StateUIEnd(StateUI::Base);
+  StateUIEnd(StateUI::Base, bool is_victory);
   virtual void Enter() override;
+  virtual void Update() override;
+
+ private:
+  bool is_victory_;
 };
 
 #endif

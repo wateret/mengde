@@ -327,14 +327,6 @@ void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
   unit_info_view_->SetCoords(::layout::CalcPositionNearUnit(unit_info_view_->GetFrameSize(), GetFrameSize(), camera, unit));
 }
 
-void RootView::SetDialogViewVisible(bool b) {
-  dialog_view_->SetVisible(b);
-}
-
-void RootView::SetDialogViewText(const string& s) {
-  dialog_view_->SetText(s);
-}
-
 void RootView::SetUnitDialogViewVisible(bool b) {
   unit_dialog_view_->SetVisible(b);
 }
@@ -368,6 +360,6 @@ void RootView::SetUnitListViewUnit(mengde::core::Unit* unit) {
 }
 
 void RootView::EndGame() {
-  app_->EndGame();
+  NextFrame([=] () { app_->EndGame(); });
 }
 

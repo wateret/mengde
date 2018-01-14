@@ -259,9 +259,13 @@ class CmdGameVictory : public Cmd {
 
 class CmdGameEnd : public Cmd {
  public:
-  CmdGameEnd();
+  CmdGameEnd(bool is_victory);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdGameEnd; }
+  bool is_victory() const { return is_victory_; }
+
+ private:
+  bool is_victory_;
 };
 
 class CmdSpeak : public CmdOneUnit {

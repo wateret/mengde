@@ -17,6 +17,7 @@
 #include "view/foundation/misc.h"
 #include "view/foundation/texture_manager.h"
 #include "view/foundation/texture_animator.h"
+#include "view/uifw/modal_dialog_view.h"
 
 // StateUI
 
@@ -119,7 +120,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     }
     case mengde::core::Cmd::Op::kCmdGameEnd: {
       const mengde::core::CmdGameEnd* c = DYNAMIC_CAST_CHECK(mengde::core::CmdGameEnd);
-      return new StateUIEnd(WrapBase());
+      return new StateUIEnd(WrapBase(), c->is_victory());
     }
 
     default:
@@ -1028,12 +1029,13 @@ void StateUINextTurn::Render(Drawer*) {
 }
 
 void StateUINextTurn::Enter() {
-  rv_->SetDialogViewText("End Turn");
-  rv_->SetDialogViewVisible(true);
+  ModalDialogView* modal_dialog_view = rv_->dialog_view();
+  modal_dialog_view->SetText("End Turn");
+  modal_dialog_view->SetVisible(true);
 }
 
 void StateUINextTurn::Exit() {
-  rv_->SetDialogViewVisible(false);
+  rv_->dialog_view()->SetVisible(false);
   RootView* rv = rv_;
   mengde::core::Game* game = game_;
   rv_->NextFrame([rv, game] () {
@@ -1073,10 +1075,18 @@ bool StateUISpeak::OnMouseButtonEvent(const MouseButtonEvent e) {
 
 // StateUIEnd
 
-StateUIEnd::StateUIEnd(StateUI::Base base) : StateUI(base) {
+StateUIEnd::StateUIEnd(StateUI::Base base, bool is_victory) : StateUI(base), is_victory_(is_victory) {
 }
 
 void StateUIEnd::Enter() {
-  rv_->EndGame();
+  ModalDialogView* modal_dialog_view = rv_->dialog_view();
+  modal_dialog_view->SetText(is_victory_ ? "Victory" : "Defeat");
+  modal_dialog_view->SetVisible(true);
 }
 
+void StateUIEnd::Update() {
+  ModalDialogView* modal_dialog_view = rv_->dialog_view();
+  if (modal_dialog_view->IsVisible() == false) {
+    rv_->EndGame();
+  }
+}
