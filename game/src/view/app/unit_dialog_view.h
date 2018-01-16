@@ -21,12 +21,10 @@ class UnitDialogView : public CompositeView {
 
  private:
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
 
  private:
   string         message_;
   mengde::core::Unit*          unit_; // FIXME Do we really need this?
-  CompositeView* frame_view_;
   ImageView*     iv_portrait_;
   TextView*      tv_name_;
   TextView*      tv_message_;

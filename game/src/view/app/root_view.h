@@ -26,6 +26,7 @@ class UnitView;
 class UnitDialogView;
 class ControlView;
 class ModalDialogView;
+class ModalView;
 class MagicListView;
 class UnitActionView;
 class UnitInfoView;
@@ -60,7 +61,13 @@ class RootView : public View {
   void SetTerrainInfoViewText(const string&);
   void SetUnitListViewVisible(bool);
   void SetUnitListViewUnit(mengde::core::Unit* unit);
-  UnitDialogView* unit_dialog_view() { return unit_dialog_view_; }
+
+  void SetUnitDialogViewUnitAndText(mengde::core::Unit*, const string&);
+  void SetUnitDialogViewCoords(Vec2D v);
+  void SetUnitDialogViewVisible(bool b);
+  bool GetUnitDialogViewVisible() const;
+  Vec2D GetUnitDialogViewFrameSize() const;
+
   ModalDialogView* dialog_view() { return dialog_view_; }
   MagicListView* magic_list_view() { return magic_list_view_; }
   UnitActionView* unit_action_view() { return unit_action_view_; }
@@ -98,6 +105,7 @@ class RootView : public View {
   ControlView*           control_view_;
   ModalDialogView*       dialog_view_;
   UnitDialogView*        unit_dialog_view_;
+  ModalView*             unit_dialog_view_wrapper_;
   MagicListView*         magic_list_view_;
   TerrainInfoView*       terrain_info_view_;
   UnitListView*          unit_list_view_;

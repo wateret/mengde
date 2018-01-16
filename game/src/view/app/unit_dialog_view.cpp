@@ -9,25 +9,19 @@ UnitDialogView::UnitDialogView(const Rect* frame, const string& message, mengde:
     : CompositeView(frame),
       message_(message),
       unit_(unit),
-      frame_view_(nullptr),
       iv_portrait_(nullptr),
       tv_name_(nullptr),
       tv_message_(nullptr) {
-  Rect dialog_frame = LayoutHelper::CalcPosition(GetFrameSize(),
-                                                 {360, 120},
-                                                 LayoutHelper::kAlignCenter,
-                                                 LayoutHelper::kDefaultSpace);
-  frame_view_ = new CompositeView(&dialog_frame);
-  frame_view_->bg_color({64, 64, 64, 192});
+  bg_color({64, 64, 64, 192});
 
-  Rect portrait_frame = LayoutHelper::CalcPosition(frame_view_->GetFrameSize(),
+  Rect portrait_frame = LayoutHelper::CalcPosition(GetFrameSize(),
                                                    {64, 80},
                                                    LayoutHelper::kAlignLftTop,
                                                    LayoutHelper::kDefaultSpace);
   iv_portrait_ = new ImageView(&portrait_frame);
 
   Vec2D message_pos = portrait_frame.GetPos();
-  Rect message_frame(message_pos + Vec2D(64+8, 0), frame_view_->GetFrameSize());
+  Rect message_frame(message_pos + Vec2D(64+8, 0), GetFrameSize());
   tv_message_ = new TextView(&message_frame, message_);
   tv_message_->SetAlign(LayoutHelper::kAlignLftTop);
 
@@ -36,10 +30,9 @@ UnitDialogView::UnitDialogView(const Rect* frame, const string& message, mengde:
   tv_name_->SetAlign(LayoutHelper::kAlignCenter);
   tv_name_->SetColor(COLOR("yellow"));
 
-  frame_view_->AddChild(tv_name_);
-  frame_view_->AddChild(tv_message_);
-  frame_view_->AddChild(iv_portrait_);
-  AddChild(frame_view_);
+  AddChild(tv_name_);
+  AddChild(tv_message_);
+  AddChild(iv_portrait_);
 }
 
 void UnitDialogView::SetText(const string& s) {
@@ -54,13 +47,6 @@ void UnitDialogView::SetUnit(mengde::core::Unit* u) {
 }
 
 bool UnitDialogView::OnMouseButtonEvent(const MouseButtonEvent e) {
-  if (e.IsLeftButtonUp()) {
-    visible(false);
-  }
-  return true;
+  // Do not handle mouse button event. Just delegate to the View in next priority
+  return false;
 }
-
-bool UnitDialogView::OnMouseMotionEvent(const MouseMotionEvent) {
-  return true;
-}
-

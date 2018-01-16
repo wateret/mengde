@@ -1051,20 +1051,17 @@ StateUISpeak::StateUISpeak(StateUI::Base base, mengde::core::Unit* unit, const s
 }
 
 void StateUISpeak::Enter() {
-  UnitDialogView* unit_dialog_view = rv_->unit_dialog_view();
-  unit_dialog_view->SetUnit(unit_);
-  unit_dialog_view->SetText(words_);
-  /* FIXME Introduce ModalView as a decorator then we can uncomment this */
-//  unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(unit_dialog_view->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
-  unit_dialog_view->visible(true);
+  rv_->SetUnitDialogViewUnitAndText(unit_, words_);
+  rv_->SetUnitDialogViewCoords(layout::CalcPositionNearUnit(rv_->GetUnitDialogViewFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
+  rv_->SetUnitDialogViewVisible(true);
 }
 
 void StateUISpeak::Exit() {
-  rv_->unit_dialog_view()->visible(false);
+  rv_->SetUnitDialogViewVisible(false);
 }
 
 void StateUISpeak::Update() {
-  if (!rv_->unit_dialog_view()->visible()) {
+  if (!rv_->GetUnitDialogViewVisible()) {
     rv_->PopUIState();
   }
 }

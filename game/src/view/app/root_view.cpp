@@ -7,6 +7,7 @@
 #include "view/foundation/texture_manager.h"
 #include "view/uifw/composite_view.h"
 #include "view/uifw/modal_dialog_view.h"
+#include "view/uifw/modal_view.h"
 #include "view/uifw/scroll_view.h"
 #include "deploy_view.h"
 #include "unit_action_view.h"
@@ -112,10 +113,19 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
   }
 
   { // Initialize unit_dialog_view_
-    Rect unit_dialog_frame = *GetFrame();
+    Rect unit_dialog_frame = LayoutHelper::CalcPosition(GetFrameSize(),
+                                                        {360, 120},
+                                                        LayoutHelper::kAlignCenter,
+                                                        LayoutHelper::kDefaultSpace);
     unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
-    unit_dialog_view_->visible(false);
-    ui_views_->AddChild(unit_dialog_view_);
+    unit_dialog_view_wrapper_ = new ModalView(GetActualFrame(), unit_dialog_view_, [=] (const MouseButtonEvent e) {
+      if (e.IsLeftButtonUp() || e.IsRightButtonUp()) {
+        unit_dialog_view_wrapper_->visible(false);
+      }
+      return true;
+    });
+    unit_dialog_view_wrapper_->visible(false);
+    ui_views_->AddChild(unit_dialog_view_wrapper_);
   }
 
   { // Initialize terrain_info_view_
@@ -341,6 +351,28 @@ void RootView::SetUnitListViewVisible(bool b) {
 
 void RootView::SetUnitListViewUnit(mengde::core::Unit* unit) {
   unit_list_view_->SetUnit(unit);
+}
+
+void RootView::SetUnitDialogViewUnitAndText(mengde::core::Unit* unit, const string& words) {
+  unit_dialog_view_->SetUnit(unit);
+  unit_dialog_view_->SetText(words);
+}
+
+void RootView::SetUnitDialogViewCoords(Vec2D v) {
+  return unit_dialog_view_->SetCoords(v);
+}
+
+void RootView::SetUnitDialogViewVisible(bool b) {
+  return unit_dialog_view_wrapper_->visible(b);
+}
+
+bool RootView::GetUnitDialogViewVisible() const {
+  return unit_dialog_view_wrapper_->visible();
+}
+
+Vec2D RootView::GetUnitDialogViewFrameSize() const {
+  LOG_DEBUG("DIALOG VIEW FRAME SIZE : %d %d", unit_dialog_view_->GetFrameSize().x, unit_dialog_view_->GetFrameSize().y);
+  return unit_dialog_view_->GetFrameSize();
 }
 
 void RootView::EndGame() {
