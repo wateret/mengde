@@ -22,8 +22,8 @@ void UnitListView::UnitDetailView::SetUnit(mengde::core::Unit* unit) {
 
 UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>& unit_list)
     : CompositeView(frame), unit_list_(unit_list), unit_detail_view_(nullptr) {
-  SetPadding(8);
-  SetBgColor(COLOR("darkgray"));
+  padding(8);
+  bg_color(COLOR("darkgray"));
 
   const int margin = 8;
   const Vec2D btn_close_size = {150, 24};
@@ -34,7 +34,7 @@ UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>&
     ButtonView* btn_close = new ButtonView(&btn_close_frame, "Close");
     btn_close->SetMouseButtonHandler([this] (const MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
-        this->SetVisible(false);
+        this->visible(false);
       }
       return true;
     });
@@ -59,7 +59,7 @@ UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>&
     }
 
     View* list_view_wrap = new ScrollView(list_view_frame, list_view);
-    list_view_wrap->SetBgColor(COLOR("navy"));
+    list_view_wrap->bg_color(COLOR("navy"));
     AddChild(list_view_wrap);
   }
 
@@ -67,7 +67,7 @@ UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>&
     const int udv_frame_x = list_view_size.x + 8;
     Rect cv_frame(udv_frame_x, 0, GetActualFrameSize().x - udv_frame_x, GetActualFrameSize().y);
     unit_detail_view_ = new UnitDetailView(cv_frame);
-    unit_detail_view_->SetBgColor(COLOR("gray"));
+    unit_detail_view_->bg_color(COLOR("gray"));
     AddChild(unit_detail_view_);
   }
 }

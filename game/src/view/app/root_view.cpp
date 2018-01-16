@@ -56,7 +56,7 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
     mengde::core::Assets* assets = scenario->GetAssets();
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     deploy_view_ = new DeployView(frame, assets, game_);
-    deploy_view_->SetVisible(true);
+    deploy_view_->visible(true);
     ui_views_->AddChild(deploy_view_);
   }
 
@@ -76,7 +76,7 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
                                                LayoutHelper::kAlignRgtTop,
                                                LayoutHelper::kDefaultSpace);
   unit_view_ = new UnitView(&unit_frame);
-//  unit_view_->SetVisible(false);
+//  unit_view_->visible(false);
   ui_views_->AddChild(unit_view_);
 
   { // Initialize control_view_
@@ -91,14 +91,14 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
   { // Initialize dialog_view_
     Rect dialog_frame = *GetFrame();
     dialog_view_ = new ModalDialogView(&dialog_frame, "Put your message here!");
-    dialog_view_->SetVisible(false);
+    dialog_view_->visible(false);
     ui_views_->AddChild(dialog_view_);
   }
 
   { // Initialize magic_list_view_;
     Rect magic_list_frame = {8, 8, 170, 200};
     magic_list_view_ = new MagicListView(magic_list_frame, game_, this);
-    magic_list_view_->SetVisible(false);
+    magic_list_view_->visible(false);
     ui_views_->AddChild(magic_list_view_);
   }
 
@@ -114,7 +114,7 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
   { // Initialize unit_dialog_view_
     Rect unit_dialog_frame = *GetFrame();
     unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
-    unit_dialog_view_->SetVisible(false);
+    unit_dialog_view_->visible(false);
     ui_views_->AddChild(unit_dialog_view_);
   }
 
@@ -124,21 +124,21 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
                                                     LayoutHelper::kAlignLftBot,
                                                     LayoutHelper::kDefaultSpace);
     terrain_info_view_ = new TerrainInfoView(terrain_frame, {0, 0}); // FIXME temporary coords
-    terrain_info_view_->SetVisible(false);
+    terrain_info_view_->visible(false);
     ui_views_->AddChild(terrain_info_view_);
   }
 
   { // Initialize unit_list_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     unit_list_view_ = new UnitListView(frame, game_->GetCurrentTurnUnits());
-    unit_list_view_->SetVisible(false);
+    unit_list_view_->visible(false);
     ui_views_->AddChild(unit_list_view_);
   }
 
   { // Initialize unit_action_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {150, 150}, LayoutHelper::kAlignLftTop);
     unit_action_view_ = new UnitActionView(frame, game_, this);
-    unit_action_view_->SetVisible(false);
+    unit_action_view_->visible(false);
     ui_views_->AddChild(unit_action_view_);
   }
 }
@@ -295,7 +295,7 @@ void RootView::SetControlViewTurnText(int turn_current, int turn_limit) {
 }
 
 void RootView::SetUnitViewVisible(bool b) {
-  unit_view_->SetVisible(b);
+  unit_view_->visible(b);
 }
 
 void RootView::SetUnitViewUnit(mengde::core::Unit* unit) {
@@ -303,7 +303,7 @@ void RootView::SetUnitViewUnit(mengde::core::Unit* unit) {
 }
 
 void RootView::SetUnitInfoViewVisible(bool b) {
-  unit_info_view_->SetVisible(b);
+  unit_info_view_->visible(b);
 }
 
 void RootView::SetUnitInfoViewUnitTerrainInfo(mengde::core::Cell* cell) {
@@ -328,7 +328,7 @@ void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
 }
 
 void RootView::SetTerrainInfoViewVisible(bool b) {
-  terrain_info_view_->SetVisible(b);
+  terrain_info_view_->visible(b);
 }
 
 void RootView::SetTerrainInfoViewText(const string& s) {
@@ -336,7 +336,7 @@ void RootView::SetTerrainInfoViewText(const string& s) {
 }
 
 void RootView::SetUnitListViewVisible(bool b) {
-  unit_list_view_->SetVisible(b);
+  unit_list_view_->visible(b);
 }
 
 void RootView::SetUnitListViewUnit(mengde::core::Unit* unit) {

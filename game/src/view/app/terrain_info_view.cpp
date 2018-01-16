@@ -6,8 +6,8 @@
 TerrainInfoView::TerrainInfoView(const Rect& frame,
                                  Vec2D coords)
     : CompositeView(frame), coords_(coords) {
-  SetBgColor(COLOR("darkgray"));
-  SetPadding(8);
+  bg_color(COLOR("darkgray"));
+  padding(8);
 
   Rect name_frame(GetActualFrame());
   tv_name_ = new TextView(&name_frame);

@@ -8,7 +8,7 @@
 
 UnitOverView::UnitOverView(const Rect* frame)
     : CompositeView(frame), unit_(NULL) {
-  SetBgColor(COLOR("darkgray"));
+  bg_color(COLOR("darkgray"));
 
   Rect portrait_frame = {0, 0, 64, 80};
   iv_portrait_ = new ImageView(&portrait_frame);

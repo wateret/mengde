@@ -4,15 +4,15 @@
 
 TabView::TabView(const Rect* frame)
     : CompositeView(frame), view_index_(0) {
-  SetBgColor(COLOR("darkgray"));
-  SetPadding(LayoutHelper::kDefaultSpace);
+  bg_color(COLOR("darkgray"));
+  padding(LayoutHelper::kDefaultSpace);
 }
 
 void TabView::SetViewIndex(int idx) {
   view_index_ = idx;
   const int num_tabs = GetNumTabs();
   for (int i = 0; i < num_tabs; i++) {
-    v_tabs_[i]->SetVisible(i == idx);
+    v_tabs_[i]->visible(i == idx);
   }
 }
 
@@ -38,5 +38,5 @@ void TabView::AddTab(const string& button_text, View* view) {
   AddChild(tab_button);
   AddChild(view);
 
-  view->SetVisible(index == view_index_);
+  view->visible(index == view_index_);
 }

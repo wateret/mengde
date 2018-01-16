@@ -87,10 +87,10 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
 
     eqv->SetMouseMotionHandler([eqv] (const MouseMotionEvent e) {
       if (e.IsMotionOver()) {
-        eqv->SetBgColor(COLOR("darkgray"));
+        eqv->bg_color(COLOR("darkgray"));
       } else {
         ASSERT(e.IsMotionOut());
-        eqv->SetBgColor(COLOR("transparent"));
+        eqv->bg_color(COLOR("transparent"));
       }
       return true;
     });

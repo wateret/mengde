@@ -15,8 +15,8 @@
 //
 
 ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32_t amount) : CallbackView(frame) {
-  SetBgColor(COLOR("transparent"));
-  SetPadding(8);
+  bg_color(COLOR("transparent"));
+  padding(8);
 
   Rect iv_icon_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {32, 32}, LayoutHelper::kAlignCenter);
   ImageView* iv_icon = new ImageView(iv_icon_frame, "equipment/" + equipment_id + ".bmp");
@@ -28,10 +28,10 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
 
   SetMouseMotionHandler([this] (const MouseMotionEvent e) {
     if (e.IsMotionOver()) {
-      this->SetBgColor(COLOR("darkgray"));
+      this->bg_color(COLOR("darkgray"));
     } else {
       ASSERT(e.IsMotionOut());
-      this->SetBgColor(COLOR("transparent"));
+      this->bg_color(COLOR("transparent"));
     }
     return true;
   });
@@ -43,7 +43,7 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
 
 EquipmentSelectView::EquipmentSelectView(const Rect& frame, IEquipmentSetSetter* equipment_set_update)
     : CompositeView(frame), hero_(nullptr), equipment_list_view_(nullptr), equipment_set_update_(equipment_set_update) {
-  SetBgColor(COLOR("black"));
+  bg_color(COLOR("black"));
 }
 
 void EquipmentSelectView::SetEquipments(const vector<mengde::core::EquipmentWithAmount>& equipments, mengde::core::Assets* assets) {
@@ -61,7 +61,7 @@ void EquipmentSelectView::SetEquipments(const vector<mengde::core::EquipmentWith
         ASSERT(hero != nullptr);
         assets->HeroPutEquipmentOn(hero, equipment.object);
         equipment_set_update->SetEquipmentSet(hero->GetEquipmentSet());
-        this->SetVisible(false);
+        this->visible(false);
       }
       return true;
     });

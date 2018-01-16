@@ -963,11 +963,11 @@ void StateUIAction::Enter() {
   UnitActionView* unit_action_view = rv_->unit_action_view();
   unit_action_view->SetUnit(unit_);
   unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
-  unit_action_view->SetVisible(true);
+  unit_action_view->visible(true);
 }
 
 void StateUIAction::Exit() {
-  rv_->unit_action_view()->SetVisible(false);
+  rv_->unit_action_view()->visible(false);
 }
 
 void StateUIAction::Render(Drawer* drawer) {
@@ -994,11 +994,11 @@ void StateUIMagicSelection::Enter() {
   MagicListView* mlv = rv_->magic_list_view();
   mlv->SetUnitAndMagicList(unit_, magic_list);
   mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
-  mlv->SetVisible(true);
+  mlv->visible(true);
 }
 
 void StateUIMagicSelection::Exit() {
-  rv_->magic_list_view()->SetVisible(false);
+  rv_->magic_list_view()->visible(false);
 }
 
 void StateUIMagicSelection::Render(Drawer* drawer) {
@@ -1032,11 +1032,11 @@ void StateUINextTurn::Render(Drawer*) {
 void StateUINextTurn::Enter() {
   ModalDialogView* modal_dialog_view = rv_->dialog_view();
   modal_dialog_view->SetText("End Turn");
-  modal_dialog_view->SetVisible(true);
+  modal_dialog_view->visible(true);
 }
 
 void StateUINextTurn::Exit() {
-  rv_->dialog_view()->SetVisible(false);
+  rv_->dialog_view()->visible(false);
   RootView* rv = rv_;
   mengde::core::Game* game = game_;
   rv_->NextFrame([rv, game] () {
@@ -1056,15 +1056,15 @@ void StateUISpeak::Enter() {
   unit_dialog_view->SetText(words_);
   /* FIXME Introduce ModalView as a decorator then we can uncomment this */
 //  unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(unit_dialog_view->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(), unit_->GetPosition()));
-  unit_dialog_view->SetVisible(true);
+  unit_dialog_view->visible(true);
 }
 
 void StateUISpeak::Exit() {
-  rv_->unit_dialog_view()->SetVisible(false);
+  rv_->unit_dialog_view()->visible(false);
 }
 
 void StateUISpeak::Update() {
-  if (!rv_->unit_dialog_view()->IsVisible()) {
+  if (!rv_->unit_dialog_view()->visible()) {
     rv_->PopUIState();
   }
 }
@@ -1085,12 +1085,12 @@ StateUIEnd::StateUIEnd(StateUI::Base base, bool is_victory) : StateUI(base), is_
 void StateUIEnd::Enter() {
   ModalDialogView* modal_dialog_view = rv_->dialog_view();
   modal_dialog_view->SetText(is_victory_ ? "Victory" : "Defeat");
-  modal_dialog_view->SetVisible(true);
+  modal_dialog_view->visible(true);
 }
 
 void StateUIEnd::Update() {
   ModalDialogView* modal_dialog_view = rv_->dialog_view();
-  if (modal_dialog_view->IsVisible() == false) {
+  if (modal_dialog_view->visible() == false) {
     rv_->EndGame();
   }
 }

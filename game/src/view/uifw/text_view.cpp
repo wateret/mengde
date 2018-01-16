@@ -7,8 +7,8 @@ TextView::TextView(const Rect* frame, const std::string& text)
 
 TextView::TextView(const Rect* frame, const std::string& text, Color color, int size, LayoutHelper::Align align)
     : View(frame), text_(text), color_(color), size_(size), align_(align) {
-  SetBgColor(COLOR("transparent"));
-  SetPadding(0);
+  bg_color(COLOR("transparent"));
+  padding(0);
 }
 
 void TextView::SetText(const std::string& text) {

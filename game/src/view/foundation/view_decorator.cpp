@@ -11,7 +11,9 @@ ViewDecorator::~ViewDecorator() {
 }
 
 void ViewDecorator::Render(Drawer* drawer) {
+  RENDER_BEGIN(this);
   view_->Render(drawer);
+  RENDER_END(this);
 }
 
 void ViewDecorator::Update() {

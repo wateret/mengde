@@ -8,8 +8,8 @@
 
 UnitActionView::UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv)
     : VerticalListView(frame), game_(game), rv_(rv) {
-  SetBgColor(COLOR("darkgray", 160));
-  SetPadding(8);
+  bg_color(COLOR("darkgray", 160));
+  padding(8);
   Rect btn_frame = GetActualFrame();
   btn_frame.SetH(24);
 

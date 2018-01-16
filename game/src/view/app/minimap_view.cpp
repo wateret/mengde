@@ -16,7 +16,7 @@ MinimapView::MinimapView(const Rect* frame,
       camera_coords_ptr_(camera_coords_ptr),
       camera_size_(camera_size),
       map_size_(map_size) {
-  SetPadding(0);
+  padding(0);
 
   Rect bg_frame = GetActualFrame();
   bg_image_view_ = new ImageView(&bg_frame, game->GetMapBitmapPath());

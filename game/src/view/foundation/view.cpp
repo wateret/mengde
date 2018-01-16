@@ -34,7 +34,7 @@ Vec2D View::GetActualFrameCoords() const {
   return {frame_.GetX() + padding_, frame_.GetY() + padding_};
 }
 
-void View::SetVisible(bool b) {
+void View::visible(bool b) {
   visible_ = b;
 
   if (visible_) {

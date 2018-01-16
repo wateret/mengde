@@ -9,8 +9,8 @@
 
 ControlView::ControlView(const Rect* rect, mengde::core::Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
-  SetBgColor(COLOR("darkgray", 192));
-  SetPadding(8);
+  bg_color(COLOR("darkgray", 192));
+  padding(8);
 
   Rect frame_tv_turn = {0, 0, 100, 22};
   tv_turn_ = new TextView(&frame_tv_turn);

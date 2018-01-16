@@ -15,7 +15,7 @@ void VerticalListView::AddElement(View* e) {
 
   e->SetCoords({0, total_element_height_ + margin_});   // Move the coords of frame by the element's height
   total_element_height_ += element_size.y + margin_;
-  frame_size = {frame_size.x, total_element_height_ + GetPadding() * 2}; // Increment size of the frame by the element's height
+  frame_size = {frame_size.x, total_element_height_ + padding() * 2}; // Increment size of the frame by the element's height
   this->SetSize(frame_size);
 
   AddChild(e);

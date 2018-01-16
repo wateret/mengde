@@ -23,13 +23,15 @@ class View : public IView {
   void SetCoords(Vec2D v) { frame_.SetPos(v); }
   void SetSize(Vec2D v) { frame_.SetSize(v); }
   void Move(Vec2D v) { frame_.Move(v); }
-  bool IsVisible() const { return visible_; }
-  int  GetPadding() { return padding_; }
   void SetFrame(const Rect* r) { frame_ = *r; }
-  void SetBgColor(Color c) { bg_color_ = c; }
-  Color GetBgColor() { return bg_color_; }
-  void SetPadding(int p) { padding_ = p; }
-  void SetVisible(bool b);
+
+  void  bg_color(Color c) { bg_color_ = c; }
+  Color bg_color() const  { return bg_color_; }
+  void padding(int p)  { padding_ = p; }
+  int  padding() const { return padding_; }
+  void visible(bool b);
+  bool visible() const { return visible_; }
+
   bool DelegateMouseButtonEvent(const MouseButtonEvent);
   bool DelegateMouseMotionEvent(const MouseMotionEvent);
   bool DelegateMouseWheelEvent(const MouseWheelEvent);

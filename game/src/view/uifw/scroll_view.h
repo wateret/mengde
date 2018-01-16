@@ -11,7 +11,6 @@ class ScrollView : public ViewDecorator {
 
  public:
   ScrollView(const Rect&, View*);
-  virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
   virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
   virtual bool OnMouseWheelEvent(const MouseWheelEvent) override;

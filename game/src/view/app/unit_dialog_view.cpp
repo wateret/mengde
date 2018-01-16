@@ -18,7 +18,7 @@ UnitDialogView::UnitDialogView(const Rect* frame, const string& message, mengde:
                                                  LayoutHelper::kAlignCenter,
                                                  LayoutHelper::kDefaultSpace);
   frame_view_ = new CompositeView(&dialog_frame);
-  frame_view_->SetBgColor({64, 64, 64, 192});
+  frame_view_->bg_color({64, 64, 64, 192});
 
   Rect portrait_frame = LayoutHelper::CalcPosition(frame_view_->GetFrameSize(),
                                                    {64, 80},
@@ -55,7 +55,7 @@ void UnitDialogView::SetUnit(mengde::core::Unit* u) {
 
 bool UnitDialogView::OnMouseButtonEvent(const MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
-    SetVisible(false);
+    visible(false);
   }
   return true;
 }

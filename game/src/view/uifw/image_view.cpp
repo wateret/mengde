@@ -9,8 +9,8 @@ ImageView::ImageView(const Rect* frame, const string& path)
 
 ImageView::ImageView(const Rect& frame, const string& path)
     : View(frame), path_(path), texture_(nullptr) {
-  SetBgColor(COLOR("transparent"));
-  SetPadding(0);
+  bg_color(COLOR("transparent"));
+  padding(0);
 }
 
 ImageView::~ImageView() {

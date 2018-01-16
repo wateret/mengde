@@ -6,20 +6,6 @@ ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, vie
     LOG_WARNING("Wrapped frame size is smaller than ScrollView frame");
   }
   view_->SetCoords({0, 0});
-
-  // XXX Remove this workaround for padding
-  /*
-  SetPadding(view_->GetPadding());
-  view_->SetPadding(0);
-  SetBgColor(view_->GetBgColor());
-  view_->SetBgColor({255, 255, 255, 0});
-  */
-}
-
-void ScrollView::Render(Drawer* drawer) {
-  RENDER_BEGIN(this);
-  view_->Render(drawer);
-  RENDER_END(this);
 }
 
 bool ScrollView::OnMouseButtonEvent(const MouseButtonEvent e) {

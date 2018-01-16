@@ -18,7 +18,7 @@ HeroModelView::HeroModelView(const Rect& frame,
                              mengde::core::IDeployHelper* deploy_helper,
                              IEquipmentSetSetter* equipment_set_setter)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
-  SetPadding(4);
+  padding(4);
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.GetSize(), LayoutHelper::kAlignCenter);
   iv_frame.SetY(iv_frame.GetY() - 8);
@@ -43,13 +43,13 @@ HeroModelView::HeroModelView(const Rect& frame,
 void HeroModelView::UpdateViews() {
   if (required_unselectable_) {
     ASSERT(IsSelected());
-    SetBgColor(COLOR("black"));
+    bg_color(COLOR("black"));
     tv_no_->SetText("");
   } else if (IsSelected()) {
-    SetBgColor(COLOR("gray"));
+    bg_color(COLOR("gray"));
     tv_no_->SetText(std::to_string(deploy_no_));
   } else {
-    SetBgColor(COLOR("transparent"));
+    bg_color(COLOR("transparent"));
     tv_no_->SetText("");
   }
 }
@@ -60,7 +60,7 @@ HeroModelListView::HeroModelListView(const Rect& frame,
                                      IEquipmentSetSetter* equipment_set_setter,
                                      EquipmentSelectView* equipment_select_view)
     : CompositeView(frame) {
-  SetBgColor(COLOR("navy"));
+  bg_color(COLOR("navy"));
   static const Vec2D kHeroModelSize = {96, 80};
   Rect hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
@@ -89,8 +89,8 @@ HeroModelListView::HeroModelListView(const Rect& frame,
 
 DeployView::DeployView(const Rect& frame, mengde::core::Assets* assets, mengde::core::IDeployHelper* deploy_helper)
     : CompositeView(frame) {
-  SetPadding(8);
-  SetBgColor(COLOR("darkgray"));
+  padding(8);
+  bg_color(COLOR("darkgray"));
 
   Rect equipment_set_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
   equipment_set_view_ = new EquipmentSetView(&equipment_set_frame);
@@ -99,19 +99,19 @@ DeployView::DeployView(const Rect& frame, mengde::core::Assets* assets, mengde::
   equipment_select_view_ = new EquipmentSelectView(equipment_select_frame, equipment_set_view_);
 
   { // Initialize equipment_select_view_
-    equipment_select_view_->SetVisible(false);
+    equipment_select_view_->visible(false);
   }
 
   { // Initialize equipment_set_view_
     EquipmentSelectView* select_view = equipment_select_view_;
-    equipment_set_view_->SetBgColor(COLOR("navy"));
-    equipment_set_view_->SetPadding(8);
+    equipment_set_view_->bg_color(COLOR("navy"));
+    equipment_set_view_->padding(8);
 
     auto mouse_handler_gen = [select_view, assets] (mengde::core::Equipment::Type type) {
       return [select_view, assets, type] (const MouseButtonEvent e) {
         if (e.IsLeftButtonUp()) {
-          if (select_view->IsVisible()) {
-            select_view->SetVisible(false);
+          if (select_view->visible()) {
+            select_view->visible(false);
           } else {
             vector<mengde::core::EquipmentWithAmount> equipments = assets->GetEquipmentsWithAmount();
             vector<mengde::core::EquipmentWithAmount> equipments_filtered;
@@ -119,7 +119,7 @@ DeployView::DeployView(const Rect& frame, mengde::core::Assets* assets, mengde::
                          [type] (const mengde::core::EquipmentWithAmount& eq) { return eq.object->GetType() == type; });
             select_view->SetEquipments(equipments_filtered, assets);
 
-            select_view->SetVisible(true);
+            select_view->visible(true);
           }
         }
         return true;
@@ -142,7 +142,7 @@ DeployView::DeployView(const Rect& frame, mengde::core::Assets* assets, mengde::
   btn_ok->SetMouseButtonHandler([this, deploy_helper] (MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       if (deploy_helper->SubmitDeploy()) {
-        this->SetVisible(false);
+        this->visible(false);
       }
     }
     return true;

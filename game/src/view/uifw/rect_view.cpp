@@ -3,8 +3,8 @@
 
 RectView::RectView(const Rect* frame, Color color)
     : View(frame), color_(color), border_(0), border_color_(COLOR("transparent")) {
-  SetBgColor(color_);
-  SetPadding(0);
+  bg_color(color_);
+  padding(0);
 }
 
 void RectView::SetBorder(int width, Color color) {

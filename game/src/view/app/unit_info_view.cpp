@@ -17,8 +17,8 @@ UnitInfoView::UnitInfoView(const Rect* frame, mengde::core::Unit* unit)
       tv_lftbot_(nullptr),
       tv_rgtbot_(nullptr) {
   const int kAlpha = 160;
-  SetBgColor({64, 64, 64, kAlpha});
-  SetPadding(8);
+  bg_color({64, 64, 64, kAlpha});
+  padding(8);
 
   Rect gv_frame = {0, 22, 184, 16};
   gv_hp_ = new GaugeView(&gv_frame,
