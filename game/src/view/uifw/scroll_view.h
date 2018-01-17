@@ -1,7 +1,7 @@
 #ifndef SCROLL_VIEW_H_
 #define SCROLL_VIEW_H_
 
-#include "view/foundation/view_decorator.h"
+#include "view_decorator.h"
 
 class Drawer;
 

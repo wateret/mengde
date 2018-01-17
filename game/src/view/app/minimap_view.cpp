@@ -1,7 +1,7 @@
 #include "minimap_view.h"
 
 #include "core/game.h"
-#include "view/foundation/view.h"
+#include "view/uifw/view.h"
 #include "view/foundation/layout_helper.h"
 #include "view/foundation/drawer.h"
 #include "view/uifw/rect_view.h"

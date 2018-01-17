@@ -1,7 +1,7 @@
 #ifndef ROOT_VIEW_H_
 #define ROOT_VIEW_H_
 
-#include "view/foundation/view.h"
+#include "view/uifw/view.h"
 #include "util/common.h"
 #include "util/state_machine.h"
 

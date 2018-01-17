@@ -2,9 +2,9 @@
 #define VIEW_H_
 
 #include "util/common.h"
-#include "rect.h"
+#include "view/foundation/color.h"
+#include "view/foundation/rect.h"
 #include "i_view.h"
-#include "color.h"
 
 class Drawer;
 

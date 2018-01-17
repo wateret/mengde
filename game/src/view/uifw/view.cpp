@@ -1,4 +1,5 @@
 #include "view.h"
+
 #include "drawer.h"
 
 View::View(const Rect* frame)

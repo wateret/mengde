@@ -2,7 +2,7 @@
 #define STATE_UI_H_
 
 #include "util/state.h"
-#include "view/foundation/i_view.h"
+#include "view/uifw/i_view.h"
 
 // StateUI
 

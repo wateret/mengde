@@ -1,7 +1,7 @@
 #ifndef GAUGE_VIEW_H_
 #define GAUGE_VIEW_H_
 
-#include "view/foundation/view.h"
+#include "view.h"
 #include "view/foundation/rect.h"
 #include "view/foundation/color.h"
 #include "view/foundation/layout_helper.h"

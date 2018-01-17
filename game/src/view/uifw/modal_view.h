@@ -1,7 +1,7 @@
 #ifndef MODAL_VIEW_H_
 #define MODAL_VIEW_H_
 
-#include "view/foundation/view_decorator.h"
+#include "view_decorator.h"
 
 class ModalView : public ViewDecorator {
  public:

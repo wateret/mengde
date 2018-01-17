@@ -1,7 +1,7 @@
 #ifndef IMAGE_VIEW_H_
 #define IMAGE_VIEW_H_
 
-#include "view/foundation/view.h"
+#include "view.h"
 #include "util/common.h"
 #include <string>
 

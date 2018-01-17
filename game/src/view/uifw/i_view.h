@@ -1,9 +1,9 @@
 #ifndef I_VIEW_H_
 #define I_VIEW_H_
 
-#include "mouse_button_event.h"
-#include "mouse_motion_event.h"
-#include "mouse_wheel_event.h"
+#include "view/foundation/mouse_button_event.h"
+#include "view/foundation/mouse_motion_event.h"
+#include "view/foundation/mouse_wheel_event.h"
 
 class Drawer;
 

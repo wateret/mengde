@@ -2,7 +2,7 @@
 #define TEXT_VIEW_H_
 
 #include "util/common.h"
-#include "view/foundation/view.h"
+#include "view.h"
 #include "view/foundation/layout_helper.h"
 
 class TextView : public View {
