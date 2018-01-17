@@ -4,7 +4,7 @@
 #include "view.h"
 #include "view/foundation/rect.h"
 #include "view/foundation/color.h"
-#include "view/foundation/layout_helper.h"
+#include "layout_helper.h"
 
 class GaugeView : public View {
  public:

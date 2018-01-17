@@ -1,6 +1,6 @@
 #include "terrain_info_view.h"
 
-#include "view/foundation/drawer.h"
+#include "view/uifw/drawer.h"
 #include "view/uifw/text_view.h"
 
 TerrainInfoView::TerrainInfoView(const Rect& frame,

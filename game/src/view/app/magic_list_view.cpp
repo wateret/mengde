@@ -4,7 +4,7 @@
 #include "core/unit.h"
 #include "root_view.h"
 #include "state_ui.h"
-#include "view/foundation/drawer.h"
+#include "view/uifw/drawer.h"
 #include "view/uifw/button_view.h"
 #include "view/uifw/text_view.h"
 #include "view/uifw/scroll_view.h"

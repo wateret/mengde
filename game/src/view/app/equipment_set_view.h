@@ -3,7 +3,7 @@
 
 #include "view/uifw/callback_view.h"
 #include "view/uifw/composite_view.h"
-#include "view/foundation/layout_helper.h"
+#include "view/uifw/layout_helper.h"
 #include "i_equipment_set_setter.h"
 
 namespace mengde {

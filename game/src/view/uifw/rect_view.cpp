@@ -1,5 +1,5 @@
 #include "rect_view.h"
-#include "view/foundation/drawer.h"
+#include "drawer.h"
 
 RectView::RectView(const Rect* frame, Color color)
     : View(frame), color_(color), border_(0), border_color_(COLOR("transparent")) {

@@ -1,9 +1,10 @@
 #include "drawer.h"
-#include "window.h"
-#include "renderer.h"
-#include "rect.h"
-#include "texture.h"
-#include "texture_manager.h"
+
+#include "view/foundation/window.h"
+#include "view/foundation/renderer.h"
+#include "view/foundation/rect.h"
+#include "view/foundation/texture.h"
+#include "view/foundation/texture_manager.h"
 #include "view/app/app.h" // XXX Remove this depenency
 
 Drawer::Drawer(Window* window, const string& scenario_path, const string& font_path)

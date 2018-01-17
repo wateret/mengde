@@ -2,7 +2,7 @@
 #define LAYOUT_HELPER_H_
 
 #include "util/common.h"
-#include "rect.h"
+#include "view/foundation/rect.h"
 
 class LayoutHelper {
  public:

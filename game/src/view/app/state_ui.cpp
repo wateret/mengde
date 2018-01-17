@@ -14,7 +14,7 @@
 #include "core/magic.h"
 #include "core/magic_list.h"
 #include "core/path_tree.h"
-#include "view/foundation/drawer.h"
+#include "view/uifw/drawer.h"
 #include "view/foundation/misc.h"
 #include "view/foundation/texture_manager.h"
 #include "view/foundation/texture_animator.h"

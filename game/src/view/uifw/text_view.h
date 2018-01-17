@@ -3,7 +3,7 @@
 
 #include "util/common.h"
 #include "view.h"
-#include "view/foundation/layout_helper.h"
+#include "layout_helper.h"
 
 class TextView : public View {
  public:

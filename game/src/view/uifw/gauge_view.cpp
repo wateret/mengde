@@ -1,5 +1,5 @@
 #include "gauge_view.h"
-#include "view/foundation/drawer.h"
+#include "drawer.h"
 
 GaugeView::GaugeView(const Rect* frame,
                      int cur_val,

@@ -2,8 +2,8 @@
 
 #include "core/game.h"
 #include "view/uifw/view.h"
-#include "view/foundation/layout_helper.h"
-#include "view/foundation/drawer.h"
+#include "view/uifw/layout_helper.h"
+#include "view/uifw/drawer.h"
 #include "view/uifw/rect_view.h"
 #include "view/uifw/image_view.h"
 

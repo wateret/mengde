@@ -1,5 +1,5 @@
 #include "text_view.h"
-#include "view/foundation/drawer.h"
+#include "drawer.h"
 
 TextView::TextView(const Rect* frame, const std::string& text)
     : TextView(frame, text, COLOR("white"), 14, LayoutHelper::kAlignLftTop) {

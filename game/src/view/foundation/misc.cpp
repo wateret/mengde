@@ -1,4 +1,5 @@
 #include "misc.h"
+
 #include <SDL.h>
 #include <SDL_ttf.h>
 
@@ -22,8 +23,4 @@ std::string Misc::GetErrorMessage() {
 
 void Misc::SetShowCursor(bool v) {
   SDL_ShowCursor(v ? SDL_ENABLE : SDL_DISABLE);
-}
-
-std::string Misc::GetModelPath(const std::string& model_id, SpriteType type) {
-  return "model/" + model_id + "/" + kSpriteBitmapName[type] + ".bmp";
 }

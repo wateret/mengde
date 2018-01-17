@@ -1,8 +1,7 @@
-#ifndef MISC_H
-#define MISC_H
+#ifndef VIEW_FOUNDATION_MISC_H_
+#define VIEW_FOUNDATION_MISC_H_
 
 #include <string>
-#include "sprite_type.h"
 
 // Misc functions relavant to SDL2
 
@@ -13,7 +12,6 @@ class Misc {
   static void Delay(int);
   static void SetShowCursor(bool);
   static std::string GetErrorMessage();
-  static std::string GetModelPath(const std::string& /* model_id */, SpriteType);
 };
 
-#endif
+#endif // VIEW_FOUNDATION_MISC_H_

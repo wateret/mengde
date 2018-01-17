@@ -1,7 +1,7 @@
 #include "unit_dialog_view.h"
 
 #include "core/unit.h"
-#include "view/foundation/drawer.h"
+#include "view/uifw/drawer.h"
 #include "view/uifw/text_view.h"
 #include "view/uifw/image_view.h"
 

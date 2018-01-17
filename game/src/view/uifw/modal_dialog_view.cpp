@@ -1,6 +1,6 @@
 #include "modal_dialog_view.h"
 #include "text_view.h"
-#include "view/foundation/layout_helper.h"
+#include "layout_helper.h"
 
 ModalDialogView::ModalDialogView(const Rect* frame, const string& message)
     : CompositeView(frame), message_(message), message_view_(nullptr) {

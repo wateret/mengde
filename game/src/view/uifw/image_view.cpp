@@ -1,6 +1,6 @@
 #include "image_view.h"
 #include "view/foundation/texture.h"
-#include "view/foundation/drawer.h"
+#include "drawer.h"
 #include "view/foundation/texture_manager.h"
 
 ImageView::ImageView(const Rect* frame, const string& path)

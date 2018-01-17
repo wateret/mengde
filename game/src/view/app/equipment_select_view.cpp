@@ -4,7 +4,7 @@
 #include "core/equipment.h"
 #include "core/equipment_set.h"
 #include "core/hero.h"
-#include "view/foundation/layout_helper.h"
+#include "view/uifw/layout_helper.h"
 #include "view/uifw/image_view.h"
 #include "view/uifw/text_view.h"
 #include "view/uifw/row_major_list_view.h"

@@ -4,7 +4,7 @@
 #include "core/cell.h"
 #include "view/uifw/gauge_view.h"
 #include "view/uifw/text_view.h"
-#include "view/foundation/drawer.h"
+#include "view/uifw/drawer.h"
 #include "view/foundation/rect.h"
 
 UnitInfoView::UnitInfoView(const Rect* frame, mengde::core::Unit* unit)

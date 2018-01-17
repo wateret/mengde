@@ -1,6 +1,6 @@
 #include "main_view.h"
 #include "view/app/app.h"
-#include "view/foundation/layout_helper.h"
+#include "view/uifw/layout_helper.h"
 #include "view/uifw/button_view.h"
 
 MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {

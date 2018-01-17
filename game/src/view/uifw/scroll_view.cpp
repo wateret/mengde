@@ -1,5 +1,5 @@
 #include "scroll_view.h"
-#include "view/foundation/drawer.h"
+#include "drawer.h"
 
 ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, view), coords_(0, 0) {
   if (frame.GetSize() > view->GetFrame()->GetSize()) {

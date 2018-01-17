@@ -3,10 +3,10 @@
 
 #include <stack>
 #include "util/common.h"
-#include "color.h"
-#include "rect.h"
-#include "sprite_type.h"
+#include "view/foundation/color.h"
+#include "view/foundation/rect.h"
 #include "layout_helper.h"
+#include "sprite_type.h"
 
 struct Viewport {
   Rect  rect;
