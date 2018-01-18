@@ -6,10 +6,12 @@
 #include "core/unit.h"
 #include "util/common.h"
 #include "util/game_env.h"
+#include "view/foundation/color.h"
+#include "view/foundation/event_fetcher.h"
 #include "view/foundation/misc.h"
 #include "view/foundation/texture.h"
 #include "view/foundation/rect.h"
-#include "view/foundation/color.h"
+#include "view/foundation/window.h"
 #include "view/uifw/drawer.h"
 #include "main_view.h"
 #include "root_view.h"
@@ -43,7 +45,8 @@ void FpsTimer::Update() {
 }
 
 App::App(int width, int height, uint32_t max_frames_sec)
-    : window_size_(width, height),
+    : event_fetcher_(),
+      window_size_(width, height),
       drawer_(nullptr),
       main_view_(nullptr),
       root_view_(nullptr),
@@ -55,6 +58,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
   Misc::Init();
 
   // Set texture filtering to linear
+  // TODO Do not do this here (No direct SDL API allowed)
   if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1") == 0) {
     throw "Error while SDL_SetHint";
   }
@@ -105,7 +109,7 @@ void App::Run() {
   {
     frame_cap_timer.Start();
 
-    quit_ = HandleEvents();
+    HandleEvents();
 
     fps_timer_.Update();
     Update();
@@ -118,60 +122,26 @@ void App::Run() {
   }
 }
 
-bool App::HandleEvents() {
-  SDL_Event e; // Event handler
-  while (SDL_PollEvent(&e) != 0)
+void App::HandleEvents() {
+  while (event_fetcher_.Poll())
   {
-    switch (e.type) {
-      case SDL_QUIT: {
+    const Event& e = event_fetcher_.event();
+    switch (event_fetcher_.event_type()) {
+      case EventType::kQuit:
         quit_ = true;
         break;
-      }
-      case SDL_MOUSEMOTION: {
-        Vec2D coords = {e.motion.x, e.motion.y};
-        Vec2D coords_rel = {e.motion.xrel, e.motion.yrel};
-        target_view_->OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, coords, coords_rel));
+      case EventType::kMouseMotion:
+        target_view_->OnMouseMotionEvent(e.mouse_motion);
         break;
-      }
-      case SDL_MOUSEBUTTONUP:
-      case SDL_MOUSEBUTTONDOWN: {
-        MouseButtonEvent::State state = (e.type == SDL_MOUSEBUTTONUP) ?
-                                        MouseButtonEvent::State::kUp :
-                                        MouseButtonEvent::State::kDown;
-        MouseButtonEvent::Button button = MouseButtonEvent::Button::kNone;
-        switch (e.button.button) {
-          case SDL_BUTTON_LEFT:
-            button = MouseButtonEvent::Button::kLeft;
-            break;
-          case SDL_BUTTON_MIDDLE:
-            button = MouseButtonEvent::Button::kMiddle;
-            break;
-          case SDL_BUTTON_RIGHT:
-            button = MouseButtonEvent::Button::kRight;
-            break;
-          default:
-            UNREACHABLE("Unknown mouse button");
-            break;
-        }
-        target_view_->OnMouseButtonEvent(MouseButtonEvent(button, state, Vec2D(e.button.x, e.motion.y)));
+      case EventType::kMouseButton:
+        target_view_->OnMouseButtonEvent(e.mouse_button);
         break;
-      }
-      case SDL_MOUSEWHEEL: {
-        int32_t x, y;
-        SDL_GetMouseState(&x, &y);
-        MouseWheelEvent::Horizontal hor = MouseWheelEvent::Horizontal::kNone;
-        if (e.wheel.x < 0) hor = MouseWheelEvent::Horizontal::kLeft;
-        if (e.wheel.x > 0) hor = MouseWheelEvent::Horizontal::kRight;
-        MouseWheelEvent::Vertical ver = MouseWheelEvent::Vertical::kNone;
-        if (e.wheel.y < 0) ver = MouseWheelEvent::Vertical::kDown;   // TODO check the direction
-        if (e.wheel.y > 0) ver = MouseWheelEvent::Vertical::kUp;
-        target_view_->OnMouseWheelEvent(MouseWheelEvent(hor, ver, Vec2D(x, y)));
-      }
+      case EventType::kMouseWheel:
+        target_view_->OnMouseWheelEvent(e.mouse_wheel);
       default:
         break;
     }
   }
-  return quit_;
 }
 
 void App::Update() {

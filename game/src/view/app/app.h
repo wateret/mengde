@@ -5,7 +5,7 @@
 #include <vector>
 #include "util/common.h"
 #include "view/foundation/timer.h"
-#include "view/foundation/window.h"
+#include "view/foundation/event_fetcher.h"
 
 namespace mengde {
 namespace core {
@@ -14,8 +14,10 @@ namespace core {
 }
 }
 
-class View;
 class Drawer;
+class EventFetcher;
+class View;
+class Window;
 
 class FrameConfig {
  public:
@@ -66,11 +68,12 @@ class App {
   static const int kBlockSize = 48;
 
  private:
-  bool HandleEvents();
+  void HandleEvents();
   void Update();
   void Render();
 
  private:
+  EventFetcher event_fetcher_;
   Vec2D   window_size_;
   Window* window_;
   Drawer* drawer_;
