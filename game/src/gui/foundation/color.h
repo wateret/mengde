@@ -2,14 +2,13 @@
 #define COLOR_H
 
 #include <SDL.h>
+#include <stdint.h>
 #include <string>
 #include <unordered_map>
 
 namespace mengde {
 namespace gui {
 namespace foundation {
-
-typedef unsigned char uint8_t;
 
 struct Color {
   uint8_t r, g, b, a;
