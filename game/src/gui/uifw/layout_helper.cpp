@@ -1,5 +1,9 @@
 #include "layout_helper.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 Rect LayoutHelper::CalcPosition(Vec2D cont_size,
                                 Vec2D elem_size,
                                 Align alignment,
@@ -67,3 +71,7 @@ Vec2D LayoutHelper::CalcFittedSize(Vec2D orig, Vec2D max_size) {
   }
   return {w, h};
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

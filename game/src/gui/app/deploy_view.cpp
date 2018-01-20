@@ -13,6 +13,10 @@
 #include "equipment_set_view.h"
 #include "equipment_select_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 HeroModelView::HeroModelView(const Rect& frame,
                              shared_ptr<const mengde::core::Hero> hero,
                              mengde::core::IDeployHelper* deploy_helper,
@@ -151,3 +155,7 @@ DeployView::DeployView(const Rect& frame, mengde::core::Assets* assets, mengde::
 
   AddChild(equipment_select_view_);
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

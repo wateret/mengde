@@ -20,6 +20,10 @@
 #include "gui/foundation/texture_animator.h"
 #include "gui/uifw/modal_dialog_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 // StateUI
 
 StateUI::StateUI(Base base)
@@ -1091,3 +1095,7 @@ void StateUIEnd::Update() {
     rv_->EndGame();
   }
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

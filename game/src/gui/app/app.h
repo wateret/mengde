@@ -8,6 +8,10 @@
 #include "gui/foundation/event_fetcher.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Game;
   class Scenario;
@@ -88,5 +92,9 @@ class App {
 
   bool quit_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif

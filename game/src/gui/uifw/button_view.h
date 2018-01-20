@@ -4,6 +4,10 @@
 #include "callback_view.h"
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class TextView;
 
 class ButtonView : public CallbackView {
@@ -14,5 +18,9 @@ class ButtonView : public CallbackView {
   TextView* tv_label_;
   Color     hover_color_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // BUTTON_VIEW_H_

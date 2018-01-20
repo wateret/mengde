@@ -4,6 +4,10 @@
 #include "util/common.h"
 #include "composite_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class TextView;
 
 // ModalDialogView
@@ -24,5 +28,9 @@ class ModalDialogView : public CompositeView {
   CompositeView* frame_view_;
   TextView* message_view_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // MODAL_DIALOG_VIEW_H_

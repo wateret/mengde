@@ -2,6 +2,10 @@
 #include "text_view.h"
 #include "drawer.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 ButtonView::ButtonView(const Rect* frame, const std::string& text)
     : CallbackView(frame), tv_label_(nullptr), hover_color_(0,0,0,255) {
   bg_color(COLOR("gray"));
@@ -18,4 +22,8 @@ ButtonView::ButtonView(const Rect* frame, const std::string& text)
     return true;
   });
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 

@@ -6,6 +6,10 @@
 #include "gui/foundation/color.h"
 #include "layout_helper.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class GaugeView : public View {
  public:
   enum HelpTextType {
@@ -41,5 +45,9 @@ class GaugeView : public View {
   HelpTextType help_text_type_;
   LayoutHelper::Align help_text_align_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // GAUGE_VIEW_H_

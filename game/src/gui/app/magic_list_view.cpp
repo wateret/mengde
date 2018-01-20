@@ -10,6 +10,10 @@
 #include "gui/uifw/scroll_view.h"
 #include "gui/uifw/vertical_list_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 MagicListView::MagicListView(const Rect& frame,
                              mengde::core::Game* const game,
                              RootView* const rv)
@@ -84,3 +88,7 @@ bool MagicListView::OnMouseButtonEvent(const MouseButtonEvent e) {
   }
   return CompositeView::OnMouseButtonEvent(e);
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

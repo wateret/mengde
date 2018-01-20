@@ -4,6 +4,10 @@
 #include "view.h"
 #include <vector>
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class CompositeView : public View {
  public:
   CompositeView();
@@ -29,5 +33,9 @@ class CompositeView : public View {
   std::vector<View*> children_;
   bool transparent_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // COMPOSITE_VIEW_H_

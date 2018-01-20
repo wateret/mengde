@@ -6,6 +6,10 @@
 #include "i_equipment_set_setter.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Hero;
   class Assets;
@@ -47,5 +51,9 @@ class DeployView : public CompositeView {
   EquipmentSetView* equipment_set_view_;
   EquipmentSelectView* equipment_select_view_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // DEPLOY_VIEW_H_

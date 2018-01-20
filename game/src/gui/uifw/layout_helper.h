@@ -4,6 +4,10 @@
 #include "util/common.h"
 #include "gui/foundation/rect.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class LayoutHelper {
  public:
   enum Align {
@@ -35,5 +39,9 @@ class LayoutHelper {
  public:
   static const int kDefaultSpace = 8; // default value for margin and padding
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // LAYOUT_HELPER_H_

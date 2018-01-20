@@ -6,6 +6,10 @@
 #include "util/state_machine.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Assets;
   class Game;
@@ -118,5 +122,9 @@ class RootView : public View {
   Vec2D max_camera_coords_;
   int   frame_count_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // ROOT_VIEW_H_

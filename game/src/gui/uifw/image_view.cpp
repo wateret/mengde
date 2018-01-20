@@ -3,6 +3,10 @@
 #include "drawer.h"
 #include "gui/foundation/texture_manager.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 ImageView::ImageView(const Rect* frame, const string& path)
     : ImageView(*frame, path) {
 }
@@ -50,4 +54,8 @@ bool ImageView::OnMouseButtonEvent(const MouseButtonEvent e) {
 bool ImageView::OnMouseMotionEvent(const MouseMotionEvent) {
   return false;
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 

@@ -1,6 +1,10 @@
 #include "scroll_view.h"
 #include "drawer.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, view), coords_(0, 0) {
   if (frame.GetSize() > view->GetFrame()->GetSize()) {
     LOG_WARNING("Wrapped frame size is smaller than ScrollView frame");
@@ -39,3 +43,7 @@ bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
   OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, e.GetCoords(), coords_o - coords_));
   return true;
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

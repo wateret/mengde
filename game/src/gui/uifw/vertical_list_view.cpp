@@ -1,5 +1,9 @@
 #include "vertical_list_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 VerticalListView::VerticalListView(const Rect& frame) : CompositeView(frame), margin_(0), total_element_height_(0) {
   // Initial height must be zero, the height value from frame is ignored
   SetSize({GetFrameSize().x , 0});
@@ -20,3 +24,7 @@ void VerticalListView::AddElement(View* e) {
 
   AddChild(e);
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

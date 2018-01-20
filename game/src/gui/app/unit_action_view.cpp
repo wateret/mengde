@@ -6,6 +6,10 @@
 #include "core/cmd.h"
 #include "core/game.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 UnitActionView::UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv)
     : VerticalListView(frame), game_(game), rv_(rv) {
   bg_color(COLOR("darkgray", 160));
@@ -52,3 +56,7 @@ bool UnitActionView::OnMouseButtonEvent(const MouseButtonEvent e) {
   }
   return CompositeView::OnMouseButtonEvent(e);
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

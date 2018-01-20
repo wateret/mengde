@@ -8,6 +8,10 @@
 #include "layout_helper.h"
 #include "sprite_type.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 struct Viewport {
   Rect  rect;
   Vec2D neg_coords;
@@ -58,5 +62,9 @@ class Drawer {
   Vec2D offset_;
   std::stack<Viewport> viewports_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // DRAWER_H_

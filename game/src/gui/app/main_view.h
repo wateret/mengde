@@ -3,6 +3,10 @@
 
 #include "gui/uifw/composite_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 class App;
 
 class MainView : public CompositeView {
@@ -11,5 +15,9 @@ class MainView : public CompositeView {
 
  private:
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // MAIN_VIEW_H_

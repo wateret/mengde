@@ -5,6 +5,10 @@
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 //
 // EquipmentView
 //
@@ -122,3 +126,7 @@ void EquipmentSetView::OnUpdate() {
   eqv_armor_->SetEquipment(equipment_set_->GetArmor());
   eqv_aid_->SetEquipment(equipment_set_->GetAid());
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

@@ -7,6 +7,10 @@
 #include "gui/foundation/texture_manager.h"
 #include "gui/app/app.h" // XXX Remove this depenency
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 Drawer::Drawer(Window* window, const string& scenario_path, const string& font_path)
     : window_size_(window->GetSize()),
       offset_(0, 0),
@@ -221,4 +225,8 @@ void Drawer::ResetViewport() {
 //  LOG_INFO("Viewport pop  (%d %d %d %d)", vp.rect.GetX(), vp.rect.GetY(), vp.rect.GetW(), vp.rect.GetH());
   renderer_->SetViewport(&vp.rect);
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 

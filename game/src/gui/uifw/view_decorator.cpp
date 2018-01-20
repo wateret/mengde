@@ -1,5 +1,9 @@
 #include "view_decorator.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 ViewDecorator::ViewDecorator(View* view) : View(view->GetFrame()), view_(view) {
 }
 
@@ -31,3 +35,7 @@ bool ViewDecorator::OnMouseMotionEvent(const MouseMotionEvent e) {
 bool ViewDecorator::OnMouseWheelEvent(const MouseWheelEvent e) {
   return view_->OnMouseWheelEvent(e);
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

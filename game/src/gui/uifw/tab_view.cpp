@@ -2,6 +2,10 @@
 #include "button_view.h"
 #include "layout_helper.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 TabView::TabView(const Rect* frame)
     : CompositeView(frame), view_index_(0) {
   bg_color(COLOR("darkgray"));
@@ -40,3 +44,7 @@ void TabView::AddTab(const string& button_text, View* view) {
 
   view->visible(index == view_index_);
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

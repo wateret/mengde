@@ -3,6 +3,10 @@
 
 #include "view_decorator.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class Drawer;
 
 class ScrollView : public ViewDecorator {
@@ -18,5 +22,9 @@ class ScrollView : public ViewDecorator {
  private:
   Vec2D coords_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // SCROLL_VIEW_H_

@@ -3,6 +3,10 @@
 
 #include "view_decorator.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class ModalView : public ViewDecorator {
  public:
   typedef std::function<bool(const MouseButtonEvent)> MouseButtonHandler;
@@ -14,5 +18,9 @@ class ModalView : public ViewDecorator {
  private:
   MouseButtonHandler handler_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // MODAL_VIEW_H_

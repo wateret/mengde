@@ -5,6 +5,10 @@
 #include <string>
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Unit;
   class Cell;
@@ -35,5 +39,9 @@ class UnitInfoView : public CompositeView {
   TextView*  tv_lftbot_;
   TextView*  tv_rgtbot_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif

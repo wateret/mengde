@@ -3,6 +3,10 @@
 
 #include "composite_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class VerticalListView : public CompositeView {
  public:
   VerticalListView(const Rect&);
@@ -13,5 +17,9 @@ class VerticalListView : public CompositeView {
   int margin_;
   int total_element_height_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // VERTICAL_LIST_VIEW_H_

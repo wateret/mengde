@@ -5,6 +5,10 @@
 #include "view.h"
 #include "layout_helper.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class TextView : public View {
  public:
   TextView(const Rect*, const std::string& = "");
@@ -27,5 +31,9 @@ class TextView : public View {
   int         size_;
   LayoutHelper::Align align_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // TEXT_VIEW_H_

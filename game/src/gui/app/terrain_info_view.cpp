@@ -3,6 +3,10 @@
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/text_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 TerrainInfoView::TerrainInfoView(const Rect& frame,
                                  Vec2D coords)
     : CompositeView(frame), coords_(coords) {
@@ -17,3 +21,7 @@ TerrainInfoView::TerrainInfoView(const Rect& frame,
 void TerrainInfoView::SetText(const string& s) {
   tv_name_->SetText(s);
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

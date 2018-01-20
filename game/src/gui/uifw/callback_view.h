@@ -4,6 +4,10 @@
 #include "composite_view.h"
 #include <functional>
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class CallbackView : public CompositeView {
  public:
   typedef std::function<bool(const MouseButtonEvent)> MouseButtonHandler;
@@ -25,5 +29,9 @@ class CallbackView : public CompositeView {
   MouseButtonHandler mouse_button_handler_;
   MouseMotionHandler mouse_motion_handler_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // CALLBACK_VIEW_H_

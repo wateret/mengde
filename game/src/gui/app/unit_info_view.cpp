@@ -7,6 +7,10 @@
 #include "gui/uifw/drawer.h"
 #include "gui/foundation/rect.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 UnitInfoView::UnitInfoView(const Rect* frame, mengde::core::Unit* unit)
     : CompositeView(frame),
       unit_(unit),
@@ -109,3 +113,7 @@ void UnitInfoView::SetContents(const std::string& id,
 bool UnitInfoView::OnMouseMotionEvent(const MouseMotionEvent) {
   return false;
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

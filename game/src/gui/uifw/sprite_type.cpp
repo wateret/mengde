@@ -1,5 +1,9 @@
 #include "sprite_type.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 const char* kSpriteToString[] = {
 #define MACRO_SPRITE_TYPE(ename, bname, dir, ofs, snum, bsize) #ename,
 #include "sprite_type.inc.h"
@@ -35,4 +39,8 @@ const int kSpriteBitmapSize[] = {
 #include "sprite_type.inc.h"
   0
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 

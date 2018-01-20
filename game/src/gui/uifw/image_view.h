@@ -5,6 +5,10 @@
 #include "util/common.h"
 #include <string>
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class Drawer;
 class Texture;
 
@@ -25,5 +29,9 @@ class ImageView : public View {
   Texture* texture_;
   Rect src_rect_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // IMAGE_VIEW_H_

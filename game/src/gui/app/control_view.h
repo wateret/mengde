@@ -4,6 +4,10 @@
 #include "gui/uifw/composite_view.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Game;
 }
@@ -22,5 +26,9 @@ class ControlView : public CompositeView {
   RootView* rv_;
   TextView* tv_turn_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // CONTROL_VIEW_H_

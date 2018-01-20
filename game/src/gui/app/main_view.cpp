@@ -3,6 +3,10 @@
 #include "gui/uifw/layout_helper.h"
 #include "gui/uifw/button_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
   bg_color(COLOR("white"));
   const Vec2D kButtonSize = {100, 100};
@@ -28,3 +32,7 @@ MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
   AddChild(start_button);
   AddChild(quit_button);
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

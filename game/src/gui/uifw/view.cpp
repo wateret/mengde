@@ -2,6 +2,10 @@
 
 #include "drawer.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 View::View(const Rect* frame)
  : frame_(*frame), bg_color_(0, 0, 0, 0), padding_(0), visible_(true) {
 }
@@ -120,3 +124,7 @@ bool View::DelegateMouseWheelEvent(MouseWheelEvent e) {
   }
   return false;
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

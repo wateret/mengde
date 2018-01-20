@@ -1,6 +1,10 @@
 #include "text_view.h"
 #include "drawer.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 TextView::TextView(const Rect* frame, const std::string& text)
     : TextView(frame, text, COLOR("white"), 14, LayoutHelper::kAlignLftTop) {
 }
@@ -40,4 +44,8 @@ bool TextView::OnMouseButtonEvent(const MouseButtonEvent e) {
 bool TextView::OnMouseMotionEvent(const MouseMotionEvent e) {
   return false;
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 

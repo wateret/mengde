@@ -1,6 +1,10 @@
 #include "gauge_view.h"
 #include "drawer.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 GaugeView::GaugeView(const Rect* frame,
                      int cur_val,
                      int max_val,
@@ -84,3 +88,7 @@ void GaugeView::Render(Drawer* drawer) {
     drawer->DrawText(str_hp, 14, {255, 255, 255, 255}, &frame, help_text_align_);
   }
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

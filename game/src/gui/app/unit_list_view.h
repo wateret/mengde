@@ -4,6 +4,10 @@
 #include "gui/uifw/composite_view.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Unit;
 }
@@ -32,5 +36,9 @@ class UnitListView : public CompositeView {
   vector<mengde::core::Unit*> unit_list_;
   UnitDetailView* unit_detail_view_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // UNIT_LIST_VIEW_H_

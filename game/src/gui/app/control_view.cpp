@@ -7,6 +7,10 @@
 #include "root_view.h"
 #include "minimap_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 ControlView::ControlView(const Rect* rect, mengde::core::Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
   bg_color(COLOR("darkgray", 192));
@@ -44,3 +48,7 @@ ControlView::ControlView(const Rect* rect, mengde::core::Game* game, RootView* r
 void ControlView::SetTurnText(int cur_turn, int max_turn) {
   tv_turn_->SetText(string("Turn ") + std::to_string(cur_turn) + string("/") + std::to_string(max_turn));
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

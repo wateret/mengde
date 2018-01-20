@@ -6,6 +6,10 @@
 #include "gui/uifw/scroll_view.h"
 #include "gui/uifw/text_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 UnitListView::UnitDetailView::UnitDetailView(const Rect& frame)
     : CompositeView(frame), unit_(nullptr), tv_name_(nullptr) {
   Rect tv_name_frame({0, 0}, {200, 100});
@@ -71,4 +75,8 @@ UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>&
     AddChild(unit_detail_view_);
   }
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 

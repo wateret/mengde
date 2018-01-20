@@ -5,6 +5,10 @@
 #include "util/common.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Game;
   class Unit;
@@ -41,5 +45,9 @@ class MagicListView : public CompositeView {
   VerticalListView* lv_magics_;
   View*             lv_magics_wrap_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // MAGIC_LIST_VIEW_H_

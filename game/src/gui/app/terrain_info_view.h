@@ -5,6 +5,10 @@
 #include "util/common.h"
 #include "core/terrain.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 class TextView;
 
 class TerrainInfoView : public CompositeView {
@@ -16,5 +20,9 @@ class TerrainInfoView : public CompositeView {
   Vec2D coords_;
   TextView* tv_name_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // TERRAIN_INFO_VIEW_H_

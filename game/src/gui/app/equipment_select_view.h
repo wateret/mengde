@@ -6,6 +6,10 @@
 #include "core/assets.h" // XXX temporary include for EquipmentWithAmount
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Assets;
   class Hero;
@@ -31,5 +35,9 @@ class EquipmentSelectView : public CompositeView {
   RowMajorListView* equipment_list_view_;
   IEquipmentSetSetter* equipment_set_update_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // EQUIPMENT_SELECT_VIEW_H_

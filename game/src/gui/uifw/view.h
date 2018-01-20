@@ -6,6 +6,10 @@
 #include "gui/foundation/rect.h"
 #include "i_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class Drawer;
 
 class View : public IView {
@@ -56,5 +60,9 @@ class View : public IView {
   uint32_t visible_:1;
   uint32_t reserved:31;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif

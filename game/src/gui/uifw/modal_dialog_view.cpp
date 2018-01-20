@@ -2,6 +2,10 @@
 #include "text_view.h"
 #include "layout_helper.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 ModalDialogView::ModalDialogView(const Rect* frame, const string& message)
     : CompositeView(frame), message_(message), message_view_(nullptr) {
   Rect dialog_frame = LayoutHelper::CalcPosition(GetFrameSize(),
@@ -31,3 +35,7 @@ bool ModalDialogView::OnMouseButtonEvent(const MouseButtonEvent e) {
 bool ModalDialogView::OnMouseMotionEvent(const MouseMotionEvent) {
   return true;
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

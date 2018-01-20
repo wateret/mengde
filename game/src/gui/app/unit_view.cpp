@@ -4,6 +4,10 @@
 #include "equipment_set_view.h"
 #include "unit_over_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 UnitView::UnitView(const Rect* frame)
     : TabView(frame), unit_(NULL) {
   Vec2D size = frame->GetSize();
@@ -23,4 +27,8 @@ void UnitView::SetUnit(mengde::core::Unit* unit) {
     equipment_set_view_->SetEquipmentSet(unit->GetEquipmentSet());
   }
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 

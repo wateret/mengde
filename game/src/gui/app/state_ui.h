@@ -4,6 +4,10 @@
 #include "util/state.h"
 #include "gui/uifw/i_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 // StateUI
 
 namespace mengde {
@@ -403,5 +407,9 @@ class StateUIEnd : public StateUI {
  private:
   bool is_victory_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif

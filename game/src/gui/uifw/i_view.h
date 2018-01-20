@@ -5,6 +5,10 @@
 #include "gui/foundation/mouse_motion_event.h"
 #include "gui/foundation/mouse_wheel_event.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class Drawer;
 
 class IView {
@@ -18,5 +22,9 @@ class IView {
 
  private:
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // I_VIEW_H_

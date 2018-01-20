@@ -7,6 +7,10 @@
 #include "gui/uifw/rect_view.h"
 #include "gui/uifw/image_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 MinimapView::MinimapView(const Rect* frame,
                          mengde::core::Game* game,
                          Vec2D* camera_coords_ptr,
@@ -70,3 +74,7 @@ void MinimapUnitsView::Render(Drawer* drawer) {
     drawer->FillRect(&rect);
   });
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

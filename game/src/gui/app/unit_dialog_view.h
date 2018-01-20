@@ -5,6 +5,10 @@
 #include "gui/uifw/composite_view.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Unit;
 }
@@ -29,5 +33,9 @@ class UnitDialogView : public CompositeView {
   TextView*      tv_name_;
   TextView*      tv_message_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // UNIT_DIALOG_VIEW_H_

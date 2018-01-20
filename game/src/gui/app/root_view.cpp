@@ -26,6 +26,10 @@
 #include "core/scenario.h"
 #include "layout_helper.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
     : View(),
       game_(scenario->GetGame()),
@@ -378,4 +382,8 @@ Vec2D RootView::GetUnitDialogViewFrameSize() const {
 void RootView::EndGame() {
   NextFrame([=] () { app_->EndGame(); });
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 

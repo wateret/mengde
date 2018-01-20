@@ -7,6 +7,10 @@
 #include "i_equipment_set_setter.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Unit;
   class Equipment;
@@ -48,5 +52,9 @@ class EquipmentSetView : public CompositeView, public IEquipmentSetSetter {
   EquipmentView* eqv_armor_;
   EquipmentView* eqv_aid_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // EQUIPMENT_SET_VIEW_H_

@@ -4,6 +4,10 @@
 #include "view.h"
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class RectView : public View {
  public:
   RectView(const Rect*, Color);
@@ -17,5 +21,9 @@ class RectView : public View {
   int   border_;
   Color border_color_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // RECT_VIEW_H_

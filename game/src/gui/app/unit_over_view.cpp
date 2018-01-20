@@ -6,6 +6,10 @@
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 UnitOverView::UnitOverView(const Rect* frame)
     : CompositeView(frame), unit_(NULL) {
   bg_color(COLOR("darkgray"));
@@ -95,3 +99,7 @@ void UnitOverView::OnUnitUpdate() {
   Path portrait_path = Path("portrait") / (unit_->GetId() + ".bmp");
   iv_portrait_->SetPath(portrait_path.ToString());
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

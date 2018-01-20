@@ -4,6 +4,10 @@
 #include "gui/uifw/composite_view.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Unit;
 }
@@ -36,5 +40,9 @@ class UnitOverView : public CompositeView {
   TextView*   tv_stats_[kNumGVs];
   GaugeView*  gv_stats_[kNumGVs];
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // UNIT_OVER_VIEW_H_

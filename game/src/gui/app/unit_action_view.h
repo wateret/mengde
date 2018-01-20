@@ -4,6 +4,10 @@
 #include "gui/uifw/vertical_list_view.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Game;
   class Unit;
@@ -26,5 +30,9 @@ class UnitActionView : public VerticalListView {
   ButtonView* btn_magic_;
   ButtonView* btn_stay_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // UNIT_ACTION_VIEW_H_

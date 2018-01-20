@@ -1,3 +1,7 @@
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 // SpriteType Macro
 
 #ifndef MACRO_SPRITE_TYPE
@@ -14,6 +18,10 @@ MACRO_SPRITE_TYPE(Attack,  "atk",   true,  0,      4,        64)
 MACRO_SPRITE_TYPE(Blocked, "spc",   true,  0,      1,        48)
 MACRO_SPRITE_TYPE(Damaged, "spc",   false, 3,      1,        48)
 MACRO_SPRITE_TYPE(Buff,    "spc",   false, 4,      1,        48)
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #undef MACRO_SPRITE_TYPE
 

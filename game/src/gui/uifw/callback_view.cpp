@@ -1,5 +1,9 @@
 #include "callback_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 CallbackView::CallbackView() : CompositeView() {
   InitHandlers();
 }
@@ -33,4 +37,8 @@ void CallbackView::SetMouseButtonHandler(MouseButtonHandler handler) {
 void CallbackView::SetMouseMotionHandler(MouseMotionHandler handler) {
   mouse_motion_handler_ = handler;
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 

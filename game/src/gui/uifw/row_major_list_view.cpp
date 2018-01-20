@@ -1,5 +1,9 @@
 #include "row_major_list_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 RowMajorListView::RowMajorListView(const Rect& frame, int row_height)
     : CompositeView(frame), row_height_(row_height), last_x_(0) {
   SetSize({GetFrameSize().x, 0});
@@ -24,3 +28,7 @@ void RowMajorListView::AddElement(View* e) {
 
   AddChild(e);
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

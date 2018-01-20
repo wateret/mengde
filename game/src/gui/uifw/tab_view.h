@@ -4,6 +4,10 @@
 #include "util/common.h"
 #include "composite_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class TabView : public CompositeView {
  public:
   TabView(const Rect*);
@@ -16,5 +20,9 @@ class TabView : public CompositeView {
   std::vector<View*> v_tabs_;
   int                view_index_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // TAB_VIEW_H_

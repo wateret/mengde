@@ -5,6 +5,10 @@
 #include "util/common.h"
 
 namespace mengde {
+namespace gui {
+namespace app {
+
+namespace mengde {
 namespace core {
   class Game;
 }
@@ -40,5 +44,9 @@ class MinimapUnitsView : public View {
   mengde::core::Game* game_;
   Vec2D unit_size_;
 };
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 
 #endif // MINIMAP_VIEW_H_

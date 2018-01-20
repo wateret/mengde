@@ -10,6 +10,10 @@
 #include "gui/uifw/row_major_list_view.h"
 #include "i_equipment_set_setter.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 //
 // EquipmentIconView
 //
@@ -75,3 +79,7 @@ void EquipmentSelectView::SetEquipments(const vector<mengde::core::EquipmentWith
   }
   equipment_list_view_ = new_list_view;
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde

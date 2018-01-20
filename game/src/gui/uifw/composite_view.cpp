@@ -1,5 +1,9 @@
 #include "composite_view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 CompositeView::CompositeView() : View(), transparent_(false) {
 }
 
@@ -105,3 +109,7 @@ bool CompositeView::OnMouseWheelEvent(const MouseWheelEvent e) {
   }
   return true;
 }
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde

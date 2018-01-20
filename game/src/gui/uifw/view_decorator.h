@@ -3,6 +3,10 @@
 
 #include "view.h"
 
+namespace mengde {
+namespace gui {
+namespace uifw {
+
 class ViewDecorator : public View {
  public:
   ViewDecorator(View*);
@@ -17,5 +21,9 @@ class ViewDecorator : public View {
  protected:
   View* view_;
 };
+
+} // namespace uifw
+} // namespace gui
+} // namespace mengde
 
 #endif // VIEW_DECORATOR_H_

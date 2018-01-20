@@ -16,6 +16,10 @@
 #include "main_view.h"
 #include "root_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 FrameConfig::FrameConfig(uint16_t max_frames_sec, float speed) : max_frames_sec_(max_frames_sec), speed_(speed) {
   ASSERT(0.125f <= speed_ && speed_ <= 4.0f);
   LOG_DEBUG("FPS CAP : %d");
@@ -176,4 +180,8 @@ void App::EndGame() {
   root_view_ = nullptr;
   target_view_ = main_view_;
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
 

@@ -5,6 +5,10 @@
 #include "gui/uifw/text_view.h"
 #include "gui/uifw/image_view.h"
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 UnitDialogView::UnitDialogView(const Rect* frame, const string& message, mengde::core::Unit* unit)
     : CompositeView(frame),
       message_(message),
@@ -50,3 +54,7 @@ bool UnitDialogView::OnMouseButtonEvent(const MouseButtonEvent e) {
   // Do not handle mouse button event. Just delegate to the View in next priority
   return false;
 }
+
+} // namespace app
+} // namespace gui
+} // namespace mengde
