@@ -294,7 +294,7 @@ void RootView::PopUIState() {
 void RootView::InitUIStateMachine() {
   NextFrame([this] () {
     ui_state_machine_.InitState();
-    if (game_->HasPendingCmd()) {
+    if (game_->HasNext()) {
       ui_state_machine_.PushState(new StateUIDoCmd({game_, this}));
     }
   });

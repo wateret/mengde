@@ -45,11 +45,11 @@ void StateUIDoCmd::Enter() {
   //       Can we do the command before StateUIView?
   if (cmd_to_do_) {
     // Run reserved command run
-    ASSERT(game_->HasPendingCmd());
+    ASSERT(game_->HasNext());
     game_->DoPendingCmd();
     cmd_to_do_ = false;
   }
-  while (game_->HasPendingCmd()) {
+  while (game_->HasNext()) {
     StateUI* state = GenerateNextCmdUIState();
     if (state != nullptr) {
       rv_->PushUIState(state);
@@ -66,7 +66,7 @@ void StateUIDoCmd::Enter() {
 // Generate corresponding StateUI for next Cmd
 // Returns nullptr when no UI needed
 StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
-  ASSERT(game_->HasPendingCmd());
+  ASSERT(game_->HasNext());
   const core::Cmd* cmd = game_->GetNextCmdConst();
   StateUI* no_state_ui = nullptr;
 
@@ -144,7 +144,7 @@ void StateUIDoCmd::Render(Drawer*) {
 }
 
 void StateUIDoCmd::Update() {
-  if (!game_->HasPendingCmd()) {
+  if (!game_->HasNext()) {
     rv_->PopUIState();
   }
 }
@@ -271,10 +271,10 @@ void StateUIView::Update() {
   }
 
   if (game_->IsAITurn()) {
-    game_->PushCmd(unique_ptr<core::CmdPlayAI>(new core::CmdPlayAI()));
+    game_->Push(unique_ptr<core::CmdPlayAI>(new core::CmdPlayAI()));
   }
 
-  if (game_->HasPendingCmd()) {
+  if (game_->HasNext()) {
     rv_->PushUIState(new StateUIDoCmd({game_, rv_}));
   }
 }
@@ -902,7 +902,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
             unique_ptr<core::CmdAction> action(new core::CmdAction());
             action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
             action->SetCmdAct(unique_ptr<core::CmdBasicAttack>(new core::CmdBasicAttack(atk, def, core::CmdBasicAttack::Type::kActive)));
-            game_->PushCmd(std::move(action));
+            game_->Push(std::move(action));
             rv_->InitUIStateMachine();
           } else {
             LOG_INFO("Cannot attack the unit. It is not enemy");
@@ -915,7 +915,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
             unique_ptr<core::CmdAction> action(new core::CmdAction());
             action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
             action->SetCmdAct(unique_ptr<core::CmdMagic>(new core::CmdMagic(atk, def, magic)));
-            game_->PushCmd(std::move(action));
+            game_->Push(std::move(action));
             rv_->InitUIStateMachine();
           } else {
             // TODO alert

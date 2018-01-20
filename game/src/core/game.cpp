@@ -230,12 +230,12 @@ Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
   return target;
 }
 
-bool Game::HasPendingCmd() const {
-  return commander_->HasPendingCmd();
+bool Game::HasNext() const {
+  return commander_->HasNext();
 }
 
 const Cmd* Game::GetNextCmdConst() const {
-  ASSERT(HasPendingCmd());
+  ASSERT(HasNext());
   return commander_->GetNextCmdConst();
 }
 
@@ -244,16 +244,16 @@ bool Game::UnitInCell(Vec2D c) const {
 }
 
 void Game::DoPendingCmd() {
-  ASSERT(HasPendingCmd());
+  ASSERT(HasNext());
 #ifdef DEBUG
   commander_->DebugPrint();
 #endif
-  commander_->DoNextCmd(this);
+  commander_->DoNext(this);
 }
 
-void Game::PushCmd(unique_ptr<Cmd> cmd) {
+void Game::Push(unique_ptr<Cmd> cmd) {
 ///  if (cmd == nullptr) return;
-  commander_->PushCmd(std::move(cmd));
+  commander_->Push(std::move(cmd));
 }
 
 bool Game::CheckStatus() {

@@ -13,11 +13,11 @@ class Game;
 class Commander {
  public:
   Commander();
-  bool HasPendingCmd() const;
+  bool HasNext() const;
   const Cmd* GetNextCmdConst() const;
-  void DoNextCmd(Game*);
+  void DoNext(Game*);
 //  void UnDo(Game*);
-  void PushCmd(unique_ptr<Cmd>);
+  void Push(unique_ptr<Cmd>);
   void DebugPrint() const;
 
  private:

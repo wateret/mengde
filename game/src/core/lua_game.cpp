@@ -92,7 +92,7 @@ LUA_IMPL(PushCmdMove) {
   Vec2D pos = GetVec2DFromLua(&lua);
   int unit_id = lua.Get<int>();
   Unit* unit = game->GetUnit(unit_id);
-  game->PushCmd(unique_ptr<CmdMove>(new CmdMove(unit, pos)));
+  game->Push(unique_ptr<CmdMove>(new CmdMove(unit, pos)));
   return 0;
 }
 
@@ -102,7 +102,7 @@ LUA_IMPL(PushCmdSpeak) {
   string words = lua.Get<string>();
   int unit_id = lua.Get<int>();
   Unit* unit = game->GetUnit(unit_id);
-  game->PushCmd(unique_ptr<CmdSpeak>(new CmdSpeak(unit, words)));
+  game->Push(unique_ptr<CmdSpeak>(new CmdSpeak(unit, words)));
   return 0;
 }
 

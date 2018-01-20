@@ -25,7 +25,7 @@ ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv)
   ButtonView* button = new ButtonView(&button_coords, "EndTurn");
   button->SetMouseButtonHandler([this] (const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      this->game_->PushCmd(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
+      this->game_->Push(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
       return true;
     }
     return true;

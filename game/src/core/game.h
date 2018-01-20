@@ -67,9 +67,9 @@ class Game : public IDeployHelper {
   bool IsUserTurn() const;
   uint16_t GetTurnCurrent() const;
   uint16_t GetTurnLimit() const;
-  bool HasPendingCmd() const;
+  bool HasNext() const;
   void DoPendingCmd();
-  void PushCmd(unique_ptr<Cmd>);
+  void Push(unique_ptr<Cmd>);
   const Cmd* GetNextCmdConst() const;
   bool UnitInCell(Vec2D) const;
   uint32_t GetNumEnemiesAlive();

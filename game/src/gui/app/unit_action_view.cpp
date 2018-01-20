@@ -43,7 +43,7 @@ void UnitActionView::SetUnit(core::Unit* unit) {
     unique_ptr<core::CmdAction> action(new core::CmdAction());
     action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
     action->SetCmdAct(unique_ptr<core::CmdStay>(new core::CmdStay(unit)));
-    game_->PushCmd(std::move(action));
+    game_->Push(std::move(action));
     rv_->InitUIStateMachine();
     return true;
   });
