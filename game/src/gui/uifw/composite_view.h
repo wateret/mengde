@@ -4,6 +4,8 @@
 #include "view.h"
 #include <vector>
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
@@ -25,9 +27,9 @@ class CompositeView : public View {
  public:
   void Render(Drawer*) override;
   void Update() override;
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
-  virtual bool OnMouseWheelEvent(const MouseWheelEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override;
 
  private:
   std::vector<View*> children_;

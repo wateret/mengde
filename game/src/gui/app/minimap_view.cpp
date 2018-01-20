@@ -12,7 +12,7 @@ namespace gui {
 namespace app {
 
 MinimapView::MinimapView(const Rect* frame,
-                         mengde::core::Game* game,
+                         core::Game* game,
                          Vec2D* camera_coords_ptr,
                          Vec2D camera_size,
                          Vec2D map_size)
@@ -45,21 +45,21 @@ Vec2D MinimapView::MagnifyForMinimap(Vec2D v) {
   return v * GetFrameSize() / map_size_;
 }
 
-MinimapUnitsView::MinimapUnitsView(const Rect* frame, mengde::core::Game* game, Vec2D map_size) : View(frame), game_(game) {
+MinimapUnitsView::MinimapUnitsView(const Rect* frame, core::Game* game, Vec2D map_size) : View(frame), game_(game) {
   unit_size_ = {48, 48};
   unit_size_ = unit_size_ * GetFrameSize() / map_size;
 }
 
 void MinimapUnitsView::Render(Drawer* drawer) {
-  game_->ForEachUnit([=] (mengde::core::Unit* u) {
+  game_->ForEachUnit([=] (core::Unit* u) {
     switch (u->GetForce()) {
-      case mengde::core::Force::kOwn:
+      case core::Force::kOwn:
         drawer->SetDrawColor({192, 0, 0, 255});
         break;
-      case mengde::core::Force::kAlly:
+      case core::Force::kAlly:
         drawer->SetDrawColor(COLOR("orange"));
         break;
-      case mengde::core::Force::kEnemy:
+      case core::Force::kEnemy:
         drawer->SetDrawColor(COLOR("blue"));
         break;
       default:

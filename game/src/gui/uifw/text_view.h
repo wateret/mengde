@@ -5,6 +5,8 @@
 #include "view.h"
 #include "layout_helper.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
@@ -19,8 +21,8 @@ class TextView : public View {
   void SetColor(Color);
 
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
 
  private:
   void UpdateCoords();

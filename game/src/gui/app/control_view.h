@@ -3,9 +3,7 @@
 
 #include "gui/uifw/composite_view.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -13,16 +11,19 @@ namespace core {
 }
 }
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 class RootView;
-class TextView;
 
 class ControlView : public CompositeView {
  public:
-  ControlView(const Rect*, mengde::core::Game*, RootView*);
+  ControlView(const Rect*, core::Game*, RootView*);
   void SetTurnText(int, int);
 
  private:
-  mengde::core::Game* game_;
+  core::Game* game_;
   RootView* rv_;
   TextView* tv_turn_;
 };

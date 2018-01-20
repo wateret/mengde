@@ -3,6 +3,8 @@
 
 #include "view.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
@@ -14,9 +16,9 @@ class ViewDecorator : public View {
   virtual ~ViewDecorator();
   virtual void Render(Drawer*) override;
   virtual void Update() override;
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
-  virtual bool OnMouseWheelEvent(const MouseWheelEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override;
 
  protected:
   View* view_;

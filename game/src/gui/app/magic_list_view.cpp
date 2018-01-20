@@ -15,7 +15,7 @@ namespace gui {
 namespace app {
 
 MagicListView::MagicListView(const Rect& frame,
-                             mengde::core::Game* const game,
+                             core::Game* const game,
                              RootView* const rv)
     : CompositeView(frame),
       game_(game),
@@ -36,7 +36,7 @@ MagicListView::MagicListView(const Rect& frame,
 MagicListView::~MagicListView() {
 }
 
-void MagicListView::SetUnitAndMagicList(mengde::core::Unit* unit, shared_ptr<mengde::core::MagicList> magic_list) {
+void MagicListView::SetUnitAndMagicList(core::Unit* unit, shared_ptr<core::MagicList> magic_list) {
   ASSERT((unit == nullptr) == (magic_list == nullptr)); // Both should be null or non-null at the same time
 
   if (unit == nullptr || magic_list == nullptr) return;
@@ -60,17 +60,17 @@ void MagicListView::SetUnitAndMagicList(mengde::core::Unit* unit, shared_ptr<men
   }
 
   for (int i = 0, sz = magic_list->NumMagics(); i < sz; i++) {
-    mengde::core::Magic* magic = magic_list->GetMagic(i);
+    core::Magic* magic = magic_list->GetMagic(i);
     string id    = magic->GetId();
     string name  = magic->GetId();
 
     // Variables to be captured for callback
-    mengde::core::Game*     game = game_;
+    core::Game*     game = game_;
     RootView* rv   = rv_;
 
     Rect button_frame({0, 0}, {frame_size.x, item_height_});
     ButtonView* button = new ButtonView(&button_frame, name);
-    button->SetMouseButtonHandler([game, rv, unit, id] (const MouseButtonEvent e) {
+    button->SetMouseButtonHandler([game, rv, unit, id] (const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
         rv->PushUIState(new StateUITargeting({game, rv}, unit, id));
         return true;
@@ -81,7 +81,7 @@ void MagicListView::SetUnitAndMagicList(mengde::core::Unit* unit, shared_ptr<men
   }
 }
 
-bool MagicListView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool MagicListView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   // Refuse to handle RightButtonUp
   if (e.IsRightButtonUp()) {
     return false;

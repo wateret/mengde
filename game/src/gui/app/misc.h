@@ -5,6 +5,8 @@
 
 #include "gui/uifw/sprite_type.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace app {

@@ -11,7 +11,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-ControlView::ControlView(const Rect* rect, mengde::core::Game* game, RootView* rv)
+ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv)
     : CompositeView(rect), game_(game), rv_(rv) {
   bg_color(COLOR("darkgray", 192));
   padding(8);
@@ -23,9 +23,9 @@ ControlView::ControlView(const Rect* rect, mengde::core::Game* game, RootView* r
 
   Rect button_coords = {0, 30, 100, 20};
   ButtonView* button = new ButtonView(&button_coords, "EndTurn");
-  button->SetMouseButtonHandler([this] (const MouseButtonEvent e) {
+  button->SetMouseButtonHandler([this] (const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      this->game_->PushCmd(unique_ptr<mengde::core::CmdEndTurn>(new mengde::core::CmdEndTurn()));
+      this->game_->PushCmd(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
       return true;
     }
     return true;

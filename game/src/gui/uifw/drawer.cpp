@@ -50,9 +50,9 @@ void Drawer::CopyTexture(Texture* texture,
 }
 
 void Drawer::CopyTextureToCell(Texture* texture, Rect* rect_src, Vec2D pos) {
-  Vec2D dst = pos * App::kBlockSize;
+  Vec2D dst = pos * app::App::kBlockSize;
   Vec2D size = rect_src->GetSize();
-  Vec2D adjust = (size - App::kBlockSize) / 2;
+  Vec2D adjust = (size - app::App::kBlockSize) / 2;
   Rect rect_dst(dst - adjust, size);
   CopyTexture(texture, rect_src, &rect_dst);
 }
@@ -104,8 +104,8 @@ void Drawer::CopySprite(const std::string& path,
   int sprite_index = kSpriteOffset[type] + sprite_offset + sprite_no;
 
   // FIXME Can we use CopyTextureToCell()? instead of calculating coords here
-  Vec2D dst = dst_coords * App::kBlockSize + offset;
-  int adjust = (bitmap_size - App::kBlockSize) / 2;
+  Vec2D dst = dst_coords * app::App::kBlockSize + offset;
+  int adjust = (bitmap_size - app::App::kBlockSize) / 2;
   Rect src_rect = {0, sprite_index, 1, 1};
   src_rect.Magnify(bitmap_size);
   Rect dst_rect = {dst.x - adjust,
@@ -187,13 +187,13 @@ void Drawer::DrawText(const std::string& text,
 
 void Drawer::BorderCell(Vec2D c, const int b) {
   Rect rect(c.x, c.y, 1, 1);
-  rect.Magnify(App::kBlockSize);
+  rect.Magnify(app::App::kBlockSize);
   DrawRect(&rect, b);
 }
 
 void Drawer::FillCell(Vec2D c) {
   Rect rect(c.x, c.y, 1, 1);
-  rect.Magnify(App::kBlockSize);
+  rect.Magnify(app::App::kBlockSize);
   FillRect(&rect);
 }
 

@@ -4,6 +4,8 @@
 #include "view.h"
 #include "util/common.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {

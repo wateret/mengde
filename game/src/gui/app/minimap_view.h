@@ -4,9 +4,7 @@
 #include "gui/uifw/composite_view.h"
 #include "util/common.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -14,13 +12,15 @@ namespace core {
 }
 }
 
-class RectView;
-class ImageView;
+namespace mengde {
+namespace gui {
+namespace app {
+
 class MinimapUnitsView;
 
 class MinimapView : public CompositeView {
  public:
-  MinimapView(const Rect*, mengde::core::Game*, Vec2D*, Vec2D, Vec2D);
+  MinimapView(const Rect*, core::Game*, Vec2D*, Vec2D, Vec2D);
   virtual void Update() override;
 
  private:
@@ -37,11 +37,11 @@ class MinimapView : public CompositeView {
 
 class MinimapUnitsView : public View {
  public:
-  MinimapUnitsView(const Rect*, mengde::core::Game*, Vec2D);
+  MinimapUnitsView(const Rect*, core::Game*, Vec2D);
   virtual void Render(Drawer*) override;
 
  private:
-  mengde::core::Game* game_;
+  core::Game* game_;
   Vec2D unit_size_;
 };
 

@@ -4,9 +4,7 @@
 #include "util/common.h"
 #include "gui/uifw/composite_view.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -14,21 +12,22 @@ namespace core {
 }
 }
 
-class ImageView;
-class TextView;
+namespace mengde {
+namespace gui {
+namespace app {
 
 class UnitDialogView : public CompositeView {
  public:
-  UnitDialogView(const Rect*, const string& = "", mengde::core::Unit* = nullptr);
+  UnitDialogView(const Rect*, const string& = "", core::Unit* = nullptr);
   void SetText(const string&);
-  void SetUnit(mengde::core::Unit* u);
+  void SetUnit(core::Unit* u);
 
  private:
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
  private:
   string         message_;
-  mengde::core::Unit*          unit_; // FIXME Do we really need this?
+  core::Unit*          unit_; // FIXME Do we really need this?
   ImageView*     iv_portrait_;
   TextView*      tv_name_;
   TextView*      tv_message_;

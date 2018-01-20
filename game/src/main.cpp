@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
   UNUSED(argv);
 
   try {
-    App* app = new App(1024, 768, 60);
+    mengde::gui::app::App* app = new mengde::gui::app::App(1024, 768, 60);
     app->Run();
 
     delete app;

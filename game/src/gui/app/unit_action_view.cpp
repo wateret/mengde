@@ -10,7 +10,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitActionView::UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv)
+UnitActionView::UnitActionView(const Rect& frame, core::Game* game, RootView* rv)
     : VerticalListView(frame), game_(game), rv_(rv) {
   bg_color(COLOR("darkgray", 160));
   padding(8);
@@ -26,30 +26,30 @@ UnitActionView::UnitActionView(const Rect& frame, mengde::core::Game* game, Root
   AddElement(btn_stay_);
 }
 
-void UnitActionView::SetUnit(mengde::core::Unit* unit) {
-  btn_attack_->SetMouseButtonHandler([=] (const MouseButtonEvent e) {
+void UnitActionView::SetUnit(core::Unit* unit) {
+  btn_attack_->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       rv_->PushUIState(new StateUITargeting({game_, rv_}, unit));
     }
     return true;
   });
-  btn_magic_->SetMouseButtonHandler([=] (const MouseButtonEvent e) {
+  btn_magic_->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       rv_->PushUIState(new StateUIMagicSelection({game_, rv_}, unit));
     }
     return true;
   });
-  btn_stay_->SetMouseButtonHandler([=] (const MouseButtonEvent e) {
-    unique_ptr<mengde::core::CmdAction> action(new mengde::core::CmdAction());
-    action->SetCmdMove(unique_ptr<mengde::core::CmdMove>(new mengde::core::CmdMove(unit, unit->GetPosition())));
-    action->SetCmdAct(unique_ptr<mengde::core::CmdStay>(new mengde::core::CmdStay(unit)));
+  btn_stay_->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) {
+    unique_ptr<core::CmdAction> action(new core::CmdAction());
+    action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
+    action->SetCmdAct(unique_ptr<core::CmdStay>(new core::CmdStay(unit)));
     game_->PushCmd(std::move(action));
     rv_->InitUIStateMachine();
     return true;
   });
 }
 
-bool UnitActionView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool UnitActionView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   // Refuse to handle RightButtonUp
   if (e.IsRightButtonUp()) {
     return false;

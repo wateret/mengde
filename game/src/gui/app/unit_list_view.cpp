@@ -17,14 +17,14 @@ UnitListView::UnitDetailView::UnitDetailView(const Rect& frame)
   AddChild(tv_name_);
 }
 
-void UnitListView::UnitDetailView::SetUnit(mengde::core::Unit* unit) {
+void UnitListView::UnitDetailView::SetUnit(core::Unit* unit) {
   unit_ = unit;
 
   string name = unit->GetId();
   tv_name_->SetText(name);
 }
 
-UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>& unit_list)
+UnitListView::UnitListView(const Rect& frame, const vector<core::Unit*>& unit_list)
     : CompositeView(frame), unit_list_(unit_list), unit_detail_view_(nullptr) {
   padding(8);
   bg_color(COLOR("darkgray"));
@@ -36,7 +36,7 @@ UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>&
   {
     Rect btn_close_frame({0, list_view_size.y + margin}, btn_close_size);
     ButtonView* btn_close = new ButtonView(&btn_close_frame, "Close");
-    btn_close->SetMouseButtonHandler([this] (const MouseButtonEvent e) {
+    btn_close->SetMouseButtonHandler([this] (const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
         this->visible(false);
       }
@@ -53,7 +53,7 @@ UnitListView::UnitListView(const Rect& frame, const vector<mengde::core::Unit*>&
       std::string name = unit->GetId();
       Rect button_frame({0, 0}, {list_view_size.x, element_height});
       ButtonView* button = new ButtonView(&button_frame, name);
-      button->SetMouseButtonHandler([this, unit] (const MouseButtonEvent e) {
+      button->SetMouseButtonHandler([this, unit] (const foundation::MouseButtonEvent e) {
         if (e.IsLeftButtonUp()) {
           this->SetUnit(unit);
         }

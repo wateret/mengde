@@ -24,15 +24,15 @@ void ViewDecorator::Update() {
   view_->Update();
 }
 
-bool ViewDecorator::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool ViewDecorator::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   return view_->OnMouseButtonEvent(e);
 }
 
-bool ViewDecorator::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool ViewDecorator::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   return view_->OnMouseMotionEvent(e);
 }
 
-bool ViewDecorator::OnMouseWheelEvent(const MouseWheelEvent e) {
+bool ViewDecorator::OnMouseWheelEvent(const foundation::MouseWheelEvent e) {
   return view_->OnMouseWheelEvent(e);
 }
 

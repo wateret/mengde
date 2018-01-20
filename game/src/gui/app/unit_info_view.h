@@ -4,9 +4,7 @@
 #include "gui/uifw/composite_view.h"
 #include <string>
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -16,22 +14,23 @@ namespace core {
 }
 }
 
-class GaugeView;
-class TextView;
+namespace mengde {
+namespace gui {
+namespace app {
 
 class UnitInfoView : public CompositeView {
  public:
-  UnitInfoView(const Rect*, mengde::core::Unit* = NULL);
+  UnitInfoView(const Rect*, core::Unit* = NULL);
   virtual ~UnitInfoView();
-  void SetUnitTerrainInfo(mengde::core::Cell* cell);
-  void SetUnitAttackInfo(mengde::core::Unit*, int, int);
-  void SetUnit(mengde::core::Unit*);
-  void SetContents(const std::string&, int, const mengde::core::HpMp&, const mengde::core::HpMp&, int = 0, int = 0);
+  void SetUnitTerrainInfo(core::Cell* cell);
+  void SetUnitAttackInfo(core::Unit*, int, int);
+  void SetUnit(core::Unit*);
+  void SetContents(const std::string&, int, const core::HpMp&, const core::HpMp&, int = 0, int = 0);
 
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
 
  private:
-  mengde::core::Unit*      unit_;
+  core::Unit*      unit_;
   GaugeView* gv_hp_;
   GaugeView* gv_mp_;
   TextView*  tv_name_;

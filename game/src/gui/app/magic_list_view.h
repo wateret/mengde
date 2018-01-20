@@ -4,9 +4,7 @@
 #include "gui/uifw/composite_view.h"
 #include "util/common.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -16,25 +14,27 @@ namespace core {
 }
 }
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 class RootView;
-class TextView;
-class VerticalListView;
 
 class MagicListView : public CompositeView {
  public:
    static const int kTitleHeight = 24;
 
  public:
-  MagicListView(const Rect&, mengde::core::Game* const, RootView* const);
+  MagicListView(const Rect&, core::Game* const, RootView* const);
   ~MagicListView();
-  void SetUnitAndMagicList(mengde::core::Unit*, shared_ptr<mengde::core::MagicList>);
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
+  void SetUnitAndMagicList(core::Unit*, shared_ptr<core::MagicList>);
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
  private:
   void Cleanup();
 
  private:
-  mengde::core::Game*     const game_;
+  core::Game*     const game_;
   RootView* const rv_;
 
  private:

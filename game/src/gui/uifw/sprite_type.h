@@ -1,6 +1,8 @@
 #ifndef SPRITE_TYPE_H_
 #define SPRITE_TYPE_H_
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {

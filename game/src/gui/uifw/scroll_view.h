@@ -3,6 +3,8 @@
 
 #include "view_decorator.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
@@ -15,9 +17,9 @@ class ScrollView : public ViewDecorator {
 
  public:
   ScrollView(const Rect&, View*);
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
-  virtual bool OnMouseWheelEvent(const MouseWheelEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override;
 
  private:
   Vec2D coords_;

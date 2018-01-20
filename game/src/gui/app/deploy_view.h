@@ -5,9 +5,7 @@
 #include "gui/uifw/callback_view.h"
 #include "i_equipment_set_setter.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -17,19 +15,22 @@ namespace core {
 }
 }
 
-class TextView;
+namespace mengde {
+namespace gui {
+namespace app {
+
 class EquipmentSetView;
 class EquipmentSelectView;
 
 class HeroModelView : public CallbackView {
  public:
-  HeroModelView(const Rect&, shared_ptr<const mengde::core::Hero>, mengde::core::IDeployHelper*, IEquipmentSetSetter*);
+  HeroModelView(const Rect&, shared_ptr<const core::Hero>, core::IDeployHelper*, IEquipmentSetSetter*);
   void UpdateViews();
   void SetDeployNo(uint32_t no) { deploy_no_ = no; }
   bool IsSelected() { return deploy_no_ != 0; }
 
  private:
-  shared_ptr<const mengde::core::Hero> hero_;
+  shared_ptr<const core::Hero> hero_;
   uint32_t deploy_no_;
   bool     required_unselectable_;
   TextView* tv_no_;
@@ -37,7 +38,7 @@ class HeroModelView : public CallbackView {
 
 class HeroModelListView : public CompositeView {
  public:
-  HeroModelListView(const Rect&, const vector<shared_ptr<const mengde::core::Hero>>&, mengde::core::IDeployHelper*,
+  HeroModelListView(const Rect&, const vector<shared_ptr<const core::Hero>>&, core::IDeployHelper*,
                     IEquipmentSetSetter*, EquipmentSelectView*);
 };
 
@@ -45,7 +46,7 @@ class HeroModelListView : public CompositeView {
 
 class DeployView : public CompositeView {
  public:
-  DeployView(const Rect&, mengde::core::Assets*, mengde::core::IDeployHelper*);
+  DeployView(const Rect&, core::Assets*, core::IDeployHelper*);
 
  private:
   EquipmentSetView* equipment_set_view_;

@@ -72,7 +72,7 @@ void CompositeView::Update() {
   }
 }
 
-bool CompositeView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool CompositeView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   // Mouse events should be handled in reverse order
   for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
     View* view = *itr;
@@ -81,7 +81,7 @@ bool CompositeView::OnMouseButtonEvent(const MouseButtonEvent e) {
   return !transparent_;
 }
 
-bool CompositeView::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool CompositeView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   if (e.IsMotionOver()) {
     bool is_handled = false;
     // Mouse events should be handled in reverse order
@@ -101,7 +101,7 @@ bool CompositeView::OnMouseMotionEvent(const MouseMotionEvent e) {
   }
 }
 
-bool CompositeView::OnMouseWheelEvent(const MouseWheelEvent e) {
+bool CompositeView::OnMouseWheelEvent(const foundation::MouseWheelEvent e) {
   // Mouse events should be handled in reverse order
   for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
     View* view = *itr;

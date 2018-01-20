@@ -8,6 +8,8 @@
 #include "layout_helper.h"
 #include "sprite_type.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
@@ -17,11 +19,6 @@ struct Viewport {
   Vec2D neg_coords;
   Viewport(const Rect& r, Vec2D neg) : rect(r), neg_coords(neg) { /* ASSERT(neg.x < 0 && neg.y < 0); */ }
 };
-
-class Window;
-class Renderer;
-class Texture;
-class TextureManager;
 
 class Drawer {
  public:

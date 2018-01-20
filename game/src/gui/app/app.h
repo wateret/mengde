@@ -7,9 +7,7 @@
 #include "gui/foundation/timer.h"
 #include "gui/foundation/event_fetcher.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -18,10 +16,9 @@ namespace core {
 }
 }
 
-class Drawer;
-class EventFetcher;
-class View;
-class Window;
+namespace mengde {
+namespace gui {
+namespace app {
 
 class FrameConfig {
  public:
@@ -84,7 +81,7 @@ class App {
   View*   main_view_;
   View*   root_view_;
   View*   target_view_;
-  mengde::core::Scenario* scenario_;
+  core::Scenario* scenario_;
 
   // fps
   const FrameConfig frame_config_;

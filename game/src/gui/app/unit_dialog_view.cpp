@@ -9,7 +9,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitDialogView::UnitDialogView(const Rect* frame, const string& message, mengde::core::Unit* unit)
+UnitDialogView::UnitDialogView(const Rect* frame, const string& message, core::Unit* unit)
     : CompositeView(frame),
       message_(message),
       unit_(unit),
@@ -43,14 +43,14 @@ void UnitDialogView::SetText(const string& s) {
   tv_message_->SetText(s);
 }
 
-void UnitDialogView::SetUnit(mengde::core::Unit* u) {
+void UnitDialogView::SetUnit(core::Unit* u) {
   unit_ = u;
   string portrait_path = "portrait/" + unit_->GetId() + ".bmp";
   iv_portrait_->SetPath(portrait_path);
   tv_name_->SetText(unit_->GetId());
 }
 
-bool UnitDialogView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool UnitDialogView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   // Do not handle mouse button event. Just delegate to the View in next priority
   return false;
 }

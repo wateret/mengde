@@ -64,7 +64,7 @@ UnitOverView::UnitOverView(const Rect* frame)
   }
 }
 
-void UnitOverView::SetUnit(mengde::core::Unit* unit) {
+void UnitOverView::SetUnit(core::Unit* unit) {
   unit_ = unit;
   OnUnitUpdate();
 }
@@ -77,13 +77,13 @@ void UnitOverView::OnUnitUpdate() {
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
 
-  const mengde::core::Attribute& ori_attr = unit_->GetOriginalStat();
-  const mengde::core::Attribute& cur_attr = unit_->GetCurrentStat();
-  const mengde::core::HpMp& ori_hpmp = unit_->GetOriginalHpMp();
-  const mengde::core::HpMp& cur_hpmp = unit_->GetCurrentHpMp();
+  const core::Attribute& ori_attr = unit_->GetOriginalStat();
+  const core::Attribute& cur_attr = unit_->GetCurrentStat();
+  const core::HpMp& ori_hpmp = unit_->GetOriginalHpMp();
+  const core::HpMp& cur_hpmp = unit_->GetCurrentHpMp();
 
   gv_stats_[0]->SetCurVal(unit_->GetExp());
-  gv_stats_[0]->SetMaxVal(mengde::core::Level::kExpLimit);
+  gv_stats_[0]->SetMaxVal(core::Level::kExpLimit);
 
   gv_stats_[1]->SetCurVal(cur_hpmp.hp);
   gv_stats_[1]->SetMaxVal(ori_hpmp.hp);

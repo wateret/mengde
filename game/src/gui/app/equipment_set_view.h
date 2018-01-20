@@ -6,9 +6,7 @@
 #include "gui/uifw/layout_helper.h"
 #include "i_equipment_set_setter.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -18,13 +16,15 @@ namespace core {
 }
 }
 
-class ImageView;
-class TextView;;
+namespace mengde {
+namespace gui {
+
+namespace app {
 
 class EquipmentView : public CallbackView {
  public:
-  EquipmentView(const Rect*, const mengde::core::Equipment*);
-  void SetEquipment(const mengde::core::Equipment*);
+  EquipmentView(const Rect*, const core::Equipment*);
+  void SetEquipment(const core::Equipment*);
 
  private:
   ImageView* iv_image_;
@@ -35,7 +35,7 @@ class EquipmentView : public CallbackView {
 class EquipmentSetView : public CompositeView, public IEquipmentSetSetter {
  public:
   EquipmentSetView(const Rect*);
-  void SetEquipmentSet(const mengde::core::EquipmentSet*) override;
+  void SetEquipmentSet(const core::EquipmentSet*) override;
   void SetWeaponMouseButtonHandler(const CallbackView::MouseButtonHandler&);
   void SetArmorMouseButtonHandler(const CallbackView::MouseButtonHandler&);
   void SetAidMouseButtonHandler(const CallbackView::MouseButtonHandler&);
@@ -44,7 +44,7 @@ class EquipmentSetView : public CompositeView, public IEquipmentSetSetter {
   void OnUpdate();
 
  private:
-  const mengde::core::EquipmentSet* equipment_set_;
+  const core::EquipmentSet* equipment_set_;
   TextView* tv_weapon_label_;
   TextView* tv_armor_label_;
   TextView* tv_aid_label_;

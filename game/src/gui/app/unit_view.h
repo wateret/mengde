@@ -3,9 +3,7 @@
 
 #include "gui/uifw/tab_view.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -13,16 +11,20 @@ namespace core {
 }
 }
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 class UnitOverView;
 class EquipmentSetView;
 
 class UnitView : public TabView {
  public:
   UnitView(const Rect*);
-  void SetUnit(mengde::core::Unit* unit);
+  void SetUnit(core::Unit* unit);
 
  private:
-  mengde::core::Unit* unit_;
+  core::Unit* unit_;
   UnitOverView* unit_over_view_; // tab 0
   EquipmentSetView* equipment_set_view_; // tab 1
 };

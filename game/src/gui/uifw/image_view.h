@@ -5,12 +5,13 @@
 #include "util/common.h"
 #include <string>
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
 
 class Drawer;
-class Texture;
 
 class ImageView : public View {
  public:
@@ -21,8 +22,8 @@ class ImageView : public View {
   void SetSourceRect(const Rect&);
 
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
 
  private:
   std::string path_;

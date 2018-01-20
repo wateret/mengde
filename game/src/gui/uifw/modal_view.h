@@ -3,17 +3,19 @@
 
 #include "view_decorator.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
 
 class ModalView : public ViewDecorator {
  public:
-  typedef std::function<bool(const MouseButtonEvent)> MouseButtonHandler;
+  typedef std::function<bool(const foundation::MouseButtonEvent)> MouseButtonHandler;
 
  public:
   ModalView(const Rect& frame, View* view, const MouseButtonHandler&);
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
  private:
   MouseButtonHandler handler_;

@@ -6,6 +6,8 @@
 #include "gui/foundation/color.h"
 #include "layout_helper.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {

@@ -5,9 +5,7 @@
 #include "util/common.h"
 #include "util/state_machine.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -20,17 +18,18 @@ namespace core {
 }
 }
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 class App;
 class StateUI;
 
-class CompositeView;
 class DeployView;
 class EquipmentSelectView;
 class UnitView;
 class UnitDialogView;
 class ControlView;
-class ModalDialogView;
-class ModalView;
 class MagicListView;
 class UnitActionView;
 class UnitInfoView;
@@ -42,7 +41,7 @@ class RootView : public View {
    typedef function<void()> NextFrameCallback;
 
  public:
-  RootView(const Vec2D, mengde::core::Scenario*, App*);
+  RootView(const Vec2D, core::Scenario*, App*);
   ~RootView();
   Vec2D GetMouseCoords() { return mouse_coords_; }
   Vec2D GetCameraCoords() { return camera_coords_; }
@@ -55,18 +54,18 @@ class RootView : public View {
   // View wrappers
   void SetControlViewTurnText(int, int);
   void SetUnitViewVisible(bool);
-  void SetUnitViewUnit(mengde::core::Unit*);
-  void SetUnitInfoViewUnitTerrainInfo(mengde::core::Cell* cell);
-  void SetUnitInfoViewUnitAttackInfo(mengde::core::Unit* unit, int, int);
-  void SetUnitInfoViewContents(const std::string&, int, const mengde::core::HpMp&, const mengde::core::HpMp&, int, int);
+  void SetUnitViewUnit(core::Unit*);
+  void SetUnitInfoViewUnitTerrainInfo(core::Cell* cell);
+  void SetUnitInfoViewUnitAttackInfo(core::Unit* unit, int, int);
+  void SetUnitInfoViewContents(const std::string&, int, const core::HpMp&, const core::HpMp&, int, int);
   void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
   void SetUnitInfoViewVisible(bool);
   void SetTerrainInfoViewVisible(bool);
   void SetTerrainInfoViewText(const string&);
   void SetUnitListViewVisible(bool);
-  void SetUnitListViewUnit(mengde::core::Unit* unit);
+  void SetUnitListViewUnit(core::Unit* unit);
 
-  void SetUnitDialogViewUnitAndText(mengde::core::Unit*, const string&);
+  void SetUnitDialogViewUnitAndText(core::Unit*, const string&);
   void SetUnitDialogViewCoords(Vec2D v);
   void SetUnitDialogViewVisible(bool b);
   bool GetUnitDialogViewVisible() const;
@@ -90,9 +89,9 @@ class RootView : public View {
   // Overriden method (View)
   virtual void Update() override;
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
-  virtual bool OnMouseWheelEvent(const MouseWheelEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override;
 
  private:
   void RunCallbacks();
@@ -100,7 +99,7 @@ class RootView : public View {
   void RaiseMouseMotionEvent();
 
  private:
-  mengde::core::Game*                  game_;
+  core::Game*                  game_;
   App*                   app_;
   CompositeView*         ui_views_;
   DeployView*            deploy_view_;

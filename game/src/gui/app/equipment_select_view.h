@@ -5,9 +5,7 @@
 #include "gui/uifw/composite_view.h"
 #include "core/assets.h" // XXX temporary include for EquipmentWithAmount
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -16,7 +14,10 @@ namespace core {
 }
 }
 
-class RowMajorListView;
+namespace mengde {
+namespace gui {
+namespace app {
+
 class IEquipmentSetSetter;
 
 class ItemIconView : public CallbackView {
@@ -27,11 +28,11 @@ class ItemIconView : public CallbackView {
 class EquipmentSelectView : public CompositeView {
  public:
   EquipmentSelectView(const Rect&, IEquipmentSetSetter*);
-  void SetHero(const shared_ptr<const mengde::core::Hero>& hero) { hero_ = hero; }
-  void SetEquipments(const vector<mengde::core::EquipmentWithAmount>&, mengde::core::Assets*);
+  void SetHero(const shared_ptr<const core::Hero>& hero) { hero_ = hero; }
+  void SetEquipments(const vector<core::EquipmentWithAmount>&, core::Assets*);
 
  private:
-  shared_ptr<const mengde::core::Hero> hero_;
+  shared_ptr<const core::Hero> hero_;
   RowMajorListView* equipment_list_view_;
   IEquipmentSetSetter* equipment_set_update_;
 };

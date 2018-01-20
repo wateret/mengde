@@ -3,9 +3,7 @@
 
 #include "util/common.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -13,9 +11,13 @@ namespace core {
 }
 }
 
+namespace mengde {
+namespace gui {
+namespace app {
+
 class IEquipmentSetSetter {
  public:
-  virtual void SetEquipmentSet(const mengde::core::EquipmentSet*) = 0;
+  virtual void SetEquipmentSet(const core::EquipmentSet*) = 0;
 };
 
 } // namespace app

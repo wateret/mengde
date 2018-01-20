@@ -11,7 +11,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitInfoView::UnitInfoView(const Rect* frame, mengde::core::Unit* unit)
+UnitInfoView::UnitInfoView(const Rect* frame, core::Unit* unit)
     : CompositeView(frame),
       unit_(unit),
       gv_hp_(nullptr),
@@ -58,10 +58,10 @@ UnitInfoView::UnitInfoView(const Rect* frame, mengde::core::Unit* unit)
 UnitInfoView::~UnitInfoView() {
 }
 
-void UnitInfoView::SetUnitTerrainInfo(mengde::core::Cell* cell) {
+void UnitInfoView::SetUnitTerrainInfo(core::Cell* cell) {
   ASSERT(cell->IsUnitPlaced());
 
-  mengde::core::Unit* unit = cell->GetUnit();
+  core::Unit* unit = cell->GetUnit();
   if (unit_ == unit) return;
   SetUnit(unit);
 
@@ -71,16 +71,16 @@ void UnitInfoView::SetUnitTerrainInfo(mengde::core::Cell* cell) {
   tv_rgtbot_->SetText(terrain_effect);
 }
 
-void UnitInfoView::SetUnitAttackInfo(mengde::core::Unit* unit, int accuracy, int expected_damage) {
+void UnitInfoView::SetUnitAttackInfo(core::Unit* unit, int accuracy, int expected_damage) {
   SetUnit(unit);
   gv_hp_->SetExtVal(expected_damage);
   tv_rgtbot_->SetText("Accuracy : " + std::to_string(accuracy) + "%");
 }
 
-void UnitInfoView::SetUnit(mengde::core::Unit* unit) {
+void UnitInfoView::SetUnit(core::Unit* unit) {
   unit_ = unit;
-  const mengde::core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
-  const mengde::core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
+  const core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
+  const core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
   gv_hp_->SetCurVal(cur_xtat.hp);
   gv_hp_->SetMaxVal(ori_xtat.hp);
   gv_hp_->SetExtVal(0);
@@ -93,8 +93,8 @@ void UnitInfoView::SetUnit(mengde::core::Unit* unit) {
 
 void UnitInfoView::SetContents(const std::string& id,
                                int lv,
-                               const mengde::core::HpMp& xcur,
-                               const mengde::core::HpMp& xmax,
+                               const core::HpMp& xcur,
+                               const core::HpMp& xmax,
                                int damage,
                                int mp_cost) {
   unit_ = nullptr; // Reset cache
@@ -110,7 +110,7 @@ void UnitInfoView::SetContents(const std::string& id,
   tv_rgtbot_->SetText("");
 }
 
-bool UnitInfoView::OnMouseMotionEvent(const MouseMotionEvent) {
+bool UnitInfoView::OnMouseMotionEvent(const foundation::MouseMotionEvent) {
   return false;
 }
 

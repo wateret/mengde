@@ -30,7 +30,7 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
   TextView* tv_amount = new TextView(&tv_amount_frame, std::to_string(amount), COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
   AddChild(tv_amount);
 
-  SetMouseMotionHandler([this] (const MouseMotionEvent e) {
+  SetMouseMotionHandler([this] (const foundation::MouseMotionEvent e) {
     if (e.IsMotionOver()) {
       this->bg_color(COLOR("darkgray"));
     } else {
@@ -50,7 +50,7 @@ EquipmentSelectView::EquipmentSelectView(const Rect& frame, IEquipmentSetSetter*
   bg_color(COLOR("black"));
 }
 
-void EquipmentSelectView::SetEquipments(const vector<mengde::core::EquipmentWithAmount>& equipments, mengde::core::Assets* assets) {
+void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>& equipments, core::Assets* assets) {
   static const int kItemSize = 48;
 
   RowMajorListView* new_list_view = new RowMajorListView(GetActualFrame(), kItemSize);
@@ -60,7 +60,7 @@ void EquipmentSelectView::SetEquipments(const vector<mengde::core::EquipmentWith
   auto equipment_set_update = equipment_set_update_;
   for (auto equipment : equipments) {
     ItemIconView* item_icon_view = new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);
-    item_icon_view->SetMouseButtonHandler([this, assets, hero, equipment, equipment_set_update] (const MouseButtonEvent e) {
+    item_icon_view->SetMouseButtonHandler([this, assets, hero, equipment, equipment_set_update] (const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
         ASSERT(hero != nullptr);
         assets->HeroPutEquipmentOn(hero, equipment.object);

@@ -4,21 +4,23 @@
 #include "composite_view.h"
 #include <functional>
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
 
 class CallbackView : public CompositeView {
  public:
-  typedef std::function<bool(const MouseButtonEvent)> MouseButtonHandler;
-  typedef std::function<bool(const MouseMotionEvent)> MouseMotionHandler;
+  typedef std::function<bool(const foundation::MouseButtonEvent)> MouseButtonHandler;
+  typedef std::function<bool(const foundation::MouseMotionEvent)> MouseMotionHandler;
 
  public:
   CallbackView();
   CallbackView(const Rect*);
   CallbackView(const Rect&);
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override final;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override final;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override final;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override final;
   void SetMouseButtonHandler(MouseButtonHandler);
   void SetMouseMotionHandler(MouseMotionHandler);
 

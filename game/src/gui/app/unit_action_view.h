@@ -3,9 +3,7 @@
 
 #include "gui/uifw/vertical_list_view.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -14,17 +12,20 @@ namespace core {
 }
 }
 
-class ButtonView;
+namespace mengde {
+namespace gui {
+namespace app {
+
 class RootView;
 
 class UnitActionView : public VerticalListView {
  public:
-  UnitActionView(const Rect& frame, mengde::core::Game* game, RootView* rv);
-  void SetUnit(mengde::core::Unit* unit);
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
+  UnitActionView(const Rect& frame, core::Game* game, RootView* rv);
+  void SetUnit(core::Unit* unit);
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
  private:
-  mengde::core::Game* game_;
+  core::Game* game_;
   RootView*   rv_;
   ButtonView* btn_attack_;
   ButtonView* btn_magic_;

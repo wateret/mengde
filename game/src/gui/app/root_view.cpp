@@ -30,7 +30,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
+RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
     : View(),
       game_(scenario->GetGame()),
       app_(app),
@@ -58,7 +58,7 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
   ui_views_->SetTransparent();
 
   { // Initialize deploy_view_
-    mengde::core::Assets* assets = scenario->GetAssets();
+    core::Assets* assets = scenario->GetAssets();
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     deploy_view_ = new DeployView(frame, assets, game_);
     deploy_view_->visible(true);
@@ -122,7 +122,7 @@ RootView::RootView(const Vec2D size, mengde::core::Scenario* scenario, App* app)
                                                         LayoutHelper::kAlignCenter,
                                                         LayoutHelper::kDefaultSpace);
     unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
-    unit_dialog_view_wrapper_ = new ModalView(GetActualFrame(), unit_dialog_view_, [=] (const MouseButtonEvent e) {
+    unit_dialog_view_wrapper_ = new ModalView(GetActualFrame(), unit_dialog_view_, [=] (const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp() || e.IsRightButtonUp()) {
         unit_dialog_view_wrapper_->visible(false);
       }
@@ -187,7 +187,7 @@ void RootView::Render(Drawer* drawer) {
   GetCurrentState()->Render(drawer);
 
   // Render units
-  game_->ForEachUnit([this, drawer] (mengde::core::Unit* unit) {
+  game_->ForEachUnit([this, drawer] (core::Unit* unit) {
     if (unit->IsNoRender() || unit->IsDead()) return;
 
     SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
@@ -211,12 +211,12 @@ void RootView::Render(Drawer* drawer) {
   ui_views_->Render(drawer);
 }
 
-bool RootView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool RootView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (ui_views_->OnMouseButtonEvent(e)) return true;
   return GetCurrentState()->OnMouseButtonEvent(e);
 }
 
-bool RootView::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool RootView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   mouse_coords_ = e.GetCoords();
 
   if (ui_views_->OnMouseMotionEvent(e)) return true;
@@ -225,7 +225,7 @@ bool RootView::OnMouseMotionEvent(const MouseMotionEvent e) {
   return true;
 }
 
-bool RootView::OnMouseWheelEvent(const MouseWheelEvent e) {
+bool RootView::OnMouseWheelEvent(const foundation::MouseWheelEvent e) {
   if (ui_views_->DelegateMouseWheelEvent(e)) return true;
   if (GetCurrentState()->OnMouseWheelEvent(e)) return true;
 
@@ -256,7 +256,7 @@ void RootView::CenterCamera(Vec2D coords) {
 void RootView::RaiseMouseMotionEvent() {
   Vec2D mouse_pos;
   SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y); // FIXME Not to use SDL interface directly
-  OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, mouse_pos, mouse_pos));
+  OnMouseMotionEvent(foundation::MouseMotionEvent(MouseMotionEvent::Type::kOver, mouse_pos, mouse_pos));
 }
 
 void RootView::NextFrame(NextFrameCallback cb) {
@@ -312,7 +312,7 @@ void RootView::SetUnitViewVisible(bool b) {
   unit_view_->visible(b);
 }
 
-void RootView::SetUnitViewUnit(mengde::core::Unit* unit) {
+void RootView::SetUnitViewUnit(core::Unit* unit) {
   unit_view_->SetUnit(unit);
 }
 
@@ -320,25 +320,25 @@ void RootView::SetUnitInfoViewVisible(bool b) {
   unit_info_view_->visible(b);
 }
 
-void RootView::SetUnitInfoViewUnitTerrainInfo(mengde::core::Cell* cell) {
+void RootView::SetUnitInfoViewUnitTerrainInfo(core::Cell* cell) {
   unit_info_view_->SetUnitTerrainInfo(cell);
 }
 
-void RootView::SetUnitInfoViewUnitAttackInfo(mengde::core::Unit* unit, int accuracy, int damage) {
+void RootView::SetUnitInfoViewUnitAttackInfo(core::Unit* unit, int accuracy, int damage) {
   unit_info_view_->SetUnitAttackInfo(unit, accuracy, damage);
 }
 
 void RootView::SetUnitInfoViewContents(const std::string& name,
                                    int id,
-                                   const mengde::core::HpMp& xcur,
-                                   const mengde::core::HpMp& xmax,
+                                   const core::HpMp& xcur,
+                                   const core::HpMp& xmax,
                                    int damage,
                                    int mp_cost) {
   unit_info_view_->SetContents(name, id, xcur, xmax, damage, mp_cost);
 }
 
 void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
-  unit_info_view_->SetCoords(::layout::CalcPositionNearUnit(unit_info_view_->GetFrameSize(), GetFrameSize(), camera, unit));
+  unit_info_view_->SetCoords(layout::CalcPositionNearUnit(unit_info_view_->GetFrameSize(), GetFrameSize(), camera, unit));
 }
 
 void RootView::SetTerrainInfoViewVisible(bool b) {
@@ -353,11 +353,11 @@ void RootView::SetUnitListViewVisible(bool b) {
   unit_list_view_->visible(b);
 }
 
-void RootView::SetUnitListViewUnit(mengde::core::Unit* unit) {
+void RootView::SetUnitListViewUnit(core::Unit* unit) {
   unit_list_view_->SetUnit(unit);
 }
 
-void RootView::SetUnitDialogViewUnitAndText(mengde::core::Unit* unit, const string& words) {
+void RootView::SetUnitDialogViewUnitAndText(core::Unit* unit, const string& words) {
   unit_dialog_view_->SetUnit(unit);
   unit_dialog_view_->SetText(words);
 }

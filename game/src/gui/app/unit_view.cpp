@@ -20,7 +20,7 @@ UnitView::UnitView(const Rect* frame)
 //  SetViewIndex(1);
 }
 
-void UnitView::SetUnit(mengde::core::Unit* unit) {
+void UnitView::SetUnit(core::Unit* unit) {
   if (unit_ != unit) {
     unit_ = unit;
     unit_over_view_->SetUnit(unit);

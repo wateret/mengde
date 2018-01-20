@@ -16,16 +16,16 @@ CallbackView::CallbackView(const Rect& rect) : CompositeView(rect) {
 }
 
 void CallbackView::InitHandlers() {
-  mouse_button_handler_ = [] (const MouseButtonEvent) { return false; };
-  mouse_motion_handler_ = [] (const MouseMotionEvent) { return false; };
+  mouse_button_handler_ = [] (const foundation::MouseButtonEvent) { return false; };
+  mouse_motion_handler_ = [] (const foundation::MouseMotionEvent) { return false; };
 }
 
-bool CallbackView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool CallbackView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   ASSERT(mouse_button_handler_);
   return mouse_button_handler_(e);
 }
 
-bool CallbackView::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool CallbackView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   ASSERT(mouse_motion_handler_);
   return mouse_motion_handler_(e);
 }

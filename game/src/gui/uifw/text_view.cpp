@@ -33,7 +33,7 @@ void TextView::Render(Drawer* drawer) {
   drawer->DrawText(text_, size_, color_, &frame, align_);
 }
 
-bool TextView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool TextView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (e.IsLeftButtonDown()) {
     LOG_DEBUG("LeftButtonDown on the TextView '%s'", text_.c_str());
     return true;
@@ -41,7 +41,7 @@ bool TextView::OnMouseButtonEvent(const MouseButtonEvent e) {
   return true;
 }
 
-bool TextView::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool TextView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   return false;
 }
 

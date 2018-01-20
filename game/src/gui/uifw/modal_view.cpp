@@ -8,7 +8,7 @@ ModalView::ModalView(const Rect& frame, View* view, const MouseButtonHandler& ha
     : ViewDecorator(frame, view), handler_(handler) {
 }
 
-bool ModalView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool ModalView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (view_->DelegateMouseButtonEvent(e)) return true;
   return handler_(e);
 }

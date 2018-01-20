@@ -12,15 +12,15 @@ ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, vie
   view_->SetCoords({0, 0});
 }
 
-bool ScrollView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool ScrollView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   return view_->DelegateMouseButtonEvent(e);
 }
 
-bool ScrollView::OnMouseMotionEvent(const MouseMotionEvent e) {
+bool ScrollView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   return view_->DelegateMouseMotionEvent(e);
 }
 
-bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
+bool ScrollView::OnMouseWheelEvent(const foundation::MouseWheelEvent e) {
   Vec2D coords_o = coords_;
   if (e.IsLeft()) {
     coords_.x += kDefaultScrollAmount;
@@ -40,7 +40,7 @@ bool ScrollView::OnMouseWheelEvent(const MouseWheelEvent e) {
   }
   view_->SetCoords(coords_);
 
-  OnMouseMotionEvent(MouseMotionEvent(MouseMotionEvent::Type::kOver, e.GetCoords(), coords_o - coords_));
+  OnMouseMotionEvent(foundation::MouseMotionEvent(MouseMotionEvent::Type::kOver, e.GetCoords(), coords_o - coords_));
   return true;
 }
 

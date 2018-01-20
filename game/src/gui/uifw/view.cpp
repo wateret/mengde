@@ -44,7 +44,7 @@ void View::visible(bool b) {
 
   if (visible_) {
     // To reset if there was hovered objects
-    OnMouseMotionEvent({MouseMotionEvent::Type::kOut});
+    OnMouseMotionEvent({foundation::MouseMotionEvent::Type::kOut});
   }
 }
 
@@ -84,26 +84,26 @@ void View::RenderEnd(Drawer* drawer) {
   drawer->ResetViewport();
 }
 
-bool View::DelegateMouseButtonEvent(MouseButtonEvent e) {
+bool View::DelegateMouseButtonEvent(foundation::MouseButtonEvent e) {
   if (visible_ && GetFrame()->Contains(e.GetCoords())) {
     Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
-    MouseButtonEvent ec(e.GetButton(), e.GetState(), conv_coords);
+    foundation::MouseButtonEvent ec(e.GetButton(), e.GetState(), conv_coords);
     if (OnMouseButtonEvent(ec)) return true;
   }
   return false;
 }
 
-bool View::DelegateMouseMotionEvent(MouseMotionEvent e) {
+bool View::DelegateMouseMotionEvent(foundation::MouseMotionEvent e) {
   if (!visible_) return false;
   if (e.IsMotionOver()) {
     if (GetFrame()->Contains(e.GetCoords())) {
       Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
-      MouseMotionEvent ec(MouseMotionEvent::Type::kOver, conv_coords, e.GetCoordsRel());
+      foundation::MouseMotionEvent ec(MouseMotionEvent::Type::kOver, conv_coords, e.GetCoordsRel());
       return OnMouseMotionEvent(ec);
     } else {
       // Not over the view but was over in previous event then generate MouseOut event
       if (GetFrame()->Contains(e.GetLastCoords())) {
-        MouseMotionEvent ec(MouseMotionEvent::Type::kOut);
+        foundation::MouseMotionEvent ec(MouseMotionEvent::Type::kOut);
         OnMouseMotionEvent(ec);
         return false; // Always return false to keep delegating
       }
@@ -115,11 +115,11 @@ bool View::DelegateMouseMotionEvent(MouseMotionEvent e) {
   return false;
 }
 
-bool View::DelegateMouseWheelEvent(MouseWheelEvent e) {
+bool View::DelegateMouseWheelEvent(foundation::MouseWheelEvent e) {
   // FIXME This is same routine with DelegateMouseButtonEvent
   if (visible_ && GetFrame()->Contains(e.GetCoords())) {
     Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
-    MouseWheelEvent ec(e, conv_coords);
+    foundation::MouseWheelEvent ec(e, conv_coords);
     if (OnMouseWheelEvent(ec)) return true;
   }
   return false;

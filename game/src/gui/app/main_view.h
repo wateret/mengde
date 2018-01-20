@@ -3,6 +3,8 @@
 
 #include "gui/uifw/composite_view.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace app {

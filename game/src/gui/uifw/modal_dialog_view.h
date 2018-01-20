@@ -4,6 +4,8 @@
 #include "util/common.h"
 #include "composite_view.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
@@ -20,8 +22,8 @@ class ModalDialogView : public CompositeView {
   void SetText(const string&);
 
  private:
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
 
  private:
   string message_;

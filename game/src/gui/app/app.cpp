@@ -72,7 +72,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
 
   const string scenario_id = "example";
 
-  scenario_ = new mengde::core::Scenario(scenario_id);
+  scenario_ = new core::Scenario(scenario_id);
   window_ = new Window("Game", width, height);
   drawer_ = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString(),
                                 GameEnv::GetInstance()->GetResourcePath().ToString());

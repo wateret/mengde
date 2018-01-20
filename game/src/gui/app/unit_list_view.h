@@ -3,9 +3,7 @@
 
 #include "gui/uifw/composite_view.h"
 
-namespace mengde {
-namespace gui {
-namespace app {
+#include "common.h"
 
 namespace mengde {
 namespace core {
@@ -13,27 +11,28 @@ namespace core {
 }
 }
 
-class VerticalListView;
-class TextView;
+namespace mengde {
+namespace gui {
+namespace app {
 
 class UnitListView : public CompositeView {
  public:
   class UnitDetailView : public CompositeView {
    public:
     UnitDetailView(const Rect&);
-    void SetUnit(mengde::core::Unit*);
+    void SetUnit(core::Unit*);
 
    private:
-    mengde::core::Unit*     unit_;
+    core::Unit*     unit_;
     TextView* tv_name_;
   };
 
  public:
-  UnitListView(const Rect&, const vector<mengde::core::Unit*>&);
-  void SetUnit(mengde::core::Unit* unit) { unit_detail_view_->SetUnit(unit); }
+  UnitListView(const Rect&, const vector<core::Unit*>&);
+  void SetUnit(core::Unit* unit) { unit_detail_view_->SetUnit(unit); }
 
  private:
-  vector<mengde::core::Unit*> unit_list_;
+  vector<core::Unit*> unit_list_;
   UnitDetailView* unit_detail_view_;
 };
 

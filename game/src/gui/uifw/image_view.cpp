@@ -43,7 +43,7 @@ void ImageView::Render(Drawer* drawer) {
     drawer->CopyTexture(texture_, nullptr, &frame);
 }
 
-bool ImageView::OnMouseButtonEvent(const MouseButtonEvent e) {
+bool ImageView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (e.IsLeftButtonDown()) {
     LOG_DEBUG("LeftButtonDown on the a ImageView");
     return true;
@@ -51,7 +51,7 @@ bool ImageView::OnMouseButtonEvent(const MouseButtonEvent e) {
   return true;
 }
 
-bool ImageView::OnMouseMotionEvent(const MouseMotionEvent) {
+bool ImageView::OnMouseMotionEvent(const foundation::MouseMotionEvent) {
   return false;
 }
 

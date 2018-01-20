@@ -3,6 +3,8 @@
 
 #include "util/vec2d.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace app {

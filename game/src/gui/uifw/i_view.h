@@ -5,6 +5,8 @@
 #include "gui/foundation/mouse_motion_event.h"
 #include "gui/foundation/mouse_wheel_event.h"
 
+#include "common.h"
+
 namespace mengde {
 namespace gui {
 namespace uifw {
@@ -16,9 +18,9 @@ class IView {
   virtual ~IView() {}
   virtual void Render(Drawer*) = 0;
   virtual void Update() = 0;
-  virtual bool OnMouseButtonEvent(const MouseButtonEvent) = 0;
-  virtual bool OnMouseMotionEvent(const MouseMotionEvent) = 0;
-  virtual bool OnMouseWheelEvent(const MouseWheelEvent) = 0;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) = 0;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) = 0;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) = 0;
 
  private:
 };

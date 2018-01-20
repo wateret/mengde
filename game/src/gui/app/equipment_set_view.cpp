@@ -13,7 +13,7 @@ namespace app {
 // EquipmentView
 //
 
-EquipmentView::EquipmentView(const Rect* frame, const mengde::core::Equipment* equipment) : CallbackView(frame) {
+EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment) : CallbackView(frame) {
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(),
                                              {32, 32},
                                              LayoutHelper::kAlignLftMid);
@@ -29,7 +29,7 @@ EquipmentView::EquipmentView(const Rect* frame, const mengde::core::Equipment* e
   if (equipment != nullptr) SetEquipment(equipment);
 }
 
-void EquipmentView::SetEquipment(const mengde::core::Equipment* equipment) {
+void EquipmentView::SetEquipment(const core::Equipment* equipment) {
   string image_path = "equipment/60-1.bmp";
   string name = "No Equipment";
   string desc = "No Desc";
@@ -61,9 +61,9 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   AddChild(tv_armor_label_);
   AddChild(tv_aid_label_);
 
-  const mengde::core::Equipment* weapon = nullptr;
-  const mengde::core::Equipment* armor = nullptr;
-  const mengde::core::Equipment* aid = nullptr;
+  const core::Equipment* weapon = nullptr;
+  const core::Equipment* armor = nullptr;
+  const core::Equipment* aid = nullptr;
   if (equipment_set_ != nullptr) {
     weapon = equipment_set_->GetWeapon();
     armor  = equipment_set_->GetArmor();
@@ -82,14 +82,14 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   for (int i = 0; i < 3; i++) {
     EquipmentView* eqv = equipment_views[i];
 
-    eqv->SetMouseButtonHandler([] (const MouseButtonEvent e) {
+    eqv->SetMouseButtonHandler([] (const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
         LOG_DEBUG("Show Equipment Info");
       }
       return true;
     });
 
-    eqv->SetMouseMotionHandler([eqv] (const MouseMotionEvent e) {
+    eqv->SetMouseMotionHandler([eqv] (const foundation::MouseMotionEvent e) {
       if (e.IsMotionOver()) {
         eqv->bg_color(COLOR("darkgray"));
       } else {
@@ -103,7 +103,7 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   }
 }
 
-void EquipmentSetView::SetEquipmentSet(const mengde::core::EquipmentSet* equipment_set) {
+void EquipmentSetView::SetEquipmentSet(const core::EquipmentSet* equipment_set) {
   equipment_set_ = equipment_set;
   OnUpdate();
 }
