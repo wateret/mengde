@@ -1,4 +1,4 @@
-#include "view/app/app.h"
+#include "gui/app/app.h"
 #include "util/common.h"
 
 int main(int argc, char** argv) {

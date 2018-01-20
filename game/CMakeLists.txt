@@ -1,19 +1,19 @@
 project(game)
 
 file(GLOB SOURCES src/*.cpp
-                  src/view/*.cpp
-                  src/view/app/*.cpp
-                  src/view/foundation/*.cpp
-                  src/view/uifw/*.cpp
+                  src/gui/*.cpp
+                  src/gui/app/*.cpp
+                  src/gui/foundation/*.cpp
+                  src/gui/uifw/*.cpp
                   src/util/*.cpp
                   src/core/*.cpp
                   src/lua/*.cpp)
 
 file(GLOB HEADERS src/*.h
-                  src/view/*.h
-                  src/view/app/*.h
-                  src/view/foundation/*.h
-                  src/view/uifw/*.h
+                  src/gui/*.h
+                  src/gui/app/*.h
+                  src/gui/foundation/*.h
+                  src/gui/uifw/*.h
                   src/util/*.h
                   src/core/*.h
                   src/lua/*.h)
