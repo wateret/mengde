@@ -8,16 +8,16 @@
 namespace mengde {
 namespace core {
 
-class PathTreeNode {
+class PathNode {
  public:
-  PathTreeNode(Vec2D, PathTreeNode* = NULL);
-  PathTreeNode* GetParent() { return parent_; }
+  PathNode(Vec2D, PathNode* = NULL);
+  PathNode* GetParent() { return parent_; }
   Vec2D GetData() { return data_; }
   bool IsRoot() { return parent_ == NULL; }
 
  private:
   Vec2D data_;
-  PathTreeNode* parent_;
+  PathNode* parent_;
 };
 
 
@@ -33,17 +33,17 @@ class PathTree {
  public:
   PathTree(Vec2D);
   ~PathTree();
-  PathTreeNode* Adopt(Vec2D, PathTreeNode*);
+  PathNode* Adopt(Vec2D, PathNode*);
   std::vector<Vec2D> GetNodeList();
-  PathTreeNode* GetRoot() { return root_; }
-  std::vector<Vec2D> GetPathToRoot(PathTreeNode*);
+  PathNode* GetRoot() { return root_; }
+  std::vector<Vec2D> GetPathToRoot(PathNode*);
   std::vector<Vec2D> GetPathToRoot(Vec2D);
-  PathTreeNode* FindNode(Vec2D);
+  PathNode* FindNode(Vec2D);
   bool IsNodeExist(Vec2D v) { return FindNode(v) != NULL; }
 
  private:
-  PathTreeNode* root_;
-  std::vector<PathTreeNode*> node_list_;
+  PathNode* root_;
+  std::vector<PathNode*> node_list_;
 };
 
 } // namespace core

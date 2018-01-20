@@ -14,7 +14,6 @@ namespace lua {
 namespace mengde {
 namespace core {
 
-class LuaScript;
 class EventEffect;
 
 class ConfigLoader {
@@ -34,9 +33,9 @@ class ConfigLoader {
   EventEffect* GenerateEventEffect(const string&, const string&, int);
 
  private:
-  ::lua::LuaScript*       lua_config_;
-  ResourceManagers rc_;
-  string           first_stage_;
+  ::lua::LuaScript* lua_config_;
+  ResourceManagers  rc_;
+  string            first_stage_;
 };
 
 } // namespace mengde

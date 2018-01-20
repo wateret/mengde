@@ -82,7 +82,7 @@ PathTree* Map::FindPath(Unit* unit, Vec2D dest) {
 
   vector<int> dist(N, kInf);
   vector<bool> used(N, false);
-  vector<PathTreeNode*> from(N, NULL);
+  vector<PathNode*> from(N, NULL);
   Vec2D coords = unit->GetPosition();
   int sc = SerializeVec2D(coords);
   int stat_move = kInf;

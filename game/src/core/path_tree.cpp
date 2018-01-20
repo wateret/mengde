@@ -3,9 +3,9 @@
 namespace mengde {
 namespace core {
 
-// PathTreeNode
+// PathNode
 
-PathTreeNode::PathTreeNode(Vec2D data, PathTreeNode* parent)
+PathNode::PathNode(Vec2D data, PathNode* parent)
     : data_(data),
       parent_(parent) {
 }
@@ -13,7 +13,7 @@ PathTreeNode::PathTreeNode(Vec2D data, PathTreeNode* parent)
 // PathTree
 
 PathTree::PathTree(Vec2D root_data) {
-  root_ = new PathTreeNode(root_data);
+  root_ = new PathNode(root_data);
   node_list_.push_back(root_);
 }
 
@@ -24,8 +24,8 @@ PathTree::~PathTree()
   }
 }
 
-PathTreeNode* PathTree::Adopt(Vec2D child_data, PathTreeNode* parent_node) {
-  PathTreeNode* new_node = new PathTreeNode(child_data, parent_node);
+PathNode* PathTree::Adopt(Vec2D child_data, PathNode* parent_node) {
+  PathNode* new_node = new PathNode(child_data, parent_node);
   node_list_.push_back(new_node);
   return new_node;
 }
@@ -38,7 +38,7 @@ std::vector<Vec2D> PathTree::GetNodeList() {
   return nodes;
 }
 
-std::vector<Vec2D> PathTree::GetPathToRoot(PathTreeNode* node) {
+std::vector<Vec2D> PathTree::GetPathToRoot(PathNode* node) {
   std::vector<Vec2D> path;
   while (node != NULL) {
     ASSERT((node->GetParent() != NULL) != (node == root_));
@@ -52,7 +52,7 @@ std::vector<Vec2D> PathTree::GetPathToRoot(Vec2D vec) {
   return GetPathToRoot(FindNode(vec));
 }
 
-PathTreeNode* PathTree::FindNode(Vec2D vec) {
+PathNode* PathTree::FindNode(Vec2D vec) {
   for (auto itr : node_list_) {
     if (itr->GetData() == vec) return itr;
   }
