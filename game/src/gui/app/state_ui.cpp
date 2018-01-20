@@ -464,7 +464,7 @@ void StateUIMoving::Render(Drawer* drawer) {
   Direction dir = Vec2DRelativePosition(path_[path_idx], path_[path_idx - 1]);
   Vec2D diff = path_[path_idx - 1] - path_[path_idx];
   Vec2D diff_pos = diff * (percentage * (float)App::kBlockSize);
-  drawer->CopySprite(unit_->GetBitmapPath(),
+  drawer->CopySprite(unit_->GetModelId(),
                      kSpriteMove,
                      dir,
                      sprite_no,
@@ -513,7 +513,7 @@ void StateUIMagic::Render(Drawer* drawer) {
   Vec2D def_pos = def_->GetPosition();
   Direction dir = Vec2DRelativePosition(unit_pos, def_pos);
 
-  drawer->CopySprite(atk_->GetBitmapPath(),
+  drawer->CopySprite(atk_->GetModelId(),
                      kSpriteAttack,
                      dir,
                      0,
@@ -523,7 +523,7 @@ void StateUIMagic::Render(Drawer* drawer) {
   const SpriteType target_sprite_hit = magic_->IsTypeDeal() ? kSpriteDamaged : kSpriteBuff; // This condition may not be accurate
   const SpriteType target_sprite = hit_ ? target_sprite_hit : kSpriteBlocked;
 
-  drawer->CopySprite(def_->GetBitmapPath(),
+  drawer->CopySprite(def_->GetModelId(),
                      target_sprite,
                      OppositeDirection(dir),
                      0,
@@ -573,7 +573,7 @@ void StateUIKilled::Render(Drawer* drawer) {
     int f = frames_ - wait;
     if (f > hold) progress = (f - hold) * 255 / (kStateDuration - hold);
   }
-  drawer->CopySprite(unit_->GetBitmapPath(),
+  drawer->CopySprite(unit_->GetModelId(),
                      kSpriteLowHP,
                      kDirNone,
                      0,
@@ -728,14 +728,14 @@ void StateUIAttack::Render(Drawer* drawer) {
   }
 
   if (atk_->GetPosition().y > def_->GetPosition().y) {
-    drawer->CopySprite(def_->GetBitmapPath(),
+    drawer->CopySprite(def_->GetModelId(),
                        cut_def->sprite,
                        OppositeDirection(dir),
                        cut_def->no,
                        {kEffectNone, 0},
                        def_pos,
                        def_offset);
-    drawer->CopySprite(atk_->GetBitmapPath(),
+    drawer->CopySprite(atk_->GetModelId(),
                        cut_atk->sprite,
                        dir,
                        cut_atk->no,
@@ -743,14 +743,14 @@ void StateUIAttack::Render(Drawer* drawer) {
                        atk_pos,
                        atk_offset);
   } else {
-    drawer->CopySprite(atk_->GetBitmapPath(),
+    drawer->CopySprite(atk_->GetModelId(),
                        cut_atk->sprite,
                        dir,
                        cut_atk->no,
                        sprite_effect,
                        atk_pos,
                        atk_offset);
-    drawer->CopySprite(def_->GetBitmapPath(),
+    drawer->CopySprite(def_->GetModelId(),
                        cut_def->sprite,
                        OppositeDirection(dir),
                        cut_def->no,

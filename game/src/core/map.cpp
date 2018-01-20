@@ -38,7 +38,7 @@ Map::~Map() {
   }
 }
 
-string Map::GetBitmapPath() {
+string Map::GetModelId() {
   return bitmap_path_;
 }
 

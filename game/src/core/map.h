@@ -18,7 +18,7 @@ class Map {
   ~Map();
 
  public:
-  string GetBitmapPath();
+  string GetModelId();
   Vec2D GetSize() { return size_; }
   Cell* GetCell(int, int);
   Cell* GetCell(Vec2D);

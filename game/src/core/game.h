@@ -48,7 +48,7 @@ class Game : public IDeployHelper {
   // Map related //
   Map* GetMap() { return map_; }
   Vec2D GetMapSize() { return map_->GetSize(); }
-  std::string GetMapBitmapPath() { return map_->GetBitmapPath(); }
+  std::string GetMapBitmapPath() { return map_->GetModelId(); }
 
   // General //
   void ForEachUnit(std::function<void(Unit*)>);

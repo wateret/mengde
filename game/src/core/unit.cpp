@@ -63,8 +63,8 @@ int Unit::GetMove() {
   return hero_->GetMove();
 }
 
-std::string Unit::GetBitmapPath() {
-  return hero_->GetBitmapPath();
+std::string Unit::GetModelId() {
+  return hero_->GetModelId();
 }
 
 const Attribute& Unit::GetOriginalStat() const {

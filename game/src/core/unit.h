@@ -29,7 +29,7 @@ class Unit : public IEvent, public IEquipper {
   uint16_t GetLevel() const;
   int GetMove();
   uint16_t GetExp() const;
-  std::string GetBitmapPath();
+  std::string GetModelId();
   const Attribute& GetOriginalStat() const;
   const HpMp& GetOriginalHpMp() const;
   const Attribute& GetCurrentStat() const { return current_attr_; }

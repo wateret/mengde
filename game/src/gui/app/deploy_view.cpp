@@ -26,7 +26,7 @@ HeroModelView::HeroModelView(const Rect& frame,
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.GetSize(), LayoutHelper::kAlignCenter);
   iv_frame.SetY(iv_frame.GetY() - 8);
-  ImageView* iv_hero = new ImageView(iv_frame, GetModelPath(hero->GetBitmapPath(), kSpriteStand));
+  ImageView* iv_hero = new ImageView(iv_frame, GetModelPath(hero->GetModelId(), kSpriteStand));
   iv_hero->SetSourceRect(img_src_rect);
   AddChild(iv_hero);
 

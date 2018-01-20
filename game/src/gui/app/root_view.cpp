@@ -198,7 +198,7 @@ void RootView::Render(Drawer* drawer) {
       sprite_no = 0;
       sprite_effect = {kEffectShade, 128};
     }
-    drawer->CopySprite(unit->GetBitmapPath(),
+    drawer->CopySprite(unit->GetModelId(),
                    stype,
                    unit->GetDirection(),
                    sprite_no,

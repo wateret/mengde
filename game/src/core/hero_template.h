@@ -12,7 +12,7 @@ class HeroTemplate {
  public:
   HeroTemplate(const string&, const string&, const UnitClass*, const Attribute&);
   string GetId() const { return id_; }
-  string GetBitmapPath() const { return bitmap_path_; }
+  string GetModelId() const { return bitmap_path_; }
   const UnitClass* GetClass() const { return unit_class_; }
   int GetClassIndex() const;
   int GetMove() const;

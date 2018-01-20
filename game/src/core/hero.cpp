@@ -30,8 +30,8 @@ string Hero::GetId() const {
   return hero_tpl_->GetId();
 }
 
-string Hero::GetBitmapPath() const {
-  return hero_tpl_->GetBitmapPath();
+string Hero::GetModelId() const {
+  return hero_tpl_->GetModelId();
 }
 
 const UnitClass* Hero::GetClass() const {
