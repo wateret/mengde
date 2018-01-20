@@ -3,6 +3,10 @@
 
 #include <SDL.h>
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class Surface {
  public:
   Surface(SDL_Surface*);
@@ -12,5 +16,9 @@ class Surface {
  private:
   SDL_Surface* handle_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif

@@ -3,6 +3,10 @@
 #include "util/common.h"
 #include "font_manager.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 TextureManager::TextureManager(Renderer* renderer, const string& scenario_path, const string& font_path)
     : base_path_(scenario_path), font_manager_(new FontManager(font_path)),
       dummy_texture_(nullptr), renderer_(renderer) {
@@ -70,3 +74,7 @@ Texture* TextureManager::FetchTextTexture(const string& text,
     return iter->second;
   }
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

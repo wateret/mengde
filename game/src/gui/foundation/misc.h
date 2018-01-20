@@ -3,6 +3,10 @@
 
 #include <string>
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 // Misc functions relavant to SDL2
 
 class Misc {
@@ -13,5 +17,9 @@ class Misc {
   static void SetShowCursor(bool);
   static std::string GetErrorMessage();
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // VIEW_FOUNDATION_MISC_H_

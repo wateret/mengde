@@ -1,6 +1,10 @@
 #include "window.h"
 
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 Window::Window(const std::string& title, int width, int height) {
   handle_ = SDL_CreateWindow(title.c_str(),
                              SDL_WINDOWPOS_UNDEFINED,
@@ -40,3 +44,7 @@ Vec2D Window::GetSize() {
   SDL_GetWindowSize(handle_, &size.x, &size.y);
   return size;
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

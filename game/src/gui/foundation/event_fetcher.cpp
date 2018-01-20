@@ -2,6 +2,10 @@
 
 #include <SDL.h>
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 bool EventFetcher::Poll() {
   SDL_Event e;
   bool has_pending_event = SDL_PollEvent(&e);
@@ -59,3 +63,7 @@ bool EventFetcher::Poll() {
   }
   return has_pending_event;
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

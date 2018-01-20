@@ -5,6 +5,10 @@
 #include <unordered_map>
 #include "texture.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 using std::string;
 
 class FontManager;
@@ -30,5 +34,9 @@ class TextureManager {
   Texture*  dummy_texture_;
   Renderer* renderer_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // TEXTURE_MANAGER_H_

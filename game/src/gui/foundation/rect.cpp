@@ -1,5 +1,9 @@
 #include "rect.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 Rect::Rect(int x, int y, int w, int h) {
   rect_.x = x;
   rect_.y = y;
@@ -107,3 +111,7 @@ bool Rect::Contains(Vec2D v) const {
   return rect_.x <= v.x && v.x < rect_.x + rect_.w &&
          rect_.y <= v.y && v.y < rect_.y + rect_.h;
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

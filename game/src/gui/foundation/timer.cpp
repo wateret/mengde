@@ -2,6 +2,10 @@
 #include <SDL.h>
 
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 Timer::Timer() : is_on_(false), start_ticks_(0) {
 }
 
@@ -24,3 +28,7 @@ int Timer::Split() {
   uint32_t cur_ticks = SDL_GetTicks();
   return (int)(cur_ticks - start_ticks_);
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

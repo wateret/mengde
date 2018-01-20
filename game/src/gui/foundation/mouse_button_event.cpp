@@ -1,5 +1,9 @@
 #include "mouse_button_event.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 MouseButtonEvent::MouseButtonEvent(const Button mouse_button,
                                    const State mouse_button_state,
                                    const Vec2D coords)
@@ -31,4 +35,8 @@ bool MouseButtonEvent::IsRightButtonDown() const {
 bool MouseButtonEvent::IsRightButtonUp() const {
   return mouse_button_ == Button::kRight && mouse_button_state_ == State::kUp;
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 

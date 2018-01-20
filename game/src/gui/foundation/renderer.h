@@ -6,6 +6,10 @@
 #include "rect.h"
 #include "color.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class Texture;
 
 class Renderer {
@@ -31,5 +35,9 @@ class Renderer {
   SDL_PixelFormat* pixel_format_obj_;
 //  Window* window_;    // renderer is tied to a window
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // RENDERER_H

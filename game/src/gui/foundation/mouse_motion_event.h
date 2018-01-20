@@ -3,6 +3,10 @@
 
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class MouseMotionEvent {
  public:
   enum class Type : uint16_t {
@@ -26,5 +30,9 @@ class MouseMotionEvent {
   Vec2D coords_;
   Vec2D coords_rel_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // MOUSE_MOTION_EVENT_H_

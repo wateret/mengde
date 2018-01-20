@@ -3,6 +3,10 @@
 
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class MouseButtonEvent {
  public:
   enum class Button : uint16_t {
@@ -36,5 +40,9 @@ class MouseButtonEvent {
   State  mouse_button_state_;
   Vec2D  coords_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // MOUSE_BUTTON_EVENT_H_

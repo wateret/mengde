@@ -4,6 +4,10 @@
 #include <SDL.h>
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class Rect {
  public:
   Rect(int, int, int, int);
@@ -43,5 +47,9 @@ class Rect {
  private:
   SDL_Rect rect_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif

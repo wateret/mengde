@@ -5,6 +5,10 @@
 #include <string>
 #include <unordered_map>
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 typedef unsigned char uint8_t;
 
 struct Color {
@@ -44,6 +48,10 @@ class ColorGen {
  private:
   std::unordered_map<std::string, Color> colors_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #define COLOR ColorGen::GetInstance()->Generate
 #define COLOR ColorGen::GetInstance()->Generate

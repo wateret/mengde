@@ -3,6 +3,10 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 void Misc::Init() {
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     throw "SDL_Init Error";
@@ -24,3 +28,7 @@ std::string Misc::GetErrorMessage() {
 void Misc::SetShowCursor(bool v) {
   SDL_ShowCursor(v ? SDL_ENABLE : SDL_DISABLE);
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

@@ -3,6 +3,10 @@
 
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class MouseWheelEvent {
  public:
    enum class Horizontal : uint16_t {
@@ -31,5 +35,9 @@ class MouseWheelEvent {
   Vertical   ver_;
   Vec2D      coords_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // MOUSE_WHEEL_EVENT_H_

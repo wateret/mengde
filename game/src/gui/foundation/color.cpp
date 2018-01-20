@@ -1,6 +1,10 @@
 #include "color.h"
 #include "util/logger.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 ColorGen::ColorGen() {
   colors_.insert(std::make_pair("transparent", Color(255, 255, 255, 0)));
   colors_.insert(std::make_pair("white", Color(255, 255, 255)));
@@ -48,4 +52,8 @@ Color ColorGen::Generate(const std::string& name, uint8_t alpha) {
 Color ColorGen::Generate(uint8_t r, uint8_t g, uint8_t b,  uint8_t alpha) {
   return Color(r, g, b, alpha);
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 

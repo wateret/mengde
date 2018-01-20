@@ -9,6 +9,10 @@
 #include "color.h"
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class Renderer;
 
 class Texture {
@@ -41,5 +45,9 @@ class Texture {
   int width_;
   int height_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // TEXTURE_H

@@ -3,6 +3,10 @@
 
 #include "event.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class EventFetcher {
  public:
   EventFetcher() = default;
@@ -14,5 +18,9 @@ class EventFetcher {
   EventType event_type_;
   Event event_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // EVENT_FETCHER_H_

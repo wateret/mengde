@@ -1,6 +1,10 @@
 #include "texture_animator.h"
 #include "texture.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 TextureAnimator::TextureAnimator(Texture* texture, int fpc)
     : texture_(texture),
       cut_size_(0),
@@ -26,3 +30,7 @@ bool TextureAnimator::DoneAnimate() {
   int cur_cut = frame_no_ / frames_per_cut_;
   return cur_cut >= num_cuts_;
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

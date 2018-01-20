@@ -5,6 +5,10 @@
 #include "mouse_motion_event.h"
 #include "mouse_wheel_event.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class UnsupportedEvent {
  public:
   UnsupportedEvent() = default;
@@ -14,5 +18,9 @@ class QuitEvent {
  public:
   QuitEvent() = default;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // EVENTS_H_

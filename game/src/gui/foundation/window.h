@@ -6,6 +6,10 @@
 #include "surface.h"
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class Window {
  public:
   Window(const std::string&, int, int);
@@ -18,5 +22,9 @@ class Window {
  private:
   SDL_Window* handle_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif

@@ -2,6 +2,10 @@
 #include "util/common.h"
 #include "util/game_env.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 FontManager::FontManager(const string& base_path) : base_path_(base_path) {
   TTF_Init();
 
@@ -35,4 +39,8 @@ TTF_Font* FontManager::FetchFont(const string& name, int size) {
 TTF_Font* FontManager::FetchDefaultFont(int size) {
   return FetchFont(default_font_name_, size);
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 

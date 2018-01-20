@@ -3,6 +3,10 @@
 
 #include "events.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 // EventType
 //
 // Only listed supported events for this framework
@@ -26,5 +30,9 @@ union Event {
 
   Event() {}
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif // EVENT_H_

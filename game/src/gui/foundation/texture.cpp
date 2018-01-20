@@ -4,6 +4,10 @@
 #include "renderer.h"
 #include "util/game_env.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 Texture::Texture(Renderer* renderer, const std::string& path) {
   InitBitmap(renderer, path, false, Color(0, 0, 0));
 }
@@ -156,3 +160,7 @@ Texture* Texture::NewWhitenedTexture(Renderer* renderer) {
 
   return new Texture(raw_texture, width_, height_);
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

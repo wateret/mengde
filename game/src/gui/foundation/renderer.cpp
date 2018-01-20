@@ -2,6 +2,10 @@
 #include "misc.h"
 #include "texture.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 Renderer::Renderer(Window* window) {
   handle_ = SDL_CreateRenderer(window->AsRawWindow(),
                                -1,
@@ -105,3 +109,7 @@ void Renderer::SetViewport(const Rect* r) {
 SDL_PixelFormat* Renderer::GetRawPixelFormatObj() {
   return pixel_format_obj_;
 }
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde

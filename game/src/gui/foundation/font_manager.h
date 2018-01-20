@@ -5,6 +5,10 @@
 #include <unordered_map>
 #include "util/common.h"
 
+namespace mengde {
+namespace gui {
+namespace foundation {
+
 class FontManager {
  public:
   FontManager(const string& base_path);
@@ -18,5 +22,9 @@ class FontManager {
   string default_font_name_;
   std::unordered_map<std::string, TTF_Font*> container_;
 };
+
+} // namespace foundation
+} // namespace gui
+} // namespace mengde
 
 #endif
