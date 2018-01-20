@@ -54,7 +54,6 @@ class Game : public IDeployHelper {
   void ForEachUnit(std::function<void(Unit*)>);
   void MoveUnit(Unit*, Vec2D);
   void KillUnit(Unit*);
-  Cmd* BasicAttackUnit(Unit*, Unit*, bool);
   bool IsValidCoords(Vec2D);
   Magic* GetMagic(const std::string&);
   Unit* GetUnit(uint32_t);
@@ -107,7 +106,7 @@ class Game : public IDeployHelper {
  private:
   ResourceManagers   rc_;
   Assets*            assets_;
-  lua::LuaScript*         lua_script_;
+  lua::LuaScript*    lua_script_;
   Commander*         commander_;
   Deployer*          deployer_;
   Map*               map_;

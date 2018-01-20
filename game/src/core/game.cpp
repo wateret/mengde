@@ -41,9 +41,9 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
 Game::~Game() {
   // NOTE rc_ and assets_ are not deleted here
   delete lua_script_;
-  delete map_;
-  delete deployer_;
   delete commander_;
+  delete deployer_;
+  delete map_;
   delete stage_unit_manager_;
 }
 
