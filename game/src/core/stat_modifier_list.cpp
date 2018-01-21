@@ -36,10 +36,7 @@ void StatModifierList::AddModifier(StatModifier* m) {
 
 void StatModifierList::NextTurn() {
   elements_.erase(remove_if(elements_.begin(), elements_.end(), [] (StatModifier* m) -> bool {
-    if (m->GetTurnsLeft() < 0) {
-      LOG_WARNING("StatModifier.turns_left_ shouldn't be less than 0");
-    }
-    bool remove = (m->GetTurnsLeft() <= 0);
+    bool remove = (m->GetTurnsLeft() == 0);
     if (remove) delete m;
     return remove;
   }));

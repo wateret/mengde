@@ -21,7 +21,7 @@ void EventEffectList::AddEffect(EventEffect* e) {
 
 void EventEffectList::RaiseEvent(EventEffect::Type type, Unit* unit) {
   for (auto e : elements_) {
-    if (e->IsOfType(type)) {
+    if (e->type(type)) {
       e->OnEvent(unit);
     }
   }

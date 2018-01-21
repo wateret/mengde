@@ -10,7 +10,14 @@ namespace core {
 EventEffect::~EventEffect() {
 }
 
-EventEffect::EventEffect(Type type) : type_(type) {
+EventEffect::EventEffect(Type type, uint16_t turns_left) : type_(type), turns_left_(turns_left) {
+}
+
+void EventEffect::NextTurn() {
+  ASSERT(turns_left_ > 0);
+  if (turns_left_ != kTurnInfinity) {
+    turns_left_--;
+  }
 }
 
 // class EERestoreHP

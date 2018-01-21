@@ -1,6 +1,8 @@
 #ifndef STAT_MODIFIER_H_
 #define STAT_MODIFIER_H_
 
+#include "util/common.h"
+#include <limits>
 #include <string>
 
 namespace mengde {
@@ -8,7 +10,10 @@ namespace core {
 
 class StatModifier {
  public:
-  StatModifier(const std::string&, uint16_t, uint16_t, uint16_t, uint16_t = UINT16_MAX);
+  static const uint16_t kTurnInfinity = std::numeric_limits<uint16_t>::max();
+
+ public:
+  StatModifier(const std::string&, uint16_t stat_id, uint16_t addend, uint16_t multiplier, uint16_t turns_left = kTurnInfinity);
   std::string GetId() const { return id_; }
   uint16_t GetStatId() const { return stat_id_; }
   int16_t GetAddend() const { return addend_; }

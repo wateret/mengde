@@ -19,7 +19,9 @@ StatModifier::StatModifier(const std::string& id,
 
 void StatModifier::NextTurn() {
   ASSERT(turns_left_ > 0);
-  --turns_left_;
+  if (turns_left_ != kTurnInfinity) {
+    turns_left_--;
+  }
 }
 
 } // namespace core

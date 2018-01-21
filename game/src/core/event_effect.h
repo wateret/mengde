@@ -1,6 +1,9 @@
 #ifndef EVENT_EFFECT_H_
 #define EVENT_EFFECT_H_
 
+#include "util/common.h"
+#include <limits>
+
 namespace mengde {
 namespace core {
 
@@ -10,24 +13,29 @@ class Unit;
 
 class EventEffect {
  public:
+  static const uint16_t kTurnInfinity = std::numeric_limits<uint16_t>::max();
+
+ public:
   enum class Type {
     kOnNone,
     kOnTurnBegin,
-    kOnReceiveDamage,
+    kOnPreBasicAttack,
+    kOnPreBasicAttacked,
+    kOnDamaged,
     kOnActionDone
   };
 
  public:
-  EventEffect(Type);
+  EventEffect(Type, uint16_t turn_left = kTurnInfinity);
   virtual ~EventEffect();
   virtual void OnEvent(Unit*) = 0;
-  bool IsOfType(Type type) { return type_ == type; }
+  bool type(Type type) { return type_ == type; }
   int GetTurnsLeft() { return turns_left_; }
-  void NextTurn() { --turns_left_; }
+  void NextTurn();
 
  private:
   Type type_;
-  int turns_left_;
+  uint16_t turns_left_;
 };
 
 class EERestoreHP : public EventEffect {
