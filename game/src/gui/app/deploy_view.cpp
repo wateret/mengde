@@ -18,7 +18,7 @@ namespace gui {
 namespace app {
 
 HeroModelView::HeroModelView(const Rect& frame,
-                             shared_ptr<const core::Hero> hero,
+                             const core::Hero* hero,
                              core::IDeployHelper* deploy_helper,
                              IEquipmentSetSetter* equipment_set_setter)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
@@ -59,7 +59,7 @@ void HeroModelView::UpdateViews() {
 }
 
 HeroModelListView::HeroModelListView(const Rect& frame,
-                                     const vector<shared_ptr<const core::Hero>>& hero_list,
+                                     const vector<const core::Hero*>& hero_list,
                                      core::IDeployHelper* deploy_helper,
                                      IEquipmentSetSetter* equipment_set_setter,
                                      EquipmentSelectView* equipment_select_view)

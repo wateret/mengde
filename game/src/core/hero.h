@@ -16,7 +16,7 @@ class Equipment;
 class Hero : public IEquipper {
  public:
   Hero(const HeroTemplate*, uint16_t);
-  Hero(const Hero&);
+  Hero(const Hero &);
   ~Hero();
   string GetId() const;
   string GetModelId() const; // TODO Rename this to GetModelId

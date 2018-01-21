@@ -6,21 +6,23 @@
 namespace mengde {
 namespace core {
 
-Unit::Unit(const shared_ptr<Hero>& hero, Force force)
-    : hero_(hero),
+Unit::Unit(const Hero* hero, Force force)
+    : hero_(new Hero(*hero)), // NOTE deep-copy is done here
       equipment_set_(new EquipmentSet(this)),
       current_attr_(hero->GetUnitStat()),
       current_hpmp_(hero->GetHpMp()),
+      modifier_list_(),
+      effect_list_(),
       position_(0, 0),
       direction_(kDirDown),
-      stat_modifier_list_(),
       force_(force),
       no_render_(false),
       done_action_(false) {
-  equipment_set_->CopyEquipmentSet(*hero->GetEquipmentSet());
+  equipment_set_->CopyEquipmentSet(*hero_->GetEquipmentSet());
 }
 
 Unit::~Unit() {
+  delete hero_;
   delete equipment_set_;
 }
 
@@ -78,8 +80,8 @@ const HpMp& Unit::GetOriginalHpMp() const {
 void Unit::UpdateStat() {
   current_attr_ = hero_->GetUnitPureStat();
   {
-    Attribute addends = stat_modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
-    Attribute multipliers = stat_modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
+    Attribute addends = modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
+    Attribute multipliers = modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
     current_attr_ += addends;
     current_attr_ *= multipliers + 100;
@@ -88,7 +90,7 @@ void Unit::UpdateStat() {
 }
 
 void Unit::AddStatModifier(StatModifier* sm) {
-  stat_modifier_list_.AddModifier(sm);
+  modifier_list_.AddModifier(sm);
   UpdateStat();
 }
 

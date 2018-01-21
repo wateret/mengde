@@ -78,14 +78,14 @@ class Game : public IDeployHelper {
 
   // IDeployHelper interfaces
   bool     SubmitDeploy() override;
-  uint32_t AssignDeploy(const shared_ptr<const Hero>&) override;
-  uint32_t UnassignDeploy(const shared_ptr<const Hero>&) override;
-  uint32_t FindDeploy(const shared_ptr<const Hero>& hero) override;
+  uint32_t AssignDeploy(const Hero*) override;
+  uint32_t UnassignDeploy(const Hero*) override;
+  uint32_t FindDeploy(const Hero*) override;
 
   // APIs for Lua //
   void AppointHero(const string&, uint16_t);
   uint32_t GenerateOwnUnit(const string&, Vec2D);
-  uint32_t GenerateOwnUnit(shared_ptr<Hero>, Vec2D);
+  uint32_t GenerateOwnUnit(const Hero*, Vec2D);
   uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
 //  bool UnitPutWeaponOn(uint32_t, const string&);

@@ -17,7 +17,7 @@ class EquipmentSet;
 
 class Unit : public IEvent, public IEquipper {
  public:
-  Unit(const shared_ptr<Hero>&, Force);
+  Unit(const Hero*, Force);
   ~Unit();
 
  public:
@@ -66,17 +66,19 @@ class Unit : public IEvent, public IEquipper {
   void ResetAction();
 
  private:
-  shared_ptr<Hero> hero_;
+  Hero* hero_;
   EquipmentSet* equipment_set_;
-  Attribute      current_attr_;
+  Attribute current_attr_;
   HpMp      current_hpmp_;
-  Vec2D     position_;
-  Direction direction_;
-  StatModifierList stat_modifier_list_;
+  StatModifierList modifier_list_;
   EventEffectList  effect_list_;
-  Force     force_;
-  bool      no_render_;     // FIXME this should be moved to some View related module
-  bool      done_action_;
+
+  // TODO Consider below variables to move (to gui or another core module)
+  Vec2D     position_;  // Position on the map
+  Direction direction_; // Direction the unit is looking at
+  Force     force_;       // Which force that the unit is belong to
+  bool      no_render_;   // FIXME this should be moved to some View related module
+  bool      done_action_; // action is done in current turn
 };
 
 } // namespace core

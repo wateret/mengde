@@ -101,7 +101,7 @@ Deployer* Game::CreateDeployer() {
     vector<int> pos_vec = lua_script_->GetVector<int>("position");
     string hero_id = lua_script_->Get<string>("hero");
     Vec2D position(pos_vec[0], pos_vec[1]);
-    shared_ptr<Hero> hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
+    Hero* hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
     unselectable_info_list.push_back({position, hero});
   });
   uint32_t num_required = lua_script_->Get<uint32_t>("$gdata.deploy.num_required_selectables");
@@ -285,16 +285,16 @@ uint32_t Game::GetNumOwnsAlive() {
 
 void Game::AppointHero(const string& id, uint16_t level) {
   LOG_INFO("Hero added to asset '%s' with Lv %d", id.c_str(), level);
-  auto hero = std::make_shared<Hero>(rc_.hero_tpl_manager->Get(id), level);
+  Hero* hero = new Hero(rc_.hero_tpl_manager->Get(id), level);
   assets_->AddHero(hero);
 }
 
 uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
-  shared_ptr<Hero> hero = assets_->GetHero(id);
+  const Hero* hero = assets_->GetHero(id);
   return GenerateOwnUnit(hero, pos);
 }
 
-uint32_t Game::GenerateOwnUnit(shared_ptr<Hero> hero, Vec2D pos) {
+uint32_t Game::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Force::kOwn);
   map_->PlaceUnit(unit, pos);
   return stage_unit_manager_->Deploy(unit);
@@ -302,7 +302,7 @@ uint32_t Game::GenerateOwnUnit(shared_ptr<Hero> hero, Vec2D pos) {
 
 uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
-  auto hero = std::make_shared<Hero>(hero_tpl, level);
+  Hero* hero = new Hero(hero_tpl, level);
   Unit* unit = new Unit(hero, force);
   map_->PlaceUnit(unit, pos);
   return stage_unit_manager_->Deploy(unit);
@@ -319,12 +319,7 @@ bool Game::SubmitDeploy() {
   if (!deployer_->IsReady()) return false;
 
   deployer_->ForEach([=] (const DeployElement& e) {
-    // FIXME Remove const_pointer_cast
-    //       However currently we may update Hero. For example, level up.
-    //       ==== Solution(Redesign) ====
-    //       1. Clone Hero object and unit holds cloned (non-const) Hero
-    //       2. Update the hero after the scenario ends. Assets class should provide API for that.
-    this->GenerateOwnUnit(std::const_pointer_cast<Hero>(e.hero), deployer_->GetPosition(e.hero));
+    this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero));
   });
 
   status_ = Status::kUndecided;
@@ -332,15 +327,15 @@ bool Game::SubmitDeploy() {
   return true;
 }
 
-uint32_t Game::AssignDeploy(const shared_ptr<const Hero>& hero) {
+uint32_t Game::AssignDeploy(const Hero* hero) {
   return deployer_->Assign(hero);
 }
 
-uint32_t Game::UnassignDeploy(const shared_ptr<const Hero>& hero) {
+uint32_t Game::UnassignDeploy(const Hero* hero) {
   return deployer_->Unassign(hero);
 }
 
-uint32_t Game::FindDeploy(const shared_ptr<const Hero>& hero) {
+uint32_t Game::FindDeploy(const Hero* hero) {
   return deployer_->Find(hero);
 }
 

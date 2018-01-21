@@ -28,11 +28,11 @@ class ItemIconView : public CallbackView {
 class EquipmentSelectView : public CompositeView {
  public:
   EquipmentSelectView(const Rect&, IEquipmentSetSetter*);
-  void SetHero(const shared_ptr<const core::Hero>& hero) { hero_ = hero; }
+  void SetHero(const core::Hero* hero) { hero_ = hero; }
   void SetEquipments(const vector<core::EquipmentWithAmount>&, core::Assets*);
 
  private:
-  shared_ptr<const core::Hero> hero_;
+  const core::Hero* hero_;
   RowMajorListView* equipment_list_view_;
   IEquipmentSetSetter* equipment_set_update_;
 };

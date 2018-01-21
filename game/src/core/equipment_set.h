@@ -26,9 +26,6 @@ class EquipmentSet {
   Attribute CalcMultipliers() const;
 
  private:
-  // NOTE We have equipper_ as a raw pointer but the some actual instances(Hero) is always treated with shared_ptr
-  //      We aware that shared_ptr<Hero> is live at least until its corresponding Unit is deleted so it is OK with this way.
-  //      Also we would not want to use enable_shared_from_this along with weak_ptr since it would be too much for this.
   IEquipper* equipper_;
   EquipmentSlot slot_weapon_;
   EquipmentSlot slot_armor_;

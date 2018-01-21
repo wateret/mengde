@@ -56,7 +56,7 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   RowMajorListView* new_list_view = new RowMajorListView(GetActualFrame(), kItemSize);
   ASSERT(hero_ != nullptr);
   if (hero_ == nullptr) return;
-  auto hero = assets->GetHero(hero_->GetId()); // For non-const Hero and capture
+  auto hero = assets->GetHero(hero_->GetId()); // For non-const core::Hero and capture
   auto equipment_set_update = equipment_set_update_;
   for (auto equipment : equipments) {
     ItemIconView* item_icon_view = new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);

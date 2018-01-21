@@ -24,13 +24,13 @@ class EquipmentSelectView;
 
 class HeroModelView : public CallbackView {
  public:
-  HeroModelView(const Rect&, shared_ptr<const core::Hero>, core::IDeployHelper*, IEquipmentSetSetter*);
+  HeroModelView(const Rect&, const core::Hero*, core::IDeployHelper*, IEquipmentSetSetter*);
   void UpdateViews();
   void SetDeployNo(uint32_t no) { deploy_no_ = no; }
   bool IsSelected() { return deploy_no_ != 0; }
 
  private:
-  shared_ptr<const core::Hero> hero_;
+  const core::Hero* hero_;
   uint32_t deploy_no_;
   bool     required_unselectable_;
   TextView* tv_no_;
@@ -38,7 +38,7 @@ class HeroModelView : public CallbackView {
 
 class HeroModelListView : public CompositeView {
  public:
-  HeroModelListView(const Rect&, const vector<shared_ptr<const core::Hero>>&, core::IDeployHelper*,
+  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*,
                     IEquipmentSetSetter*, EquipmentSelectView*);
 };
 

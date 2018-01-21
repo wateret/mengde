@@ -22,7 +22,13 @@ void Money::Gain(const Money& money) {
 Assets::Assets() {
 }
 
-void Assets::AddHero(shared_ptr<Hero> hero) {
+Assets::~Assets() {
+  for (auto e : heroes_) {
+    delete e.second;
+  }
+}
+
+void Assets::AddHero(Hero* hero) {
   string id = hero->GetId();
   auto found = heroes_.find(id);
   if (found == heroes_.end()) {
@@ -41,7 +47,7 @@ void Assets::RemoveHero(const string& id) {
   }
 }
 
-shared_ptr<Hero> Assets::GetHero(const string& id) {
+Hero* Assets::GetHero(const string& id) {
   auto found = heroes_.find(id);
   if (found == heroes_.end()) {
     UNREACHABLE("Hero does not exist.");
@@ -50,8 +56,8 @@ shared_ptr<Hero> Assets::GetHero(const string& id) {
   }
 }
 
-vector<shared_ptr<const Hero>> Assets::GetHeroes() {
-  vector<shared_ptr<const Hero>> ret;
+vector<const Hero*> Assets::GetHeroes() {
+  vector<const Hero*> ret;
   for (auto kv : heroes_) {
     ret.push_back(kv.second);
   }
@@ -124,9 +130,10 @@ vector<const Equipment*> Assets::GetEquipments() {
   return ret;
 }
 
-void Assets::HeroPutEquipmentOn(const shared_ptr<Hero>& hero, const Equipment* equipment) {
+void Assets::HeroPutEquipmentOn(Hero* hero, const Equipment* equipment) {
   const Equipment* equipment_new = GetEquipment(equipment->GetId());
-  if (equipment == nullptr) return;
+  ASSERT(equipment_new != nullptr);
+  if (equipment == nullptr || equipment_new == nullptr) return;
 
   const Equipment* equipment_current = hero->GetEquipmentSet()->GetEquipment(equipment->GetType());
   if (equipment_current != nullptr) {
