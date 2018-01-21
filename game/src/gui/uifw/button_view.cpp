@@ -7,20 +7,26 @@ namespace gui {
 namespace uifw {
 
 ButtonView::ButtonView(const Rect* frame, const std::string& text)
-    : CallbackView(frame), tv_label_(nullptr), hover_color_(0,0,0,255) {
-  bg_color(COLOR("gray"));
+    : CallbackView(frame), checked_(false), tv_label_(nullptr),
+      base_color_(COLOR("gray")), hover_color_(32, 32, 32), checked_color_(COLOR("black")) {
+  bg_color(GetNormalColor());
 
   Rect rect_label = GetActualFrame();
   tv_label_= new TextView(&rect_label, text, COLOR("white"), 14, LayoutHelper::kAlignCenter);
   AddChild(tv_label_);
-  SetMouseMotionHandler([this] (const foundation::MouseMotionEvent e) -> bool {
+  SetMouseMotionHandler([=] (const foundation::MouseMotionEvent e) -> bool {
     if (e.IsMotionOver()) {
-      bg_color(COLOR(32, 32, 32));
+      this->bg_color(hover_color_);
     } else {
-      bg_color(COLOR("gray"));
+      this->bg_color(GetNormalColor());
     }
     return true;
   });
+}
+
+void ButtonView::check(bool b) {
+  checked_ = b;
+  bg_color(GetNormalColor());
 }
 
 } // namespace uifw

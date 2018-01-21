@@ -10,6 +10,8 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
+class ButtonView;
+
 class TabView : public CompositeView {
  public:
   TabView(const Rect*);
@@ -18,7 +20,7 @@ class TabView : public CompositeView {
   void SetViewIndex(int);
 
  private:
-  std::vector<View*> v_tab_buttons_;
+  std::vector<ButtonView*> v_tab_buttons_;
   std::vector<View*> v_tabs_;
   int                view_index_;
 };

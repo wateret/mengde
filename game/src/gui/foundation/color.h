@@ -53,6 +53,5 @@ class ColorGen {
 } // namespace mengde
 
 #define COLOR ColorGen::GetInstance()->Generate
-#define COLOR ColorGen::GetInstance()->Generate
 
 #endif

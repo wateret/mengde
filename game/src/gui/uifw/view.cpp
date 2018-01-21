@@ -71,10 +71,10 @@ bool View::RenderBegin(Drawer* drawer) {
 
   const Rect* frame = GetFrame();
   Rect actual_frame = *frame;
+  actual_frame.Contract(padding_);
 
   drawer->SetDrawColor(bg_color_);
   drawer->FillRect(frame);
-  actual_frame.Contract(padding_);
   drawer->SetViewport(&actual_frame);
 
   return true;

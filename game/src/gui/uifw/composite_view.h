@@ -33,7 +33,7 @@ class CompositeView : public View {
 
  private:
   std::vector<View*> children_;
-  bool transparent_;
+  bool transparent_; // TODO Add comment what is this for. I don't remember why ':)
 };
 
 } // namespace uifw

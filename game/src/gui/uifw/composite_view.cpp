@@ -88,6 +88,7 @@ bool CompositeView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
     for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
       View* view = *itr;
       is_handled = view->DelegateMouseMotionEvent(e) || is_handled;
+      // Keep handling even if it is handled, since it may need to generate MotionOut event
     }
     return is_handled || !transparent_;
   } else {

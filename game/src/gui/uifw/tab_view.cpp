@@ -1,4 +1,5 @@
 #include "tab_view.h"
+
 #include "button_view.h"
 #include "layout_helper.h"
 
@@ -13,14 +14,21 @@ TabView::TabView(const Rect* frame)
 }
 
 void TabView::SetViewIndex(int idx) {
-  view_index_ = idx;
   const int num_tabs = GetNumTabs();
-  for (int i = 0; i < num_tabs; i++) {
-    v_tabs_[i]->visible(i == idx);
-  }
+
+  // Uncheck
+  v_tab_buttons_[view_index_]->check(false);
+  v_tabs_[view_index_]->visible(false);
+
+  // Check
+  v_tab_buttons_[idx]->check(true);
+  v_tabs_[idx]->visible(true);
+
+  view_index_ = idx;
 }
 
 void TabView::AddTab(const string& button_text, View* view) {
+  // Generate a button for the new tab
   const int kButtonWidth = 60;
   const int kButtonHeight = 20;
   const int index = GetNumTabs();
@@ -29,20 +37,23 @@ void TabView::AddTab(const string& button_text, View* view) {
                     kButtonWidth,
                     kButtonHeight};
   ButtonView* tab_button = new ButtonView(&btn_frame, button_text);
-  tab_button->SetMouseButtonHandler([this, index] (const foundation::MouseButtonEvent e) -> bool {
+  tab_button->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) -> bool {
     if (e.IsLeftButtonDown()) {
       this->SetViewIndex(index);
-      return true;
     }
     return true;
   });
+
+  view->visible(false);
 
   v_tab_buttons_.push_back(tab_button);
   v_tabs_.push_back(view);
   AddChild(tab_button);
   AddChild(view);
 
-  view->visible(index == view_index_);
+  if (index == view_index_) {
+    SetViewIndex(view_index_);
+  }
 }
 
 } // namespace uifw
