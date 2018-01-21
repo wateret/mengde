@@ -4,6 +4,7 @@
 #include "util/common.h"
 #include "hero.h"
 #include "stat_modifier_list.h"
+#include "event_effect_list.h"
 #include "equipment_set.h"
 #include "i_event.h"
 #include "i_equipper.h"
@@ -37,6 +38,7 @@ class Unit : public IEvent, public IEquipper {
   void SetStat();
   void UpdateStat() override;
   void AddStatModifier(StatModifier*);
+  void AddEventEffect(EventEffect*);
   const EquipmentSet* GetEquipmentSet() const { return equipment_set_; }
   uint16_t GetMaxExp() { return Level::kExpLimit; }
   void SetPosition(Vec2D pos) { position_ = pos; }

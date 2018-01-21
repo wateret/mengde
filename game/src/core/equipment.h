@@ -3,7 +3,8 @@
 
 #include <string>
 
-#include "unit_effect_list.h"
+#include "event_effect_list.h"
+#include "stat_modifier_list.h"
 #include "util/common.h"
 #include "i_event.h"
 
@@ -37,7 +38,8 @@ class Equipment : public IEvent {
  private:
   string id_;
   Type type_;
-  UnitEffectList unit_effect_list_;
+  StatModifierList modifier_list_;
+  EventEffectList  effect_list_;
 };
 
 } // namespace core
