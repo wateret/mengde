@@ -12,7 +12,7 @@ namespace app {
 
 UnitActionView::UnitActionView(const Rect& frame, core::Game* game, RootView* rv)
     : VerticalListView(frame), game_(game), rv_(rv) {
-  bg_color(COLOR("darkgray", 160));
+  bg_color(COLOR("darkgray", 212));
   padding(8);
   Rect btn_frame = GetActualFrame();
   btn_frame.SetH(24);

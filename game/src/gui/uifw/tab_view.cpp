@@ -32,7 +32,7 @@ void TabView::AddTab(const string& button_text, View* view) {
   const int kButtonWidth = 60;
   const int kButtonHeight = 20;
   const int index = GetNumTabs();
-  Rect btn_frame = {(kButtonWidth + LayoutHelper::kDefaultSpace) * index,
+  Rect btn_frame = {(kButtonWidth + LayoutHelper::kDefaultSpace / 2) * index,
                     0,
                     kButtonWidth,
                     kButtonHeight};
