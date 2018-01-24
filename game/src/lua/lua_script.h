@@ -143,9 +143,14 @@ class LuaScript {
   void PushToStack(T val) {
     lua_pushnumber(L, (double)val);
   }
+
+  template<typename T>
+  void PushToStack(T* val) {
+    lua_pushlightuserdata(L, static_cast<void*>(val));
+  }
+
   void PushToStack(const string&);
   void PushToStack(lua_CFunction);
-  void PushToStack(void *);
 
   int GetToStack(const string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
@@ -230,6 +235,8 @@ class LuaScript {
 
 // Template Specializations
 
+// boolean
+
 template<>
 bool LuaScript::GetDefault<bool>();
 
@@ -239,6 +246,8 @@ bool LuaScript::GetTop<bool>();
 template<>
 bool LuaScript::GetTopOpt<bool>();
 
+// string
+
 template<>
 string LuaScript::GetDefault<string>();
 
@@ -247,6 +256,8 @@ string LuaScript::GetTop<string>();
 
 template<>
 string LuaScript::GetTopOpt<string>();
+
+// For return type of `void`
 
 template<>
 void LuaScript::Call<void>(unsigned argc);

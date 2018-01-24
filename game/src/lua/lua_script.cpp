@@ -60,12 +60,8 @@ void LuaScript::PushToStack(lua_CFunction fn) {
   lua_pushcfunction(L, fn);
 }
 
-void LuaScript::PushToStack(void *ptr) {
-  lua_pushlightuserdata(L, ptr);
-}
-
 void LuaScript::SetRawPointerToGlobal(const string& name, void* p) {
-  lua_pushlightuserdata(L, p);
+  PushToStack(p);
   lua_setglobal(L, name.c_str());
 }
 
@@ -118,7 +114,12 @@ bool LuaScript::GetDefault<bool>() {
 
 template<>
 bool LuaScript::GetTop<bool>() {
-  return (bool)lua_toboolean(L, -1);
+  if (lua_isboolean(L, -1)) {
+    return (bool)lua_toboolean(L, -1);
+  } else {
+    LogError("Not a boolean.");
+    throw "Not a boolean";
+  }
 }
 
 template<>
@@ -126,8 +127,7 @@ bool LuaScript::GetTopOpt<bool>() {
   if (lua_isboolean(L, -1)) {
     return (bool)lua_toboolean(L, -1);
   } else {
-    LogError("Not a boolean.");
-    throw "Not a boolean";
+    return GetDefault<bool>();
   }
 }
 
