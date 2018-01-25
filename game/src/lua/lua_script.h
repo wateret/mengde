@@ -207,6 +207,30 @@ class LuaScript {
   template<typename T>
   T GetDefault() { return 0; }
 
+  // SNIFAE for pointer types
+
+  template<typename T>
+  typename std::enable_if<std::is_pointer<T>::value, T>::type GetDefault() { return nullptr; }
+
+  template<typename T>
+  typename std::enable_if<std::is_pointer<T>::value, T>::type GetTop() {
+    if (lua_isuserdata(L, -1)) {
+      return static_cast<T>(lua_isuserdata(L, -1));
+    } else {
+      LogError("Not a pointer.");
+      throw "Not a pointer";
+    }
+  }
+
+  template<typename T>
+  typename std::enable_if<std::is_pointer<T>::value, T>::type GetTopOpt() {
+    if (lua_isuserdata(L, -1)) {
+      return static_cast<T>(lua_touserdata(L, -1));
+    } else {
+      return GetDefault<T>();
+    }
+  }
+
   void DumpStack();
 
   void SetRawPointerToGlobal(const string&, void*);
