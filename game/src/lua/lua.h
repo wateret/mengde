@@ -1,9 +1,12 @@
 #ifndef LUA_SCRIPT_H_
 #define LUA_SCRIPT_H_
 
+#include <assert.h>
+
 #include <string>
 #include <vector>
 #include <functional>
+
 #include "util/common.h"
 
 extern "C" {
@@ -22,9 +25,7 @@ class Lua {
   Lua();
   Lua(lua_State*);
   ~Lua();
-  void LogError(const string&);
-  void LogWarning(const string&);
-  void LogDebug(const string&);
+
   void ForEachTableEntry(const string&, ForEachEntryFunc);
   void Run(const string&);
   void Register(const string&, lua_CFunction);
@@ -33,28 +34,23 @@ class Lua {
     lua_pop(L, n);
   }
 
-  void CleanStack() {
-    int n = lua_gettop(L);
-    lua_pop(L, n);
-  }
-
   // Call functions with variadic template
   template<typename R>
   R Call(const string& name) {
     GetToStack(name); // XXX should pop more when name is nested
-    return Call<R>(0);
+    return CallImpl<R>(0);
   }
 
   template<typename R, typename... Args>
   R Call(const string& name, Args... args) {
     GetToStack(name); // XXX should pop more when name is nested
-    return Call<R>(0, args...);
+    return CallImpl<R>(0, args...);
   }
 
   template<typename T>
   vector<T> GetVector(const string& name = "") {
     vector<T> vec;
-    ForEachTableEntry(name, [=, &vec] () mutable {
+    ForEachTableEntry(name, [&] () {
       T val = this->GetTop<T>();
       vec.push_back(val);
     });
@@ -66,12 +62,16 @@ class Lua {
   // If the entry is not exist, emits an error.
   template<typename T>
   T Get(const string& var_expr = "") {
-    ASSERT(L != nullptr);
+    assert(L != nullptr);
 
-    GetToStack(var_expr);
+    int initial_stack_size = GetStackSize();
+    bool get_top = var_expr.empty();
+    int to_be_popped = get_top ? 1 : GetToStack(var_expr);
     T result = GetTop<T>();
 
-    lua_pop(L, 1);
+    PopStack(to_be_popped);
+
+    assert(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
     return result;
   }
 
@@ -79,12 +79,17 @@ class Lua {
   // If the entry is not exist, returns default value.
   template<typename T>
   T GetOpt(const string& var_expr = "") {
-    ASSERT(L != nullptr);
+    assert(L != nullptr);
 
-    GetToStackOpt(var_expr);
+    int initial_stack_size = GetStackSize();
+    bool get_top = var_expr.empty();
+
+    int to_be_popped = get_top ? 1 : GetToStackOpt(var_expr);
     T result = GetTopOpt<T>();
 
-    lua_pop(L, 1);
+    PopStack(to_be_popped);
+
+    assert(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
     return result;
   }
 
@@ -100,29 +105,20 @@ class Lua {
 
   template<typename T>
   void Set(const string& var_expr, T val) {
+    int initial_stack_size = GetStackSize();
+
     string var = "";
     int level = 0;
-    bool from_global = (var_expr[0] == '$');
-    for (unsigned int i = from_global ? 1 : 0, size = var_expr.size(); i < size; i++) {
-      if (var_expr[i] == '.') { // in the middle
-        if (level == 0 && from_global) {
-          lua_getglobal(L, var.c_str());
-        } else {
-          lua_getfield(L, -1, var.c_str());
-        }
-        if (lua_isnil(L, -1)) {
+    for (unsigned int i = 0, size = var_expr.size(); i < size; i++) {
+      if (var_expr[i] == '.') { // Handle a var name in the middle
+        // Find field
+        GetField(var);
+        if (lua_isnil(L, -1)) { // Field not found
+          // Create a new table
           lua_pop(L, 1);
           lua_newtable(L);
-          if (level == 0 && from_global) {
-            lua_setglobal(L, var.c_str());
-            lua_getglobal(L, var.c_str());
-          } else {
-            lua_setfield(L, -2, var.c_str());
-            lua_getfield(L, -1, var.c_str());
-          }
-        } else {
-          PushToStack(val);
-          lua_setfield(L, -2, var.c_str());
+          SetField(var);
+          GetField(var);
         }
         var = "";
         level++;
@@ -130,14 +126,16 @@ class Lua {
         var += var_expr[i];
       }
     }
+    // Handle the last var name - Set a field
     PushToStack(val);
-    if (level == 0 && from_global) {
-      lua_setglobal(L, var.c_str());
-    } else {
-      lua_setfield(L, -2, var.c_str());
-    }
+    SetField(var);
     lua_pop(L, level);
+
+    assert(initial_stack_size == GetStackSize());
   }
+
+  // PushToStack is public for pushing return value from lua C function
+  // and it is also used frequently internally.
 
   template<typename T>
   void PushToStack(T val) {
@@ -152,28 +150,29 @@ class Lua {
   void PushToStack(const string&);
   void PushToStack(lua_CFunction);
 
+  void DumpStack();
+
+ private:
+
   int GetToStack(const string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
 
     string var = "";
     int level = 0;
-    bool from_global = (var_expr[0] == '$');
-    for (unsigned int i = from_global ? 1 : 0, size = var_expr.size(); i < size + 1; i++) {
+    for (unsigned int i = 0, size = var_expr.size(); i < size + 1; i++) {
       if (i == size || var_expr[i] == '.') {
-        if (level == 0 && from_global) {
-          lua_getglobal(L, var.c_str());
-        } else {
-          lua_getfield(L, -1, var.c_str());
-        }
-
+        GetField(var);
+        level++;
         if (lua_isnil(L, -1)) {
-          if (!optional) LogError(var + " is not defined");
-          lua_pop(L, level);
-          if (!optional) throw "GetToStack Error";
+          // Cleanup and return or throw
+          PopStack(level);
+          if (!optional) {
+            LogError(var + " is not defined");
+            throw "GetToStack Error";
+          }
           return 0;
         }
         var = "";
-        level++;
       } else {
         var += var_expr[i];
       }
@@ -186,11 +185,10 @@ class Lua {
     return GetToStack(var_expr, true);
   }
 
+  // type aliases
 
-  template<typename T>
-  using is_bool = std::is_same<bool, T>;
-  template<typename T>
-  using is_string = std::is_same<string, T>;
+  template<typename T> using is_bool   = std::is_same<bool,   T>;
+  template<typename T> using is_string = std::is_same<string, T>;
 
   // Arithmetic types except bool
 
@@ -293,11 +291,16 @@ class Lua {
     }
   }
 
-  void DumpStack();
+  void LogError(const string&);
+  void LogWarning(const string&);
+  void LogDebug(const string&);
 
- private:
+  void GetField(const string& id);
+  void SetField(const string& id);
+  int  GetStackSize();
+
   template<typename R>
-  R Call(unsigned argc) {
+  R CallImpl(unsigned argc) {
     if (lua_pcall(L, argc, 1, 0)) {
       LogError("Error on Call");
     }
@@ -307,9 +310,9 @@ class Lua {
   }
 
   template<typename R, typename A, typename... Args>
-  R Call(unsigned argc, A arg0, Args... args) {
+  R CallImpl(unsigned argc, A arg0, Args... args) {
     PushToStack(arg0);
-    return Call<R>(argc + 1, args...);
+    return CallImpl<R>(argc + 1, args...);
   }
 
  private:
@@ -321,9 +324,9 @@ class Lua {
 // Template Specializations
 //
 
-// method Call - for return type of `void`
+// method CallImpl - for return type of `void`
 template<>
-void Lua::Call<void>(unsigned argc);
+void Lua::CallImpl<void>(unsigned argc);
 
 } // namespace lua
 

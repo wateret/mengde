@@ -22,8 +22,8 @@ namespace app {
 
 FrameConfig::FrameConfig(uint16_t max_frames_sec, float speed) : max_frames_sec_(max_frames_sec), speed_(speed) {
   ASSERT(0.125f <= speed_ && speed_ <= 4.0f);
-  LOG_DEBUG("FPS CAP : %d");
-  LOG_DEBUG("SPEED   : %fx", max_frames_sec_, speed_);
+  LOG_DEBUG("FPS CAP : %d", max_frames_sec_);
+  LOG_DEBUG("SPEED   : %fx", speed_);
 }
 
 uint32_t FrameConfig::MsecToFrame(uint32_t ms) const {

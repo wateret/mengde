@@ -40,7 +40,7 @@ void Lua::LogDebug(const string& msg) {
 }
 
 void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
-  int num_stack = GetToStack(name.c_str());
+  int num_stack = GetToStack(name);
   if (!lua_istable(L, -1)) { // Table not found
     return;
   }
@@ -66,6 +66,34 @@ void Lua::SetGlobal(const string& name, const string& val) {
   lua_setglobal(L, name.c_str());
 }
 
+void Lua::GetField(const string& id) {
+  if (GetStackSize() == 0) {
+    lua_getglobal(L, id.c_str());
+  } else {
+    assert(GetStackSize() > 0);
+    // At this point Lua Stack must be
+    // Index -1 : value
+    lua_getfield(L, -1, id.c_str());
+  }
+}
+
+void Lua::SetField(const string& id) {
+  if (GetStackSize() == 1) {
+    lua_setglobal(L, id.c_str());
+  } else {
+    assert(GetStackSize() > 1);
+    // At this point Lua Stack must be look like
+    // Index -1 : value (to be set)
+    // Index -2 : table (to set a field)
+    // So the below lua_setfield() does `table[id] = value`
+    lua_setfield(L, -2, id.c_str());
+  }
+}
+
+int Lua::GetStackSize() {
+  return lua_gettop(L);
+}
+
 void Lua::DumpStack() {
 #ifdef DEBUG
   int i = lua_gettop(L);
@@ -74,7 +102,7 @@ void Lua::DumpStack() {
     int t = lua_type(L, i);
     switch (t) {
       case LUA_TSTRING:
-        printf("%d:\"%s\"", i, lua_tostring(L, i));
+        printf("%d: \"%s\"", i, lua_tostring(L, i));
         break;
       case LUA_TBOOLEAN:
         printf("%d: %s", i, lua_toboolean(L, i) ? "true" : "false");
@@ -89,12 +117,12 @@ void Lua::DumpStack() {
     printf("\n");
     i--;
   }
-  printf("--------------- Stack Dump End   ---------------\n");
+  printf("--------------- Stack Dump End   ----------------\n");
 #endif // DEBUG
 }
 
 template<>
-void Lua::Call<void>(unsigned argc) {
+void Lua::CallImpl<void>(unsigned argc) {
   if (lua_pcall(L, argc, 0, 0)) {
     LogError("Error on Call(return type : void).");
   }
