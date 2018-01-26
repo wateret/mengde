@@ -186,15 +186,21 @@ class LuaScript {
     return GetToStack(var_expr, true);
   }
 
+
+  template<typename T>
+  using is_bool = std::is_same<bool, T>;
+  template<typename T>
+  using is_string = std::is_same<string, T>;
+
   // Arithmetic types except bool
 
   template<typename T>
-  typename std::enable_if<std::is_arithmetic<T>::value && !std::is_same<bool, T>::value, T>::type GetDefault() {
+  typename std::enable_if<std::is_arithmetic<T>::value && !is_bool<T>::value, T>::type GetDefault() {
     return static_cast<T>(0);
   }
 
   template<typename T>
-  typename std::enable_if<std::is_arithmetic<T>::value && !std::is_same<bool, T>::value, T>::type GetTop() {
+  typename std::enable_if<std::is_arithmetic<T>::value && !is_bool<T>::value, T>::type GetTop() {
     if (!lua_isnumber(L, -1)) {
       LogError("Not a number.");
       throw "Not a number";
@@ -203,7 +209,7 @@ class LuaScript {
   }
 
   template<typename T>
-  typename std::enable_if<std::is_arithmetic<T>::value && !std::is_same<bool, T>::value, T>::type GetTopOpt() {
+  typename std::enable_if<std::is_arithmetic<T>::value && !is_bool<T>::value, T>::type GetTopOpt() {
     if (!lua_isnumber(L, -1)) {
       LogDebug("Not a number. Returning default value.");
       return GetDefault<T>();
@@ -214,12 +220,12 @@ class LuaScript {
   // bool
 
   template<typename T>
-  typename std::enable_if<std::is_same<bool, T>::value, T>::type GetDefault() {
+  typename std::enable_if<is_bool<T>::value, T>::type GetDefault() {
     return false;
   }
 
   template<typename T>
-  typename std::enable_if<std::is_same<bool, T>::value, T>::type GetTop() {
+  typename std::enable_if<is_bool<T>::value, T>::type GetTop() {
     if (lua_isboolean(L, -1)) {
       return (bool)lua_toboolean(L, -1);
     } else {
@@ -229,7 +235,7 @@ class LuaScript {
   }
 
   template<typename T>
-  typename std::enable_if<std::is_same<bool, T>::value, T>::type GetTopOpt() {
+  typename std::enable_if<is_bool<T>::value, T>::type GetTopOpt() {
     if (lua_isboolean(L, -1)) {
       return (bool)lua_toboolean(L, -1);
     } else {
@@ -240,12 +246,12 @@ class LuaScript {
   // string
 
   template<typename T>
-  typename std::enable_if<std::is_same<string, T>::value, T>::type GetDefault() {
+  typename std::enable_if<is_string<T>::value, T>::type GetDefault() {
     return "nil";
   }
 
   template<typename T>
-  typename std::enable_if<std::is_same<string, T>::value, T>::type GetTop() {
+  typename std::enable_if<is_string<T>::value, T>::type GetTop() {
     if (lua_isstring(L, -1)) {
       return string(lua_tostring(L, -1));
     } else {
@@ -255,7 +261,7 @@ class LuaScript {
   }
 
   template<typename T>
-  typename std::enable_if<std::is_same<string, T>::value, T>::type GetTopOpt() {
+  typename std::enable_if<is_string<T>::value, T>::type GetTopOpt() {
     if (lua_isstring(L, -1)) {
       return string(lua_tostring(L, -1));
     } else {
