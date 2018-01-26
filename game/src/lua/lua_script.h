@@ -295,8 +295,6 @@ class LuaScript {
 
   void DumpStack();
 
-  void SetRawPointerToGlobal(const string&, void*);
-
  private:
   template<typename R>
   R Call(unsigned argc) {

@@ -61,11 +61,6 @@ void LuaScript::PushToStack(lua_CFunction fn) {
   lua_pushcfunction(L, fn);
 }
 
-void LuaScript::SetRawPointerToGlobal(const string& name, void* p) {
-  PushToStack(p);
-  lua_setglobal(L, name.c_str());
-}
-
 void LuaScript::SetGlobal(const string& name, const string& val) {
   lua_pushstring(L, val.c_str());
   lua_setglobal(L, name.c_str());

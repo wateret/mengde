@@ -50,9 +50,6 @@ Game::~Game() {
 lua::LuaScript* Game::CreateLua(const Path& stage_script_path) {
   lua::LuaScript* lua_script = new lua::LuaScript();
 
-  // Register game object as lua global
-  lua_script->SetRawPointerToGlobal(LUA_GAME_OBJ_NAME, (void*)this);
-
 #define GAME_PREFIX "$game_"
 #define ENUM_PREFIX "$Enum."
 
