@@ -31,7 +31,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       status_(Status::kDeploying) {
   lua_script_ = CreateLua(stage_script_path);
   map_        = CreateMap();
-  lua_script_->Call<void>("$on_deploy");
+  lua_script_->Call<void>("$on_deploy", this);
   deployer_ = CreateDeployer();
 
   commander_ = new Commander();
@@ -53,7 +53,8 @@ lua::LuaScript* Game::CreateLua(const Path& stage_script_path) {
   // Register game object as lua global
   lua_script->SetRawPointerToGlobal(LUA_GAME_OBJ_NAME, (void*)this);
 
-#define GAME_PREFIX "$" LUA_GAME_TABLE_NAME "."
+#define GAME_PREFIX "$game_"
+#define ENUM_PREFIX "$Enum."
 
   // Register API functions
 #define MACRO_LUA_GAME(cname, luaname) \
@@ -64,12 +65,12 @@ lua::LuaScript* Game::CreateLua(const Path& stage_script_path) {
 #undef MACRO_LUA_GAME
 
   // Register enum values
-  lua_script->Set(GAME_PREFIX "force.own", (int)Force::kOwn);
-  lua_script->Set(GAME_PREFIX "force.ally", (int)Force::kAlly);
-  lua_script->Set(GAME_PREFIX "force.enemy", (int)Force::kEnemy);
-  lua_script->Set(GAME_PREFIX "status.undecided", (int)Status::kUndecided);
-  lua_script->Set(GAME_PREFIX "status.defeat", (int)Status::kDefeat);
-  lua_script->Set(GAME_PREFIX "status.victory", (int)Status::kVictory);
+  lua_script->Set(ENUM_PREFIX "force.own", (int)Force::kOwn);
+  lua_script->Set(ENUM_PREFIX "force.ally", (int)Force::kAlly);
+  lua_script->Set(ENUM_PREFIX "force.enemy", (int)Force::kEnemy);
+  lua_script->Set(ENUM_PREFIX "status.undecided", (int)Status::kUndecided);
+  lua_script->Set(ENUM_PREFIX "status.defeat", (int)Status::kDefeat);
+  lua_script->Set(ENUM_PREFIX "status.victory", (int)Status::kVictory);
 
 #undef GAME_PREFIX
 
@@ -258,7 +259,7 @@ void Game::Push(unique_ptr<Cmd> cmd) {
 
 bool Game::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
-  uint32_t res = lua_script_->Call<uint32_t>("$end_condition");
+  uint32_t res = lua_script_->Call<uint32_t>("$end_condition", this);
   status_ = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
@@ -323,7 +324,7 @@ bool Game::SubmitDeploy() {
   });
 
   status_ = Status::kUndecided;
-  lua_script_->Call<void>("$on_begin");
+  lua_script_->Call<void>("$on_begin", this);
   return true;
 }
 

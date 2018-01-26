@@ -27,6 +27,7 @@ void LuaScript::Register(const string& name, lua_CFunction fn) {
 }
 
 void LuaScript::LogError(const string& msg) {
+  DumpStack();
   LOGM_ERROR(Lua, "%s", msg.c_str());
 }
 
@@ -73,25 +74,27 @@ void LuaScript::SetGlobal(const string& name, const string& val) {
 void LuaScript::DumpStack() {
 #ifdef DEBUG
   int i = lua_gettop(L);
-  printf("--------------- Stack Dump ----------------\n");
+  printf("--------------- Stack Dump Begin ----------------\n");
   while (i) {
     int t = lua_type(L, i);
     switch (t) {
       case LUA_TSTRING:
-        printf("%d:`%s'", i, lua_tostring(L, i));
+        printf("%d:\"%s\"", i, lua_tostring(L, i));
         break;
       case LUA_TBOOLEAN:
-        printf("%d: %s",i,lua_toboolean(L, i) ? "true" : "false");
+        printf("%d: %s", i, lua_toboolean(L, i) ? "true" : "false");
         break;
       case LUA_TNUMBER:
-        printf("%d: %g",  i, lua_tonumber(L, i));
+        printf("%d: %g", i, lua_tonumber(L, i));
         break;
-      default: printf("%d: %s", i, lua_typename(L, t)); break;
+      default:
+        printf("%d: %s", i, lua_typename(L, t));
+        break;
     }
     printf("\n");
     i--;
   }
-  printf("--------------- Stack Dump Finished ---------------\n");
+  printf("--------------- Stack Dump End   ---------------\n");
 #endif // DEBUG
 }
 
@@ -105,54 +108,6 @@ void LuaScript::Call<void>(unsigned argc) {
 void LuaScript::NewGlobalTable(const string& name) {
   lua_newtable(L);
   lua_setglobal(L, name.c_str());
-}
-
-template<>
-bool LuaScript::GetDefault<bool>() {
-  return false;
-}
-
-template<>
-bool LuaScript::GetTop<bool>() {
-  if (lua_isboolean(L, -1)) {
-    return (bool)lua_toboolean(L, -1);
-  } else {
-    LogError("Not a boolean.");
-    throw "Not a boolean";
-  }
-}
-
-template<>
-bool LuaScript::GetTopOpt<bool>() {
-  if (lua_isboolean(L, -1)) {
-    return (bool)lua_toboolean(L, -1);
-  } else {
-    return GetDefault<bool>();
-  }
-}
-
-template<>
-string LuaScript::GetDefault<string>() {
-  return "nil";
-}
-
-template<>
-string LuaScript::GetTop<string>() {
-  if (lua_isstring(L, -1)) {
-    return string(lua_tostring(L, -1));
-  } else {
-    LogError("Not a string.");
-    throw "Not a string";
-  }
-}
-
-template<>
-string LuaScript::GetTopOpt<string>() {
-  if (lua_isstring(L, -1)) {
-    return string(lua_tostring(L, -1));
-  } else {
-    return GetDefault<string>();
-  }
 }
 
 } // namespace lua

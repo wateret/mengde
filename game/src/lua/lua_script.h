@@ -186,9 +186,16 @@ class LuaScript {
     return GetToStack(var_expr, true);
   }
 
+  // Arithmetic types except bool
+
   template<typename T>
-  T GetTop() {
-    if(!lua_isnumber(L, -1)) {
+  typename std::enable_if<std::is_arithmetic<T>::value && !std::is_same<bool, T>::value, T>::type GetDefault() {
+    return static_cast<T>(0);
+  }
+
+  template<typename T>
+  typename std::enable_if<std::is_arithmetic<T>::value && !std::is_same<bool, T>::value, T>::type GetTop() {
+    if (!lua_isnumber(L, -1)) {
       LogError("Not a number.");
       throw "Not a number";
     }
@@ -196,26 +203,75 @@ class LuaScript {
   }
 
   template<typename T>
-  T GetTopOpt() {
-    if(!lua_isnumber(L, -1)) {
+  typename std::enable_if<std::is_arithmetic<T>::value && !std::is_same<bool, T>::value, T>::type GetTopOpt() {
+    if (!lua_isnumber(L, -1)) {
       LogDebug("Not a number. Returning default value.");
       return GetDefault<T>();
     }
     return (T)lua_tonumber(L, -1);
   }
 
-  template<typename T>
-  T GetDefault() { return 0; }
+  // bool
 
-  // SNIFAE for pointer types
+  template<typename T>
+  typename std::enable_if<std::is_same<bool, T>::value, T>::type GetDefault() {
+    return false;
+  }
+
+  template<typename T>
+  typename std::enable_if<std::is_same<bool, T>::value, T>::type GetTop() {
+    if (lua_isboolean(L, -1)) {
+      return (bool)lua_toboolean(L, -1);
+    } else {
+      LogError("Not a boolean.");
+      throw "Not a boolean";
+    }
+  }
+
+  template<typename T>
+  typename std::enable_if<std::is_same<bool, T>::value, T>::type GetTopOpt() {
+    if (lua_isboolean(L, -1)) {
+      return (bool)lua_toboolean(L, -1);
+    } else {
+      return GetDefault<bool>();
+    }
+  }
+
+  // string
+
+  template<typename T>
+  typename std::enable_if<std::is_same<string, T>::value, T>::type GetDefault() {
+    return "nil";
+  }
+
+  template<typename T>
+  typename std::enable_if<std::is_same<string, T>::value, T>::type GetTop() {
+    if (lua_isstring(L, -1)) {
+      return string(lua_tostring(L, -1));
+    } else {
+      LogError("Not a string.");
+      throw "Not a string";
+    }
+  }
+
+  template<typename T>
+  typename std::enable_if<std::is_same<string, T>::value, T>::type GetTopOpt() {
+    if (lua_isstring(L, -1)) {
+      return string(lua_tostring(L, -1));
+    } else {
+      return GetDefault<string>();
+    }
+  }
+
+  // Pointer types
 
   template<typename T>
   typename std::enable_if<std::is_pointer<T>::value, T>::type GetDefault() { return nullptr; }
 
   template<typename T>
   typename std::enable_if<std::is_pointer<T>::value, T>::type GetTop() {
-    if (lua_isuserdata(L, -1)) {
-      return static_cast<T>(lua_isuserdata(L, -1));
+    if (lua_islightuserdata(L, -1)) {
+      return static_cast<T>(lua_touserdata(L, -1));
     } else {
       LogError("Not a pointer.");
       throw "Not a pointer";
@@ -224,7 +280,7 @@ class LuaScript {
 
   template<typename T>
   typename std::enable_if<std::is_pointer<T>::value, T>::type GetTopOpt() {
-    if (lua_isuserdata(L, -1)) {
+    if (lua_islightuserdata(L, -1)) {
       return static_cast<T>(lua_touserdata(L, -1));
     } else {
       return GetDefault<T>();
@@ -257,32 +313,11 @@ class LuaScript {
   bool       destroy_;
 };
 
+//
 // Template Specializations
+//
 
-// boolean
-
-template<>
-bool LuaScript::GetDefault<bool>();
-
-template<>
-bool LuaScript::GetTop<bool>();
-
-template<>
-bool LuaScript::GetTopOpt<bool>();
-
-// string
-
-template<>
-string LuaScript::GetDefault<string>();
-
-template<>
-string LuaScript::GetTop<string>();
-
-template<>
-string LuaScript::GetTopOpt<string>();
-
-// For return type of `void`
-
+// method Call - for return type of `void`
 template<>
 void LuaScript::Call<void>(unsigned argc);
 
