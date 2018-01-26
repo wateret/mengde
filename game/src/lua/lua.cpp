@@ -1,45 +1,45 @@
-#include "lua_script.h"
+#include "lua.h"
 
 #include <stdio.h>
 
 namespace lua {
 
-LuaScript::LuaScript() : L(nullptr), destroy_(true) {
+Lua::Lua() : L(nullptr), destroy_(true) {
   L = luaL_newstate();
   if (L != nullptr) luaL_openlibs(L);
 }
 
-LuaScript::LuaScript(lua_State* L) : L(L), destroy_(false) {
+Lua::Lua(lua_State* L) : L(L), destroy_(false) {
 }
 
-LuaScript::~LuaScript() {
+Lua::~Lua() {
 	if (L != nullptr && destroy_) lua_close(L);
 }
 
-void LuaScript::Run(const string& filename) {
+void Lua::Run(const string& filename) {
   if (luaL_loadfile(L, filename.c_str()) || lua_pcall(L, 0, 0, 0)) {
     printf("LuaError: Load and run '%s' failed. \n", filename.c_str());
   }
 }
 
-void LuaScript::Register(const string& name, lua_CFunction fn) {
+void Lua::Register(const string& name, lua_CFunction fn) {
   lua_register(L, name.c_str(), fn);
 }
 
-void LuaScript::LogError(const string& msg) {
+void Lua::LogError(const string& msg) {
   DumpStack();
   LOGM_ERROR(Lua, "%s", msg.c_str());
 }
 
-void LuaScript::LogWarning(const string& msg) {
+void Lua::LogWarning(const string& msg) {
   LOGM_WARNING(Lua, "%s", msg.c_str());
 }
 
-void LuaScript::LogDebug(const string& msg) {
+void Lua::LogDebug(const string& msg) {
   LOGM_DEBUG(Lua, "%s", msg.c_str());
 }
 
-void LuaScript::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
+void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
   int num_stack = GetToStack(name.c_str());
   if (!lua_istable(L, -1)) { // Table not found
     return;
@@ -53,20 +53,20 @@ void LuaScript::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
   PopStack(num_stack); // Pop tables pushed by GetToStack
 }
 
-void LuaScript::PushToStack(const string& s) {
+void Lua::PushToStack(const string& s) {
   lua_pushstring(L, s.c_str());
 }
 
-void LuaScript::PushToStack(lua_CFunction fn) {
+void Lua::PushToStack(lua_CFunction fn) {
   lua_pushcfunction(L, fn);
 }
 
-void LuaScript::SetGlobal(const string& name, const string& val) {
+void Lua::SetGlobal(const string& name, const string& val) {
   lua_pushstring(L, val.c_str());
   lua_setglobal(L, name.c_str());
 }
 
-void LuaScript::DumpStack() {
+void Lua::DumpStack() {
 #ifdef DEBUG
   int i = lua_gettop(L);
   printf("--------------- Stack Dump Begin ----------------\n");
@@ -94,13 +94,13 @@ void LuaScript::DumpStack() {
 }
 
 template<>
-void LuaScript::Call<void>(unsigned argc) {
+void Lua::Call<void>(unsigned argc) {
   if (lua_pcall(L, argc, 0, 0)) {
     LogError("Error on Call(return type : void).");
   }
 }
 
-void LuaScript::NewGlobalTable(const string& name) {
+void Lua::NewGlobalTable(const string& name) {
   lua_newtable(L);
   lua_setglobal(L, name.c_str());
 }

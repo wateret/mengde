@@ -15,7 +15,7 @@
 class Path;
 
 namespace lua {
-  class LuaScript;
+  class Lua;
 }
 
 namespace mengde {
@@ -24,7 +24,7 @@ namespace core {
 class Assets;
 class Cmd;
 class Commander;
-class LuaScript;
+class Lua;
 class Magic;
 class Deployer;
 class StageUnitManager;
@@ -59,7 +59,7 @@ class Game : public IDeployHelper {
   Unit* GetUnit(uint32_t);
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
-  lua::LuaScript* GetLuaScript() { return lua_script_; }
+  lua::Lua* GetLuaScript() { return lua_script_; }
   bool EndForceTurn();
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
@@ -97,7 +97,7 @@ class Game : public IDeployHelper {
   Unit*         GetOneHostileInRange(Unit*, Vec2D);
 
  private:
-  lua::LuaScript* CreateLua(const Path&);
+  lua::Lua* CreateLua(const Path&);
   Map*       CreateMap();
   Deployer*  CreateDeployer();
   bool TryBasicAttack(Unit*, Unit*);
@@ -106,7 +106,7 @@ class Game : public IDeployHelper {
  private:
   ResourceManagers   rc_;
   Assets*            assets_;
-  lua::LuaScript*    lua_script_;
+  lua::Lua*    lua_script_;
   Commander*         commander_;
   Deployer*          deployer_;
   Map*               map_;

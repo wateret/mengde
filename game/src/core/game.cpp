@@ -11,7 +11,7 @@
 #include "util/game_env.h"
 #include "core/path_tree.h"
 #include "util/path.h"
-#include "lua/lua_script.h"
+#include "lua/lua.h"
 
 // XXX temporary include
 #include "lua_game.h"
@@ -47,33 +47,33 @@ Game::~Game() {
   delete stage_unit_manager_;
 }
 
-lua::LuaScript* Game::CreateLua(const Path& stage_script_path) {
-  lua::LuaScript* lua_script = new lua::LuaScript();
+lua::Lua* Game::CreateLua(const Path& stage_script_path) {
+  lua::Lua* lua = new lua::Lua();
 
 #define GAME_PREFIX "$game_"
 #define ENUM_PREFIX "$Enum."
 
   // Register API functions
 #define MACRO_LUA_GAME(cname, luaname) \
-  lua_script->Set(GAME_PREFIX #luaname, Game_##cname);
+  lua->Set(GAME_PREFIX #luaname, Game_##cname);
 
 #include "lua_game.inc.h"
 
 #undef MACRO_LUA_GAME
 
   // Register enum values
-  lua_script->Set(ENUM_PREFIX "force.own", (int)Force::kOwn);
-  lua_script->Set(ENUM_PREFIX "force.ally", (int)Force::kAlly);
-  lua_script->Set(ENUM_PREFIX "force.enemy", (int)Force::kEnemy);
-  lua_script->Set(ENUM_PREFIX "status.undecided", (int)Status::kUndecided);
-  lua_script->Set(ENUM_PREFIX "status.defeat", (int)Status::kDefeat);
-  lua_script->Set(ENUM_PREFIX "status.victory", (int)Status::kVictory);
+  lua->Set(ENUM_PREFIX "force.own", (int)Force::kOwn);
+  lua->Set(ENUM_PREFIX "force.ally", (int)Force::kAlly);
+  lua->Set(ENUM_PREFIX "force.enemy", (int)Force::kEnemy);
+  lua->Set(ENUM_PREFIX "status.undecided", (int)Status::kUndecided);
+  lua->Set(ENUM_PREFIX "status.defeat", (int)Status::kDefeat);
+  lua->Set(ENUM_PREFIX "status.victory", (int)Status::kVictory);
 
 #undef GAME_PREFIX
 
   // Run the main script
-  lua_script->Run(stage_script_path.ToString());
-  return lua_script;
+  lua->Run(stage_script_path.ToString());
+  return lua;
 }
 
 Map* Game::CreateMap() {

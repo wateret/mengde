@@ -16,12 +16,12 @@ extern "C" {
 
 namespace lua {
 
-class LuaScript {
+class Lua {
  public:
   typedef function<void()> ForEachEntryFunc;
-  LuaScript();
-  LuaScript(lua_State*);
-  ~LuaScript();
+  Lua();
+  Lua(lua_State*);
+  ~Lua();
   void LogError(const string&);
   void LogWarning(const string&);
   void LogDebug(const string&);
@@ -323,7 +323,7 @@ class LuaScript {
 
 // method Call - for return type of `void`
 template<>
-void LuaScript::Call<void>(unsigned argc);
+void Lua::Call<void>(unsigned argc);
 
 } // namespace lua
 

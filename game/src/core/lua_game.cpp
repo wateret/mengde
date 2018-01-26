@@ -1,12 +1,12 @@
 #include "lua_game.h"
 
-#include "lua/lua_script.h"
+#include "lua/lua.h"
 #include "game.h"
 #include "cmd.h"
 
 using namespace mengde::core;
 
-static Vec2D GetVec2DFromLua(lua::LuaScript* lua) {
+static Vec2D GetVec2DFromLua(lua::Lua* lua) {
   vector<int> vec = lua->GetVector<int>();
   lua->PopStack(1); // FIXME GetVector does not pop a element.
   return {vec[0], vec[1]};
@@ -16,7 +16,7 @@ static Vec2D GetVec2DFromLua(lua::LuaScript* lua) {
   int Game_##cname(lua_State* L)
 
 LUA_IMPL(AppointHero) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   uint16_t level = lua.Get<uint16_t>();
   string   id    = lua.Get<string>();
   Game*    game =  lua.Get<Game*>();
@@ -27,7 +27,7 @@ LUA_IMPL(AppointHero) {
 }
 
 LUA_IMPL(GenerateOwnUnit) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   Vec2D  pos = GetVec2DFromLua(&lua);
   string id  = lua.Get<string>();
   Game* game = lua.Get<Game*>();
@@ -39,7 +39,7 @@ LUA_IMPL(GenerateOwnUnit) {
 }
 
 LUA_IMPL(GenerateUnit) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   Vec2D    pos   = GetVec2DFromLua(&lua);
   Force    force = (Force)lua.Get<int>();
   uint16_t level = lua.Get<uint16_t>();
@@ -53,7 +53,7 @@ LUA_IMPL(GenerateUnit) {
 }
 
 LUA_IMPL(ObtainEquipment) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   uint16_t amount = lua.Get<uint16_t>();
   string   id     = lua.Get<string>();
   Game*    game   = lua.Get<Game*>();
@@ -64,7 +64,7 @@ LUA_IMPL(ObtainEquipment) {
 }
 
 LUA_IMPL(GetNumEnemiesAlive) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   Game* game = lua.Get<Game*>();
 
   uint32_t ret = game->GetNumEnemiesAlive();
@@ -74,7 +74,7 @@ LUA_IMPL(GetNumEnemiesAlive) {
 }
 
 LUA_IMPL(GetNumOwnsAlive) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   Game* game = lua.Get<Game*>();
 
   uint32_t ret = game->GetNumOwnsAlive();
@@ -84,7 +84,7 @@ LUA_IMPL(GetNumOwnsAlive) {
 }
 
 LUA_IMPL(PushCmdMove) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   Vec2D pos     = GetVec2DFromLua(&lua);
   int   unit_id = lua.Get<int>();
   Game* game    = lua.Get<Game*>();
@@ -96,7 +96,7 @@ LUA_IMPL(PushCmdMove) {
 }
 
 LUA_IMPL(PushCmdSpeak) {
-  lua::LuaScript lua(L);
+  lua::Lua lua(L);
   string words = lua.Get<string>();
   int unit_id  = lua.Get<int>();
   Game* game   = lua.Get<Game*>();

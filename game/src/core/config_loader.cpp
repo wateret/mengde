@@ -9,7 +9,7 @@
 #include "equipment.h"
 #include "stat_modifier.h"
 #include "event_effect.h"
-#include "lua/lua_script.h"
+#include "lua/lua.h"
 #include "terrain.h"
 #include "hero.h"
 
@@ -20,7 +20,7 @@ ConfigLoader::ConfigLoader(const Path& filename)
     : lua_config_(nullptr),
       rc_() {
   Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
-  lua_config_ = new ::lua::LuaScript();
+  lua_config_ = new ::lua::Lua();
   lua_config_->Run(path.ToString());
 
   ParseUnitClassesAndTerrains();
