@@ -190,6 +190,9 @@ class Lua {
   template<typename T> using is_bool   = std::is_same<bool,   T>;
   template<typename T> using is_string = std::is_same<string, T>;
 
+  template<typename T> struct is_vector { static const bool value = false; };
+  template<typename T> struct is_vector<std::vector<T>> { static const bool value = true; };
+
   // Arithmetic types except bool
 
   template<typename T>
@@ -290,6 +293,34 @@ class Lua {
       return GetDefault<T>();
     }
   }
+
+  // Vector types
+
+  template<typename T>
+  typename std::enable_if<is_vector<T>::value, T>::type GetDefault() {
+    return T(); // Return default vector type
+  }
+
+  template<typename T>
+  typename std::enable_if<is_vector<T>::value, T>::type GetTop() {
+    T vec;
+    ForEachTableEntry("", [&] () {
+      typename T::value_type val = this->GetTop<typename T::value_type>();
+      vec.push_back(val);
+    });
+    return vec;
+  }
+
+  /*
+  template<typename T>
+  typename std::enable_if<is_vector<T>::value, T>::type GetTopOpt() {
+    if (lua_isstring(L, -1)) {
+      return string(lua_tostring(L, -1));
+    } else {
+      return GetDefault<string>();
+    }
+  }
+  */
 
   void LogError(const string&);
   void LogWarning(const string&);
