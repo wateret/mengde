@@ -8,7 +8,7 @@
 class Path;
 
 namespace lua {
-  class Lua;
+  class Olua;
 }
 
 namespace mengde {
@@ -33,7 +33,7 @@ class ConfigLoader {
   EventEffect* GenerateEventEffect(const string&, const string&, int);
 
  private:
-  ::lua::Lua* lua_config_;
+  ::lua::Olua* lua_config_;
   ResourceManagers  rc_;
   string            first_stage_;
 };

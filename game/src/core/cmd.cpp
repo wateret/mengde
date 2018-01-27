@@ -4,7 +4,7 @@
 #include "game.h"
 #include "magic.h"
 #include "core/path_tree.h"
-#include "lua/lua.h"
+#include "lua/olua.h"
 
 namespace mengde {
 namespace core {
@@ -486,7 +486,7 @@ CmdGameVictory::CmdGameVictory() : Cmd() {
 }
 
 unique_ptr<Cmd> CmdGameVictory::Do(Game* game) {
-  lua::Lua* lua = game->GetLuaScript();
+  lua::Olua* lua = game->GetLuaScript();
   lua->Call<void>("on_victory", game);
   // Return a new CmdGameEnd just in case when user script does not specifies next scenario
   return unique_ptr<Cmd>(new CmdGameEnd(true));

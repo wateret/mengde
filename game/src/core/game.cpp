@@ -11,7 +11,7 @@
 #include "util/game_env.h"
 #include "core/path_tree.h"
 #include "util/path.h"
-#include "lua/lua.h"
+#include "lua/olua.h"
 
 // XXX temporary include
 #include "lua_game.h"
@@ -47,8 +47,8 @@ Game::~Game() {
   delete stage_unit_manager_;
 }
 
-lua::Lua* Game::CreateLua(const Path& stage_script_path) {
-  lua::Lua* lua = new lua::Lua();
+lua::Olua* Game::CreateLua(const Path& stage_script_path) {
+  lua::Olua* lua = new lua::Olua();
 
 #define GAME_PREFIX "Game_"
 

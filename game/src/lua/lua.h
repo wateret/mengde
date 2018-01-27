@@ -24,7 +24,7 @@ class Lua {
   typedef function<void()> ForEachEntryFunc;
   Lua();
   Lua(lua_State*);
-  ~Lua();
+  virtual ~Lua();
 
   void ForEachTableEntry(const string&, ForEachEntryFunc);
   void Run(const string& filename);
@@ -170,7 +170,7 @@ class Lua {
 
   void DumpStack();
 
- private:
+ protected:
 
   int GetToStack(const string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
@@ -364,7 +364,7 @@ class Lua {
     return CallImpl<R>(argc + 1, args...);
   }
 
- private:
+ protected:
   lua_State* L;
   bool       destroy_;
 };
