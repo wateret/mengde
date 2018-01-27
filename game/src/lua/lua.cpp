@@ -124,7 +124,6 @@ function <C>.new(cobj)\n\
 end\n\
 ";
   string code = string_replace_all(tpl, "<C>", class_name);
-  LOG_DEBUG("%s", code.c_str());
   RunScript(code);
 }
 
@@ -136,7 +135,6 @@ end\n\
 ";
   string code = string_replace_all(tpl, "<C>", class_name);
   code = string_replace_all(code, "<M>", method_name);
-  LOG_DEBUG("%s", code.c_str());
   RunScript(code);
 }
 

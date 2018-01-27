@@ -35,35 +35,14 @@ class Lua {
     lua_pop(L, n);
   }
 
-  // Call functions with variadic template
-  template<typename R>
-  R Call(const string& name) {
-    GetToStack(name); // XXX should pop more when name is nested
-    return CallImpl<R>(0);
-  }
-
+  // Call a function with variadic template
   template<typename R, typename... Args>
   R Call(const string& name, Args... args) {
     GetToStack(name); // XXX should pop more when name is nested
     return CallImpl<R>(0, args...);
   }
 
-  // OO-style call methods with variadic template
-
-  template<typename R, typename O>
-  R Call(const string& lua_metatable_name, O* object, const string& name) {
-    GetToStack(lua_metatable_name);
-    if (lua_pcall(L, 0, 1, 0)) {
-      LogError("Error on Call");
-    }
-    Set("__cobj", object);
-
-    lua_getglobal(L, name.c_str());
-    lua_insert(L, 1); // Move function to top
-
-    return CallImpl<R>(1);
-  }
-
+  // OO-style call a method with variadic template
   template<typename R, typename O, typename... Args>
   R Call(const string& lua_metatable_name, O* object, const string& name, Args... args) {
     GetToStack(lua_metatable_name);
