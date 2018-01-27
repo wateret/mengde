@@ -115,7 +115,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   uint32_t terrain_count = ids.size();
 
   vector< vector<int> > cost_list;
-  lua_config_->ForEachTableEntry("gconf.terrain_cost", [=, &cost_list, &class_count] () mutable {
+  lua_config_->ForEachTableEntry("gconf.terrain_cost", [&] () {
     vector<int> costs = this->lua_config_->GetVector<int>();
     if (costs.size() != class_count)
       throw "Incorrect size of terrainCost : class_count";
@@ -125,7 +125,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
     throw "Incorrect size of terrainCost";
 
   vector< vector<int> > effect_list;
-  lua_config_->ForEachTableEntry("gconf.terrain_effect", [=, &effect_list, &class_count] () mutable {
+  lua_config_->ForEachTableEntry("gconf.terrain_effect", [&] () {
     vector<int> effects = this->lua_config_->GetVector<int>();
     if (effects.size() != class_count)
       throw "Incorrect size of terrainCost : class_count";

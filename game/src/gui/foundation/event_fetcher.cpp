@@ -59,7 +59,7 @@ bool EventFetcher::Poll() {
     }
     default:
       event_type_ = EventType::kUnsupported;
-      return false;
+      break;
   }
   return has_pending_event;
 }

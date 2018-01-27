@@ -45,7 +45,6 @@ void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
     return;
   }
   lua_pushnil(L);
-  // TODO handle when table has no entry
   while (lua_next(L, -2)) {
     cb();
     lua_pop(L, 1);
