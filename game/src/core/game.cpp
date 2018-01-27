@@ -96,7 +96,7 @@ Deployer* Game::CreateDeployer() {
 
   vector<DeployInfoUnselectable> unselectable_info_list;
   lua_script_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list] () mutable {
-    vector<int> pos_vec = lua_script_->GetVector<int>("position");
+    vector<int> pos_vec = lua_script_->Get<vector<int>>("position");
     string hero_id = lua_script_->Get<string>("hero");
     Vec2D position(pos_vec[0], pos_vec[1]);
     Hero* hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
@@ -105,7 +105,7 @@ Deployer* Game::CreateDeployer() {
   uint32_t num_required = lua_script_->Get<uint32_t>("gdata.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
   lua_script_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list] () mutable {
-    vector<int> pos_vec = lua_script_->GetVector<int>("position");
+    vector<int> pos_vec = lua_script_->Get<vector<int>>("position");
     Vec2D position(pos_vec[0], pos_vec[1]);
     selectable_info_list.push_back({position});
   });

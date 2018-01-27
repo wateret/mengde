@@ -74,8 +74,8 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
     string grades  = this->lua_config_->Get<string>("stat_grades");
     string range_s = this->lua_config_->Get<string>("attack_range");
     int move       = this->lua_config_->Get<int>("move");
-    vector<int> hp = this->lua_config_->GetVector<int>("hp");
-    vector<int> mp = this->lua_config_->GetVector<int>("mp");
+    vector<int> hp = this->lua_config_->Get<vector<int>>("hp");
+    vector<int> mp = this->lua_config_->Get<vector<int>>("mp");
 
     Range::Type range = Range::StringToRange(range_s);
     auto GradeCharToInt  = [] (const char grade) -> int {
@@ -114,23 +114,11 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   });
   uint32_t terrain_count = ids.size();
 
-  vector< vector<int> > cost_list;
-  lua_config_->ForEachTableEntry("gconf.terrain_cost", [&] () {
-    vector<int> costs = this->lua_config_->GetVector<int>();
-    if (costs.size() != class_count)
-      throw "Incorrect size of terrainCost : class_count";
-    cost_list.push_back(costs);
-  });
+  vector< vector<int> > cost_list = lua_config_->Get<vector<vector<int>>>("gconf.terrain_cost");
   if (cost_list.size() != terrain_count)
     throw "Incorrect size of terrainCost";
 
-  vector< vector<int> > effect_list;
-  lua_config_->ForEachTableEntry("gconf.terrain_effect", [&] () {
-    vector<int> effects = this->lua_config_->GetVector<int>();
-    if (effects.size() != class_count)
-      throw "Incorrect size of terrainCost : class_count";
-    effect_list.push_back(effects);
-  });
+  vector< vector<int> > effect_list = lua_config_->Get<vector<vector<int>>>("gconf.terrain_effect");
   if (effect_list.size() != terrain_count)
     throw "Incorrect size of terrainCost";
 
@@ -230,7 +218,7 @@ void ConfigLoader::ParseHeroTemplates() {
   lua_config_->ForEachTableEntry("gconf.heroes", [this] () {
     string id         = this->lua_config_->Get<string>("id");
     string uclass     = this->lua_config_->Get<string>("class");
-    vector<int> statr = this->lua_config_->GetVector<int>("stat");
+    vector<int> statr = this->lua_config_->Get<vector<int>>("stat");
     string model      = this->lua_config_->GetOpt<string>("model");
     if (model == "nil") {
       model = "infantry-1-red"; // XXX hardcoded. Make this to find default model

@@ -7,8 +7,7 @@
 using namespace mengde::core;
 
 static Vec2D GetVec2DFromLua(lua::Lua* lua) {
-  vector<int> vec = lua->GetVector<int>();
-  lua->PopStack(1); // FIXME GetVector does not pop a element.
+  vector<int> vec = lua->Get<vector<int>>();
   return {vec[0], vec[1]};
 }
 
