@@ -31,7 +31,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       status_(Status::kDeploying) {
   lua_script_ = CreateLua(stage_script_path);
   map_        = CreateMap();
-  lua_script_->Call<void>("on_deploy", this);
+  lua_script_->Call<void>("Game", this, string("on_deploy"));
   deployer_ = CreateDeployer();
 
   commander_ = new Commander();
@@ -51,25 +51,38 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
   lua::Lua* lua = new lua::Lua();
 
 #define GAME_PREFIX "Game_"
-#define ENUM_PREFIX "Enum."
 
   // Register API functions
+  {
 #define MACRO_LUA_GAME(cname, luaname) \
-  lua->Set(GAME_PREFIX #luaname, Game_##cname);
-
+    lua->Register(GAME_PREFIX #luaname, Game_##cname);
 #include "lua_game.inc.h"
-
 #undef MACRO_LUA_GAME
+  }
 
-  // Register enum values
-  lua->Set(ENUM_PREFIX "force.own", (int)Force::kOwn);
-  lua->Set(ENUM_PREFIX "force.ally", (int)Force::kAlly);
-  lua->Set(ENUM_PREFIX "force.enemy", (int)Force::kEnemy);
-  lua->Set(ENUM_PREFIX "status.undecided", (int)Status::kUndecided);
-  lua->Set(ENUM_PREFIX "status.defeat", (int)Status::kDefeat);
-  lua->Set(ENUM_PREFIX "status.victory", (int)Status::kVictory);
+  // Register OO-style pseudo class for Lua
+  {
+    lua->RegisterClass("Game");
+
+#define MACRO_LUA_GAME(cname, luaname) \
+    lua->RegisterMethod("Game", string(#luaname));
+#include "lua_game.inc.h"
+#undef MACRO_LUA_GAME
+  }
 
 #undef GAME_PREFIX
+
+  // Register enum values
+  {
+#define ENUM_PREFIX "Enum."
+    lua->Set(ENUM_PREFIX "force.own", (int)Force::kOwn);
+    lua->Set(ENUM_PREFIX "force.ally", (int)Force::kAlly);
+    lua->Set(ENUM_PREFIX "force.enemy", (int)Force::kEnemy);
+    lua->Set(ENUM_PREFIX "status.undecided", (int)Status::kUndecided);
+    lua->Set(ENUM_PREFIX "status.defeat", (int)Status::kDefeat);
+    lua->Set(ENUM_PREFIX "status.victory", (int)Status::kVictory);
+#undef GAME_PREFIX
+  }
 
   // Run the main script
   lua->Run(stage_script_path.ToString());

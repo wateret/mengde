@@ -27,8 +27,9 @@ class Lua {
   ~Lua();
 
   void ForEachTableEntry(const string&, ForEachEntryFunc);
-  void Run(const string&);
-  void Register(const string&, lua_CFunction);
+  void Run(const string& filename);
+  void RunScript(const string& code);
+  void Register(const string& name, lua_CFunction);
 
   void PopStack(unsigned n) {
     lua_pop(L, n);
@@ -45,6 +46,36 @@ class Lua {
   R Call(const string& name, Args... args) {
     GetToStack(name); // XXX should pop more when name is nested
     return CallImpl<R>(0, args...);
+  }
+
+  // OO-style call methods with variadic template
+
+  template<typename R, typename O>
+  R Call(const string& lua_metatable_name, O* object, const string& name) {
+    GetToStack(lua_metatable_name);
+    if (lua_pcall(L, 0, 1, 0)) {
+      LogError("Error on Call");
+    }
+    Set("__cobj", object);
+
+    lua_getglobal(L, name.c_str());
+    lua_insert(L, 1); // Move function to top
+
+    return CallImpl<R>(1);
+  }
+
+  template<typename R, typename O, typename... Args>
+  R Call(const string& lua_metatable_name, O* object, const string& name, Args... args) {
+    GetToStack(lua_metatable_name);
+    if (lua_pcall(L, 0, 1, 0)) {
+      LogError("Error on Call");
+    }
+    Set("__cobj", object);
+
+    lua_getglobal(L, name.c_str());
+    lua_insert(L, 1); // Move function to top
+
+    return CallImpl<R>(1, args...);
   }
 
   template<typename T>
@@ -92,6 +123,7 @@ class Lua {
     assert(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
     return result;
   }
+
 
   template<typename T>
   void SetGlobal(const string& name, T val) {
@@ -149,6 +181,13 @@ class Lua {
 
   void PushToStack(const string&);
   void PushToStack(lua_CFunction);
+
+  // OO-style registering class and method
+
+  void RegisterClass(const string& class_name);
+  void RegisterMethod(const string& class_name, const string& method_name);
+
+  // For debugging
 
   void DumpStack();
 
@@ -335,8 +374,8 @@ class Lua {
     if (lua_pcall(L, argc, 1, 0)) {
       LogError("Error on Call");
     }
-    R ret = (R)GetTop<R>();
-    lua_pop(L, 1);
+    R ret = GetTop<R>();
+    PopStack(1);
     return ret;
   }
 

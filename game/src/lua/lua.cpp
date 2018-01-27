@@ -2,6 +2,17 @@
 
 #include <stdio.h>
 
+#include <regex>
+
+namespace {
+
+std::string string_replace_all(const std::string& str, const string& from, const string& to)
+{
+  return std::regex_replace(str, std::regex(from), to);
+}
+
+} // namespace *ananymous*
+
 namespace lua {
 
 Lua::Lua() : L(nullptr), destroy_(true) {
@@ -18,7 +29,13 @@ Lua::~Lua() {
 
 void Lua::Run(const string& filename) {
   if (luaL_loadfile(L, filename.c_str()) || lua_pcall(L, 0, 0, 0)) {
-    printf("LuaError: Load and run '%s' failed. \n", filename.c_str());
+    LogError("Load and run from file failed.\n");
+  }
+}
+
+void Lua::RunScript(const string& code) {
+  if (luaL_dostring(L, code.c_str())) {
+    LogError("Run script failed.\n");
   }
 }
 
@@ -87,6 +104,40 @@ void Lua::SetField(const string& id) {
     // So the below lua_setfield() does `table[id] = value`
     lua_setfield(L, -2, id.c_str());
   }
+}
+
+void Lua::RegisterClass(const string& class_name) {
+  static const char tpl[] = "\
+<C> = {} \n\
+<C>.__index = <C>\n\
+\n\
+setmetatable(<C>, {\n\
+  __call = function (cls, ...)\n\
+    return cls.new(...)\n\
+  end,\n\
+})\n\
+\n\
+function <C>.new(cobj)\n\
+  local self = setmetatable({}, <C>)\n\
+  self.__cobj = cobj\n\
+  return self\n\
+end\n\
+";
+  string code = string_replace_all(tpl, "<C>", class_name);
+  LOG_DEBUG("%s", code.c_str());
+  RunScript(code);
+}
+
+void Lua::RegisterMethod(const string& class_name, const string& method_name) {
+  static const char tpl[] = "\
+function <C>:<M>(...)\n\
+  return <C>_<M>(self.__cobj, ...)\n\
+end\n\
+";
+  string code = string_replace_all(tpl, "<C>", class_name);
+  code = string_replace_all(code, "<M>", method_name);
+  LOG_DEBUG("%s", code.c_str());
+  RunScript(code);
 }
 
 int Lua::GetStackSize() {
