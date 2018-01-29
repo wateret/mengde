@@ -19,6 +19,11 @@ extern "C" {
 
 namespace lua {
 
+class ILuaClass {
+ public:
+  virtual std::string metatable_name() const = 0;
+};
+
 class Lua {
  public:
   typedef function<void()> ForEachEntryFunc;
@@ -40,21 +45,6 @@ class Lua {
   R Call(const string& name, Args... args) {
     GetToStack(name); // XXX should pop more when name is nested
     return CallImpl<R>(0, args...);
-  }
-
-  // OO-style call a method with variadic template
-  template<typename R, typename O, typename... Args>
-  R Call(const string& lua_metatable_name, O* object, const string& name, Args... args) {
-    GetToStack(lua_metatable_name);
-    if (lua_pcall(L, 0, 1, 0)) {
-      LogError("Error on Call");
-    }
-    Set("__cobj", object);
-
-    lua_getglobal(L, name.c_str());
-    lua_insert(L, 1); // Move function to top
-
-    return CallImpl<R>(1, args...);
   }
 
   template<typename T>
@@ -158,8 +148,9 @@ class Lua {
     lua_pushlightuserdata(L, static_cast<void*>(val));
   }
 
-  void PushToStack(const string&);
-  void PushToStack(lua_CFunction);
+  void PushToStack(const string& s);
+  void PushToStack(lua_CFunction fn);
+  void PushToStack(ILuaClass* object);
 
   // OO-style registering class and method
 

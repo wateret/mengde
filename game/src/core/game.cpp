@@ -11,7 +11,6 @@
 #include "util/game_env.h"
 #include "core/path_tree.h"
 #include "util/path.h"
-#include "lua/olua.h"
 
 // XXX temporary include
 #include "lua_game.h"
@@ -31,7 +30,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       status_(Status::kDeploying) {
   lua_script_ = CreateLua(stage_script_path);
   map_        = CreateMap();
-  lua_script_->Call<void>("Game", this, string("on_deploy"));
+  lua_script_->Call<void>(string("on_deploy"), (lua::ILuaClass*)this);
   deployer_ = CreateDeployer();
 
   commander_ = new Commander();
@@ -334,7 +333,7 @@ bool Game::SubmitDeploy() {
   });
 
   status_ = Status::kUndecided;
-  lua_script_->Call<void>("on_begin", this);
+  lua_script_->Call<void>(string("on_begin"), (lua::ILuaClass*)this);
   return true;
 }
 

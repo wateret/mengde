@@ -11,7 +11,7 @@ std::string string_replace_all(const std::string& str, const string& from, const
   return std::regex_replace(str, std::regex(from), to);
 }
 
-} // namespace *ananymous*
+} // namespace *anonymous*
 
 namespace lua {
 
@@ -75,6 +75,16 @@ void Lua::PushToStack(const string& s) {
 
 void Lua::PushToStack(lua_CFunction fn) {
   lua_pushcfunction(L, fn);
+}
+
+void Lua::PushToStack(ILuaClass* object) {
+  // Specially handle ILuaClass objects
+  lua_getglobal(L, object->metatable_name().c_str());
+  if (lua_pcall(L, 0, 1, 0)) {
+    LogError("Error on Call");
+  }
+  // Set C object field
+  Set("__cobj", static_cast<void*>(object));
 }
 
 void Lua::SetGlobal(const string& name, const string& val) {

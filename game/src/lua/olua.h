@@ -9,8 +9,6 @@ class Olua : public Lua {
  public:
   Olua();
   Olua(lua_State* L);
-
- public:
 };
 
 } // namespace lua

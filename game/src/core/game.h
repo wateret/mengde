@@ -11,6 +11,7 @@
 #include "util/common.h"
 #include "turn.h"
 #include "resource_manager.h"
+#include "lua/olua.h"
 
 class Path;
 
@@ -29,7 +30,7 @@ class Deployer;
 class StageUnitManager;
 class UnitSupervisor;
 
-class Game : public IDeployHelper {
+class Game : public lua::ILuaClass, public IDeployHelper { // ILuaClass should be first or dommed - why?
  public:
   enum class Status {
     kNone,
@@ -74,6 +75,8 @@ class Game : public IDeployHelper {
   uint32_t GetNumOwnsAlive();
   bool CheckStatus();
   Status GetStatus() { return status_; }
+
+  string metatable_name() const override { return "Game"; }
 
   // IDeployHelper interfaces
   bool     SubmitDeploy() override;
