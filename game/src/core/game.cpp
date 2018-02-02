@@ -21,16 +21,16 @@ namespace core {
 Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_path)
     : rc_(rc),
       assets_(assets),
-      lua_script_(nullptr),
+      lua_(nullptr),
       commander_(nullptr),
       deployer_(nullptr),
       map_(nullptr),
       stage_unit_manager_(nullptr),
       turn_(),
       status_(Status::kDeploying) {
-  lua_script_ = CreateLua(stage_script_path);
+  lua_ = CreateLua(stage_script_path);
   map_        = CreateMap();
-  lua_script_->Call<void>(string("on_deploy"), lua::LuaClass(this, "Game"));
+  lua_->Call<void>(string("on_deploy"), lua::LuaClass(this, "Game"));
   deployer_ = CreateDeployer();
 
   commander_ = new Commander();
@@ -39,7 +39,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
 
 Game::~Game() {
   // NOTE rc_ and assets_ are not deleted here
-  delete lua_script_;
+  delete lua_;
   delete commander_;
   delete deployer_;
   delete map_;
@@ -89,13 +89,13 @@ lua::Olua* Game::CreateLua(const Path& stage_script_path) {
 }
 
 Map* Game::CreateMap() {
-  ASSERT(lua_script_ != nullptr);
+  ASSERT(lua_ != nullptr);
 
-  vector<uint32_t> size = lua_script_->GetVector<uint32_t>("gdata.map.size");
+  vector<uint32_t> size = lua_->GetVector<uint32_t>("gdata.map.size");
   uint32_t cols = size[0];
   uint32_t rows = size[1];
-  vector<string> terrain = lua_script_->GetVector<string>("gdata.map.terrain");
-  string file = lua_script_->Get<string>("gdata.map.file");
+  vector<string> terrain = lua_->GetVector<string>("gdata.map.terrain");
+  string file = lua_->Get<string>("gdata.map.file");
   ASSERT(rows == terrain.size());
   for (auto e : terrain) {
     ASSERT(cols == e.size());
@@ -104,20 +104,20 @@ Map* Game::CreateMap() {
 }
 
 Deployer* Game::CreateDeployer() {
-  ASSERT(lua_script_ != nullptr);
+  ASSERT(lua_ != nullptr);
 
   vector<DeployInfoUnselectable> unselectable_info_list;
-  lua_script_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list] () mutable {
-    vector<int> pos_vec = lua_script_->Get<vector<int>>("position");
-    string hero_id = lua_script_->Get<string>("hero");
+  lua_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list] () mutable {
+    vector<int> pos_vec = lua_->Get<vector<int>>("position");
+    string hero_id = lua_->Get<string>("hero");
     Vec2D position(pos_vec[0], pos_vec[1]);
     Hero* hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
     unselectable_info_list.push_back({position, hero});
   });
-  uint32_t num_required = lua_script_->Get<uint32_t>("gdata.deploy.num_required_selectables");
+  uint32_t num_required = lua_->Get<uint32_t>("gdata.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
-  lua_script_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list] () mutable {
-    vector<int> pos_vec = lua_script_->Get<vector<int>>("position");
+  lua_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list] () mutable {
+    vector<int> pos_vec = lua_->Get<vector<int>>("position");
     Vec2D position(pos_vec[0], pos_vec[1]);
     selectable_info_list.push_back({position});
   });
@@ -268,7 +268,7 @@ void Game::Push(unique_ptr<Cmd> cmd) {
 
 bool Game::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
-  uint32_t res = lua_script_->Call<uint32_t>("end_condition", lua::LuaClass(this, "Game"));
+  uint32_t res = lua_->Call<uint32_t>("end_condition", lua::LuaClass(this, "Game"));
   status_ = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
@@ -333,7 +333,7 @@ bool Game::SubmitDeploy() {
   });
 
   status_ = Status::kUndecided;
-  lua_script_->Call<void>(string("on_begin"), lua::LuaClass(this, "Game"));
+  lua_->Call<void>(string("on_begin"), lua::LuaClass(this, "Game"));
   return true;
 }
 

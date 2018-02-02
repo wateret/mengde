@@ -59,7 +59,7 @@ class Game : public IDeployHelper {
   Unit* GetUnit(uint32_t);
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
-  lua::Olua* GetLuaScript() { return lua_script_; }
+  lua::Olua* GetLuaScript() { return lua_; }
   bool EndForceTurn();
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
@@ -106,7 +106,7 @@ class Game : public IDeployHelper {
  private:
   ResourceManagers   rc_;
   Assets*            assets_;
-  lua::Olua*    lua_script_;
+  lua::Olua*    lua_;
   Commander*         commander_;
   Deployer*          deployer_;
   Map*               map_;
