@@ -77,14 +77,15 @@ void Lua::PushToStack(lua_CFunction fn) {
   lua_pushcfunction(L, fn);
 }
 
-void Lua::PushToStack(ILuaClass* object) {
-  // Specially handle ILuaClass objects
-  lua_getglobal(L, object->metatable_name().c_str());
+void Lua::PushToStack(const LuaClass& object) {
+  // Specially handle LuaClass objects
+  // Call metatable object for object construction)
+  lua_getglobal(L, object.name().c_str());
   if (lua_pcall(L, 0, 1, 0)) {
     LogError("Error on Call");
   }
   // Set C object field
-  Set("__cobj", static_cast<void*>(object));
+  Set("__cobj", object.pointer());
 }
 
 void Lua::SetGlobal(const string& name, const string& val) {

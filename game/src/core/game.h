@@ -30,7 +30,7 @@ class Deployer;
 class StageUnitManager;
 class UnitSupervisor;
 
-class Game : public lua::ILuaClass, public IDeployHelper { // ILuaClass should be first or dommed - why?
+class Game : public IDeployHelper {
  public:
   enum class Status {
     kNone,
@@ -75,8 +75,6 @@ class Game : public lua::ILuaClass, public IDeployHelper { // ILuaClass should b
   uint32_t GetNumOwnsAlive();
   bool CheckStatus();
   Status GetStatus() { return status_; }
-
-  string metatable_name() const override { return "Game"; }
 
   // IDeployHelper interfaces
   bool     SubmitDeploy() override;

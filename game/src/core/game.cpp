@@ -30,7 +30,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       status_(Status::kDeploying) {
   lua_script_ = CreateLua(stage_script_path);
   map_        = CreateMap();
-  lua_script_->Call<void>(string("on_deploy"), (lua::ILuaClass*)this);
+  lua_script_->Call<void>(string("on_deploy"), lua::LuaClass(this, "Game"));
   deployer_ = CreateDeployer();
 
   commander_ = new Commander();
@@ -268,7 +268,7 @@ void Game::Push(unique_ptr<Cmd> cmd) {
 
 bool Game::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
-  uint32_t res = lua_script_->Call<uint32_t>("end_condition", this);
+  uint32_t res = lua_script_->Call<uint32_t>("end_condition", lua::LuaClass(this, "Game"));
   status_ = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
@@ -333,7 +333,7 @@ bool Game::SubmitDeploy() {
   });
 
   status_ = Status::kUndecided;
-  lua_script_->Call<void>(string("on_begin"), (lua::ILuaClass*)this);
+  lua_script_->Call<void>(string("on_begin"), lua::LuaClass(this, "Game"));
   return true;
 }
 

@@ -19,9 +19,17 @@ extern "C" {
 
 namespace lua {
 
-class ILuaClass {
+class LuaClass {
  public:
-  virtual std::string metatable_name() const = 0;
+  template <typename T>
+  LuaClass(T* pointer, const std::string& name) : pointer_(static_cast<void*>(pointer)), name_(name) {}
+
+  void* pointer() const { return pointer_; }
+  const std::string& name() const { return name_; }
+
+ private:
+  void* pointer_;
+  std::string name_;
 };
 
 class Lua {
@@ -150,7 +158,7 @@ class Lua {
 
   void PushToStack(const string& s);
   void PushToStack(lua_CFunction fn);
-  void PushToStack(ILuaClass* object);
+  void PushToStack(const LuaClass& object);
 
   // OO-style registering class and method
 
@@ -287,7 +295,7 @@ class Lua {
   template<typename T>
   typename std::enable_if<std::is_pointer<T>::value, T>::type GetTop() {
     if (lua_islightuserdata(L, -1)) {
-      return static_cast<T>(lua_touserdata(L, -1));
+      return reinterpret_cast<T>(lua_touserdata(L, -1));
     } else {
       LogError("Not a pointer.");
       throw "Not a pointer";
@@ -297,7 +305,7 @@ class Lua {
   template<typename T>
   typename std::enable_if<std::is_pointer<T>::value, T>::type GetTopOpt() {
     if (lua_islightuserdata(L, -1)) {
-      return static_cast<T>(lua_touserdata(L, -1));
+      return reinterpret_cast<T>(lua_touserdata(L, -1));
     } else {
       return GetDefault<T>();
     }
