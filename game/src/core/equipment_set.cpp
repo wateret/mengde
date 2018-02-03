@@ -72,7 +72,7 @@ const Equipment* EquipmentSet::GetEquipment(Equipment::Type type) const {
       return GetAid();
     default:
       UNREACHABLE("Unknown Equipment Type");
-      break;
+      return nullptr;
   }
 }
 

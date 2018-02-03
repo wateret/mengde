@@ -1,8 +1,6 @@
 #ifndef LUA_SCRIPT_H_
 #define LUA_SCRIPT_H_
 
-#include <assert.h>
-
 #include <string>
 #include <vector>
 #include <functional>
@@ -70,7 +68,7 @@ class Lua {
   // If the entry is not exist, emits an error.
   template<typename T>
   T Get(const string& var_expr = "") {
-    assert(L != nullptr);
+    ASSERT(L != nullptr);
 
     int initial_stack_size = GetStackSize();
     bool get_top = var_expr.empty();
@@ -79,7 +77,7 @@ class Lua {
 
     PopStack(to_be_popped);
 
-    assert(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
+    ASSERT(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
     return result;
   }
 
@@ -87,7 +85,7 @@ class Lua {
   // If the entry is not exist, returns default value.
   template<typename T>
   T GetOpt(const string& var_expr = "") {
-    assert(L != nullptr);
+    ASSERT(L != nullptr);
 
     int initial_stack_size = GetStackSize();
     bool get_top = var_expr.empty();
@@ -97,7 +95,7 @@ class Lua {
 
     PopStack(to_be_popped);
 
-    assert(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
+    ASSERT(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
     return result;
   }
 
@@ -140,7 +138,7 @@ class Lua {
     SetField(var);
     lua_pop(L, level);
 
-    assert(initial_stack_size == GetStackSize());
+    ASSERT(initial_stack_size == GetStackSize());
   }
 
   // PushToStack is public for pushing return value from lua C function

@@ -97,7 +97,7 @@ void Lua::GetField(const string& id) {
   if (GetStackSize() == 0) {
     lua_getglobal(L, id.c_str());
   } else {
-    assert(GetStackSize() > 0);
+    ASSERT(GetStackSize() > 0);
     // At this point Lua Stack must be
     // Index -1 : value
     lua_getfield(L, -1, id.c_str());
@@ -108,7 +108,7 @@ void Lua::SetField(const string& id) {
   if (GetStackSize() == 1) {
     lua_setglobal(L, id.c_str());
   } else {
-    assert(GetStackSize() > 1);
+    ASSERT(GetStackSize() > 1);
     // At this point Lua Stack must be look like
     // Index -1 : value (to be set)
     // Index -2 : table (to set a field)

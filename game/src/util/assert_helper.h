@@ -79,12 +79,17 @@
 
 #else // DEBUG
 
-#define ASSERT(x) ((void) 0)
-#define ASSERT_EQ(A, B) ((void) 0)
-#define ASSERT_LT(A, B) ((void) 0)
-#define ASSERT_LE(A, B) ((void) 0)
-#define ASSERT_GT(A, B) ((void) 0)
-#define ASSERT_GE(A, B) ((void) 0)
+#define ASSERT(x) ((void)sizeof(x))
+#define ASSERT_BIN_(A, B) \
+  do { \
+    ((void)sizeof(A)); \
+    ((void)sizeof(B)); \
+  } while (0)
+#define ASSERT_EQ(A, B) ASSERT_BIN_(A, B)
+#define ASSERT_LT(A, B) ASSERT_BIN_(A, B)
+#define ASSERT_LE(A, B) ASSERT_BIN_(A, B)
+#define ASSERT_GT(A, B) ASSERT_BIN_(A, B)
+#define ASSERT_GE(A, B) ASSERT_BIN_(A, B)
 
 #define UNREACHABLE(x) ((void) 0)
 

@@ -51,6 +51,7 @@ Hero* Assets::GetHero(const string& id) {
   auto found = heroes_.find(id);
   if (found == heroes_.end()) {
     UNREACHABLE("Hero does not exist.");
+    return nullptr;
   } else {
     return found->second;
   }
@@ -105,6 +106,7 @@ uint32_t Assets::GetAmountEquipment(const string& id) {
   auto found = equipments_.find(id);
   if (found == equipments_.end()) {
     UNREACHABLE("Equipment does not exist.");
+    return 0;
   } else {
     auto& r = found->second;
     ASSERT(!r.HasNone());
