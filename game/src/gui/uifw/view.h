@@ -60,7 +60,6 @@ class View : public IView {
   Color bg_color_;
   int padding_;
   uint32_t visible_:1;
-  uint32_t reserved:31;
 };
 
 } // namespace uifw

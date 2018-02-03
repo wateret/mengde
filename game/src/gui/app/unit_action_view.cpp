@@ -40,11 +40,13 @@ void UnitActionView::SetUnit(core::Unit* unit) {
     return true;
   });
   btn_stay_->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) {
-    unique_ptr<core::CmdAction> action(new core::CmdAction());
-    action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
-    action->SetCmdAct(unique_ptr<core::CmdStay>(new core::CmdStay(unit)));
-    game_->Push(std::move(action));
-    rv_->InitUIStateMachine();
+    if (e.IsLeftButtonUp()) {
+      unique_ptr<core::CmdAction> action(new core::CmdAction());
+      action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
+      action->SetCmdAct(unique_ptr<core::CmdStay>(new core::CmdStay(unit)));
+      game_->Push(std::move(action));
+      rv_->InitUIStateMachine();
+    }
     return true;
   });
 }

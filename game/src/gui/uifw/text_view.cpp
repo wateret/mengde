@@ -41,7 +41,7 @@ bool TextView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   return true;
 }
 
-bool TextView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
+bool TextView::OnMouseMotionEvent(const foundation::MouseMotionEvent) {
   return false;
 }
 

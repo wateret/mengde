@@ -50,7 +50,7 @@ void UnitDialogView::SetUnit(core::Unit* u) {
   tv_name_->SetText(unit_->GetId());
 }
 
-bool UnitDialogView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool UnitDialogView::OnMouseButtonEvent(const foundation::MouseButtonEvent) {
   // Do not handle mouse button event. Just delegate to the View in next priority
   return false;
 }

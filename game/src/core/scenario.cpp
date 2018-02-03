@@ -23,6 +23,9 @@ Game* Scenario::NewGame(const string& id, const string& first_stage_script) {
 }
 
 Game* Scenario::LoadGame(const string& scenario_id, const string& save_file_path) {
+  UNUSED(scenario_id);
+  UNUSED(save_file_path);
+
   UNREACHABLE("NYI");
 //  return new Game(rc_, assets_, GameEnv::GetInstance()->GetScenarioPath() + "/" + base_path + "/" + first_stage_script);
   return nullptr;

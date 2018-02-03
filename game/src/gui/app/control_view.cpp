@@ -12,7 +12,7 @@ namespace gui {
 namespace app {
 
 ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv)
-    : CompositeView(rect), game_(game), rv_(rv) {
+    : CompositeView(rect), game_(game) {
   bg_color(COLOR("darkgray", 192));
   padding(8);
 

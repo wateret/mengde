@@ -2,6 +2,7 @@
 
 #include "button_view.h"
 #include "layout_helper.h"
+#include "util/common.h"
 
 namespace mengde {
 namespace gui {
@@ -14,7 +15,7 @@ TabView::TabView(const Rect* frame)
 }
 
 void TabView::SetViewIndex(int idx) {
-  const int num_tabs = GetNumTabs();
+  ASSERT(idx < GetNumTabs());
 
   // Uncheck
   v_tab_buttons_[view_index_]->check(false);

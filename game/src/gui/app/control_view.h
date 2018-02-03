@@ -24,7 +24,6 @@ class ControlView : public CompositeView {
 
  private:
   core::Game* game_;
-  RootView* rv_;
   TextView* tv_turn_;
 };
 

@@ -27,6 +27,9 @@ Magic::Magic(const std::string& id,
       stat_id_(stat_id),
       amount_(amount),
       turns_(turns) {
+  // TODO Make use of these
+  UNUSED(mp_cost_);
+  UNUSED(power_);
 }
 
 void Magic::Perform(Unit* unit_atk, Unit* unit_def) {

@@ -26,7 +26,7 @@ class App;
 class StateUI;
 
 class DeployView;
-class EquipmentSelectView;
+//class EquipmentSelectView;
 class UnitView;
 class UnitDialogView;
 class ControlView;
@@ -112,7 +112,7 @@ class RootView : public View {
   MagicListView*         magic_list_view_;
   TerrainInfoView*       terrain_info_view_;
   UnitListView*          unit_list_view_;
-  EquipmentSelectView*   equipment_select_view_;
+//  EquipmentSelectView*   equipment_select_view_;
   UnitActionView*        unit_action_view_;
   StateMachine<StateUI*> ui_state_machine_;
   queue<NextFrameCallback> reserved_callbacks_;

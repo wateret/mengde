@@ -44,10 +44,10 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    system, node, release, version, machine, processor = platform.uname()
-    build_dir = "build/%s.%s" % (system, machine)
-
     options = parse_args()
+
+    system, node, release, version, machine, processor = platform.uname()
+    build_dir = "build/%s.%s.%s" % (system, machine, options.buildtype)
 
     check_run_cmd("mkdir", ["-p", build_dir])
     os.chdir(build_dir)

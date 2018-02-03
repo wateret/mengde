@@ -19,8 +19,7 @@ namespace app {
 
 HeroModelView::HeroModelView(const Rect& frame,
                              const core::Hero* hero,
-                             core::IDeployHelper* deploy_helper,
-                             IEquipmentSetSetter* equipment_set_setter)
+                             core::IDeployHelper* deploy_helper)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
   padding(4);
   Rect img_src_rect(0, 0, 48, 48);
@@ -68,7 +67,7 @@ HeroModelListView::HeroModelListView(const Rect& frame,
   static const Vec2D kHeroModelSize = {96, 80};
   Rect hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
-    HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper, equipment_set_setter);
+    HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
     model_view->SetMouseButtonHandler([this, model_view, hero, deploy_helper, equipment_set_setter, equipment_select_view] (const foundation::MouseButtonEvent e) -> bool {
       if (e.IsLeftButtonUp()) {
         if (model_view->IsSelected()) {

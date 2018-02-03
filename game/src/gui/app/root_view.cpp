@@ -43,7 +43,7 @@ RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
       magic_list_view_(nullptr),
       terrain_info_view_(nullptr),
       unit_list_view_(nullptr),
-      equipment_select_view_(nullptr),
+//      equipment_select_view_(nullptr),
       unit_action_view_(nullptr),
       ui_state_machine_(new StateUIView({game_, this})),
       reserved_callbacks_(),

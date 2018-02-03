@@ -24,7 +24,7 @@ class EquipmentSelectView;
 
 class HeroModelView : public CallbackView {
  public:
-  HeroModelView(const Rect&, const core::Hero*, core::IDeployHelper*, IEquipmentSetSetter*);
+  HeroModelView(const Rect&, const core::Hero*, core::IDeployHelper*);
   void UpdateViews();
   void SetDeployNo(uint32_t no) { deploy_no_ = no; }
   bool IsSelected() { return deploy_no_ != 0; }
