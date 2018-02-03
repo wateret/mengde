@@ -11,7 +11,7 @@ namespace core {
 class IEvent {
  public:
    virtual ~IEvent() = default;
-   virtual void RaiseEvent(EventEffect::Type, Unit*) = 0;
+   virtual void RaiseEvent(EventType, Unit*) = 0;
 };
 
 } // namespace core

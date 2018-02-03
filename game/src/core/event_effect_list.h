@@ -11,7 +11,7 @@ namespace core {
 
 class EventEffectList : public IEvent {
  public:
-  void RaiseEvent(EventEffect::Type, Unit*) override;
+  void RaiseEvent(EventType, Unit*) override;
 
  public:
   EventEffectList();

@@ -24,7 +24,7 @@ class Equipment : public IEvent {
   };
 
  public:
-  void RaiseEvent(EventEffect::Type, Unit*) override;
+  void RaiseEvent(EventType, Unit*) override;
 
  public:
   Equipment(const std::string&, Type);

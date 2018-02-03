@@ -22,8 +22,8 @@ class Unit : public IEvent, public IEquipper {
   ~Unit();
 
  public:
-  void RaiseEvent(EventEffect::Type, Unit*) override;
-  void RaiseEvent(EventEffect::Type);
+  void RaiseEvent(EventType, Unit*) override;
+  void RaiseEvent(EventType);
 
  public:
   std::string GetId();

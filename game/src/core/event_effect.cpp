@@ -10,7 +10,7 @@ namespace core {
 EventEffect::~EventEffect() {
 }
 
-EventEffect::EventEffect(Type type, uint16_t turns_left) : type_(type), turns_left_(turns_left) {
+EventEffect::EventEffect(EventType type, uint16_t turns_left) : type_(type), turns_left_(turns_left) {
 }
 
 void EventEffect::NextTurn() {
@@ -22,7 +22,7 @@ void EventEffect::NextTurn() {
 
 // class EERestoreHP
 
-EERestoreHP::EERestoreHP(Type type, int amount)
+EERestoreHP::EERestoreHP(EventType type, int amount)
     : EventEffect(type), amount_(amount) {
   ASSERT(0 <= amount_ && amount_ <= 100);
 }

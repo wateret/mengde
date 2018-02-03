@@ -22,7 +22,7 @@ Attribute Equipment::CalcMultipliers() const {
   return modifier_list_.CalcMultipliers();
 }
 
-void Equipment::RaiseEvent(EventEffect::Type type, Unit* unit) {
+void Equipment::RaiseEvent(EventType type, Unit* unit) {
   effect_list_.RaiseEvent(type, unit);
 }
 

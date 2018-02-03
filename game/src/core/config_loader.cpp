@@ -38,14 +38,14 @@ ConfigLoader::~ConfigLoader() {
 }
 
 EventEffect* ConfigLoader::GenerateEventEffect(const string& type, const string& event, int amount) {
-  EventEffect::Type event_type = EventEffect::Type::kOnNone;
+  EventType event_type = EventType::kOnNone;
   if (event == "on_action_done") {
-    event_type = EventEffect::Type::kOnActionDone;
+    event_type = EventType::kOnActionDone;
   }
   else if (event == "on_turn_begin") {
-    event_type = EventEffect::Type::kOnTurnBegin;
+    event_type = EventType::kOnTurnBegin;
   }
-  ASSERT(event_type != EventEffect::Type::kOnNone);
+  ASSERT(event_type != EventType::kOnNone);
 
   if (type == "restore_hp") {
     return new EERestoreHP(event_type, amount);

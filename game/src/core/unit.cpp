@@ -156,7 +156,7 @@ void Unit::LevelUp() {
 }
 
 void Unit::EndAction() {
-  RaiseEvent(EventEffect::Type::kOnActionDone);
+  RaiseEvent(EventType::kOnActionDone);
   done_action_ = true;
 }
 
@@ -164,7 +164,7 @@ void Unit::ResetAction() {
   done_action_ = false;
 }
 
-void Unit::RaiseEvent(EventEffect::Type type, Unit* unit) {
+void Unit::RaiseEvent(EventType type, Unit* unit) {
   ASSERT(unit == this);
 
   // TODO Remove const_cast when RaiseEvent become const
@@ -176,7 +176,7 @@ void Unit::RaiseEvent(EventEffect::Type type, Unit* unit) {
   if (aid != nullptr) aid->RaiseEvent(type, unit);
 }
 
-void Unit::RaiseEvent(EventEffect::Type type) {
+void Unit::RaiseEvent(EventType type) {
   RaiseEvent(type, this);
 }
 

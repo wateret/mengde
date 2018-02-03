@@ -22,7 +22,7 @@ Attribute UnitEffectList::CalcMultipliers() const {
   return sm_list_.CalcMultipliers();
 }
 
-void UnitEffectList::RaiseEvent(EventEffect::Type type, Unit* unit) {
+void UnitEffectList::RaiseEvent(EventType type, Unit* unit) {
   ee_list_.RaiseEvent(type, unit);
 }
 
