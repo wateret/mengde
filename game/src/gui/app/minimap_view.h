@@ -27,7 +27,7 @@ class MinimapView : public CompositeView {
   Vec2D MagnifyForMinimap(Vec2D);
 
  private:
-  Vec2D* camera_coords_ptr_; // FIXME not a good design to have this as a pointer
+  Vec2D* camera_coords_ptr_; // FIXME bad design - Maybe use observer pattern? (Could be overkill)
   Vec2D  camera_size_;
   Vec2D  map_size_;
   RectView* camera_rect_view_;
