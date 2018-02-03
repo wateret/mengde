@@ -24,7 +24,7 @@ Lua::Lua(lua_State* L) : L(L), destroy_(false) {
 }
 
 Lua::~Lua() {
-	if (L != nullptr && destroy_) lua_close(L);
+  if (L != nullptr && destroy_) lua_close(L);
 }
 
 void Lua::Run(const string& filename) {

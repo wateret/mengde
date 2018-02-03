@@ -434,8 +434,7 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
   LOG_DEBUG("units: %d", units.size());
   Unit* unit = nullptr;
   // Find first availible unit
-  for (vector<Unit*>::iterator itr = units.begin(); itr != units.end(); itr++) {
-    Unit* u = *itr;
+  for (auto u : units) {
     if (!u->IsDead() && !u->IsDoneAction()) {
       unit = u;
       break;
