@@ -22,6 +22,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
     : rc_(rc),
       assets_(assets),
       lua_(nullptr),
+      lua_this_(this, "Game"),
       commander_(nullptr),
       deployer_(nullptr),
       map_(nullptr),
@@ -30,7 +31,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       status_(Status::kDeploying) {
   lua_ = CreateLua(stage_script_path);
   map_        = CreateMap();
-  lua_->Call<void>(string("on_deploy"), lua::LuaClass(this, "Game"));
+  lua_->Call<void>(string("on_deploy"), lua_this_);
   deployer_ = CreateDeployer();
 
   commander_ = new Commander();
@@ -61,10 +62,10 @@ lua::Olua* Game::CreateLua(const Path& stage_script_path) {
 
   // Register OO-style pseudo class for Lua
   {
-    lua->RegisterClass("Game");
+    lua->RegisterClass(lua_this_.name());
 
 #define MACRO_LUA_GAME(cname, luaname) \
-    lua->RegisterMethod("Game", string(#luaname));
+    lua->RegisterMethod(lua_this_.name(), string(#luaname));
 #include "lua_game.inc.h"
 #undef MACRO_LUA_GAME
   }
@@ -268,7 +269,7 @@ void Game::Push(unique_ptr<Cmd> cmd) {
 
 bool Game::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
-  uint32_t res = lua_->Call<uint32_t>("end_condition", lua::LuaClass(this, "Game"));
+  uint32_t res = lua_->Call<uint32_t>("end_condition", lua_this_);
   status_ = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
@@ -333,7 +334,7 @@ bool Game::SubmitDeploy() {
   });
 
   status_ = Status::kUndecided;
-  lua_->Call<void>(string("on_begin"), lua::LuaClass(this, "Game"));
+  lua_->Call<void>(string("on_begin"), lua_this_);
   return true;
 }
 

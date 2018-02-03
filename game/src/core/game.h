@@ -104,15 +104,16 @@ class Game : public IDeployHelper {
   bool TryMagic(Unit*, Unit*);
 
  private:
-  ResourceManagers   rc_;
-  Assets*            assets_;
-  lua::Olua*    lua_;
-  Commander*         commander_;
-  Deployer*          deployer_;
-  Map*               map_;
-  StageUnitManager*  stage_unit_manager_;
-  Turn               turn_;
-  Status             status_;
+  ResourceManagers  rc_;
+  Assets*           assets_;
+  lua::Olua*        lua_;
+  lua::LuaClass     lua_this_; // LuaClass with this object
+  Commander*        commander_;
+  Deployer*         deployer_;
+  Map*              map_;
+  StageUnitManager* stage_unit_manager_;
+  Turn              turn_;
+  Status            status_;
 };
 
 } // namespace core
