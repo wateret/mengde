@@ -21,21 +21,21 @@ class ConfigLoader {
   ConfigLoader(const Path&);
   ~ConfigLoader();
   const ResourceManagers& GetResources() const { return rc_; }
-  const string& GetFirstStage() const { return first_stage_; }
+  const string& GetFirstStage() const { return stages_[0]; }
 
  private:
   void ParseUnitClassesAndTerrains();
   void ParseMagics();
   void ParseEquipments();
   void ParseHeroTemplates();
-  void ParseFirstStage();
+  void ParseStages();
   uint16_t StatStrToIdx(const string&);
   EventEffect* GenerateEventEffect(const string&, const string&, int);
 
  private:
   ::lua::Olua* lua_config_;
   ResourceManagers  rc_;
-  string            first_stage_;
+  vector<string> stages_;
 };
 
 } // namespace mengde

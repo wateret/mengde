@@ -27,7 +27,7 @@ ConfigLoader::ConfigLoader(const Path& filename)
   ParseMagics();
   ParseEquipments();
   ParseHeroTemplates();
-  ParseFirstStage();
+  ParseStages();
 }
 
 ConfigLoader::~ConfigLoader() {
@@ -242,8 +242,8 @@ void ConfigLoader::ParseHeroTemplates() {
   });
 }
 
-void ConfigLoader::ParseFirstStage() {
-  first_stage_ = lua_config_->Get<string>("gconf.first_stage");
+void ConfigLoader::ParseStages() {
+  stages_ = lua_config_->Get<vector<string>>("gconf.stages");
 }
 
 } // namespace core
