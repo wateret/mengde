@@ -53,9 +53,9 @@ class CmdQueue : public Cmd {
   deque<unique_ptr<Cmd>> q_;
 };
 
-class CmdOneUnit : public Cmd {
+class CmdUnit : public Cmd {
  public:
-  CmdOneUnit(Unit*);
+  CmdUnit(Unit*);
   virtual unique_ptr<Cmd> Do(Game*) override = 0;
 
  public:
@@ -195,14 +195,14 @@ class CmdMiss : public CmdActResult {
   virtual Cmd::Op GetOp() const override { return Op::kCmdMiss; }
 };
 
-class CmdKilled : public CmdOneUnit {
+class CmdKilled : public CmdUnit {
  public:
   CmdKilled(Unit*);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdKilled; }
 };
 
-class CmdMove : public CmdOneUnit {
+class CmdMove : public CmdUnit {
  public:
   CmdMove(Unit*, Vec2D);
   virtual unique_ptr<Cmd> Do(Game*) override;
@@ -268,7 +268,7 @@ class CmdGameEnd : public Cmd {
   bool is_victory_;
 };
 
-class CmdSpeak : public CmdOneUnit {
+class CmdSpeak : public CmdUnit {
  public:
   CmdSpeak(Unit*, const string&);
   virtual unique_ptr<Cmd> Do(Game*) override;

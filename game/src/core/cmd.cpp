@@ -128,9 +128,9 @@ void CmdQueue::DebugPrint() const {
 }
 #endif
 
-// CmdOneUnit
+// CmdUnit
 
-CmdOneUnit::CmdOneUnit(Unit* unit) : unit_(unit) {
+CmdUnit::CmdUnit(Unit* unit) : unit_(unit) {
   ASSERT(unit_ != nullptr);
 }
 
@@ -334,7 +334,7 @@ unique_ptr<Cmd> CmdMiss::Do(Game*) {
 
 // CmdKilled
 
-CmdKilled::CmdKilled(Unit* unit) : CmdOneUnit(unit) {
+CmdKilled::CmdKilled(Unit* unit) : CmdUnit(unit) {
 }
 
 unique_ptr<Cmd> CmdKilled::Do(Game* game) {
@@ -344,7 +344,7 @@ unique_ptr<Cmd> CmdKilled::Do(Game* game) {
 
 // CmdMove
 
-CmdMove::CmdMove(Unit* unit, Vec2D dest) : CmdOneUnit(unit), dest_(dest) {
+CmdMove::CmdMove(Unit* unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {
 }
 
 unique_ptr<Cmd> CmdMove::Do(Game* game) {
@@ -504,7 +504,7 @@ unique_ptr<Cmd> CmdGameEnd::Do(Game*) {
 
 // CmdSpeak
 
-CmdSpeak::CmdSpeak(Unit* unit, const string& words) : CmdOneUnit(unit), words_(words) {
+CmdSpeak::CmdSpeak(Unit* unit, const string& words) : CmdUnit(unit), words_(words) {
 }
 
 unique_ptr<Cmd> CmdSpeak::Do(Game*) {
