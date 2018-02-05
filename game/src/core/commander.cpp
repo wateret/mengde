@@ -18,9 +18,8 @@ const Cmd* Commander::GetNextCmdConst() const {
 
 void Commander::DoNext(Game* game) {
   ASSERT(HasNext());
-//  Cmd* cmd = const_cast<Cmd*>(cmdq_current_->GetNextAtomicCmd());
-//  cmdq_history_->Append(std::move(cmd));
-  cmdq_current_->Do(game);
+  auto cmd_done = cmdq_current_->Do(game);
+  cmdq_history_->Append(std::move(cmd_done));
 }
 
 void Commander::Push(unique_ptr<Cmd> cmd) {
