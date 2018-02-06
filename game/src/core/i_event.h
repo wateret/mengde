@@ -1,7 +1,7 @@
 #ifndef I_EVENT_H_
 #define I_EVENT_H_
 
-#include "event_effect.h"
+#include "event_types.h"
 
 namespace mengde {
 namespace core {
@@ -10,8 +10,8 @@ namespace core {
 
 class IEvent {
  public:
-   virtual ~IEvent() = default;
-   virtual void RaiseEvent(EventType, Unit*) = 0;
+  virtual ~IEvent() = default;
+  virtual void RaiseEvent(EventType, Unit*) = 0;
 };
 
 } // namespace core

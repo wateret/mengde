@@ -4,7 +4,7 @@
 #include <limits>
 
 #include "util/common.h"
-#include "event_type.h"
+#include "event_types.h"
 
 namespace mengde {
 namespace core {
@@ -22,7 +22,7 @@ class EventEffect {
   virtual ~EventEffect();
   virtual void OnEvent(Unit*) = 0;
   bool type(EventType type) { return type_ == type; }
-  int GetTurnsLeft() { return turns_left_; }
+  uint16_t GetTurnsLeft() { return turns_left_; }
   void NextTurn();
 
  private:
