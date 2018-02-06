@@ -88,6 +88,11 @@ void CmdQueue::Append(unique_ptr<Cmd> cmd) {
   }
 }
 
+CmdQueue& CmdQueue::operator+=(unique_ptr<Cmd> rhs) {
+  Append(std::move(rhs));
+  return *this;
+}
+
 bool CmdQueue::IsEmpty() const {
   return q_.empty();
   /*

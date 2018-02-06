@@ -49,9 +49,13 @@ class CmdQueue : public Cmd {
   bool IsEmpty() const;
   const Cmd* GetNextCmdConst() const;
 
+  CmdQueue& operator+=(unique_ptr<Cmd>);
+
  private:
   deque<unique_ptr<Cmd>> q_;
 };
+
+// CmdQueue operators
 
 class CmdUnit : public Cmd {
  public:
