@@ -9,6 +9,8 @@
 namespace mengde {
 namespace core {
 
+class Cmd;
+class CmdAct;
 class Unit;
 
 // EventEffect class is an observer for game event handling
@@ -37,6 +39,40 @@ class EERestoreHP : public EventEffect {
 
  private:
   int amount_;
+};
+
+class EventEffectBase {
+ public:
+  static const uint16_t kTurnInfinity = std::numeric_limits<uint16_t>::max();
+
+ public:
+  EventEffectBase(uint16_t turns_left);
+  virtual ~EventEffectBase() = default;
+  uint16_t GetTurnsLeft() { return turns_left_; }
+  void NextTurn();
+
+ private:
+  uint16_t turns_left_;
+};
+
+class GeneralEventEffect : public EventEffectBase {
+ public:
+  GeneralEventEffect(event::GeneralEvent, uint16_t turns_left = kTurnInfinity);
+  bool typeof(event::GeneralEvent type) { return type_ == type; }
+  virtual unique_ptr<Cmd> OnEvent(Unit*) = 0;
+
+ private:
+  event::GeneralEvent type_;
+};
+
+class OnCmdEventEffect : public EventEffectBase {
+ public:
+  OnCmdEventEffect(event::OnCmdEvent, uint16_t turns_left = kTurnInfinity);
+  bool typeof(event::OnCmdEvent type) { return type_ == type; }
+  virtual void OnEvent(Unit*, CmdAct*) = 0;
+
+ private:
+  event::OnCmdEvent type_;
 };
 
 } // namespace core

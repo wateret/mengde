@@ -1,10 +1,10 @@
 /* XXXXXXXXXXXXXXXXXXXXXXX */
 /* THIS FILE IS UNUSED AND TO BE REMOVED (.cpp AS WELL) */
 /* XXXXXXXXXXXXXXXXXXXXXXX */
-
 #ifndef UNIT_EFFECT_LIST_H_
 #define UNIT_EFFECT_LIST_H_
 
+/*
 #include "stat_modifier_list.h"
 #include "event_effect_list.h"
 #include "i_event.h"
@@ -32,4 +32,5 @@ class UnitEffectList : public IEvent {
 } // namespace core
 } // namespace mengde
 
+*/
 #endif // UNIT_EFFECT_LIST_H_

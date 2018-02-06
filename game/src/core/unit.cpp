@@ -1,5 +1,6 @@
 #include "unit.h"
 
+#include "cmd.h"// TODO Only for CmdQueue
 #include "unit_class.h"
 #include "equipment_set.h"
 
@@ -178,6 +179,39 @@ void Unit::RaiseEvent(EventType type, Unit* unit) {
 
 void Unit::RaiseEvent(EventType type) {
   RaiseEvent(type, this);
+}
+
+unique_ptr<Cmd> Unit::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
+  // TODO make EquipmentSet have IEvent
+  ASSERT(unit == this);
+
+  auto cmdq = unique_ptr<CmdQueue>(new CmdQueue());
+  const Equipment* weapon = equipment_set_->GetWeapon();
+  const Equipment* armor  = equipment_set_->GetArmor();
+  const Equipment* aid    = equipment_set_->GetAid();
+  if (weapon != nullptr) *cmdq += weapon->RaiseEvent(type, unit);
+  if (armor != nullptr) *cmdq += armor->RaiseEvent(type, unit);
+  if (aid != nullptr) *cmdq += aid->RaiseEvent(type, unit);
+  return cmdq;
+}
+
+void Unit::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) const {
+  ASSERT(unit == this);
+
+  const Equipment* weapon = equipment_set_->GetWeapon();
+  const Equipment* armor  = equipment_set_->GetArmor();
+  const Equipment* aid    = equipment_set_->GetAid();
+  if (weapon != nullptr) weapon->RaiseEvent(type, unit, act);
+  if (armor != nullptr) armor->RaiseEvent(type, unit, act);
+  if (aid != nullptr) aid->RaiseEvent(type, unit, act);
+}
+
+unique_ptr<Cmd> Unit::RaiseEvent(event::GeneralEvent type) {
+  return RaiseEvent(type, this);
+}
+
+void Unit::RaiseEvent(event::OnCmdEvent type, CmdAct* act) {
+  RaiseEvent(type, this, act);
 }
 
 } // namespace core

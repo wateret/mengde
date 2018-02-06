@@ -25,6 +25,8 @@ class Equipment : public IEvent {
 
  public:
   void RaiseEvent(EventType, Unit*) override;
+  virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const override;
+  virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
 
  public:
   Equipment(const std::string&, Type);

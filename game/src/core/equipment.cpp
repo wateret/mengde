@@ -1,5 +1,7 @@
 #include "equipment.h"
 
+#include "cmd.h" // TODO Only for CmdQueue
+
 namespace mengde {
 namespace core {
 
@@ -25,6 +27,15 @@ Attribute Equipment::CalcMultipliers() const {
 void Equipment::RaiseEvent(EventType type, Unit* unit) {
   effect_list_.RaiseEvent(type, unit);
 }
+
+unique_ptr<Cmd> Equipment::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
+  return effect_list_.RaiseEvent(type, unit);
+}
+
+void Equipment::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) const {
+  effect_list_.RaiseEvent(type, unit, act);
+}
+
 
 } // namespace core
 } // namespace mengde

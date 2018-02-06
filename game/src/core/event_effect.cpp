@@ -34,5 +34,22 @@ void EERestoreHP::OnEvent(Unit* unit) {
   LOG_INFO("EERestoreHP restores HP by %d", real_amount);
 }
 
+// class EventEffectBase
+
+EventEffectBase::EventEffectBase(uint16_t turns_left) : turns_left_(turns_left) {
+}
+
+// class GeneralEventEffect
+
+GeneralEventEffect::GeneralEventEffect(event::GeneralEvent type, uint16_t turns_left)
+    : EventEffectBase(turns_left), type_(type) {
+}
+
+// class GeneralEventEffect
+
+OnCmdEventEffect::OnCmdEventEffect(event::OnCmdEvent type, uint16_t turns_left)
+    : EventEffectBase(turns_left), type_(type) {
+}
+
 } // namespace core
 } // namespace mengde
