@@ -167,8 +167,17 @@ CmdStay::CmdStay(Unit* unit) : CmdAct(unit, nullptr) {
 }
 
 unique_ptr<Cmd> CmdStay::Do(Game*) {
-  atk_->EndAction(); // XXX Temporarily added
-  // Simply do nothing
+  // Do nothing
+  return nullptr;
+}
+
+// CmdEndAction
+CmdEndAction::CmdEndAction(Unit* unit) : CmdUnit(unit) {
+}
+
+unique_ptr<Cmd> CmdEndAction::Do(Game* game) {
+  unit_->EndAction();
+  game->Push(unit_->RaiseEvent(event::GeneralEvent::kActionDone));
   return nullptr;
 }
 
@@ -411,8 +420,7 @@ unique_ptr<Cmd> CmdAction::Do(Game* game) {
     if (cmd_act_ != nullptr) {
       ret->Append(std::move(cmd_act_));
     }
-
-    doer->EndAction();
+    ret->Append(unique_ptr<Cmd>(new CmdEndAction(doer)));
   }
 
   return std::move(ret);
@@ -513,6 +521,20 @@ CmdSpeak::CmdSpeak(Unit* unit, const string& words) : CmdUnit(unit), words_(word
 }
 
 unique_ptr<Cmd> CmdSpeak::Do(Game*) {
+  // Do nothing, UI will do appropriate stuff.
+  return nullptr;
+}
+
+// CmdRestoreHp
+
+CmdRestoreHp::CmdRestoreHp(Unit* unit, int ratio, int adder) : CmdUnit(unit), ratio_(ratio), adder_(adder) {
+}
+
+unique_ptr<Cmd> CmdRestoreHp::Do(Game*) {
+  int amount = unit_->GetOriginalHpMp().hp * ratio_ / 100;
+  amount += adder_;
+  unit_->RestoreHP(amount);
+  LOG_INFO("%s restores HP by %d", unit_->GetId().c_str(), amount);
   return nullptr;
 }
 

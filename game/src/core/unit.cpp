@@ -157,7 +157,6 @@ void Unit::LevelUp() {
 }
 
 void Unit::EndAction() {
-  RaiseEvent(EventType::kOnActionDone);
   done_action_ = true;
 }
 

@@ -176,7 +176,7 @@ bool Game::EndForceTurn() {
 
   ForEachUnit([this] (Unit* u) {
     if (this->IsCurrentTurn(u)) {
-      u->RaiseEvent(EventType::kOnTurnBegin);
+      commander_->Push(u->RaiseEvent(event::GeneralEvent::kTurnBegin));
     }
   });
 

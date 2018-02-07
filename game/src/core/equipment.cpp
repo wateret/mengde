@@ -16,6 +16,14 @@ void Equipment::AddEffect(EventEffect* ee) {
   effect_list_.AddEffect(ee);
 }
 
+void Equipment::AddGeneralEffect(GeneralEventEffect* gee) {
+  effect_list_.AddGeneralEffect(gee);
+}
+
+void Equipment::AddOnCmdEffect(OnCmdEventEffect* ocee) {
+  effect_list_.AddOnCmdEffect(ocee);
+}
+
 Attribute Equipment::CalcAddends() const {
   return modifier_list_.CalcAddends();
 }

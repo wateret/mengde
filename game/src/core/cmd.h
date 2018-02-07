@@ -93,6 +93,13 @@ class CmdAct : public CmdTwoUnits {
   virtual unique_ptr<Cmd> Do(Game*) override = 0;
 };
 
+class CmdEndAction : public CmdUnit {
+ public:
+  CmdEndAction(Unit*);
+  virtual unique_ptr<Cmd> Do(Game*) override;
+  virtual Cmd::Op GetOp() const override { return Op::kCmdEndAction; }
+};
+
 class CmdStay : public CmdAct {
  public:
   CmdStay(Unit*);
@@ -281,6 +288,17 @@ class CmdSpeak : public CmdUnit {
 
  private:
   string words_;
+};
+
+class CmdRestoreHp : public CmdUnit {
+ public:
+  CmdRestoreHp(Unit*, int ratio, int adder);
+  virtual unique_ptr<Cmd> Do(Game*) override;
+  virtual Cmd::Op GetOp() const override { return Op::kCmdRestoreHp; }
+
+ private:
+  int ratio_;
+  int adder_;
 };
 
 } // namespace core

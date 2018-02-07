@@ -57,7 +57,7 @@ class EventEffectBase {
 
 class GeneralEventEffect : public EventEffectBase {
  public:
-  GeneralEventEffect(event::GeneralEvent, uint16_t turns_left = kTurnInfinity);
+  GeneralEventEffect(event::GeneralEvent type, uint16_t turns_left);
   bool typeof(event::GeneralEvent type) { return type_ == type; }
   virtual unique_ptr<Cmd> OnEvent(Unit*) = 0;
 
@@ -67,12 +67,26 @@ class GeneralEventEffect : public EventEffectBase {
 
 class OnCmdEventEffect : public EventEffectBase {
  public:
-  OnCmdEventEffect(event::OnCmdEvent, uint16_t turns_left = kTurnInfinity);
+  OnCmdEventEffect(event::OnCmdEvent type, uint16_t turns_left);
   bool typeof(event::OnCmdEvent type) { return type_ == type; }
   virtual void OnEvent(Unit*, CmdAct*) = 0;
 
  private:
   event::OnCmdEvent type_;
+};
+
+// Children of GeneralEventEffect and OnCmdEventEffect
+// The name of the class must be in the form of `{G|OC}EE.*` for the classes that inherit GeneralEventEffect or
+// OnCmdEventEffect. G stands for General, OC for OnCmd.
+
+class GEERestoreHp : public GeneralEventEffect {
+ public:
+  GEERestoreHp(event::GeneralEvent type, int ratio, int amount, uint16_t turns_left = kTurnInfinity);
+  virtual unique_ptr<Cmd> OnEvent(Unit*);
+
+ private:
+  int ratio_;
+  int adder_;
 };
 
 } // namespace core

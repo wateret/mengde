@@ -30,7 +30,7 @@ class ConfigLoader {
   void ParseHeroTemplates();
   void ParseStages();
   uint16_t StatStrToIdx(const string&);
-  EventEffect* GenerateEventEffect(const string&, const string&, int);
+  GeneralEventEffect* GenerateGeneralEventEffect(const string&, const string&, int);
 
  private:
   ::lua::Olua* lua_config_;
