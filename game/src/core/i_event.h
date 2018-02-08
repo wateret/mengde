@@ -15,7 +15,6 @@ class Unit;
 class IEvent {
  public:
   virtual ~IEvent() = default;
-  virtual void RaiseEvent(EventType, Unit*) = 0;
   virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const = 0;
   virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const = 0;
 };

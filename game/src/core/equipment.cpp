@@ -12,10 +12,6 @@ void Equipment::AddModifier(StatModifier* sm) {
   modifier_list_.AddModifier(sm);
 }
 
-void Equipment::AddEffect(EventEffect* ee) {
-  effect_list_.AddEffect(ee);
-}
-
 void Equipment::AddGeneralEffect(GeneralEventEffect* gee) {
   effect_list_.AddGeneralEffect(gee);
 }
@@ -30,10 +26,6 @@ Attribute Equipment::CalcAddends() const {
 
 Attribute Equipment::CalcMultipliers() const {
   return modifier_list_.CalcMultipliers();
-}
-
-void Equipment::RaiseEvent(EventType type, Unit* unit) {
-  effect_list_.RaiseEvent(type, unit);
 }
 
 unique_ptr<Cmd> Equipment::RaiseEvent(event::GeneralEvent type, Unit* unit) const {

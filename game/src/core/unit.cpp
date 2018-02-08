@@ -164,22 +164,6 @@ void Unit::ResetAction() {
   done_action_ = false;
 }
 
-void Unit::RaiseEvent(EventType type, Unit* unit) {
-  ASSERT(unit == this);
-
-  // TODO Remove const_cast when RaiseEvent become const
-  Equipment* weapon = const_cast<Equipment*>(equipment_set_->GetWeapon());
-  Equipment* armor  = const_cast<Equipment*>(equipment_set_->GetArmor());
-  Equipment* aid    = const_cast<Equipment*>(equipment_set_->GetAid());
-  if (weapon != nullptr) weapon->RaiseEvent(type, unit);
-  if (armor != nullptr) armor->RaiseEvent(type, unit);
-  if (aid != nullptr) aid->RaiseEvent(type, unit);
-}
-
-void Unit::RaiseEvent(EventType type) {
-  RaiseEvent(type, this);
-}
-
 unique_ptr<Cmd> Unit::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
   // TODO make EquipmentSet have IEvent
   ASSERT(unit == this);

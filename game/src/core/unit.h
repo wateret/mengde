@@ -22,9 +22,6 @@ class Unit : public IEvent, public IEquipper {
   ~Unit();
 
  public:
-  virtual void RaiseEvent(EventType, Unit*) override;
-  void RaiseEvent(EventType);
-
   virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const override;
   virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
   unique_ptr<Cmd> RaiseEvent(event::GeneralEvent);

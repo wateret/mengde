@@ -11,13 +11,12 @@ EventEffectList::EventEffectList() {
 }
 
 EventEffectList::~EventEffectList() {
-  for (auto e : elements_) {
+  for (auto e : general_elements_) {
     delete e;
   }
-}
-
-void EventEffectList::AddEffect(EventEffect* e) {
-  elements_.push_back(e);
+  for (auto e : oncmd_elements_) {
+    delete e;
+  }
 }
 
 void EventEffectList::AddGeneralEffect(GeneralEventEffect* e) {
@@ -26,14 +25,6 @@ void EventEffectList::AddGeneralEffect(GeneralEventEffect* e) {
 
 void EventEffectList::AddOnCmdEffect(OnCmdEventEffect* e) {
   oncmd_elements_.push_back(e);
-}
-
-void EventEffectList::RaiseEvent(EventType type, Unit* unit) {
-  for (auto e : elements_) {
-    if (e->type(type)) {
-      e->OnEvent(unit);
-    }
-  }
 }
 
 unique_ptr<Cmd> EventEffectList::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
@@ -55,9 +46,11 @@ void EventEffectList::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act
 }
 
 void EventEffectList::NextTurn() {
+  // TODO Implement NextTurn
+  /*
   elements_.erase(remove_if(elements_.begin(), elements_.end(), [] (EventEffect* e) {
     if (e->GetTurnsLeft() < 0) {
-      LOG_WARNING("EventEffect.turns_left_ shouldn't be less than 0");
+      LOG_WARNING("turns_left_ must not be less than 0");
     }
     bool remove = (e->GetTurnsLeft() <= 0);
     if (remove) delete e;
@@ -67,6 +60,7 @@ void EventEffectList::NextTurn() {
   for (auto e : elements_) {
     e->NextTurn();
   }
+  */
 }
 
 } // namespace core

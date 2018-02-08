@@ -13,33 +13,9 @@ class Cmd;
 class CmdAct;
 class Unit;
 
-// EventEffect class is an observer for game event handling
-
-class EventEffect {
- public:
-  static const uint16_t kTurnInfinity = std::numeric_limits<uint16_t>::max();
-
- public:
-  EventEffect(EventType, uint16_t turn_left = kTurnInfinity);
-  virtual ~EventEffect();
-  virtual void OnEvent(Unit*) = 0;
-  bool type(EventType type) { return type_ == type; }
-  uint16_t GetTurnsLeft() { return turns_left_; }
-  void NextTurn();
-
- private:
-  EventType type_;
-  uint16_t turns_left_;
-};
-
-class EERestoreHP : public EventEffect {
- public:
-  EERestoreHP(EventType, int);
-  virtual void OnEvent(Unit*) override;
-
- private:
-  int amount_;
-};
+// EventEffectBase is an observer for game event handling
+// There are two types of Events - GeneralEventEffect and OnCmdEventEffect.
+// These two types both have the method `RaiseEvent` but note that their signatures are different.
 
 class EventEffectBase {
  public:
@@ -55,6 +31,8 @@ class EventEffectBase {
   uint16_t turns_left_;
 };
 
+// GeneralEventEffect is event effect that can generate Cmds
+
 class GeneralEventEffect : public EventEffectBase {
  public:
   GeneralEventEffect(event::GeneralEvent type, uint16_t turns_left);
@@ -64,6 +42,9 @@ class GeneralEventEffect : public EventEffectBase {
  private:
   event::GeneralEvent type_;
 };
+
+// OnCmdEventEffect is event effect that can modify CmdAction.
+// Different from GeneralEventEffect, this cannot generate Cmds it can only modify CmdAction passed as an argument.
 
 class OnCmdEventEffect : public EventEffectBase {
  public:
