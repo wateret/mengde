@@ -545,11 +545,16 @@ CmdRestoreHp::CmdRestoreHp(Unit* unit, int ratio, int adder) : CmdUnit(unit), ra
 }
 
 unique_ptr<Cmd> CmdRestoreHp::Do(Game*) {
-  int amount = unit_->GetOriginalHpMp().hp * ratio_ / 100;
-  amount += adder_;
+  int amount = CalcAmount();
   unit_->RestoreHP(amount);
   LOG_INFO("%s restores HP by %d", unit_->GetId().c_str(), amount);
   return nullptr;
+}
+
+int CmdRestoreHp::CalcAmount() const {
+  int amount = unit_->GetOriginalHpMp().hp * ratio_ / 100;
+  amount += adder_;
+  return amount;
 }
 
 } // namespace core

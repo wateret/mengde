@@ -298,6 +298,7 @@ class CmdRestoreHp : public CmdUnit {
   CmdRestoreHp(Unit*, int ratio, int adder);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdRestoreHp; }
+  int CalcAmount() const;
 
  private:
   int ratio_;

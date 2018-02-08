@@ -91,20 +91,19 @@ void UnitInfoView::SetUnit(core::Unit* unit) {
   tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
 }
 
-void UnitInfoView::SetContents(const std::string& id,
+void UnitInfoView::SetContents(const std::string& name,
                                int lv,
-                               const core::HpMp& xcur,
-                               const core::HpMp& xmax,
-                               int damage,
-                               int mp_cost) {
+                               const core::HpMp& hpmp_cur,
+                               const core::HpMp& hpmp_max,
+                               const core::HpMp& hpmp_ext) {
   unit_ = nullptr; // Reset cache
-  gv_hp_->SetCurVal(xcur.hp);
-  gv_hp_->SetMaxVal(xmax.hp);
-  gv_hp_->SetExtVal(damage);
-  gv_mp_->SetCurVal(xcur.mp);
-  gv_mp_->SetMaxVal(xmax.mp);
-  gv_mp_->SetExtVal(mp_cost);
-  tv_name_->SetText(id);
+  gv_hp_->SetCurVal(hpmp_cur.hp);
+  gv_hp_->SetMaxVal(hpmp_max.hp);
+  gv_hp_->SetExtVal(hpmp_ext.hp);
+  gv_mp_->SetCurVal(hpmp_cur.mp);
+  gv_mp_->SetMaxVal(hpmp_max.mp);
+  gv_mp_->SetExtVal(hpmp_ext.mp);
+  tv_name_->SetText(name);
   tv_lv_->SetText("Lv " + std::to_string(lv));
   tv_lftbot_->SetText("");
   tv_rgtbot_->SetText("");

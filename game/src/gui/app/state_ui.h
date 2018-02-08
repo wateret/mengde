@@ -291,18 +291,18 @@ class StateUIAttack : public StateUI {
   int   frames_;
 };
 
-class StateUIDamaged : public StateUI {
+class StateUIUnitTooltipAnim : public StateUI {
  public:
   static const int kFrames = 90;
 
  public:
-  StateUIDamaged(StateUI::Base, core::Unit*, int);
+  StateUIUnitTooltipAnim(StateUI::Base, core::Unit*, int hp, int mp);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
   virtual void Render(Drawer*) override;
 #ifdef DEBUG
-  virtual string GetStateID() const override { return "StateUIDamaged"; }
+  virtual string GetStateID() const override { return "StateUIUnitTooltipAnim"; }
 #endif
 
   bool LastFrame() { return frames_ == kFrames - 1; }
@@ -310,7 +310,8 @@ class StateUIDamaged : public StateUI {
  private:
   int   frames_;
   core::Unit* unit_;
-  int   damage_;
+  int   hp_; // Amount of hp changed
+  int   mp_; // Amount of mp changed
 };
 
 // StateUIAction

@@ -25,7 +25,7 @@ class UnitInfoView : public CompositeView {
   void SetUnitTerrainInfo(core::Cell* cell);
   void SetUnitAttackInfo(core::Unit*, int, int);
   void SetUnit(core::Unit*);
-  void SetContents(const std::string&, int, const core::HpMp&, const core::HpMp&, int = 0, int = 0);
+  void SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max, const core::HpMp& hpmp_ext);
 
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
 

@@ -127,6 +127,10 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
       const core::CmdGameEnd* c = DYNAMIC_CAST_CHECK(core::CmdGameEnd);
       return new StateUIEnd(WrapBase(), c->is_victory());
     }
+    case core::Cmd::Op::kCmdRestoreHp: {
+      const core::CmdRestoreHp* c = DYNAMIC_CAST_CHECK(core::CmdRestoreHp);
+      return new StateUIUnitTooltipAnim(WrapBase(), c->GetUnit(), c->CalcAmount(), 0);
+    }
 
     default:
 //      UNREACHABLE("Unknown type of Cmd");
@@ -539,7 +543,7 @@ void StateUIMagic::Update() {
     animator_->NextFrame();
     if (animator_->DoneAnimate()) {
       if (hit_) {
-        rv_->ChangeUIState(new StateUIDamaged(WrapBase(), def_, damage_));
+        rv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
       } else {
         rv_->PopUIState();
       }
@@ -785,31 +789,48 @@ void StateUIAttack::Update() {
   frames_++;
   if (LastFrame()) {
     if (hit_) {
-      rv_->ChangeUIState(new StateUIDamaged(WrapBase(), def_, damage_));
+      rv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
     } else {
       rv_->PopUIState();
     }
   }
 }
 
-// StateUIDamaged
+// StateUIUnitTooltipAnim
 
-StateUIDamaged::StateUIDamaged(StateUI::Base base, core::Unit* unit, int damage)
-   : StateUI(base), frames_(-1), unit_(unit), damage_(damage) {
-  damage_ = std::min(damage_, unit->GetCurrentHpMp().hp);
+StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, core::Unit* unit, int hp, int mp)
+   : StateUI(base), frames_(-1), unit_(unit), hp_(hp), mp_(mp) {
+  const core::HpMp& cur_hpmp = unit->GetCurrentHpMp();
+  const core::HpMp& max_hpmp = unit->GetOriginalHpMp();
+  int cur_hp = cur_hpmp.hp;
+  int cur_mp = cur_hpmp.mp;
+  int max_hp = max_hpmp.hp;
+  int max_mp = max_hpmp.mp;
+
+  // Cap min/max value of changes
+  if (hp_ > 0) {
+    hp_ = std::min(hp_, max_hp - cur_hp);
+  } else {
+    hp_ = std::max(hp_, -cur_hp);
+  }
+  if (mp_ > 0) {
+    mp_ = std::min(mp_, max_mp - cur_mp);
+  } else {
+    mp_ = std::max(mp_, -cur_mp);
+  }
 }
 
-void StateUIDamaged::Enter() {
+void StateUIUnitTooltipAnim::Enter() {
   Misc::SetShowCursor(false);
   rv_->SetUnitInfoViewVisible(true);
 }
 
-void StateUIDamaged::Exit() {
+void StateUIUnitTooltipAnim::Exit() {
   Misc::SetShowCursor(true);
   rv_->SetUnitInfoViewVisible(false);
 }
 
-void StateUIDamaged::Update() {
+void StateUIUnitTooltipAnim::Update() {
   frames_++;
   if (LastFrame()) {
     rv_->PopUIState();
@@ -819,18 +840,32 @@ void StateUIDamaged::Update() {
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
   core::HpMp hpmp_mod = unit_->GetCurrentHpMp();
-  int damage_rem = damage_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
-  hpmp_mod.hp -= damage_ - damage_rem;
+  core::HpMp hpmp_rem = {0, 0};
+  if (hp_ < 0) {
+    hpmp_rem.hp = -hp_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
+    hpmp_mod.hp -= -hp_ - hpmp_rem.hp;
+  } else {
+    hpmp_rem.hp = 0;
+    hpmp_mod.hp += hp_ * cur_anim_frames / max_anim_frames;
+  }
+  if (mp_ < 0) {
+    hpmp_rem.mp = -mp_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
+    hpmp_mod.mp -= -mp_ - hpmp_rem.mp;
+  } else {
+    hpmp_rem.mp = 0;
+    hpmp_mod.mp += mp_ * cur_anim_frames / max_anim_frames;
+  }
+
+
   rv_->SetUnitInfoViewContents(unit_->GetId(),
                                unit_->GetLevel(),
                                hpmp_mod,
                                unit_->GetOriginalHpMp(),
-                               damage_rem,
-                               0);
+                               hpmp_rem);
   rv_->SetUnitInfoViewCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords());
 }
 
-void StateUIDamaged::Render(Drawer*) {
+void StateUIUnitTooltipAnim::Render(Drawer*) {
 }
 
 // StateUITargeting
