@@ -129,6 +129,8 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     }
     case core::Cmd::Op::kCmdRestoreHp: {
       const core::CmdRestoreHp* c = DYNAMIC_CAST_CHECK(core::CmdRestoreHp);
+      int amount = c->CalcAmount();
+      if (amount == 0) return no_state_ui;
       return new StateUIUnitTooltipAnim(WrapBase(), c->GetUnit(), c->CalcAmount(), 0);
     }
 

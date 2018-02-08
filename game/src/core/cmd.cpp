@@ -554,7 +554,7 @@ unique_ptr<Cmd> CmdRestoreHp::Do(Game*) {
 int CmdRestoreHp::CalcAmount() const {
   int amount = unit_->GetOriginalHpMp().hp * ratio_ / 100;
   amount += adder_;
-  return amount;
+  return std::min(amount, unit_->GetOriginalHpMp().hp - unit_->GetCurrentHpMp().hp);
 }
 
 } // namespace core
