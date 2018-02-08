@@ -207,6 +207,8 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
            def_->GetId().c_str());
 
   unique_ptr<CmdQueue> ret(new CmdQueue());
+
+  // Perform and get result
   bool success = TryBasicAttack();
   if (success) {
     CmdHit::HitType hit_type = TryBasicAttackCritical() ? CmdHit::HitType::kCritical : CmdHit::HitType::kNormal;
@@ -222,6 +224,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
     ret->Append(unique_ptr<CmdMiss>(new CmdMiss(atk_, def_, CmdActResult::Type::kBasicAttack)));
   }
 
+  // Double attack
   bool reserve_second_attack = TryBasicAttackDouble();
   if (!IsSecond() && reserve_second_attack) {
     ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk_, def_, (Type)(type_ | Type::kSecond))));
@@ -229,9 +232,9 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
 
   // atk_->GainExp(def_);
 
+  // Counter attack
   bool is_last_attack = (reserve_second_attack == IsSecond());
   if (is_last_attack && !IsCounter() && def_->IsInRange(atk_->GetPosition())) {
-    // Add counter attack command
     LOG_INFO("'%s's' counter-attack to '%s' is reserved.",
              def_->GetId().c_str(),
              atk_->GetId().c_str());
