@@ -20,8 +20,7 @@ class Cmd {
   };
 
  public:
-  Cmd();
-  virtual ~Cmd();
+  virtual ~Cmd() = default;
   virtual unique_ptr<Cmd> Do(Game*) = 0;
   //virtual Cmd* Undo(Game*) = 0;
   virtual Cmd::Op GetOp() const = 0;
@@ -45,11 +44,15 @@ class CmdQueue : public Cmd {
 #endif
 
  public:
+  void Prepend(unique_ptr<Cmd>);
   void Append(unique_ptr<Cmd>);
   bool IsEmpty() const;
   const Cmd* GetNextCmdConst() const;
 
   CmdQueue& operator+=(unique_ptr<Cmd>);
+
+ private:
+  void Insert(unique_ptr<Cmd>, bool prepend);
 
  private:
   deque<unique_ptr<Cmd>> q_;

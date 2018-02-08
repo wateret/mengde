@@ -15,13 +15,6 @@ const char* kCmdOpToString[] = {
   nullptr
 };
 
-// Cmd
-
-Cmd::Cmd() {
-}
-
-Cmd::~Cmd() {
-}
 
 // CmdQueue
 
@@ -54,7 +47,7 @@ unique_ptr<Cmd> CmdQueue::Do(Game* game) {
 
   unique_ptr<Cmd> result = current->Do(game);
   if (result != nullptr) {
-    Append(std::move(result));
+    Prepend(std::move(result));
   }
 
   if (game->CheckStatus()) {
@@ -77,15 +70,33 @@ unique_ptr<Cmd> CmdQueue::Do(Game* game) {
   return current;
 }
 
-void CmdQueue::Append(unique_ptr<Cmd> cmd) {
+void CmdQueue::Insert(unique_ptr<Cmd> cmd, bool prepend) {
   if (cmd == nullptr) return;
   if (CmdQueue* cmdq = dynamic_cast<CmdQueue*>(cmd.get())) {
-    for (auto&& e : cmdq->q_) {
-      q_.push_back(std::move(e));
+    if (prepend) {
+      // In order to keep the sequence of CmdQueue being appended, push to front in reverse order
+      for (auto itr = cmdq->q_.rbegin(); itr != cmdq->q_.rend(); itr++) {
+        q_.push_front(std::move(*itr));
+      }
+    } else {
+      for (auto&& e : cmdq->q_) {
+        q_.push_back(std::move(e));
+      }
     }
   } else {
-    q_.push_back(std::move(cmd));
+    if (prepend)
+      q_.push_front(std::move(cmd));
+    else
+      q_.push_back(std::move(cmd));
   }
+}
+
+void CmdQueue::Append(unique_ptr<Cmd> cmd) {
+  return Insert(std::move(cmd), false);
+}
+
+void CmdQueue::Prepend(unique_ptr<Cmd> cmd) {
+  return Insert(std::move(cmd), true);
 }
 
 CmdQueue& CmdQueue::operator+=(unique_ptr<Cmd> rhs) {
