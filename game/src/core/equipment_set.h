@@ -1,6 +1,7 @@
 #ifndef EQUIPMENT_SET_H_
 #define EQUIPMENT_SET_H_
 
+#include "i_event.h"
 #include "stat.h"
 #include "equipment_slot.h"
 
@@ -9,7 +10,7 @@ namespace core {
 
 class IEquipper;
 
-class EquipmentSet {
+class EquipmentSet : public IEvent {
  public:
   EquipmentSet(IEquipper*);
   void CopyEquipmentSet(const EquipmentSet&);
@@ -24,6 +25,10 @@ class EquipmentSet {
   const Equipment* GetAid() const;
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
+
+ public:
+  virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const override;
+  virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
 
  private:
   IEquipper* equipper_;

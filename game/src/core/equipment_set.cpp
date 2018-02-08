@@ -1,6 +1,7 @@
 #include "equipment_set.h"
 
 #include "i_equipper.h"
+#include "cmd.h" // TODO included for CmdQueue only
 
 namespace mengde {
 namespace core {
@@ -94,6 +95,26 @@ Attribute EquipmentSet::CalcAddends() const {
 
 Attribute EquipmentSet::CalcMultipliers() const {
   return slot_weapon_.CalcMultipliers() + slot_armor_.CalcMultipliers() + slot_aid_.CalcMultipliers();
+}
+
+unique_ptr<Cmd> EquipmentSet::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
+  auto cmdq = unique_ptr<CmdQueue>(new CmdQueue());
+  const Equipment* weapon = GetWeapon();
+  const Equipment* armor  = GetArmor();
+  const Equipment* aid    = GetAid();
+  if (weapon != nullptr) cmdq->Append(weapon->RaiseEvent(type, unit));
+  if (armor != nullptr)  cmdq->Append(armor->RaiseEvent(type, unit));
+  if (aid != nullptr)    cmdq->Append(aid->RaiseEvent(type, unit));
+  return cmdq;
+}
+
+void EquipmentSet::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) const {
+  const Equipment* weapon = GetWeapon();
+  const Equipment* armor  = GetArmor();
+  const Equipment* aid    = GetAid();
+  if (weapon != nullptr) weapon->RaiseEvent(type, unit, act);
+  if (armor != nullptr)  armor->RaiseEvent(type, unit, act);
+  if (aid != nullptr)    aid->RaiseEvent(type, unit, act);
 }
 
 } // namespace core

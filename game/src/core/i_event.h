@@ -1,7 +1,11 @@
 #ifndef I_EVENT_H_
 #define I_EVENT_H_
 
+#include <memory>
+
 #include "event_types.h"
+
+using std::unique_ptr;
 
 namespace mengde {
 namespace core {
