@@ -47,8 +47,8 @@ Game::~Game() {
   delete stage_unit_manager_;
 }
 
-lua::Olua* Game::CreateLua(const Path& stage_script_path) {
-  lua::Olua* lua = new lua::Olua();
+lua::Lua* Game::CreateLua(const Path& stage_script_path) {
+  lua::Lua* lua = new lua::Lua();
 
 #define GAME_PREFIX "Game_"
 

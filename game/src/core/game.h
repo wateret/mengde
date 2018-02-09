@@ -11,12 +11,12 @@
 #include "util/common.h"
 #include "turn.h"
 #include "resource_manager.h"
-#include "lua/olua.h"
+#include "lua/lua.h"
 
 class Path;
 
 namespace lua {
-  class Olua;
+  class Lua;
 }
 
 namespace mengde {
@@ -59,7 +59,7 @@ class Game : public IDeployHelper {
   Unit* GetUnit(uint32_t);
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
-  lua::Olua* GetLuaScript() { return lua_; }
+  lua::Lua* GetLuaScript() { return lua_; }
   bool EndForceTurn();
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
@@ -97,7 +97,7 @@ class Game : public IDeployHelper {
   Unit*         GetOneHostileInRange(Unit*, Vec2D);
 
  private:
-  lua::Olua* CreateLua(const Path&);
+  lua::Lua* CreateLua(const Path&);
   Map*       CreateMap();
   Deployer*  CreateDeployer();
   bool TryBasicAttack(Unit*, Unit*);
@@ -106,7 +106,7 @@ class Game : public IDeployHelper {
  private:
   ResourceManagers  rc_;
   Assets*           assets_;
-  lua::Olua*        lua_;
+  lua::Lua*        lua_;
   lua::LuaClass     lua_this_; // LuaClass with this object
   Commander*        commander_;
   Deployer*         deployer_;
