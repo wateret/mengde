@@ -108,17 +108,17 @@ Deployer* Game::CreateDeployer() {
   ASSERT(lua_ != nullptr);
 
   vector<DeployInfoUnselectable> unselectable_info_list;
-  lua_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list] () mutable {
-    vector<int> pos_vec = lua_->Get<vector<int>>("position");
-    string hero_id = lua_->Get<string>("hero");
+  lua_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list] (lua::Lua* l, const string&) mutable {
+    vector<int> pos_vec = l->Get<vector<int>>("position");
+    string hero_id = l->Get<string>("hero");
     Vec2D position(pos_vec[0], pos_vec[1]);
     Hero* hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
     unselectable_info_list.push_back({position, hero});
   });
   uint32_t num_required = lua_->Get<uint32_t>("gdata.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
-  lua_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list] () mutable {
-    vector<int> pos_vec = lua_->Get<vector<int>>("position");
+  lua_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list] (lua::Lua* l, const string&) mutable {
+    vector<int> pos_vec = l->Get<vector<int>>("position");
     Vec2D position(pos_vec[0], pos_vec[1]);
     selectable_info_list.push_back({position});
   });

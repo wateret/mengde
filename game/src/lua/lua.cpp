@@ -61,9 +61,13 @@ void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
   if (!lua_istable(L, -1)) { // Table not found
     return;
   }
+
   lua_pushnil(L);
   while (lua_next(L, -2)) {
-    cb();
+    // Only string keys are supported
+    std::string key = "";
+    if (lua_isstring(L, 2)) key = lua_tostring(L, -2);
+    cb(this, key);
     lua_pop(L, 1);
   }
   PopStack(num_stack); // Pop tables pushed by GetToStack

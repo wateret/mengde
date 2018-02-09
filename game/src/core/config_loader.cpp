@@ -68,14 +68,14 @@ uint16_t ConfigLoader::StatStrToIdx(const string& s) {
 void ConfigLoader::ParseUnitClassesAndTerrains() {
   rc_.unit_class_manager = new UnitClassManager();
   int class_idx = 0;
-  lua_config_->ForEachTableEntry("gconf.unit_classes", [&] () {
-    string id      = this->lua_config_->Get<string>("id");
-    int promotions = this->lua_config_->Get<int>("promotions");
-    string grades  = this->lua_config_->Get<string>("stat_grades");
-    string range_s = this->lua_config_->Get<string>("attack_range");
-    int move       = this->lua_config_->Get<int>("move");
-    vector<int> hp = this->lua_config_->Get<vector<int>>("hp");
-    vector<int> mp = this->lua_config_->Get<vector<int>>("mp");
+  lua_config_->ForEachTableEntry("gconf.unit_classes", [&] (lua::Lua* l, const string&) {
+    string id      = l->Get<string>("id");
+    int promotions = l->Get<int>("promotions");
+    string grades  = l->Get<string>("stat_grades");
+    string range_s = l->Get<string>("attack_range");
+    int move       = l->Get<int>("move");
+    vector<int> hp = l->Get<vector<int>>("hp");
+    vector<int> mp = l->Get<vector<int>>("mp");
 
     Range::Type range = Range::StringToRange(range_s);
     auto GradeCharToInt  = [] (const char grade) -> int {
@@ -106,9 +106,9 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   rc_.terrain_manager = new TerrainManager();
   vector<string> ids;
   vector<char> cmaps;
-  lua_config_->ForEachTableEntry("gconf.terrains", [=, &ids, &cmaps] () mutable {
-    string id = this->lua_config_->Get<string>("id");
-    char cmap = this->lua_config_->Get<string>("char")[0];
+  lua_config_->ForEachTableEntry("gconf.terrains", [=, &ids, &cmaps] (lua::Lua* l, const string&) mutable {
+    string id = l->Get<string>("id");
+    char cmap = l->Get<string>("char")[0];
     ids.push_back(id);
     cmaps.push_back(cmap);
   });
@@ -140,12 +140,12 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
 void ConfigLoader::ParseMagics() {
   rc_.magic_manager = new MagicManager();
-  lua_config_->ForEachTableEntry("gconf.magics", [this] () {
-    string id       = this->lua_config_->Get<string>("id");
-    string range_s  = this->lua_config_->Get<string>("range");
-    string target_s = this->lua_config_->Get<string>("target");
-    string type_s   = this->lua_config_->Get<string>("type");
-    int    mp       = this->lua_config_->Get<int>("mp");
+  lua_config_->ForEachTableEntry("gconf.magics", [this] (lua::Lua* l, const string&) {
+    string id       = l->Get<string>("id");
+    string range_s  = l->Get<string>("range");
+    string target_s = l->Get<string>("target");
+    string type_s   = l->Get<string>("type");
+    int    mp       = l->Get<int>("mp");
 
     Range::Type range = Range::StringToRange(range_s);
     bool target = (target_s == "enemy");
@@ -162,14 +162,14 @@ void ConfigLoader::ParseMagics() {
     switch (type) {
       case Magic::MagicType::kMagicDeal:
       case Magic::MagicType::kMagicHeal: {
-        int power = this->lua_config_->Get<int>("power");
+        int power = l->Get<int>("power");
         magic = new Magic(id, type, range, target, mp, power, 0, 0, 0);
         break;
       }
       case Magic::MagicType::kMagicStatMod: {
-        string   stat_s = this->lua_config_->Get<string>("stat");
-        int      amount = this->lua_config_->Get<int>("amount");
-        int      turns  = this->lua_config_->Get<int>("turns");
+        string   stat_s = l->Get<string>("stat");
+        int      amount = l->Get<int>("amount");
+        int      turns  = l->Get<int>("turns");
         uint16_t stat   = StatStrToIdx(stat_s);
         magic = new Magic(id, type, range, target, mp, 0, stat, amount, turns);
         break;
@@ -179,9 +179,9 @@ void ConfigLoader::ParseMagics() {
         break;
     };
 
-    this->lua_config_->ForEachTableEntry("learnat", [=, &magic] () {
-      string uclass = this->lua_config_->Get<string>("class");
-      uint16_t level = (uint16_t) this->lua_config_->Get<int>("level");
+    l->ForEachTableEntry("learnat", [=, &magic] (lua::Lua* l, const string&) {
+      string uclass = l->Get<string>("class");
+      uint16_t level = (uint16_t) l->Get<int>("level");
       magic->AddLearnInfo(rc_.unit_class_manager->Get(uclass)->GetIndex(), level); // FIXME
     });
     rc_.magic_manager->Add(id, magic);
@@ -190,11 +190,11 @@ void ConfigLoader::ParseMagics() {
 
 void ConfigLoader::ParseEquipments() {
   rc_.equipment_manager = new EquipmentManager();
-  lua_config_->ForEachTableEntry("gconf.equipments", [this] () {
-    string id        = this->lua_config_->Get<string>("id");
-    string type_s    = this->lua_config_->Get<string>("type");
-    string equipable = this->lua_config_->Get<string>("equipable");
-    string desc      = this->lua_config_->Get<string>("description");
+  lua_config_->ForEachTableEntry("gconf.equipments", [this] (lua::Lua* l, const string&) {
+    string id        = l->Get<string>("id");
+    string type_s    = l->Get<string>("type");
+    string equipable = l->Get<string>("equipable");
+    string desc      = l->Get<string>("description");
     Equipment::Type type = [] (const string& type) {
       if (type == "weapon") return Equipment::Type::kWeapon;
       if (type == "armor") return Equipment::Type::kArmor;
@@ -204,18 +204,18 @@ void ConfigLoader::ParseEquipments() {
 
     Equipment* equipment = new Equipment(id, type);
 
-    this->lua_config_->ForEachTableEntry("effects", [=, &equipment] () {
-      string type = this->lua_config_->Get<string>("type");
-      string event = this->lua_config_->Get<string>("event");
+    l->ForEachTableEntry("effects", [=, &equipment] (lua::Lua* l, const string&) {
+      string type = l->Get<string>("type");
+      string event = l->Get<string>("event");
       // XXX Fix generation of EventEffect : gets different by type
-      int amount = this->lua_config_->Get<int>("ratio");
+      int amount = l->Get<int>("ratio");
       GeneralEventEffect* effect = GenerateGeneralEventEffect(type, event, amount);
       equipment->AddGeneralEffect(effect);
     });
-    this->lua_config_->ForEachTableEntry("modifiers", [=, &equipment] () {
-      string   stat_s     = this->lua_config_->Get<string>("stat");
-      uint16_t addend     = this->lua_config_->GetOpt<uint16_t>("addend");
-      uint16_t multiplier = this->lua_config_->GetOpt<uint16_t>("multiplier");
+    l->ForEachTableEntry("modifiers", [=, &equipment] (lua::Lua* l, const string&) {
+      string   stat_s     = l->Get<string>("stat");
+      uint16_t addend     = l->GetOpt<uint16_t>("addend");
+      uint16_t multiplier = l->GetOpt<uint16_t>("multiplier");
       StatModifier* mod = new StatModifier(id, StatStrToIdx(stat_s), addend, multiplier);
       equipment->AddModifier(mod);
     });
@@ -225,11 +225,11 @@ void ConfigLoader::ParseEquipments() {
 
 void ConfigLoader::ParseHeroTemplates() {
   rc_.hero_tpl_manager = new HeroTemplateManager();
-  lua_config_->ForEachTableEntry("gconf.heroes", [this] () {
-    string id         = this->lua_config_->Get<string>("id");
-    string uclass     = this->lua_config_->Get<string>("class");
-    vector<int> statr = this->lua_config_->Get<vector<int>>("stat");
-    string model      = this->lua_config_->GetOpt<string>("model");
+  lua_config_->ForEachTableEntry("gconf.heroes", [this] (lua::Lua* l, const string&) {
+    string id         = l->Get<string>("id");
+    string uclass     = l->Get<string>("class");
+    vector<int> statr = l->Get<vector<int>>("stat");
+    string model      = l->GetOpt<string>("model");
     if (model == "nil") {
       model = "infantry-1-red"; // XXX hardcoded. Make this to find default model
     }

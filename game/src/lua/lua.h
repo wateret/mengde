@@ -32,7 +32,7 @@ class LuaClass {
 
 class Lua {
  public:
-  typedef function<void()> ForEachEntryFunc;
+  typedef function<void(Lua* lua, const std::string& key)> ForEachEntryFunc;
   Lua();
   Lua(lua_State*);
   virtual ~Lua();
@@ -56,8 +56,8 @@ class Lua {
   template<typename T>
   vector<T> GetVector(const string& name = "") {
     vector<T> vec;
-    ForEachTableEntry(name, [&] () {
-      T val = this->GetTop<T>();
+    ForEachTableEntry(name, [&] (Lua* lua, const std::string&) {
+      T val = lua->GetTop<T>();
       vec.push_back(val);
     });
     // FIXME pop or not?
@@ -319,8 +319,8 @@ class Lua {
   template<typename T>
   typename std::enable_if<is_vector<T>::value, T>::type GetTop() {
     T vec;
-    ForEachTableEntry("", [&] () {
-      typename T::value_type val = this->GetTop<typename T::value_type>();
+    ForEachTableEntry("", [&] (Lua* lua, const std::string&) {
+      typename T::value_type val = lua->GetTop<typename T::value_type>();
       vec.push_back(val);
     });
     return vec;
