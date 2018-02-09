@@ -29,6 +29,8 @@ struct Attribute {
       : atk(atk), def(def), dex(dex), itl(itl), mor(mor) {
   }
 
+  void ApplyModifier(const Attribute& addend, const Attribute& multiplier);
+
   int GetValueByIndex(int index) const {
     // Fragile but fast implementation
     return *((int*)(this) + index);
@@ -58,6 +60,9 @@ struct Attribute {
 #define ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(OP, TYPE) \
   Attribute& operator OP (Attribute& lhs, TYPE rhs); \
 
+#define ATTRIBUTE_COMPARATOR_NUMERIC_DECL(OP, TYPE) \
+  bool operator OP (const Attribute& lhs, TYPE rhs);
+
 ATTRIBUTE_BIN_OP_DECL(+)
 ATTRIBUTE_BIN_OP_DECL(-)
 ATTRIBUTE_BIN_OP_DECL(*)
@@ -78,10 +83,17 @@ ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(-=, int)
 ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(*=, int)
 ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(/=, int)
 
+ATTRIBUTE_COMPARATOR_NUMERIC_DECL(==, int)
+ATTRIBUTE_COMPARATOR_NUMERIC_DECL(<, int)
+ATTRIBUTE_COMPARATOR_NUMERIC_DECL(>, int)
+ATTRIBUTE_COMPARATOR_NUMERIC_DECL(<=, int)
+ATTRIBUTE_COMPARATOR_NUMERIC_DECL(<=, int)
+
 #undef ATTRIBUTE_BIN_OP_DECL
 #undef ATTRIBUTE_BIN_OP_NUMERIC_DECL
 #undef ATTRIBUTE_ASSIGN_OP_DECL
 #undef ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL
+#undef ATTRIBUTE_COMPARATOR_NUMERIC_DECL
 
 struct HpMp {
   int hp;

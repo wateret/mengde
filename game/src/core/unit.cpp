@@ -84,9 +84,7 @@ void Unit::UpdateStat() {
     Attribute addends = modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
     Attribute multipliers = modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
-    current_attr_ += addends;
-    current_attr_ *= multipliers + 100;
-    current_attr_ /= 100;
+    current_attr_.ApplyModifier(addends, multipliers);
   }
 }
 

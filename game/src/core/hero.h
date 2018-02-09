@@ -47,7 +47,7 @@ class Hero : public IEquipper {
   Level     level_;
   Attribute hero_attr_;
   Attribute unit_attr_;
-  Attribute unit_pure_attr_;
+  Attribute unit_pure_attr_; // Cached data
   HpMp      hpmp_;
 };
 

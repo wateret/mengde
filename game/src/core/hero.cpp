@@ -86,9 +86,7 @@ void Hero::UpdateStat() {
     Attribute addends = equipment_set_->CalcAddends();
     Attribute multipliers = equipment_set_->CalcMultipliers();
 
-    unit_attr_ += addends;
-    unit_attr_ *= multipliers + 100;
-    unit_attr_ /= 100;
+    unit_attr_.ApplyModifier(multipliers, addends);
   }
 }
 

@@ -208,7 +208,7 @@ void ConfigLoader::ParseEquipments() {
       string type = this->lua_config_->Get<string>("type");
       string event = this->lua_config_->Get<string>("event");
       // XXX Fix generation of EventEffect : gets different by type
-      int amount = this->lua_config_->Get<int>("amount");
+      int amount = this->lua_config_->Get<int>("ratio");
       GeneralEventEffect* effect = GenerateGeneralEventEffect(type, event, amount);
       equipment->AddGeneralEffect(effect);
     });
