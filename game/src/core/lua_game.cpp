@@ -7,7 +7,7 @@
 using namespace mengde::core;
 
 static Vec2D GetVec2DFromLua(lua::Lua* lua) {
-  vector<int> vec = lua->Get<vector<int>>();
+  vector<int> vec = lua->Pop<vector<int>>();
   return {vec[0], vec[1]};
 }
 
@@ -16,9 +16,9 @@ static Vec2D GetVec2DFromLua(lua::Lua* lua) {
 
 LUA_IMPL(AppointHero) {
   lua::Lua lua(L);
-  uint16_t level = lua.Get<uint16_t>();
-  string   id    = lua.Get<string>();
-  Game*    game =  lua.Get<Game*>();
+  uint16_t level = lua.Pop<uint16_t>();
+  string   id    = lua.Pop<string>();
+  Game*    game =  lua.Pop<Game*>();
 
   game->AppointHero(id, level);
 
@@ -28,8 +28,8 @@ LUA_IMPL(AppointHero) {
 LUA_IMPL(GenerateOwnUnit) {
   lua::Lua lua(L);
   Vec2D  pos = GetVec2DFromLua(&lua);
-  string id  = lua.Get<string>();
-  Game* game = lua.Get<Game*>();
+  string id  = lua.Pop<string>();
+  Game* game = lua.Pop<Game*>();
 
   int unit_no = game->GenerateOwnUnit(id, pos);
 
@@ -40,10 +40,10 @@ LUA_IMPL(GenerateOwnUnit) {
 LUA_IMPL(GenerateUnit) {
   lua::Lua lua(L);
   Vec2D    pos   = GetVec2DFromLua(&lua);
-  Force    force = (Force)lua.Get<int>();
-  uint16_t level = lua.Get<uint16_t>();
-  string   id    = lua.Get<string>();
-  Game*    game  = lua.Get<Game*>();
+  Force    force = (Force)lua.Pop<int>();
+  uint16_t level = lua.Pop<uint16_t>();
+  string   id    = lua.Pop<string>();
+  Game*    game  = lua.Pop<Game*>();
 
   int unit_no = game->GenerateUnit(id, level, force, pos);
 
@@ -53,9 +53,9 @@ LUA_IMPL(GenerateUnit) {
 
 LUA_IMPL(ObtainEquipment) {
   lua::Lua lua(L);
-  uint16_t amount = lua.Get<uint16_t>();
-  string   id     = lua.Get<string>();
-  Game*    game   = lua.Get<Game*>();
+  uint16_t amount = lua.Pop<uint16_t>();
+  string   id     = lua.Pop<string>();
+  Game*    game   = lua.Pop<Game*>();
 
   game->ObtainEquipment(id, amount);
 
@@ -64,7 +64,7 @@ LUA_IMPL(ObtainEquipment) {
 
 LUA_IMPL(GetNumEnemiesAlive) {
   lua::Lua lua(L);
-  Game* game = lua.Get<Game*>();
+  Game* game = lua.Pop<Game*>();
 
   uint32_t ret = game->GetNumEnemiesAlive();
 
@@ -74,7 +74,7 @@ LUA_IMPL(GetNumEnemiesAlive) {
 
 LUA_IMPL(GetNumOwnsAlive) {
   lua::Lua lua(L);
-  Game* game = lua.Get<Game*>();
+  Game* game = lua.Pop<Game*>();
 
   uint32_t ret = game->GetNumOwnsAlive();
 
@@ -85,8 +85,8 @@ LUA_IMPL(GetNumOwnsAlive) {
 LUA_IMPL(PushCmdMove) {
   lua::Lua lua(L);
   Vec2D pos     = GetVec2DFromLua(&lua);
-  int   unit_id = lua.Get<int>();
-  Game* game    = lua.Get<Game*>();
+  int   unit_id = lua.Pop<int>();
+  Game* game    = lua.Pop<Game*>();
 
   Unit* unit = game->GetUnit(unit_id);
   game->Push(unique_ptr<CmdMove>(new CmdMove(unit, pos)));
@@ -96,9 +96,9 @@ LUA_IMPL(PushCmdMove) {
 
 LUA_IMPL(PushCmdSpeak) {
   lua::Lua lua(L);
-  string words = lua.Get<string>();
-  int unit_id  = lua.Get<int>();
-  Game* game   = lua.Get<Game*>();
+  string words = lua.Pop<string>();
+  int unit_id  = lua.Pop<int>();
+  Game* game   = lua.Pop<Game*>();
 
   Unit* unit = game->GetUnit(unit_id);
   game->Push(unique_ptr<CmdSpeak>(new CmdSpeak(unit, words)));

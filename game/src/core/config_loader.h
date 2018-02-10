@@ -14,7 +14,7 @@ namespace lua {
 namespace mengde {
 namespace core {
 
-class EventEffect;
+class GeneralEventEffect;
 
 class ConfigLoader {
  public:

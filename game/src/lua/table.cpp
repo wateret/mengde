@@ -13,8 +13,21 @@ void Table::Dump() {
   printf("Table {\n");
   for (auto e : values_) {
     auto& key = e.first;
+    auto value = e.second;
     printf("  %s: ", key.c_str());
-    printf("value");
+    switch (value->type()) {
+      case Value::Type::kInt32:
+        printf("\"%d\"", value->Get<int32_t>());
+        break;
+
+      case Value::Type::kString:
+        printf("\"%s\"", value->Get<std::string>().c_str());
+        break;
+
+      default:
+        printf("[some value]");
+        break;
+    }
     printf("\n");
   }
   printf("}\n");

@@ -6,6 +6,7 @@
 #include <functional>
 
 #include "util/common.h"
+#include "table.h"
 
 extern "C" {
 
@@ -70,14 +71,11 @@ class Lua {
   T Get(const string& var_expr = "") {
     ASSERT(L != nullptr);
 
-    int initial_stack_size = GetStackSize();
-    bool get_top = var_expr.empty();
-    int to_be_popped = get_top ? 1 : GetToStack(var_expr);
+    int to_be_popped = GetToStack(var_expr);
     T result = GetTop<T>();
 
     PopStack(to_be_popped);
 
-    ASSERT(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
     return result;
   }
 
@@ -87,18 +85,21 @@ class Lua {
   T GetOpt(const string& var_expr = "") {
     ASSERT(L != nullptr);
 
-    int initial_stack_size = GetStackSize();
-    bool get_top = var_expr.empty();
-
-    int to_be_popped = get_top ? 1 : GetToStackOpt(var_expr);
+    int to_be_popped = GetToStackOpt(var_expr);
     T result = GetTopOpt<T>();
 
     PopStack(to_be_popped);
 
-    ASSERT(initial_stack_size == GetStackSize() + (get_top ? 1 : 0));
     return result;
   }
 
+  // Get a required entry and remove it from stack
+  template<typename T>
+  T Pop() {
+    T result = Get<T>();
+    PopStack(1);
+    return result;
+  }
 
   template<typename T>
   void SetGlobal(const string& name, T val) {
@@ -204,6 +205,7 @@ class Lua {
 
   template<typename T> using is_bool   = std::is_same<bool,   T>;
   template<typename T> using is_string = std::is_same<string, T>;
+  template<typename T> using is_table  = std::is_same<Table*, T>;
 
   template<typename T> struct is_vector { static const bool value = false; };
   template<typename T> struct is_vector<std::vector<T>> { static const bool value = true; };
@@ -288,10 +290,10 @@ class Lua {
   // Pointer types
 
   template<typename T>
-  typename std::enable_if<std::is_pointer<T>::value, T>::type GetDefault() { return nullptr; }
+  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetDefault() { return nullptr; }
 
   template<typename T>
-  typename std::enable_if<std::is_pointer<T>::value, T>::type GetTop() {
+  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetTop() {
     if (lua_islightuserdata(L, -1)) {
       return reinterpret_cast<T>(lua_touserdata(L, -1));
     } else {
@@ -301,13 +303,44 @@ class Lua {
   }
 
   template<typename T>
-  typename std::enable_if<std::is_pointer<T>::value, T>::type GetTopOpt() {
+  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetTopOpt() {
     if (lua_islightuserdata(L, -1)) {
       return reinterpret_cast<T>(lua_touserdata(L, -1));
     } else {
       return GetDefault<T>();
     }
   }
+
+  // lua::Table type
+
+  template<typename T>
+  typename std::enable_if<is_table<T>::value, T>::type GetDefault() { return nullptr; }
+
+  template<typename T>
+  typename std::enable_if<is_table<T>::value, T>::type GetTop() {
+    Table* table = new Table();
+    ForEachTableEntry("", [&] (Lua*, const std::string& key) {
+      if (lua_istable(L, -1)) {
+        table->Add(key, Get<Table*>());
+      } else if (lua_isnumber(L, -1)) {
+        // FIXME handle double and other numeric types
+        table->Add(key, Get<int32_t>());
+      } else if (lua_isstring(L, -1)) {
+        table->Add(key, Get<std::string>());
+      } else if (lua_isuserdata(L, -1)) {
+        table->Add(key, Get<void*>());
+      } else {
+        assert(false && "Unsupported type.");
+      }
+    });
+    return table;
+  }
+
+  /*
+  template<typename T>
+  typename std::enable_if<is_table<T>::value, T>::type GetTopOpt() {
+  }
+  */
 
   // Vector types
 

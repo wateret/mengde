@@ -64,9 +64,9 @@ void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
 
   lua_pushnil(L);
   while (lua_next(L, -2)) {
-    // Only string keys are supported
+    // Lua can have any type for table key, but we support only string keys.
     std::string key = "";
-    if (lua_isstring(L, 2)) key = lua_tostring(L, -2);
+    if (!lua_isnumber(L, -2) && lua_isstring(L, -2)) key = lua_tostring(L, -2);
     cb(this, key);
     lua_pop(L, 1);
   }

@@ -205,12 +205,17 @@ void ConfigLoader::ParseEquipments() {
     Equipment* equipment = new Equipment(id, type);
 
     l->ForEachTableEntry("effects", [=, &equipment] (lua::Lua* l, const string&) {
+      LOG_DEBUG("Effect Parsing");
+      auto table = l->Get<lua::Table*>();
+      (void)table;
+      /*
       string type = l->Get<string>("type");
       string event = l->Get<string>("event");
       // XXX Fix generation of EventEffect : gets different by type
       int amount = l->Get<int>("ratio");
       GeneralEventEffect* effect = GenerateGeneralEventEffect(type, event, amount);
       equipment->AddGeneralEffect(effect);
+      */
     });
     l->ForEachTableEntry("modifiers", [=, &equipment] (lua::Lua* l, const string&) {
       string   stat_s     = l->Get<string>("stat");

@@ -13,6 +13,7 @@ class Table {
   template <typename T>
   void Add(const std::string& key, T value) {
     values_.insert({key, new Value(value)});
+    Dump();
   }
 
   template <typename T>
