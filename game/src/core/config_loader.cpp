@@ -16,6 +16,46 @@
 namespace mengde {
 namespace core {
 
+EventEffectLoader::EventEffectLoader() {
+  gee_map_.insert({"on_action_done", event::GeneralEvent::kActionDone});
+  gee_map_.insert({"on_turn_begin", event::GeneralEvent::kTurnBegin});
+}
+
+GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table* table) const {
+  auto str_effect = table->Get<std::string>("effect");
+  auto str_event = table->Get<std::string>("event");
+
+  event::GeneralEvent event = event::GeneralEvent::kNone;
+  auto found = gee_map_.find(str_event);
+  if (found == gee_map_.end()) {
+    throw "Such event '" + str_event + "' does not exist";
+  } else {
+    event = found->second;
+  }
+  ASSERT(event != event::GeneralEvent::kNone);
+
+  if (str_effect == "restore_hp") {
+    auto mult = table->Get<int>("multiplier", 0);
+    auto add = table->Get<int>("addend", 0);
+    return new GEERestoreHp(event, mult, add);
+  }
+
+  throw "Such GeneralEventEffect '" + str_effect + "' does not exist";
+}
+
+bool EventEffectLoader::IsGeneralEventEffect(const std::string& key) const {
+  return gee_map_.find(key) != gee_map_.end();
+}
+
+bool EventEffectLoader::IsOnCmdEventEffect(const std::string& key) const {
+  return ocee_map_.find(key) != ocee_map_.end();
+}
+
+const EventEffectLoader& EventEffectLoader::instance() {
+  static EventEffectLoader inst;
+  return inst;
+}
+
 ConfigLoader::ConfigLoader(const Path& filename)
     : lua_config_(nullptr),
       rc_() {
@@ -35,23 +75,6 @@ ConfigLoader::~ConfigLoader() {
   // we assume that corresponding Game object will do that.
 
   delete lua_config_;
-}
-
-GeneralEventEffect* ConfigLoader::GenerateGeneralEventEffect(const string& type, const string& event, int amount) {
-  event::GeneralEvent event_type = event::GeneralEvent::kNone;
-  if (event == "on_action_done") {
-    event_type = event::GeneralEvent::kActionDone;
-  }
-  else if (event == "on_turn_begin") {
-    event_type = event::GeneralEvent::kTurnBegin;
-  }
-  ASSERT(event_type != event::GeneralEvent::kNone);
-
-  if (type == "restore_hp") {
-    return new GEERestoreHp(event_type, amount, 0);
-  }
-  UNREACHABLE("Unknown ID");
-  return nullptr;
 }
 
 uint16_t ConfigLoader::StatStrToIdx(const string& s) {
@@ -205,17 +228,17 @@ void ConfigLoader::ParseEquipments() {
     Equipment* equipment = new Equipment(id, type);
 
     l->ForEachTableEntry("effects", [=, &equipment] (lua::Lua* l, const string&) {
-      LOG_DEBUG("Effect Parsing");
       auto table = l->Get<lua::Table*>();
-      (void)table;
-      /*
-      string type = l->Get<string>("type");
-      string event = l->Get<string>("event");
-      // XXX Fix generation of EventEffect : gets different by type
-      int amount = l->Get<int>("ratio");
-      GeneralEventEffect* effect = GenerateGeneralEventEffect(type, event, amount);
-      equipment->AddGeneralEffect(effect);
-      */
+      auto event = table->Get<std::string>("event");
+      auto ee_loader = EventEffectLoader::instance();
+      if (ee_loader.IsGeneralEventEffect(event)) {
+        equipment->AddGeneralEffect(EventEffectLoader::instance().CreateGeneralEventEffect(table));
+      } else if (ee_loader.IsOnCmdEventEffect(event)) {
+//        equipment->AddGeneralEffect(EventEffectLoader::instance().CreateGeneralEventEffect(table));
+      } else {
+        throw "Such event '" + event + "' does not exist.";
+      }
+      delete table; // TODO Do not manually delete pointer
     });
     l->ForEachTableEntry("modifiers", [=, &equipment] (lua::Lua* l, const string&) {
       string   stat_s     = l->Get<string>("stat");

@@ -17,7 +17,7 @@ void Table::Dump() {
     printf("  %s: ", key.c_str());
     switch (value->type()) {
       case Value::Type::kInt32:
-        printf("\"%d\"", value->Get<int32_t>());
+        printf("%d", value->Get<int32_t>());
         break;
 
       case Value::Type::kString:

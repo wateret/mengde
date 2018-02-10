@@ -9,12 +9,33 @@ class Path;
 
 namespace lua {
   class Lua;
+  class Table;
 }
 
 namespace mengde {
 namespace core {
 
 class GeneralEventEffect;
+
+class EventEffectLoader {
+ public:
+  static const EventEffectLoader& instance();
+
+ public:
+  ~EventEffectLoader() = default;
+
+  GeneralEventEffect* CreateGeneralEventEffect(const lua::Table*) const;
+  OnCmdEventEffect* CreateOnCmdEventEffect(const lua::Table*) const;
+  bool IsGeneralEventEffect(const std::string& key) const;
+  bool IsOnCmdEventEffect(const std::string& key) const;
+
+ private:
+  EventEffectLoader();
+
+ private:
+  std::unordered_map<std::string, event::GeneralEvent> gee_map_;
+  std::unordered_map<std::string, event::OnCmdEvent> ocee_map_;
+};
 
 class ConfigLoader {
  public:
@@ -30,7 +51,6 @@ class ConfigLoader {
   void ParseHeroTemplates();
   void ParseStages();
   uint16_t StatStrToIdx(const string&);
-  GeneralEventEffect* GenerateGeneralEventEffect(const string&, const string&, int);
 
  private:
   ::lua::Lua* lua_config_;
