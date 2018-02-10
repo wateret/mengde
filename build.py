@@ -75,7 +75,7 @@ def main():
     start_time = time.time()
     check_run_cmd("make", make_args)
     elapsed_time = time.time() - start_time
-    print("Build Time is %d:%02d.%2d" % (elapsed_time // 60, elapsed_time % 60, (elapsed_time * 100) % 100))
+    print("Build Time is %d:%02d.%02d" % (elapsed_time // 60, elapsed_time % 60, (elapsed_time * 100) % 100))
 
 if __name__ == "__main__":
     main()
