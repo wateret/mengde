@@ -3,16 +3,6 @@
 
 namespace mengde {
 namespace core {
-
-enum class EventType { // TODO to be removed
-  kOnNone,
-  kOnTurnBegin,
-  kOnPreBasicAttack,
-  kOnPreBasicAttacked,
-  kOnDamaged,
-  kOnActionDone
-};
-
 namespace event {
 
 enum class GeneralEvent {
@@ -35,7 +25,6 @@ enum class OnCmdEvent {
 };
 
 } // namespace event
-
 } // namespace core
 } // namespace mengde
 

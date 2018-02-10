@@ -225,7 +225,6 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
 
   unique_ptr<CmdQueue> ret(new CmdQueue());
 
-
   if (!IsCounter()) {
     atk_->RaiseEvent(event::OnCmdEvent::kBasicAttack, this);
     def_->RaiseEvent(event::OnCmdEvent::kBasicAttacked, this);
