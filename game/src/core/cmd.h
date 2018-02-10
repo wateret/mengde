@@ -84,6 +84,7 @@ class CmdTwoUnits : public Cmd {
  public:
   Unit* GetUnitAtk() const { return atk_; }
   Unit* GetUnitDef() const { return def_; }
+  void SwapAtkDef();
 
  protected:
   Unit* atk_;

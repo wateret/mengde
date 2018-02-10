@@ -1,5 +1,7 @@
 #include "cmd.h"
 
+#include <algorithm>
+
 #include "formulae.h"
 #include "game.h"
 #include "magic.h"
@@ -167,6 +169,10 @@ void CmdTwoUnits::DebugPrint() const {
 }
 #endif
 
+void CmdTwoUnits::SwapAtkDef() {
+  std::swap(atk_, def_);
+}
+
 // CmdAct
 
 CmdAct::CmdAct(Unit* atk, Unit* def) : CmdTwoUnits(atk, def) {
@@ -218,6 +224,12 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
            def_->GetId().c_str());
 
   unique_ptr<CmdQueue> ret(new CmdQueue());
+
+
+  if (!IsCounter()) {
+    atk_->RaiseEvent(event::OnCmdEvent::kBasicAttack, this);
+    def_->RaiseEvent(event::OnCmdEvent::kBasicAttacked, this);
+  }
 
   // Perform and get result
   bool success = TryBasicAttack();

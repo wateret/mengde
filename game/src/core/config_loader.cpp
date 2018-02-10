@@ -17,23 +17,22 @@ namespace mengde {
 namespace core {
 
 EventEffectLoader::EventEffectLoader() {
-  gee_map_.insert({"on_action_done", event::GeneralEvent::kActionDone});
-  gee_map_.insert({"on_turn_begin", event::GeneralEvent::kTurnBegin});
+  gee_map_.insert({"action_done", event::GeneralEvent::kActionDone});
+  gee_map_.insert({"turn_begin", event::GeneralEvent::kTurnBegin});
+  ocee_map_.insert({"on_basic_attacked", event::OnCmdEvent::kBasicAttacked});
 }
 
 GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table* table) const {
   auto str_effect = table->Get<std::string>("effect");
   auto str_event = table->Get<std::string>("event");
 
-  event::GeneralEvent event = event::GeneralEvent::kNone;
+  // Find Event Type
   auto found = gee_map_.find(str_event);
-  if (found == gee_map_.end()) {
-    throw "Such event '" + str_event + "' does not exist";
-  } else {
-    event = found->second;
-  }
+  ASSERT(found != gee_map_.end());
+  event::GeneralEvent event = found->second;
   ASSERT(event != event::GeneralEvent::kNone);
 
+  // Find Effect Type
   if (str_effect == "restore_hp") {
     auto mult = table->Get<int>("multiplier", 0);
     auto add = table->Get<int>("addend", 0);
@@ -41,6 +40,24 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table
   }
 
   throw "Such GeneralEventEffect '" + str_effect + "' does not exist";
+}
+
+OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table* table) const {
+  auto str_effect = table->Get<std::string>("effect");
+  auto str_event = table->Get<std::string>("event");
+
+  // Find Event Type
+  auto found = ocee_map_.find(str_event);
+  ASSERT(found != ocee_map_.end());
+  event::OnCmdEvent event = found->second;
+  ASSERT(event != event::OnCmdEvent::kNone);
+
+  // Find Effect Type
+  if (str_effect == "preemptive_attack") {
+    return new OCEEPreemptiveAttack(event);
+  }
+
+  throw "Such OnCmdEventEffect '" + str_effect + "' does not exist";
 }
 
 bool EventEffectLoader::IsGeneralEventEffect(const std::string& key) const {
@@ -232,9 +249,9 @@ void ConfigLoader::ParseEquipments() {
       auto event = table->Get<std::string>("event");
       auto ee_loader = EventEffectLoader::instance();
       if (ee_loader.IsGeneralEventEffect(event)) {
-        equipment->AddGeneralEffect(EventEffectLoader::instance().CreateGeneralEventEffect(table));
+        equipment->AddGeneralEffect(ee_loader.CreateGeneralEventEffect(table));
       } else if (ee_loader.IsOnCmdEventEffect(event)) {
-//        equipment->AddGeneralEffect(EventEffectLoader::instance().CreateGeneralEventEffect(table));
+        equipment->AddOnCmdEffect(ee_loader.CreateOnCmdEventEffect(table));
       } else {
         throw "Such event '" + event + "' does not exist.";
       }
