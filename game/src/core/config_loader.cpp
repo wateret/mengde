@@ -19,7 +19,8 @@ namespace core {
 EventEffectLoader::EventEffectLoader() {
   gee_map_.insert({"action_done", event::GeneralEvent::kActionDone});
   gee_map_.insert({"turn_begin", event::GeneralEvent::kTurnBegin});
-  ocee_map_.insert({"on_basic_attacked", event::OnCmdEvent::kBasicAttacked});
+  ocee_map_.insert({"on_normal_attack", event::OnCmdEvent::kNormalAttack});
+  ocee_map_.insert({"on_normal_attacked", event::OnCmdEvent::kNormalAttacked});
 }
 
 GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table* table) const {
@@ -55,6 +56,10 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table* ta
   // Find Effect Type
   if (str_effect == "preemptive_attack") {
     return new OCEEPreemptiveAttack(event);
+  } else if (str_effect == "enhance_basic_attack") {
+    auto mult = table->Get<int>("multiplier", 0);
+    auto add = table->Get<int>("addend", 0);
+    return new OCEEEnhanceBasicAttack(event, mult, add);
   }
 
   throw "Such OnCmdEventEffect '" + str_effect + "' does not exist";

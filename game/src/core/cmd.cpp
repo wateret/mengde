@@ -201,7 +201,7 @@ unique_ptr<Cmd> CmdEndAction::Do(Game* game) {
 // CmdBasicAttack
 
 CmdBasicAttack::CmdBasicAttack(Unit* atk, Unit* def, Type type)
-    : CmdAct(atk, def), type_(type) {
+    : CmdAct(atk, def), type_(type), multiplier_(0), addend_(0) {
   // Either one of kActive or kCounter must be set
   ASSERT(type & Type::kActiveOrCounter);
   // Cannot set flag kActive and kCounter at the same time
@@ -218,7 +218,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   def_->SetDirection(OppositeDirection(dir));
 
   LOG_INFO("%s(%s) '%s' -> '%s'",
-           IsCounter() ? "CounterAttack" : "BasicAttack",
+           IsCounter() ? "CounterAttack" : "Attack",
            IsSecond() ? "2nd" : "1st",
            atk_->GetId().c_str(),
            def_->GetId().c_str());
@@ -226,8 +226,11 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   unique_ptr<CmdQueue> ret(new CmdQueue());
 
   if (!IsCounter()) {
-    atk_->RaiseEvent(event::OnCmdEvent::kBasicAttack, this);
-    def_->RaiseEvent(event::OnCmdEvent::kBasicAttacked, this);
+    atk_->RaiseEvent(event::OnCmdEvent::kNormalAttack, this);
+    def_->RaiseEvent(event::OnCmdEvent::kNormalAttacked, this);
+  } else {
+    atk_->RaiseEvent(event::OnCmdEvent::kCounterAttack, this);
+    def_->RaiseEvent(event::OnCmdEvent::kCounterAttacked, this);
   }
 
   // Perform and get result
@@ -241,6 +244,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
     if (IsSecond()) {
       damage *= 0.75;
     }
+    damage = std::max(damage, 1);
     ret->Append(unique_ptr<CmdHit>(new CmdHit(atk_, def_, CmdActResult::Type::kBasicAttack, hit_type, damage)));
   } else {
     ret->Append(unique_ptr<CmdMiss>(new CmdMiss(atk_, def_, CmdActResult::Type::kBasicAttack)));
@@ -285,7 +289,9 @@ bool CmdBasicAttack::TryBasicAttackDouble() {
 
 int CmdBasicAttack::ComputeDamage(Map* map) {
   int damage = Formulae::ComputeBasicAttackDamage(map, atk_, def_);
-  if (IsCounter()) damage = damage * 3 / 4;
+  damage += addend_;
+  damage = damage * (100 + multiplier_) / 100;
+  damage = std::max(damage, 0);
   return damage;
 }
 

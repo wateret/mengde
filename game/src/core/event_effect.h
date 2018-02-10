@@ -64,12 +64,12 @@ class OnCmdEventEffect : public EventEffectBase {
 
 class GEERestoreHp : public GeneralEventEffect {
  public:
-  GEERestoreHp(event::GeneralEvent type, int ratio, int amount, uint16_t turns_left = kTurnInfinity);
+  GEERestoreHp(event::GeneralEvent type, int multiplier, int addend, uint16_t turns_left = kTurnInfinity);
   virtual unique_ptr<Cmd> OnEvent(Unit* unit) override;
 
  private:
-  int ratio_;
-  int adder_;
+  int multiplier_;
+  int addend_;
 };
 
 // OnCmdEventEffect Dervatives
@@ -78,6 +78,16 @@ class OCEEPreemptiveAttack : public OnCmdEventEffect {
  public:
   OCEEPreemptiveAttack(event::OnCmdEvent type, uint16_t turns_left = kTurnInfinity);
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
+};
+
+class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
+ public:
+  OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multiplier, int addend, uint16_t turns_left = kTurnInfinity);
+  virtual void OnEvent(Unit* unit, CmdAct* act) override;
+
+ private:
+  int multiplier_;
+  int addend_;
 };
 
 } // namespace core

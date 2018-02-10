@@ -130,6 +130,8 @@ class CmdBasicAttack : public CmdAct {
  public:
   bool IsCounter() { return type_ & Type::kCounter; }
   bool IsSecond() { return type_ & Type::kSecond; }
+  void AddToMultiplier(int m) { multiplier_ += m; }
+  void AddToAddend(int m) { addend_ += m; }
 
  private:
   bool TryBasicAttack();
@@ -139,6 +141,8 @@ class CmdBasicAttack : public CmdAct {
 
  private:
   Type type_;
+  int  multiplier_;
+  int  addend_;
 };
 
 class Magic;

@@ -8,18 +8,23 @@ namespace event {
 enum class GeneralEvent {
   kNone,
   kTurnBegin,
-  kPreBasicAttack,
-  kPreBasicAttacked,
-  kPostBasicAttack,
-  kPostBasicAttacked,
-  kDamaged,
+  kPreNormalAttack,
+  kPreNormalAttacked,
+  kPostNormalAttack,
+  kPostNormalAttacked,
+  kPreCounterAttack,
+  kPreCounterAttacked,
+  kPostCounterAttack,
+  kPostCounterAttacked,
   kActionDone
 };
 
 enum class OnCmdEvent {
   kNone,
-  kBasicAttack,
-  kBasicAttacked,
+  kNormalAttack,
+  kNormalAttacked,
+  kCounterAttack,
+  kCounterAttacked,
   kDamaged,
   kActionDone
 };
