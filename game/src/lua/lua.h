@@ -1,6 +1,7 @@
 #ifndef LUA_SCRIPT_H_
 #define LUA_SCRIPT_H_
 
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include <functional>
@@ -17,6 +18,42 @@ extern "C" {
 }
 
 namespace lua {
+
+class LuaException : public std::exception {
+ public:
+  LuaException() : std::exception() {}
+};
+
+class UndeclaredVariableException : public LuaException {
+ public:
+  UndeclaredVariableException(const std::string& var_expr) : LuaException(), var_expr_(var_expr) {}
+  virtual const char* what() const throw() { return (var_expr_ + " is undeclared.").c_str(); }
+
+ private:
+  std::string var_expr_;
+};
+
+class WrongTypeException : public LuaException {
+ public:
+  WrongTypeException(const std::string& type_expected, const std::string& type_actual)
+      : LuaException(), type_expected_(type_expected), type_actual_(type_actual) {}
+  virtual const char* what() const throw() {
+    return ("Wrong type - (Expected: " + type_expected_ + ", Actual: " + type_actual_ + ")").c_str();
+  }
+
+ private:
+  std::string type_expected_;
+  std::string type_actual_;
+};
+
+class ScriptRuntimeException : public LuaException {
+ public:
+  ScriptRuntimeException(const std::string& message) : LuaException(), message_(message) {}
+  virtual const char* what() const throw() { return message_.c_str(); }
+
+ private:
+  std::string message_;
+};
 
 class LuaClass {
  public:
@@ -39,7 +76,7 @@ class Lua {
   virtual ~Lua();
 
   void ForEachTableEntry(const string&, ForEachEntryFunc);
-  void Run(const string& filename);
+  void RunFile(const string& filename);
   void RunScript(const string& code);
   void Register(const string& name, lua_CFunction);
 
@@ -183,8 +220,7 @@ class Lua {
           // Cleanup and return or throw
           PopStack(level);
           if (!optional) {
-            LogError(var + " is not defined");
-            throw "GetToStack Error";
+            throw UndeclaredVariableException(var_expr);
           }
           return 0;
         }
@@ -220,8 +256,7 @@ class Lua {
   template<typename T>
   typename std::enable_if<std::is_arithmetic<T>::value && !is_bool<T>::value, T>::type GetTop() {
     if (!lua_isnumber(L, -1)) {
-      LogError("Not a number.");
-      throw "Not a number";
+      throw WrongTypeException("number", "?");
     }
     return (T)lua_tonumber(L, -1);
   }
@@ -247,8 +282,7 @@ class Lua {
     if (lua_isboolean(L, -1)) {
       return (bool)lua_toboolean(L, -1);
     } else {
-      LogError("Not a boolean.");
-      throw "Not a boolean";
+      throw WrongTypeException("boolean", "?");
     }
   }
 
@@ -273,8 +307,7 @@ class Lua {
     if (lua_isstring(L, -1)) {
       return string(lua_tostring(L, -1));
     } else {
-      LogError("Not a string.");
-      throw "Not a string";
+      throw WrongTypeException("string", "?");
     }
   }
 
@@ -297,8 +330,7 @@ class Lua {
     if (lua_islightuserdata(L, -1)) {
       return reinterpret_cast<T>(lua_touserdata(L, -1));
     } else {
-      LogError("Not a pointer.");
-      throw "Not a pointer";
+      throw WrongTypeException("pointer", "?");
     }
   }
 

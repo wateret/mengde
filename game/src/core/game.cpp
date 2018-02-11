@@ -85,7 +85,7 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
   }
 
   // Run the main script
-  lua->Run(stage_script_path.ToString());
+  lua->RunFile(stage_script_path.ToString());
   return lua;
 }
 

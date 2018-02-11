@@ -83,13 +83,24 @@ ConfigLoader::ConfigLoader(const Path& filename)
       rc_() {
   Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
   lua_config_ = new ::lua::Lua();
-  lua_config_->Run(path.ToString());
 
-  ParseUnitClassesAndTerrains();
-  ParseMagics();
-  ParseEquipments();
-  ParseHeroTemplates();
-  ParseStages();
+  try {
+    lua_config_->RunFile(path.ToString());
+    ParseUnitClassesAndTerrains();
+    ParseMagics();
+    ParseEquipments();
+    ParseHeroTemplates();
+    ParseStages();
+  } catch (const lua::UndeclaredVariableException& e) {
+    LOG_ERROR("%s", e.what());
+    exit(1);
+  } catch (const lua::WrongTypeException& e) {
+    LOG_ERROR("%s", e.what());
+    exit(1);
+  } catch (const lua::ScriptRuntimeException& e) {
+    LOG_ERROR("%s", e.what());
+    exit(1);
+  }
 }
 
 ConfigLoader::~ConfigLoader() {

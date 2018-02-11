@@ -27,15 +27,25 @@ Lua::~Lua() {
   if (L != nullptr && destroy_) lua_close(L);
 }
 
-void Lua::Run(const string& filename) {
-  if (luaL_loadfile(L, filename.c_str()) || lua_pcall(L, 0, 0, 0)) {
-    LogError("Load and run from file failed.\n");
+void Lua::RunFile(const string& filename) {
+  if (luaL_loadfile(L, filename.c_str())) {
+    // TODO Throw appropriate exception;
+    throw "Loadfile error";
+  }
+  if (lua_pcall(L, 0, 0, 0)) {
+    std::string message(lua_tostring(L, -1));
+    throw ScriptRuntimeException(message);
   }
 }
 
 void Lua::RunScript(const string& code) {
-  if (luaL_dostring(L, code.c_str())) {
-    LogError("Run script failed.\n");
+  if (luaL_loadstring(L, code.c_str())) {
+    // TODO Dump lua error (the string on the stack top)
+    throw "Loadfile error";
+  }
+  if (lua_pcall(L, 0, 0, 0)) {
+    std::string message(lua_tostring(L, -1));
+    throw ScriptRuntimeException(message);
   }
 }
 
