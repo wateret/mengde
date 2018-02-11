@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include "core/assets.h"
+#include "core/exceptions.h"
 #include "core/game.h"
 #include "core/scenario.h"
 #include "core/unit.h"
@@ -72,7 +73,13 @@ App::App(int width, int height, uint32_t max_frames_sec)
 
   const string scenario_id = "example";
 
-  scenario_ = new core::Scenario(scenario_id);
+  try {
+    scenario_ = new core::Scenario(scenario_id);
+  } catch (const core::ConfigLoadException& e) {
+    // TODO Show error message appropriately
+    exit(1);
+  }
+
   window_ = new Window("Game", width, height);
   drawer_ = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString(),
                                 GameEnv::GetInstance()->GetResourcePath().ToString());

@@ -12,7 +12,7 @@
 #include "lua/lua.h"
 #include "terrain.h"
 #include "hero.h"
-#include "data_load_exception.h"
+#include "exceptions.h"
 
 namespace mengde {
 namespace core {
@@ -94,13 +94,16 @@ ConfigLoader::ConfigLoader(const Path& filename)
     ParseStages();
   } catch (const lua::UndeclaredVariableException& e) {
     LOG_ERROR("%s", e.what());
-    exit(1);
+    throw ConfigLoadException(e.what());
   } catch (const lua::WrongTypeException& e) {
     LOG_ERROR("%s", e.what());
-    exit(1);
+    throw ConfigLoadException(e.what());
   } catch (const lua::ScriptRuntimeException& e) {
     LOG_ERROR("%s", e.what());
-    exit(1);
+    throw ConfigLoadException(e.what());
+  } catch (const DataFormatException& e) {
+    LOG_ERROR("%s", e.what());
+    throw ConfigLoadException(e.what());
   }
 }
 

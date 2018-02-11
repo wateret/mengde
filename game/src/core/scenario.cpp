@@ -9,6 +9,7 @@ namespace core {
 
 Scenario::Scenario(const string& scenario_id) : rc_(), assets_(nullptr), game_(nullptr) {
   const Path base_path(scenario_id);
+
   ConfigLoader loader(base_path / "config.lua");
   rc_ = loader.GetResources();
 

@@ -28,7 +28,6 @@ class Scenario {
   ResourceManagers rc_;
   Assets* assets_;
   Game* game_;
-  // TODO Add Game
 };
 
 } // namespace core
