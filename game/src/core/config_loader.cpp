@@ -12,6 +12,7 @@
 #include "lua/lua.h"
 #include "terrain.h"
 #include "hero.h"
+#include "data_load_exception.h"
 
 namespace mengde {
 namespace core {
@@ -40,7 +41,7 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table
     return new GEERestoreHp(event, mult, add);
   }
 
-  throw "Such GeneralEventEffect '" + str_effect + "' does not exist";
+  throw DataFormatException("Such GeneralEventEffect '" + str_effect + "' does not exist");
 }
 
 OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table* table) const {
@@ -62,7 +63,7 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table* ta
     return new OCEEEnhanceBasicAttack(event, mult, add);
   }
 
-  throw "Such OnCmdEventEffect '" + str_effect + "' does not exist";
+  throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");
 }
 
 bool EventEffectLoader::IsGeneralEventEffect(const std::string& key) const {
@@ -174,18 +175,18 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
   // Check row and column size
   if (cost_list.size() != terrain_count)
-    throw "Incorrect size of terrain_movecost";
+    throw DataFormatException("Incorrect size of terrain_movecost");
   for (auto e : cost_list) {
-    if (e.size() != class_count) throw "Incorrect size of terrain_movecost";
+    if (e.size() != class_count) throw DataFormatException("Incorrect size of terrain_movecost");
   }
 
   vector< vector<int> > effect_list = lua_config_->Get<vector<vector<int>>>("gconf.terrain_effect");
 
   // Check row and column size
   if (effect_list.size() != terrain_count)
-    throw "Incorrect size of terrain_effect";
+    throw DataFormatException("Incorrect size of terrain_effect");
   for (auto e : effect_list) {
-    if (e.size() != class_count) throw "Incorrect size of terrain_effect";
+    if (e.size() != class_count) throw DataFormatException("Incorrect size of terrain_effect");
   }
 
   for (uint32_t i = 0; i < terrain_count; i++) {
@@ -269,7 +270,7 @@ void ConfigLoader::ParseEquipments() {
       } else if (ee_loader.IsOnCmdEventEffect(event)) {
         equipment->AddOnCmdEffect(ee_loader.CreateOnCmdEventEffect(table));
       } else {
-        throw "Such event '" + event + "' does not exist.";
+        throw DataFormatException("Such event '" + event + "' does not exist.");
       }
       delete table; // TODO Do not manually delete pointer
     });

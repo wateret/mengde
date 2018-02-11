@@ -16,6 +16,7 @@ namespace mengde {
 namespace core {
 
 class GeneralEventEffect;
+class OnCmdEventEffect;
 
 class EventEffectLoader {
  public:
