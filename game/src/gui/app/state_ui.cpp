@@ -167,7 +167,7 @@ bool StateUIDoCmd::OnMouseMotionEvent(const foundation::MouseMotionEvent) {
 
 StateUIOperable::StateUIOperable(Base base)
     : StateUI(base),
-      cursor_cell_(-1, -1) {
+      cursor_cell_(0, 0) {
   ClearScrolls();
 }
 
@@ -186,7 +186,7 @@ void StateUIOperable::Update() {
   if (IsScrollRight()) rv_->MoveCameraX(kScrollAmount);
   if (IsScrollUp()) rv_->MoveCameraY(-kScrollAmount);
   if (IsScrollDown()) rv_->MoveCameraY(kScrollAmount);
-//  cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / App::kBlockSize;
+  cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / App::kBlockSize;
 }
 
 void StateUIOperable::Render(Drawer* drawer) {
@@ -196,8 +196,6 @@ void StateUIOperable::Render(Drawer* drawer) {
 
 bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   if (e.IsMotionOver()) {
-    cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / App::kBlockSize;
-
     // mouse scroll
     int window_width  = rv_->GetFrameSize().x;
     int window_height = rv_->GetFrameSize().y;

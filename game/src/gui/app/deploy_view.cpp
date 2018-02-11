@@ -142,7 +142,7 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
 
   Rect btn_ok_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {100, 50}, LayoutHelper::kAlignRgtBot);
   ButtonView* btn_ok = new ButtonView(&btn_ok_frame, "To Battle");
-  btn_ok->SetMouseButtonHandler([this, deploy_helper] (foundation::MouseButtonEvent e) {
+  btn_ok->SetMouseButtonHandler([&, deploy_helper] (foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       if (deploy_helper->SubmitDeploy()) {
         this->visible(false);

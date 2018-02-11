@@ -47,7 +47,7 @@ RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
       unit_action_view_(nullptr),
       ui_state_machine_(new StateUIView({game_, this})),
       reserved_callbacks_(),
-      mouse_coords_(-1, -1),
+      mouse_coords_(0, 0),
       camera_coords_(0, 0),
       max_camera_coords_(size),
       frame_count_(-1) {

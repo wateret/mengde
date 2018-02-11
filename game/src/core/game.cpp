@@ -326,6 +326,7 @@ void Game::ObtainEquipment(const string& id, uint32_t amount) {
 
 bool Game::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
+  if (status_ != Status::kDeploying) return true;
 
   if (!deployer_->IsReady()) return false;
 
