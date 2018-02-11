@@ -24,7 +24,7 @@ Value::Value(double value) {
 
 Value::Value(const std::string& value) {
   type_ = Type::kString;
-  value_.v_string = value;
+  new((void*)&value_.v_string) std::string(value);
 }
 
 Value::Value(const Table& value) {
