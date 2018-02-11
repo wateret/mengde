@@ -239,10 +239,10 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
     CmdHit::HitType hit_type = TryBasicAttackCritical() ? CmdHit::HitType::kCritical : CmdHit::HitType::kNormal;
     int damage = ComputeDamage(game->GetMap());
     if (hit_type == CmdHit::HitType::kCritical) {
-      damage *= 1.5;
+      damage = damage * 3 / 2; // 1.5x
     }
     if (IsSecond()) {
-      damage *= 0.75;
+      damage = damage * 3 / 4; // 0.75x
     }
     damage = std::max(damage, 1);
     ret->Append(unique_ptr<CmdHit>(new CmdHit(atk_, def_, CmdActResult::Type::kBasicAttack, hit_type, damage)));
