@@ -61,6 +61,7 @@ OCEEEnhanceBasicAttack::OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multi
 void OCEEEnhanceBasicAttack::OnEvent(Unit* unit, CmdAct* act) {
   LOG_INFO("'%s' the damage will be enhanced by (%d%%,+%d)", unit->GetId().c_str(), multiplier_, addend_);
   CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
+  ASSERT(ba != nullptr);
   ba->AddToMultiplier(multiplier_);
   ba->AddToAddend(addend_);
 }

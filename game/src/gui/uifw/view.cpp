@@ -7,7 +7,7 @@ namespace gui {
 namespace uifw {
 
 View::View(const Rect* frame)
- : frame_(*frame), bg_color_(0, 0, 0, 0), padding_(0), visible_(true) {
+ : View(*frame) {
 }
 
 View::View(const Rect& frame)
@@ -15,7 +15,7 @@ View::View(const Rect& frame)
 }
 
 View::View()
- : frame_(), bg_color_(0, 0, 0, 0), padding_(0), visible_(true) {
+ : View(Rect()) {
 }
 
 Rect View::GetActualFrame() const {

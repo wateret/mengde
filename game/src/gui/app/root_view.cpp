@@ -329,11 +329,11 @@ void RootView::SetUnitInfoViewUnitAttackInfo(core::Unit* unit, int accuracy, int
 }
 
 void RootView::SetUnitInfoViewContents(const std::string& name,
-                                   int id,
+                                   int lv,
                                    const core::HpMp& hpmp_cur,
                                    const core::HpMp& hpmp_max,
                                    const core::HpMp& hpmp_ext) {
-  unit_info_view_->SetContents(name, id, hpmp_cur, hpmp_max, hpmp_ext);
+  unit_info_view_->SetContents(name, lv, hpmp_cur, hpmp_max, hpmp_ext);
 }
 
 void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {

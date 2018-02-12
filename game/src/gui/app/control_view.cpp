@@ -23,9 +23,11 @@ ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv)
 
   Rect button_coords = {0, 30, 100, 20};
   ButtonView* button = new ButtonView(&button_coords, "EndTurn");
-  button->SetMouseButtonHandler([this] (const foundation::MouseButtonEvent e) {
+  button->SetMouseButtonHandler([&] (const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
+      // TODO Handle clicked twice in a frame
       this->game_->Push(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
+      rv->InitUIStateMachine();
       return true;
     }
     return true;

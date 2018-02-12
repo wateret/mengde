@@ -57,7 +57,7 @@ class RootView : public View {
   void SetUnitViewUnit(core::Unit*);
   void SetUnitInfoViewUnitTerrainInfo(core::Cell* cell);
   void SetUnitInfoViewUnitAttackInfo(core::Unit* unit, int, int);
-  void SetUnitInfoViewContents(const std::string&, int, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max, const core::HpMp& hpmp_ext);
+  void SetUnitInfoViewContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max, const core::HpMp& hpmp_ext);
   void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
   void SetUnitInfoViewVisible(bool);
   void SetTerrainInfoViewVisible(bool);

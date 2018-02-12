@@ -77,7 +77,8 @@ App::App(int width, int height, uint32_t max_frames_sec)
     scenario_ = new core::Scenario(scenario_id);
   } catch (const core::ConfigLoadException& e) {
     // TODO Show error message appropriately
-    exit(1);
+    LOG_ERROR("Scenario config load failure - %s", e.what());
+    UNREACHABLE("Scenario config load failure.");
   }
 
   window_ = new Window("Game", width, height);
