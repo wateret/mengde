@@ -52,7 +52,6 @@ class RootView : public View {
   void MoveCameraY(int d);
 
   // View wrappers
-  void SetControlViewTurnText(int, int);
   void SetUnitViewVisible(bool);
   void SetUnitViewUnit(core::Unit*);
   void SetUnitInfoViewUnitTerrainInfo(core::Cell* cell);
@@ -71,6 +70,7 @@ class RootView : public View {
   bool GetUnitDialogViewVisible() const;
   Vec2D GetUnitDialogViewFrameSize() const;
 
+  ControlView* control_view() { return control_view_; }
   ModalDialogView* dialog_view() { return dialog_view_; }
   MagicListView* magic_list_view() { return magic_list_view_; }
   UnitActionView* unit_action_view() { return unit_action_view_; }

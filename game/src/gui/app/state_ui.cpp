@@ -1,6 +1,7 @@
 #include "state_ui.h"
 
 #include "root_view.h"
+#include "control_view.h"
 #include "unit_action_view.h"
 #include "unit_dialog_view.h"
 #include "magic_list_view.h"
@@ -1076,10 +1077,13 @@ void StateUINextTurn::Enter() {
 
 void StateUINextTurn::Exit() {
   rv_->dialog_view()->visible(false);
+
   RootView* rv = rv_;
   core::Game* game = game_;
-  rv_->NextFrame([rv, game] () {
-    rv->SetControlViewTurnText(game->GetTurnCurrent(), game->GetTurnLimit());
+  rv_->NextFrame([=] () {
+    ControlView* control_view = rv->control_view();
+    control_view->SetTurnText(game->GetTurnCurrent(), game->GetTurnLimit());
+    control_view->SetEndTurnVisible(game->IsUserTurn());
   });
 }
 

@@ -22,17 +22,18 @@ ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv)
   AddChild(tv_turn_);
 
   Rect button_coords = {0, 30, 100, 20};
-  ButtonView* button = new ButtonView(&button_coords, "EndTurn");
-  button->SetMouseButtonHandler([&] (const foundation::MouseButtonEvent e) {
+  btn_end_turn_ = new ButtonView(&button_coords, "EndTurn");
+  btn_end_turn_->SetMouseButtonHandler([this, rv] (const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       // TODO Handle clicked twice in a frame
+      this->SetEndTurnVisible(false);
       this->game_->Push(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
       rv->InitUIStateMachine();
       return true;
     }
     return true;
   });
-  AddChild(button);
+  AddChild(btn_end_turn_);
 
   const Vec2D map_size = game_->GetMapSize() * App::kBlockSize;
 
@@ -49,6 +50,10 @@ ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv)
 
 void ControlView::SetTurnText(int cur_turn, int max_turn) {
   tv_turn_->SetText(string("Turn ") + std::to_string(cur_turn) + string("/") + std::to_string(max_turn));
+}
+
+void ControlView::SetEndTurnVisible(bool b) {
+  btn_end_turn_->visible(b);
 }
 
 } // namespace app

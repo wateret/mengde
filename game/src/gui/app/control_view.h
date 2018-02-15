@@ -20,11 +20,13 @@ class RootView;
 class ControlView : public CompositeView {
  public:
   ControlView(const Rect*, core::Game*, RootView*);
-  void SetTurnText(int, int);
+  void SetTurnText(int cur_turn, int max_turn);
+  void SetEndTurnVisible(bool);
 
  private:
   core::Game* game_;
   TextView* tv_turn_;
+  ButtonView* btn_end_turn_;
 };
 
 } // namespace app

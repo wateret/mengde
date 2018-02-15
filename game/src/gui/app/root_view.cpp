@@ -304,10 +304,6 @@ int RootView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
   return (frame_count_ / frames_per_sprite) % num_sprites;
 }
 
-void RootView::SetControlViewTurnText(int turn_current, int turn_limit) {
-  control_view_->SetTurnText(turn_current, turn_limit);
-}
-
 void RootView::SetUnitViewVisible(bool b) {
   unit_view_->visible(b);
 }
