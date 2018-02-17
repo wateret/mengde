@@ -15,6 +15,7 @@
 #include "gui/uifw/text_view.h"
 #include "misc.h"
 #include "unit_over_view.h"
+#include "unit_view.h"
 
 namespace mengde {
 namespace gui {
@@ -97,25 +98,21 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   padding(8);
   bg_color(COLOR("darkgray"));
 
-  Rect equipment_set_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
-  equipment_set_view_      = new EquipmentSetView(&equipment_set_frame);
+  Rect unit_view_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {204, 320}, LayoutHelper::kAlignRgtTop);
+  UnitView* unit_view = new UnitView(unit_view_frame);
+  unit_view->padding(0);
+  AddChild(unit_view);
+
+  equipment_set_view_ = unit_view->equipment_set_view();
+  unit_over_view_ = unit_view->unit_over_view();
+
   Rect equipment_select_frame = GetActualFrame();
   equipment_select_frame.SetW(4 * 96);
   equipment_select_view_ = new EquipmentSelectView(equipment_select_frame, equipment_set_view_);
-
-  {  // Initialize unit_over_view_
-    Rect unit_over_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtBot);
-    unit_over_view_ = new UnitOverView(unit_over_frame);
-  }
-
-  {  // Initialize equipment_select_view_
-    equipment_select_view_->visible(false);
-  }
+  equipment_select_view_->visible(false);
 
   {  // Initialize equipment_set_view_
     EquipmentSelectView* select_view = equipment_select_view_;
-    equipment_set_view_->bg_color(COLOR("navy"));
-    equipment_set_view_->padding(8);
 
     auto mouse_handler_gen = [select_view, assets](core::Equipment::Type type) {
       return [select_view, assets, type](const foundation::MouseButtonEvent e) {
@@ -159,8 +156,6 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
     return true;
   });
 
-  AddChild(equipment_set_view_);
-  AddChild(unit_over_view_);
   AddChild(equipment_select_view_);
   AddChild(btn_ok);
 }

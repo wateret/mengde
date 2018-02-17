@@ -24,6 +24,7 @@ namespace app {
 class EquipmentSetView;
 class EquipmentSelectView;
 class UnitOverView;
+class UnitView;
 
 class HeroModelView : public CallbackView {
  public:

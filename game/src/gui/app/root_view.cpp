@@ -78,7 +78,7 @@ RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
 
   Rect unit_frame =
       LayoutHelper::CalcPosition(GetFrameSize(), {220, 320}, LayoutHelper::kAlignRgtTop, LayoutHelper::kDefaultSpace);
-  unit_view_ = new UnitView(&unit_frame);
+  unit_view_ = new UnitView(unit_frame);
   //  unit_view_->visible(false);
   ui_views_->AddChild(unit_view_);
 

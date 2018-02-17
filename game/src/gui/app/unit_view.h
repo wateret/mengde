@@ -7,7 +7,9 @@
 
 namespace mengde {
 namespace core {
-class Unit;
+
+class IUnitBase;
+
 }
 }  // namespace mengde
 
@@ -20,11 +22,13 @@ class EquipmentSetView;
 
 class UnitView : public TabView {
  public:
-  UnitView(const Rect*);
-  void SetUnit(core::Unit* unit);
+  UnitView(const Rect&);
+  void SetUnit(core::IUnitBase* unit);
+  UnitOverView* unit_over_view() { return unit_over_view_; }
+  EquipmentSetView* equipment_set_view() { return equipment_set_view_; }
 
  private:
-  core::Unit*       unit_;
+  core::IUnitBase*  unit_;
   UnitOverView*     unit_over_view_;      // tab 0
   EquipmentSetView* equipment_set_view_;  // tab 1
 };
