@@ -1,10 +1,10 @@
 #include "unit_list_view.h"
 
 #include "core/unit.h"
-#include "gui/uifw/vertical_list_view.h"
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/scroll_view.h"
 #include "gui/uifw/text_view.h"
+#include "gui/uifw/vertical_list_view.h"
 
 namespace mengde {
 namespace gui {
@@ -29,14 +29,14 @@ UnitListView::UnitListView(const Rect& frame, const vector<core::Unit*>& unit_li
   padding(8);
   bg_color(COLOR("darkgray"));
 
-  const int margin = 8;
+  const int   margin         = 8;
   const Vec2D btn_close_size = {150, 24};
   const Vec2D list_view_size = {btn_close_size.x, GetActualFrameSize().y - (btn_close_size.y + margin)};
 
   {
-    Rect btn_close_frame({0, list_view_size.y + margin}, btn_close_size);
+    Rect        btn_close_frame({0, list_view_size.y + margin}, btn_close_size);
     ButtonView* btn_close = new ButtonView(&btn_close_frame, "Close");
-    btn_close->SetMouseButtonHandler([this] (const foundation::MouseButtonEvent e) {
+    btn_close->SetMouseButtonHandler([this](const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
         this->visible(false);
       }
@@ -46,14 +46,14 @@ UnitListView::UnitListView(const Rect& frame, const vector<core::Unit*>& unit_li
   }
 
   {
-    const int element_height = 24;
-    Rect list_view_frame({0, 0}, list_view_size);
+    const int         element_height = 24;
+    Rect              list_view_frame({0, 0}, list_view_size);
     VerticalListView* list_view = new VerticalListView(list_view_frame);
     for (auto unit : unit_list_) {
       std::string name = unit->GetId();
-      Rect button_frame({0, 0}, {list_view_size.x, element_height});
+      Rect        button_frame({0, 0}, {list_view_size.x, element_height});
       ButtonView* button = new ButtonView(&button_frame, name);
-      button->SetMouseButtonHandler([this, unit] (const foundation::MouseButtonEvent e) {
+      button->SetMouseButtonHandler([this, unit](const foundation::MouseButtonEvent e) {
         if (e.IsLeftButtonUp()) {
           this->SetUnit(unit);
         }
@@ -69,14 +69,13 @@ UnitListView::UnitListView(const Rect& frame, const vector<core::Unit*>& unit_li
 
   {
     const int udv_frame_x = list_view_size.x + 8;
-    Rect cv_frame(udv_frame_x, 0, GetActualFrameSize().x - udv_frame_x, GetActualFrameSize().y);
+    Rect      cv_frame(udv_frame_x, 0, GetActualFrameSize().x - udv_frame_x, GetActualFrameSize().y);
     unit_detail_view_ = new UnitDetailView(cv_frame);
     unit_detail_view_->bg_color(COLOR("gray"));
     AddChild(unit_detail_view_);
   }
 }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
-
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

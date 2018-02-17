@@ -1,10 +1,10 @@
 #include "unit_action_view.h"
 
-#include "root_view.h"
-#include "state_ui.h"
-#include "gui/uifw/button_view.h"
 #include "core/cmd.h"
 #include "core/game.h"
+#include "gui/uifw/button_view.h"
+#include "root_view.h"
+#include "state_ui.h"
 
 namespace mengde {
 namespace gui {
@@ -27,19 +27,19 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, RootView* rv
 }
 
 void UnitActionView::SetUnit(core::Unit* unit) {
-  btn_attack_->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) {
+  btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       rv_->PushUIState(new StateUITargeting({game_, rv_}, unit));
     }
     return true;
   });
-  btn_magic_->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) {
+  btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       rv_->PushUIState(new StateUIMagicSelection({game_, rv_}, unit));
     }
     return true;
   });
-  btn_stay_->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) {
+  btn_stay_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       unique_ptr<core::CmdAction> action(new core::CmdAction());
       action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
@@ -59,6 +59,6 @@ bool UnitActionView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   return CompositeView::OnMouseButtonEvent(e);
 }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

@@ -3,18 +3,18 @@
 
 #include <functional>
 #include <vector>
-#include "util/common.h"
-#include "gui/foundation/timer.h"
 #include "gui/foundation/event_fetcher.h"
+#include "gui/foundation/timer.h"
+#include "util/common.h"
 
 #include "common.h"
 
 namespace mengde {
 namespace core {
-  class Game;
-  class Scenario;
-}
-}
+class Game;
+class Scenario;
+}  // namespace core
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -36,14 +36,14 @@ class FrameConfig {
 class FpsTimer {
  public:
   FpsTimer() : timer_(), frames_cur_sec_(0), fps_(0.f) {}
-  void Start();
-  void Update();
+  void  Start();
+  void  Update();
   float GetLastFps() { return fps_; }
 
  private:
-  Timer timer_;
+  Timer    timer_;
   uint32_t frames_cur_sec_;
-  float fps_;
+  float    fps_;
 };
 
 class App {
@@ -55,13 +55,13 @@ class App {
   void Run();
 
   // Getters and Setters
-  Drawer* GetDrawer();
-  Vec2D GetWindowSize() { return window_size_; }
+  Drawer*  GetDrawer();
+  Vec2D    GetWindowSize() { return window_size_; }
   uint16_t GetMaxFps() { return frame_config_.GetMaxFps(); }
   uint32_t MsecToFrame(uint32_t ms) { return frame_config_.MsecToFrame(ms); }
-  void SetMagicListViewVisible(bool);
-  void SetQuit(bool b) { quit_ = b; }
-  void EndGame();
+  void     SetMagicListViewVisible(bool);
+  void     SetQuit(bool b) { quit_ = b; }
+  void     EndGame();
 
   void StartNewGame();
 
@@ -74,24 +74,24 @@ class App {
   void Render();
 
  private:
-  EventFetcher event_fetcher_;
-  Vec2D   window_size_;
-  Window* window_;
-  Drawer* drawer_;
-  View*   main_view_;
-  View*   root_view_;
-  View*   target_view_;
+  EventFetcher    event_fetcher_;
+  Vec2D           window_size_;
+  Window*         window_;
+  Drawer*         drawer_;
+  View*           main_view_;
+  View*           root_view_;
+  View*           target_view_;
   core::Scenario* scenario_;
 
   // fps
   const FrameConfig frame_config_;
-  FpsTimer fps_timer_;
+  FpsTimer          fps_timer_;
 
   bool quit_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
 #endif

@@ -13,22 +13,14 @@ void Misc::Init() {
   }
 }
 
-void Misc::Quit() {
-  SDL_Quit();
-}
+void Misc::Quit() { SDL_Quit(); }
 
-void Misc::Delay(int ms) {
-  SDL_Delay(ms);
-}
+void Misc::Delay(int ms) { SDL_Delay(ms); }
 
-std::string Misc::GetErrorMessage() {
-  return std::string(SDL_GetError());
-}
+std::string Misc::GetErrorMessage() { return std::string(SDL_GetError()); }
 
-void Misc::SetShowCursor(bool v) {
-  SDL_ShowCursor(v ? SDL_ENABLE : SDL_DISABLE);
-}
+void Misc::SetShowCursor(bool v) { SDL_ShowCursor(v ? SDL_ENABLE : SDL_DISABLE); }
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde

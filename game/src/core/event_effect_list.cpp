@@ -1,14 +1,13 @@
 #include "event_effect_list.h"
 
-#include "cmd.h" // TODO Only for CmdQueue
+#include "cmd.h"  // TODO Only for CmdQueue
 #include "event_effect.h"
 #include "util/common.h"
 
 namespace mengde {
 namespace core {
 
-EventEffectList::EventEffectList() {
-}
+EventEffectList::EventEffectList() {}
 
 EventEffectList::~EventEffectList() {
   for (auto e : general_elements_) {
@@ -19,13 +18,9 @@ EventEffectList::~EventEffectList() {
   }
 }
 
-void EventEffectList::AddGeneralEffect(GeneralEventEffect* e) {
-  general_elements_.push_back(e);
-}
+void EventEffectList::AddGeneralEffect(GeneralEventEffect* e) { general_elements_.push_back(e); }
 
-void EventEffectList::AddOnCmdEffect(OnCmdEventEffect* e) {
-  oncmd_elements_.push_back(e);
-}
+void EventEffectList::AddOnCmdEffect(OnCmdEventEffect* e) { oncmd_elements_.push_back(e); }
 
 unique_ptr<Cmd> EventEffectList::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
   auto cmdq = unique_ptr<CmdQueue>(new CmdQueue());
@@ -63,5 +58,5 @@ void EventEffectList::NextTurn() {
   */
 }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

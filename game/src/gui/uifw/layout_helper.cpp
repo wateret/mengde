@@ -4,13 +4,10 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-Rect LayoutHelper::CalcPosition(Vec2D cont_size,
-                                Vec2D elem_size,
-                                Align alignment,
-                                int margin) {
-  static const int mask = 0x03;
+Rect LayoutHelper::CalcPosition(Vec2D cont_size, Vec2D elem_size, Align alignment, int margin) {
+  static const int mask  = 0x03;
   static const int shift = 2;
-  Vec2D pos(0, 0);
+  Vec2D            pos(0, 0);
 
   switch (alignment & mask) {
     case kAlignNone:
@@ -47,14 +44,8 @@ Rect LayoutHelper::CalcPosition(Vec2D cont_size,
   return Rect(pos, elem_size);
 }
 
-Rect LayoutHelper::CalcPosition(const Rect* cont_rect,
-                                Vec2D elem_size,
-                                Align alignment,
-                                int margin) {
-  Rect ret = CalcPosition(cont_rect->GetSize(),
-                          elem_size,
-                          alignment,
-                          margin);
+Rect LayoutHelper::CalcPosition(const Rect* cont_rect, Vec2D elem_size, Align alignment, int margin) {
+  Rect ret = CalcPosition(cont_rect->GetSize(), elem_size, alignment, margin);
   ret.Move(cont_rect->GetPos());
   return ret;
 }
@@ -72,6 +63,6 @@ Vec2D LayoutHelper::CalcFittedSize(Vec2D orig, Vec2D max_size) {
   return {w, h};
 }
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde

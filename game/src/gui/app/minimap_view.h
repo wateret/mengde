@@ -8,9 +8,9 @@
 
 namespace mengde {
 namespace core {
-  class Game;
+class Game;
 }
-}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -27,11 +27,11 @@ class MinimapView : public CompositeView {
   Vec2D MagnifyForMinimap(Vec2D);
 
  private:
-  Vec2D* camera_coords_ptr_; // FIXME bad design - Maybe use observer pattern? (Could be overkill)
-  Vec2D  camera_size_;
-  Vec2D  map_size_;
-  RectView* camera_rect_view_;
-  ImageView* bg_image_view_;
+  Vec2D*            camera_coords_ptr_;  // FIXME bad design - Maybe use observer pattern? (Could be overkill)
+  Vec2D             camera_size_;
+  Vec2D             map_size_;
+  RectView*         camera_rect_view_;
+  ImageView*        bg_image_view_;
   MinimapUnitsView* mini_units_view_;
 };
 
@@ -42,11 +42,11 @@ class MinimapUnitsView : public View {
 
  private:
   core::Game* game_;
-  Vec2D unit_size_;
+  Vec2D       unit_size_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // MINIMAP_VIEW_H_
+#endif  // MINIMAP_VIEW_H_

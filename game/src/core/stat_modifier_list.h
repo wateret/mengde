@@ -14,8 +14,8 @@ class StatModifierList {
  public:
   StatModifierList();
   ~StatModifierList();
-  void AddModifier(StatModifier*);
-  void NextTurn();
+  void      AddModifier(StatModifier*);
+  void      NextTurn();
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
 
@@ -23,7 +23,7 @@ class StatModifierList {
   std::vector<StatModifier*> elements_;
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // STAT_MODIFIER_LIST_H_
+#endif  // STAT_MODIFIER_LIST_H_

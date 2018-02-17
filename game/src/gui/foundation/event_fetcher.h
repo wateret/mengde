@@ -10,17 +10,17 @@ namespace foundation {
 class EventFetcher {
  public:
   EventFetcher() = default;
-  bool Poll();
-  EventType event_type() const { return event_type_; }
+  bool         Poll();
+  EventType    event_type() const { return event_type_; }
   const Event& event() const { return event_; }
 
  private:
   EventType event_type_;
-  Event event_;
+  Event     event_;
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
-#endif // EVENT_FETCHER_H_
+#endif  // EVENT_FETCHER_H_

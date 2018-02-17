@@ -8,8 +8,7 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-TabView::TabView(const Rect* frame)
-    : CompositeView(frame), view_index_(0) {
+TabView::TabView(const Rect* frame) : CompositeView(frame), view_index_(0) {
   bg_color(COLOR("darkgray"));
   padding(LayoutHelper::kDefaultSpace);
 }
@@ -30,15 +29,12 @@ void TabView::SetViewIndex(int idx) {
 
 void TabView::AddTab(const string& button_text, View* view) {
   // Generate a button for the new tab
-  const int kButtonWidth = 60;
-  const int kButtonHeight = 20;
-  const int index = GetNumTabs();
-  Rect btn_frame = {(kButtonWidth + LayoutHelper::kDefaultSpace / 2) * index,
-                    0,
-                    kButtonWidth,
-                    kButtonHeight};
+  const int   kButtonWidth  = 60;
+  const int   kButtonHeight = 20;
+  const int   index         = GetNumTabs();
+  Rect        btn_frame  = {(kButtonWidth + LayoutHelper::kDefaultSpace / 2) * index, 0, kButtonWidth, kButtonHeight};
   ButtonView* tab_button = new ButtonView(&btn_frame, button_text);
-  tab_button->SetMouseButtonHandler([=] (const foundation::MouseButtonEvent e) -> bool {
+  tab_button->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) -> bool {
     if (e.IsLeftButtonDown()) {
       this->SetViewIndex(index);
     }
@@ -57,6 +53,6 @@ void TabView::AddTab(const string& button_text, View* view) {
   }
 }
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde

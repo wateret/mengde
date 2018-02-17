@@ -2,9 +2,9 @@
 
 #include <limits.h>
 
-#include "hero.h"
-#include "equipment.h"
 #include "core/equipment_set.h"
+#include "equipment.h"
+#include "hero.h"
 
 namespace mengde {
 namespace core {
@@ -15,12 +15,11 @@ void Money::Pay(const Money& cost) {
 }
 
 void Money::Gain(const Money& money) {
-  ASSERT(amount_ > UINT32_MAX - money.amount_); // Check overflow
+  ASSERT(amount_ > UINT32_MAX - money.amount_);  // Check overflow
   amount_ += money.amount_;
 }
 
-Assets::Assets() {
-}
+Assets::Assets() {}
 
 Assets::~Assets() {
   for (auto e : heroes_) {
@@ -29,8 +28,8 @@ Assets::~Assets() {
 }
 
 void Assets::AddHero(Hero* hero) {
-  string id = hero->GetId();
-  auto found = heroes_.find(id);
+  string id    = hero->GetId();
+  auto   found = heroes_.find(id);
   if (found == heroes_.end()) {
     heroes_[id] = hero;
   } else {
@@ -67,8 +66,8 @@ vector<const Hero*> Assets::GetHeroes() {
 
 void Assets::AddEquipment(const Equipment* equipment, uint32_t amount) {
   ASSERT(amount > 0);
-  string id = equipment->GetId();
-  auto found = equipments_.find(id);
+  string id    = equipment->GetId();
+  auto   found = equipments_.find(id);
   if (found == equipments_.end()) {
     equipments_.insert(std::make_pair(id, EquipmentWithAmount(equipment, 0)));
     found = equipments_.find(id);
@@ -146,5 +145,5 @@ void Assets::HeroPutEquipmentOn(Hero* hero, const Equipment* equipment) {
   hero->PutOn(equipment_new);
 }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

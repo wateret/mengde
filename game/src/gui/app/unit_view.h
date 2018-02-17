@@ -7,9 +7,9 @@
 
 namespace mengde {
 namespace core {
-  class Unit;
+class Unit;
 }
-}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -24,13 +24,13 @@ class UnitView : public TabView {
   void SetUnit(core::Unit* unit);
 
  private:
-  core::Unit* unit_;
-  UnitOverView* unit_over_view_; // tab 0
-  EquipmentSetView* equipment_set_view_; // tab 1
+  core::Unit*       unit_;
+  UnitOverView*     unit_over_view_;      // tab 0
+  EquipmentSetView* equipment_set_view_;  // tab 1
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // UNIT_VIEW_H_
+#endif  // UNIT_VIEW_H_

@@ -7,9 +7,9 @@
 
 namespace mengde {
 namespace core {
-  class Game;
+class Game;
 }
-}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -25,12 +25,12 @@ class ControlView : public CompositeView {
 
  private:
   core::Game* game_;
-  TextView* tv_turn_;
+  TextView*   tv_turn_;
   ButtonView* btn_end_turn_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // CONTROL_VIEW_H_
+#endif  // CONTROL_VIEW_H_

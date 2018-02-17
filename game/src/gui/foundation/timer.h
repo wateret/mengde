@@ -13,16 +13,16 @@ class Timer {
 
  public:
   void Start();
-  int Stop();
-  int Split();
+  int  Stop();
+  int  Split();
 
  private:
-  bool is_on_;
+  bool     is_on_;
   uint32_t start_ticks_;
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
 #endif

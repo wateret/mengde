@@ -5,26 +5,10 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-GaugeView::GaugeView(const Rect* frame,
-                     int cur_val,
-                     int max_val,
-                     Color cur_color,
-                     Color max_color)
-    : GaugeView(frame,
-                cur_val,
-                max_val,
-                0,
-                cur_color,
-                max_color,
-                {0, 0, 0, 0}) {
-}
+GaugeView::GaugeView(const Rect* frame, int cur_val, int max_val, Color cur_color, Color max_color)
+    : GaugeView(frame, cur_val, max_val, 0, cur_color, max_color, {0, 0, 0, 0}) {}
 
-GaugeView::GaugeView(const Rect* frame,
-                     int cur_val,
-                     int max_val,
-                     int ext_val,
-                     Color cur_color,
-                     Color max_color,
+GaugeView::GaugeView(const Rect* frame, int cur_val, int max_val, int ext_val, Color cur_color, Color max_color,
                      Color ext_color)
     : View(frame),
       cur_val_(cur_val),
@@ -35,12 +19,10 @@ GaugeView::GaugeView(const Rect* frame,
       ext_color_(ext_color),
       help_text_type_(kHelpTextNone),
       help_text_align_(LayoutHelper::kAlignCenter) {
-  if (cur_val_ < 0)
-    cur_val_ = 0;
+  if (cur_val_ < 0) cur_val_ = 0;
 }
 
-GaugeView::~GaugeView() {
-}
+GaugeView::~GaugeView() {}
 
 int GaugeView::CalcWidth(int val) {
   ASSERT(max_val_ > 0);
@@ -89,6 +71,6 @@ void GaugeView::Render(Drawer* drawer) {
   }
 }
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde

@@ -1,8 +1,8 @@
 #ifndef CALLBACK_VIEW_H_
 #define CALLBACK_VIEW_H_
 
-#include "composite_view.h"
 #include <functional>
+#include "composite_view.h"
 
 #include "common.h"
 
@@ -21,8 +21,8 @@ class CallbackView : public CompositeView {
   CallbackView(const Rect&);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override final;
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override final;
-  void SetMouseButtonHandler(MouseButtonHandler);
-  void SetMouseMotionHandler(MouseMotionHandler);
+  void         SetMouseButtonHandler(MouseButtonHandler);
+  void         SetMouseMotionHandler(MouseMotionHandler);
 
  private:
   void InitHandlers();
@@ -32,8 +32,8 @@ class CallbackView : public CompositeView {
   MouseMotionHandler mouse_motion_handler_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // CALLBACK_VIEW_H_
+#endif  // CALLBACK_VIEW_H_

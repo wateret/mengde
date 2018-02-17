@@ -4,10 +4,10 @@
 #include "core/equipment.h"
 #include "core/equipment_set.h"
 #include "core/hero.h"
-#include "gui/uifw/layout_helper.h"
 #include "gui/uifw/image_view.h"
-#include "gui/uifw/text_view.h"
+#include "gui/uifw/layout_helper.h"
 #include "gui/uifw/row_major_list_view.h"
+#include "gui/uifw/text_view.h"
 #include "i_equipment_set_setter.h"
 
 namespace mengde {
@@ -22,15 +22,16 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
   bg_color(COLOR("transparent"));
   padding(8);
 
-  Rect iv_icon_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {32, 32}, LayoutHelper::kAlignCenter);
-  ImageView* iv_icon = new ImageView(iv_icon_frame, "equipment/" + equipment_id + ".bmp");
+  Rect       iv_icon_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {32, 32}, LayoutHelper::kAlignCenter);
+  ImageView* iv_icon       = new ImageView(iv_icon_frame, "equipment/" + equipment_id + ".bmp");
   AddChild(iv_icon);
 
-  Rect tv_amount_frame = GetActualFrame();
-  TextView* tv_amount = new TextView(&tv_amount_frame, std::to_string(amount), COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
+  Rect      tv_amount_frame = GetActualFrame();
+  TextView* tv_amount =
+      new TextView(&tv_amount_frame, std::to_string(amount), COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
   AddChild(tv_amount);
 
-  SetMouseMotionHandler([this] (const foundation::MouseMotionEvent e) {
+  SetMouseMotionHandler([this](const foundation::MouseMotionEvent e) {
     if (e.IsMotionOver()) {
       this->bg_color(COLOR("darkgray"));
     } else {
@@ -56,19 +57,21 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   RowMajorListView* new_list_view = new RowMajorListView(GetActualFrame(), kItemSize);
   ASSERT(hero_ != nullptr);
   if (hero_ == nullptr) return;
-  auto hero = assets->GetHero(hero_->GetId()); // For non-const core::Hero and capture
+  auto hero                 = assets->GetHero(hero_->GetId());  // For non-const core::Hero and capture
   auto equipment_set_update = equipment_set_update_;
   for (auto equipment : equipments) {
-    ItemIconView* item_icon_view = new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);
-    item_icon_view->SetMouseButtonHandler([this, assets, hero, equipment, equipment_set_update] (const foundation::MouseButtonEvent e) {
-      if (e.IsLeftButtonUp()) {
-        ASSERT(hero != nullptr);
-        assets->HeroPutEquipmentOn(hero, equipment.object);
-        equipment_set_update->SetEquipmentSet(hero->GetEquipmentSet());
-        this->visible(false);
-      }
-      return true;
-    });
+    ItemIconView* item_icon_view =
+        new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);
+    item_icon_view->SetMouseButtonHandler(
+        [this, assets, hero, equipment, equipment_set_update](const foundation::MouseButtonEvent e) {
+          if (e.IsLeftButtonUp()) {
+            ASSERT(hero != nullptr);
+            assets->HeroPutEquipmentOn(hero, equipment.object);
+            equipment_set_update->SetEquipmentSet(hero->GetEquipmentSet());
+            this->visible(false);
+          }
+          return true;
+        });
     new_list_view->AddElement(item_icon_view);
   }
 
@@ -80,6 +83,6 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   equipment_list_view_ = new_list_view;
 }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

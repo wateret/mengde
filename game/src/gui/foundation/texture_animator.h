@@ -1,8 +1,8 @@
 #ifndef TEXTURE_ANIMATOR_H_
 #define TEXTURE_ANIMATOR_H_
 
-#include "util/common.h"
 #include "rect.h"
+#include "util/common.h"
 
 namespace mengde {
 namespace gui {
@@ -13,11 +13,11 @@ class Texture;
 class TextureAnimator {
  public:
   TextureAnimator(Texture*, int);
-  Rect GetCurrentCutRect();
-  void NextFrame();
-  bool DoneAnimate();
+  Rect     GetCurrentCutRect();
+  void     NextFrame();
+  bool     DoneAnimate();
   Texture* GetTexture() { return texture_; }
-  int GetCutSize() { return cut_size_; }
+  int      GetCutSize() { return cut_size_; }
 
  private:
   Texture* texture_;
@@ -27,8 +27,8 @@ class TextureAnimator {
   int      frame_no_;
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
-#endif // TEXTURE_ANIMATOR_H_
+#endif  // TEXTURE_ANIMATOR_H_

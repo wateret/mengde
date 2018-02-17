@@ -14,14 +14,12 @@ namespace app {
 //
 
 EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment) : CallbackView(frame) {
-  Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(),
-                                             {32, 32},
-                                             LayoutHelper::kAlignLftMid);
-  iv_image_ = new ImageView(&iv_frame, "equipment/60-1.bmp"); // FIXME path hardcoded
+  Rect iv_frame      = LayoutHelper::CalcPosition(GetActualFrame().GetSize(), {32, 32}, LayoutHelper::kAlignLftMid);
+  iv_image_          = new ImageView(&iv_frame, "equipment/60-1.bmp");  // FIXME path hardcoded
   Rect tv_name_frame = {32 + 8, 0, 164, 16};
-  tv_name_  = new TextView(&tv_name_frame, "");
+  tv_name_           = new TextView(&tv_name_frame, "");
   Rect tv_desc_frame = {32 + 8, 16, 164, 52};
-  tv_desc_  = new TextView(&tv_desc_frame, "");
+  tv_desc_           = new TextView(&tv_desc_frame, "");
   AddChild(iv_image_);
   AddChild(tv_name_);
   AddChild(tv_desc_);
@@ -31,12 +29,12 @@ EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment
 
 void EquipmentView::SetEquipment(const core::Equipment* equipment) {
   string image_path = "equipment/60-1.bmp";
-  string name = "No Equipment";
-  string desc = "No Desc";
+  string name       = "No Equipment";
+  string desc       = "No Desc";
   if (equipment != nullptr) {
     image_path = "equipment/" + equipment->GetId() + ".bmp";
-    name = equipment->GetId();
-    desc = equipment->GetId() + "_desc";
+    name       = equipment->GetId();
+    desc       = equipment->GetId() + "_desc";
   }
 
   iv_image_->SetPath(image_path);
@@ -48,22 +46,21 @@ void EquipmentView::SetEquipment(const core::Equipment* equipment) {
 // EquipmentSetView
 //
 
-EquipmentSetView::EquipmentSetView(const Rect* frame)
-    : CompositeView(frame), equipment_set_(nullptr) {
-  const int kMargin = 80 + 8;
-  Rect tv_frame = {0, 0, 200, 16};
-  tv_weapon_label_ = new TextView(&tv_frame, "Weapon");
+EquipmentSetView::EquipmentSetView(const Rect* frame) : CompositeView(frame), equipment_set_(nullptr) {
+  const int kMargin  = 80 + 8;
+  Rect      tv_frame = {0, 0, 200, 16};
+  tv_weapon_label_   = new TextView(&tv_frame, "Weapon");
   tv_frame.Move({0, kMargin});
-  tv_armor_label_  = new TextView(&tv_frame, "Armor");
+  tv_armor_label_ = new TextView(&tv_frame, "Armor");
   tv_frame.Move({0, kMargin});
-  tv_aid_label_    = new TextView(&tv_frame, "Aid");
+  tv_aid_label_ = new TextView(&tv_frame, "Aid");
   AddChild(tv_weapon_label_);
   AddChild(tv_armor_label_);
   AddChild(tv_aid_label_);
 
   const core::Equipment* weapon = nullptr;
-  const core::Equipment* armor = nullptr;
-  const core::Equipment* aid = nullptr;
+  const core::Equipment* armor  = nullptr;
+  const core::Equipment* aid    = nullptr;
   if (equipment_set_ != nullptr) {
     weapon = equipment_set_->GetWeapon();
     armor  = equipment_set_->GetArmor();
@@ -71,7 +68,7 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   }
 
   Rect equipment_view_frame = {0, 24, 204, 60};
-  eqv_weapon_ = new EquipmentView(&equipment_view_frame, weapon);
+  eqv_weapon_               = new EquipmentView(&equipment_view_frame, weapon);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
   eqv_armor_ = new EquipmentView(&equipment_view_frame, armor);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
@@ -82,14 +79,14 @@ EquipmentSetView::EquipmentSetView(const Rect* frame)
   for (int i = 0; i < 3; i++) {
     EquipmentView* eqv = equipment_views[i];
 
-    eqv->SetMouseButtonHandler([] (const foundation::MouseButtonEvent e) {
+    eqv->SetMouseButtonHandler([](const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
         LOG_DEBUG("Show Equipment Info");
       }
       return true;
     });
 
-    eqv->SetMouseMotionHandler([eqv] (const foundation::MouseMotionEvent e) {
+    eqv->SetMouseMotionHandler([eqv](const foundation::MouseMotionEvent e) {
       if (e.IsMotionOver()) {
         eqv->bg_color(COLOR("darkgray"));
       } else {
@@ -127,6 +124,6 @@ void EquipmentSetView::OnUpdate() {
   eqv_aid_->SetEquipment(equipment_set_->GetAid());
 }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

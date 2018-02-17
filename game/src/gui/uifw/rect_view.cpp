@@ -12,7 +12,7 @@ RectView::RectView(const Rect* frame, Color color)
 }
 
 void RectView::SetBorder(int width, Color color) {
-  border_ = width;
+  border_       = width;
   border_color_ = color;
 }
 
@@ -21,6 +21,6 @@ void RectView::Render(Drawer* drawer) {
   drawer->DrawRect(GetFrame(), border_);
 }
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde

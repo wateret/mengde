@@ -29,8 +29,8 @@ class ButtonView : public CallbackView {
   Color     checked_color_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // BUTTON_VIEW_H_
+#endif  // BUTTON_VIEW_H_

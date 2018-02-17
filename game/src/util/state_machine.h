@@ -10,7 +10,7 @@ class StateMachine {
  public:
   StateMachine(T);
   ~StateMachine();
-  T GetCurrentState();
+  T    GetCurrentState();
   void PushState(T);
   void ChangeState(T);
   void PopState();
@@ -62,7 +62,8 @@ void StateMachine<T>::PushState(T state) {
   }
   stack_.push(state);
 #ifdef DEBUG
-  LOG_INFO("StateMachine Pushed   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+  LOG_INFO("StateMachine Pushed   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(),
+           stack_.size());
 #endif
   state->Enter();
 }
@@ -77,7 +78,8 @@ void StateMachine<T>::ChangeState(T state) {
   stack_.push(state);
   state->Enter();
 #ifdef DEBUG
-  LOG_INFO("StateMachine Replaced / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+  LOG_INFO("StateMachine Replaced / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(),
+           stack_.size());
 #endif
 }
 
@@ -92,14 +94,14 @@ void StateMachine<T>::PopState() {
     cur_state = GetCurrentState();
     cur_state->Enter();
 #ifdef DEBUG
-    LOG_INFO("StateMachine Popped   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(), stack_.size());
+    LOG_INFO("StateMachine Popped   / CurrentState : %s, StackSize: %d", GetCurrentState()->GetStateID().c_str(),
+             stack_.size());
 #endif
-  }
-  else {
+  } else {
 #ifdef DEBUG
     LOG_INFO("StateMachine Popped   / Stack is empty");
 #endif
   }
 }
 
-#endif // STATE_MACHINE_H_
+#endif  // STATE_MACHINE_H_

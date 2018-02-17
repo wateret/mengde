@@ -13,10 +13,10 @@ class Game;
 class Commander {
  public:
   Commander();
-  bool HasNext() const;
+  bool       HasNext() const;
   const Cmd* GetNextCmdConst() const;
-  void DoNext(Game*);
-//  void UnDo(Game*);
+  void       DoNext(Game*);
+  //  void UnDo(Game*);
   void Push(unique_ptr<Cmd>);
   void DebugPrint() const;
 
@@ -25,7 +25,7 @@ class Commander {
   unique_ptr<CmdQueue> cmdq_history_;
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // COMMANDER_H_
+#endif  // COMMANDER_H_

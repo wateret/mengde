@@ -1,14 +1,16 @@
 #include "equipment_set.h"
 
+#include "cmd.h"  // TODO included for CmdQueue only
 #include "i_equipper.h"
-#include "cmd.h" // TODO included for CmdQueue only
 
 namespace mengde {
 namespace core {
 
-EquipmentSet::EquipmentSet(IEquipper* equipper) : equipper_(equipper),
-    slot_weapon_(Equipment::Type::kWeapon), slot_armor_(Equipment::Type::kArmor), slot_aid_(Equipment::Type::kAid) {
-}
+EquipmentSet::EquipmentSet(IEquipper* equipper)
+    : equipper_(equipper),
+      slot_weapon_(Equipment::Type::kWeapon),
+      slot_armor_(Equipment::Type::kArmor),
+      slot_aid_(Equipment::Type::kAid) {}
 
 void EquipmentSet::CopyEquipmentSet(const EquipmentSet& eqset) {
   SetWeapon(eqset.GetWeapon());
@@ -21,8 +23,8 @@ void EquipmentSet::CopyEquipmentSet(const EquipmentSet& eqset) {
 EquipmentSet* EquipmentSet::Clone(IEquipper* equipper) const {
   EquipmentSet* cloned = new EquipmentSet(equipper);
   cloned->slot_weapon_ = this->slot_weapon_;
-  cloned->slot_armor_ = this->slot_armor_;
-  cloned->slot_aid_ = this->slot_aid_;
+  cloned->slot_armor_  = this->slot_armor_;
+  cloned->slot_aid_    = this->slot_aid_;
   /*
   cloned->PutEquipmentOn(this->GetWeapon());
   cloned->PutEquipmentOn(this->GetArmor());
@@ -77,17 +79,11 @@ const Equipment* EquipmentSet::GetEquipment(Equipment::Type type) const {
   }
 }
 
-const Equipment* EquipmentSet::GetWeapon() const {
-  return slot_weapon_.GetEquipment();
-}
+const Equipment* EquipmentSet::GetWeapon() const { return slot_weapon_.GetEquipment(); }
 
-const Equipment* EquipmentSet::GetArmor() const {
-  return slot_armor_.GetEquipment();
-}
+const Equipment* EquipmentSet::GetArmor() const { return slot_armor_.GetEquipment(); }
 
-const Equipment* EquipmentSet::GetAid() const {
-  return slot_aid_.GetEquipment();
-}
+const Equipment* EquipmentSet::GetAid() const { return slot_aid_.GetEquipment(); }
 
 Attribute EquipmentSet::CalcAddends() const {
   return slot_weapon_.CalcAddends() + slot_armor_.CalcAddends() + slot_aid_.CalcAddends();
@@ -98,13 +94,13 @@ Attribute EquipmentSet::CalcMultipliers() const {
 }
 
 unique_ptr<Cmd> EquipmentSet::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
-  auto cmdq = unique_ptr<CmdQueue>(new CmdQueue());
+  auto             cmdq   = unique_ptr<CmdQueue>(new CmdQueue());
   const Equipment* weapon = GetWeapon();
   const Equipment* armor  = GetArmor();
   const Equipment* aid    = GetAid();
   if (weapon != nullptr) cmdq->Append(weapon->RaiseEvent(type, unit));
-  if (armor != nullptr)  cmdq->Append(armor->RaiseEvent(type, unit));
-  if (aid != nullptr)    cmdq->Append(aid->RaiseEvent(type, unit));
+  if (armor != nullptr) cmdq->Append(armor->RaiseEvent(type, unit));
+  if (aid != nullptr) cmdq->Append(aid->RaiseEvent(type, unit));
   return cmdq;
 }
 
@@ -113,9 +109,9 @@ void EquipmentSet::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) c
   const Equipment* armor  = GetArmor();
   const Equipment* aid    = GetAid();
   if (weapon != nullptr) weapon->RaiseEvent(type, unit, act);
-  if (armor != nullptr)  armor->RaiseEvent(type, unit, act);
-  if (aid != nullptr)    aid->RaiseEvent(type, unit, act);
+  if (armor != nullptr) armor->RaiseEvent(type, unit, act);
+  if (aid != nullptr) aid->RaiseEvent(type, unit, act);
 }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

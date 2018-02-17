@@ -6,11 +6,11 @@
 #define NULL (0)
 #endif
 
-#define UNUSED(x) ((void) (x))
+#define UNUSED(x) ((void)(x))
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <algorithm>
 #include <deque>
 #include <functional>
@@ -26,16 +26,16 @@ using std::deque;
 using std::function;
 using std::list;
 using std::queue;
-using std::string;
-using std::stack;
-using std::unique_ptr;
 using std::shared_ptr;
+using std::stack;
+using std::string;
+using std::unique_ptr;
 using std::vector;
 
-#include "vec2d.h"
-#include "direction.h"
-#include "misc_helpers.h"
 #include "assert_helper.h"
+#include "direction.h"
 #include "logger.h"
+#include "misc_helpers.h"
+#include "vec2d.h"
 
-#endif // COMMON_H_
+#endif  // COMMON_H_

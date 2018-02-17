@@ -1,32 +1,31 @@
 #include "unit_over_view.h"
 
 #include "core/unit.h"
-#include "util/path.h"
 #include "gui/uifw/gauge_view.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
+#include "util/path.h"
 
 namespace mengde {
 namespace gui {
 namespace app {
 
-UnitOverView::UnitOverView(const Rect* frame)
-    : CompositeView(frame), unit_(NULL) {
+UnitOverView::UnitOverView(const Rect* frame) : CompositeView(frame), unit_(NULL) {
   bg_color(COLOR("darkgray"));
 
   Rect portrait_frame = {0, 0, 64, 80};
-  iv_portrait_ = new ImageView(&portrait_frame);
-  Rect top_frame = {64 + LayoutHelper::kDefaultSpace, 0, 200, 16};
-  tv_name_ = new TextView(&top_frame, "name");
+  iv_portrait_        = new ImageView(&portrait_frame);
+  Rect top_frame      = {64 + LayoutHelper::kDefaultSpace, 0, 200, 16};
+  tv_name_            = new TextView(&top_frame, "name");
   top_frame.Move({0, 16});
   tv_lv_ = new TextView(&top_frame, "lv");
   AddChild(iv_portrait_);
   AddChild(tv_name_);
   AddChild(tv_lv_);
 
-  const Vec2D frame_space = {0, 24};
-  const int kLabelWidth  = 45;
-  const int kLabelHeight = 16;
+  const Vec2D frame_space  = {0, 24};
+  const int   kLabelWidth  = 45;
+  const int   kLabelHeight = 16;
 
   Rect tv_frame = {0, 92, kLabelWidth, kLabelHeight};
 
@@ -38,16 +37,11 @@ UnitOverView::UnitOverView(const Rect* frame)
     tv_frame.Move(frame_space);
   }
 
-  Rect gv_frame = {kLabelWidth, 92, 220-16-kLabelWidth, kLabelHeight};
+  Rect gv_frame = {kLabelWidth, 92, 220 - 16 - kLabelWidth, kLabelHeight};
 
-  static const Color colors[kNumGVs] = {COLOR("gauge_exp"),
-                                        COLOR("gauge_hp"),
-                                        COLOR("gauge_mp"),
-                                        COLOR("gauge_stats"),
-                                        COLOR("gauge_stats"),
-                                        COLOR("gauge_stats"),
-                                        COLOR("gauge_stats"),
-                                        COLOR("gauge_stats")};
+  static const Color colors[kNumGVs] = {COLOR("gauge_exp"),   COLOR("gauge_hp"),    COLOR("gauge_mp"),
+                                        COLOR("gauge_stats"), COLOR("gauge_stats"), COLOR("gauge_stats"),
+                                        COLOR("gauge_stats"), COLOR("gauge_stats")};
 
   for (int i = 0; i < kNumGVs; i++) {
     GaugeView* gv = new GaugeView(&gv_frame, 0, 1, 0, colors[i], COLOR(128, 128, 128), COLOR(255, 232, 142));
@@ -79,8 +73,8 @@ void UnitOverView::OnUnitUpdate() {
 
   const core::Attribute& ori_attr = unit_->GetOriginalStat();
   const core::Attribute& cur_attr = unit_->GetCurrentStat();
-  const core::HpMp& ori_hpmp = unit_->GetOriginalHpMp();
-  const core::HpMp& cur_hpmp = unit_->GetCurrentHpMp();
+  const core::HpMp&      ori_hpmp = unit_->GetOriginalHpMp();
+  const core::HpMp&      cur_hpmp = unit_->GetCurrentHpMp();
 
   gv_stats_[0]->SetCurVal(unit_->GetExp());
   gv_stats_[0]->SetMaxVal(core::Level::kExpLimit);
@@ -100,6 +94,6 @@ void UnitOverView::OnUnitUpdate() {
   iv_portrait_->SetPath(portrait_path.ToString());
 }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

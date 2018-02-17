@@ -13,8 +13,8 @@ namespace app {
 
 std::string GetModelPath(const std::string& model_id, SpriteType type);
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // VIEW_APP_MISC_H_
+#endif  // VIEW_APP_MISC_H_

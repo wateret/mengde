@@ -3,13 +3,13 @@
 #include "assets.h"
 #include "cmd.h"
 #include "commander.h"
+#include "core/path_tree.h"
 #include "deployer.h"
 #include "event_effect.h"
-#include "magic.h"
 #include "formulae.h"
+#include "magic.h"
 #include "stage_unit_manager.h"
 #include "util/game_env.h"
-#include "core/path_tree.h"
 #include "util/path.h"
 
 // XXX temporary include
@@ -30,11 +30,11 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       turn_(),
       status_(Status::kDeploying) {
   lua_ = CreateLua(stage_script_path);
-  map_        = CreateMap();
+  map_ = CreateMap();
   lua_->Call<void>(string("on_deploy"), lua_this_);
   deployer_ = CreateDeployer();
 
-  commander_ = new Commander();
+  commander_          = new Commander();
   stage_unit_manager_ = new StageUnitManager();
 }
 
@@ -54,8 +54,7 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
 
   // Register API functions
   {
-#define MACRO_LUA_GAME(cname, luaname) \
-    lua->Register(GAME_PREFIX #luaname, Game_##cname);
+#define MACRO_LUA_GAME(cname, luaname) lua->Register(GAME_PREFIX #luaname, Game_##cname);
 #include "lua_game.h.inc"
 #undef MACRO_LUA_GAME
   }
@@ -64,8 +63,7 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
   {
     lua->RegisterClass(lua_this_.name());
 
-#define MACRO_LUA_GAME(cname, luaname) \
-    lua->RegisterMethod(lua_this_.name(), string(#luaname));
+#define MACRO_LUA_GAME(cname, luaname) lua->RegisterMethod(lua_this_.name(), string(#luaname));
 #include "lua_game.h.inc"
 #undef MACRO_LUA_GAME
   }
@@ -92,11 +90,11 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
 Map* Game::CreateMap() {
   ASSERT(lua_ != nullptr);
 
-  vector<uint32_t> size = lua_->GetVector<uint32_t>("gdata.map.size");
-  uint32_t cols = size[0];
-  uint32_t rows = size[1];
-  vector<string> terrain = lua_->GetVector<string>("gdata.map.terrain");
-  string file = lua_->Get<string>("gdata.map.file");
+  vector<uint32_t> size    = lua_->GetVector<uint32_t>("gdata.map.size");
+  uint32_t         cols    = size[0];
+  uint32_t         rows    = size[1];
+  vector<string>   terrain = lua_->GetVector<string>("gdata.map.terrain");
+  string           file    = lua_->Get<string>("gdata.map.file");
   ASSERT(rows == terrain.size());
   for (auto e : terrain) {
     ASSERT(cols == e.size());
@@ -108,26 +106,25 @@ Deployer* Game::CreateDeployer() {
   ASSERT(lua_ != nullptr);
 
   vector<DeployInfoUnselectable> unselectable_info_list;
-  lua_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list] (lua::Lua* l, const string&) mutable {
-    vector<int> pos_vec = l->Get<vector<int>>("position");
-    string hero_id = l->Get<string>("hero");
-    Vec2D position(pos_vec[0], pos_vec[1]);
-    Hero* hero = assets_->GetHero(hero_id); // TODO Check if Hero exists in our assets
-    unselectable_info_list.push_back({position, hero});
-  });
-  uint32_t num_required = lua_->Get<uint32_t>("gdata.deploy.num_required_selectables");
+  lua_->ForEachTableEntry("gdata.deploy.unselectables",
+                          [=, &unselectable_info_list](lua::Lua* l, const string&) mutable {
+                            vector<int> pos_vec = l->Get<vector<int>>("position");
+                            string      hero_id = l->Get<string>("hero");
+                            Vec2D       position(pos_vec[0], pos_vec[1]);
+                            Hero*       hero = assets_->GetHero(hero_id);  // TODO Check if Hero exists in our assets
+                            unselectable_info_list.push_back({position, hero});
+                          });
+  uint32_t                     num_required = lua_->Get<uint32_t>("gdata.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
-  lua_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list] (lua::Lua* l, const string&) mutable {
+  lua_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list](lua::Lua* l, const string&) mutable {
     vector<int> pos_vec = l->Get<vector<int>>("position");
-    Vec2D position(pos_vec[0], pos_vec[1]);
+    Vec2D       position(pos_vec[0], pos_vec[1]);
     selectable_info_list.push_back({position});
   });
   return new Deployer(unselectable_info_list, selectable_info_list, num_required);
 }
 
-void Game::ForEachUnit(std::function<void(Unit*)> fn) {
-  stage_unit_manager_->ForEach(fn);
-}
+void Game::ForEachUnit(std::function<void(Unit*)> fn) { stage_unit_manager_->ForEach(fn); }
 
 void Game::MoveUnit(Unit* unit, Vec2D dst) {
   Vec2D src = unit->GetPosition();
@@ -149,24 +146,16 @@ bool Game::TryMagic(Unit* unit_atk, Unit* unit_def) {
   return GenRandom(100) < Formulae::ComputeMagicAccuracy(unit_atk, unit_def);
 }
 
-bool Game::IsValidCoords(Vec2D c) {
-  return map_->IsValidCoords(c);
-}
+bool Game::IsValidCoords(Vec2D c) { return map_->IsValidCoords(c); }
 
-Magic* Game::GetMagic(const std::string& id) {
-  return rc_.magic_manager->Get(id);
-}
+Magic* Game::GetMagic(const std::string& id) { return rc_.magic_manager->Get(id); }
 
-Unit* Game::GetUnit(uint32_t id) {
-  return stage_unit_manager_->Get(id);
-}
+Unit* Game::GetUnit(uint32_t id) { return stage_unit_manager_->Get(id); }
 
-Equipment* Game::GetEquipment(const std::string& id) {
-  return rc_.equipment_manager->Get(id);
-}
+Equipment* Game::GetEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
 
 bool Game::EndForceTurn() {
-  ForEachUnit([this] (Unit* u) {
+  ForEachUnit([this](Unit* u) {
     if (this->IsCurrentTurn(u)) {
       u->ResetAction();
     }
@@ -174,7 +163,7 @@ bool Game::EndForceTurn() {
 
   bool next_turn = turn_.Next();
 
-  ForEachUnit([this] (Unit* u) {
+  ForEachUnit([this](Unit* u) {
     if (this->IsCurrentTurn(u)) {
       commander_->Push(u->RaiseEvent(event::GeneralEvent::kTurnBegin));
     }
@@ -187,29 +176,19 @@ bool Game::EndForceTurn() {
   return IsUserTurn();
 }
 
-bool Game::IsUserTurn() const {
-  return turn_.GetForce() == Force::kOwn;
-}
+bool Game::IsUserTurn() const { return turn_.GetForce() == Force::kOwn; }
 
-bool Game::IsAITurn() const {
-  return !IsUserTurn();
-}
+bool Game::IsAITurn() const { return !IsUserTurn(); }
 
-bool Game::IsCurrentTurn(Unit* unit) const {
-  return unit->GetForce() == turn_.GetForce();
-}
+bool Game::IsCurrentTurn(Unit* unit) const { return unit->GetForce() == turn_.GetForce(); }
 
-uint16_t Game::GetTurnCurrent() const {
-  return turn_.GetCurrent();
-}
+uint16_t Game::GetTurnCurrent() const { return turn_.GetCurrent(); }
 
-uint16_t Game::GetTurnLimit() const {
-  return turn_.GetLimit();
-}
+uint16_t Game::GetTurnLimit() const { return turn_.GetLimit(); }
 
 vector<Unit*> Game::GetCurrentTurnUnits() {
   vector<Unit*> units;
-  ForEachUnit([this, &units] (Unit* u) {
+  ForEachUnit([this, &units](Unit* u) {
     if (this->IsCurrentTurn(u)) {
       units.push_back(u);
     }
@@ -222,15 +201,13 @@ vector<Vec2D> Game::FindMovablePos(Unit* unit) {
   return path_tree->GetNodeList();
 }
 
-PathTree* Game::FindMovablePath(Unit* unit) {
-  return map_->FindMovablePath(unit);
-}
+PathTree* Game::FindMovablePath(Unit* unit) { return map_->FindMovablePath(unit); }
 
 Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
   Vec2D original_pos = unit->GetPosition();
   MoveUnit(unit, virtual_pos);
   Unit* target = nullptr;
-  stage_unit_manager_->ForEach([unit, &target] (Unit* candidate) {
+  stage_unit_manager_->ForEach([unit, &target](Unit* candidate) {
     if (unit->IsHostile(candidate)) {
       if (unit->IsInRange(candidate->GetPosition())) {
         target = candidate;
@@ -241,18 +218,14 @@ Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
   return target;
 }
 
-bool Game::HasNext() const {
-  return commander_->HasNext();
-}
+bool Game::HasNext() const { return commander_->HasNext(); }
 
 const Cmd* Game::GetNextCmdConst() const {
   ASSERT(HasNext());
   return commander_->GetNextCmdConst();
 }
 
-bool Game::UnitInCell(Vec2D c) const {
-  return map_->UnitInCell(c);
-}
+bool Game::UnitInCell(Vec2D c) const { return map_->UnitInCell(c); }
 
 void Game::DoPendingCmd() {
   ASSERT(HasNext());
@@ -263,20 +236,20 @@ void Game::DoPendingCmd() {
 }
 
 void Game::Push(unique_ptr<Cmd> cmd) {
-///  if (cmd == nullptr) return;
+  ///  if (cmd == nullptr) return;
   commander_->Push(std::move(cmd));
 }
 
 bool Game::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
   uint32_t res = lua_->Call<uint32_t>("end_condition", lua_this_);
-  status_ = static_cast<Status>(res);
+  status_      = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
 
 uint32_t Game::GetNumEnemiesAlive() {
   uint32_t count = 0;
-  ForEachUnit([=, &count] (Unit* u) {
+  ForEachUnit([=, &count](Unit* u) {
     if (!u->IsDead() && u->GetForce() == Force::kEnemy) {
       count++;
     }
@@ -286,7 +259,7 @@ uint32_t Game::GetNumEnemiesAlive() {
 
 uint32_t Game::GetNumOwnsAlive() {
   uint32_t count = 0;
-  ForEachUnit([=, &count] (Unit* u) {
+  ForEachUnit([=, &count](Unit* u) {
     if (!u->IsDead() && u->GetForce() == Force::kOwn) {
       count++;
     }
@@ -313,8 +286,8 @@ uint32_t Game::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
 
 uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
-  Hero* hero = new Hero(hero_tpl, level);
-  Unit* unit = new Unit(hero, force);
+  Hero*         hero     = new Hero(hero_tpl, level);
+  Unit*         unit     = new Unit(hero, force);
   map_->PlaceUnit(unit, pos);
   return stage_unit_manager_->Deploy(unit);
 }
@@ -330,26 +303,18 @@ bool Game::SubmitDeploy() {
 
   if (!deployer_->IsReady()) return false;
 
-  deployer_->ForEach([=] (const DeployElement& e) {
-    this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero));
-  });
+  deployer_->ForEach([=](const DeployElement& e) { this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero)); });
 
   status_ = Status::kUndecided;
   lua_->Call<void>(string("on_begin"), lua_this_);
   return true;
 }
 
-uint32_t Game::AssignDeploy(const Hero* hero) {
-  return deployer_->Assign(hero);
-}
+uint32_t Game::AssignDeploy(const Hero* hero) { return deployer_->Assign(hero); }
 
-uint32_t Game::UnassignDeploy(const Hero* hero) {
-  return deployer_->Unassign(hero);
-}
+uint32_t Game::UnassignDeploy(const Hero* hero) { return deployer_->Unassign(hero); }
 
-uint32_t Game::FindDeploy(const Hero* hero) {
-  return deployer_->Find(hero);
-}
+uint32_t Game::FindDeploy(const Hero* hero) { return deployer_->Find(hero); }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

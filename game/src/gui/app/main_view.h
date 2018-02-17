@@ -18,8 +18,8 @@ class MainView : public CompositeView {
  private:
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // MAIN_VIEW_H_
+#endif  // MAIN_VIEW_H_

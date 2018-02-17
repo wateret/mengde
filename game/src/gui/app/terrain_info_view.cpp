@@ -7,9 +7,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-TerrainInfoView::TerrainInfoView(const Rect& frame,
-                                 Vec2D coords)
-    : CompositeView(frame), coords_(coords) {
+TerrainInfoView::TerrainInfoView(const Rect& frame, Vec2D coords) : CompositeView(frame), coords_(coords) {
   bg_color(COLOR("darkgray"));
   padding(8);
 
@@ -18,10 +16,8 @@ TerrainInfoView::TerrainInfoView(const Rect& frame,
   AddChild(tv_name_);
 }
 
-void TerrainInfoView::SetText(const string& s) {
-  tv_name_->SetText(s);
-}
+void TerrainInfoView::SetText(const string& s) { tv_name_->SetText(s); }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

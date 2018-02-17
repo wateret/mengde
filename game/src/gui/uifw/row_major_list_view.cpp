@@ -29,6 +29,6 @@ void RowMajorListView::AddElement(View* e) {
   AddChild(e);
 }
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde

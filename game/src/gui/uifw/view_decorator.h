@@ -24,8 +24,8 @@ class ViewDecorator : public View {
   View* view_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // VIEW_DECORATOR_H_
+#endif  // VIEW_DECORATOR_H_

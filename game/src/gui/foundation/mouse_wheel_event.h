@@ -9,25 +9,17 @@ namespace foundation {
 
 class MouseWheelEvent {
  public:
-   enum class Horizontal : uint16_t {
-     kNone,
-     kLeft,
-     kRight
-   };
+  enum class Horizontal : uint16_t { kNone, kLeft, kRight };
 
-   enum class Vertical : uint16_t {
-     kNone,
-     kUp,
-     kDown
-   };
+  enum class Vertical : uint16_t { kNone, kUp, kDown };
 
  public:
   MouseWheelEvent(Horizontal, Vertical, Vec2D);
   MouseWheelEvent(const MouseWheelEvent&, Vec2D);
-  bool IsLeft() const { return hor_ == Horizontal::kLeft; }
-  bool IsRight() const { return hor_ == Horizontal::kRight; }
-  bool IsUp() const { return ver_ == Vertical::kUp; }
-  bool IsDown() const { return ver_ == Vertical::kDown; }
+  bool  IsLeft() const { return hor_ == Horizontal::kLeft; }
+  bool  IsRight() const { return hor_ == Horizontal::kRight; }
+  bool  IsUp() const { return ver_ == Vertical::kUp; }
+  bool  IsDown() const { return ver_ == Vertical::kDown; }
   Vec2D GetCoords() const { return coords_; }
 
  private:
@@ -36,8 +28,8 @@ class MouseWheelEvent {
   Vec2D      coords_;
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
-#endif // MOUSE_WHEEL_EVENT_H_
+#endif  // MOUSE_WHEEL_EVENT_H_

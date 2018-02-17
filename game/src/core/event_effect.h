@@ -3,8 +3,8 @@
 
 #include <limits>
 
-#include "util/common.h"
 #include "event_types.h"
+#include "util/common.h"
 
 namespace mengde {
 namespace core {
@@ -25,7 +25,7 @@ class EventEffectBase {
   EventEffectBase(uint16_t turns_left);
   virtual ~EventEffectBase() = default;
   uint16_t GetTurnsLeft() { return turns_left_; }
-  void NextTurn();
+  void     NextTurn();
 
  private:
   uint16_t turns_left_;
@@ -90,7 +90,7 @@ class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
   int addend_;
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // EVENT_EFFECT_H_
+#endif  // EVENT_EFFECT_H_

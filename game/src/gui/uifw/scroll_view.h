@@ -25,8 +25,8 @@ class ScrollView : public ViewDecorator {
   Vec2D coords_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // SCROLL_VIEW_H_
+#endif  // SCROLL_VIEW_H_

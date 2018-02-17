@@ -1,22 +1,15 @@
 #include "magic.h"
 
-#include "unit.h"
-#include "stat_modifier_list.h"
-#include "stat_modifier.h"
 #include "formulae.h"
+#include "stat_modifier.h"
+#include "stat_modifier_list.h"
+#include "unit.h"
 
 namespace mengde {
 namespace core {
 
-Magic::Magic(const std::string& id,
-             MagicType type,
-             Range::Type range,
-             bool is_target_enemy,
-             uint16_t mp_cost,
-             uint16_t power,
-             uint16_t stat_id,
-             uint16_t amount,
-             uint16_t turns)
+Magic::Magic(const std::string& id, MagicType type, Range::Type range, bool is_target_enemy, uint16_t mp_cost,
+             uint16_t power, uint16_t stat_id, uint16_t amount, uint16_t turns)
     : id_(id),
       type_(type),
       range_(range),
@@ -34,8 +27,8 @@ Magic::Magic(const std::string& id,
 
 void Magic::Perform(Unit* unit_atk, Unit* unit_def) {
   /*
-           */
-//  if (TryPerform(unit_atk, unit_def)) {
+   */
+  //  if (TryPerform(unit_atk, unit_def)) {
   LOG_INFO("Magic hits!");
 
   if (type_ & kMagicDeal) {
@@ -45,7 +38,7 @@ void Magic::Perform(Unit* unit_atk, Unit* unit_def) {
   }
 
   if (type_ & kMagicHeal) {
-    int amount = CalcDamage(unit_atk, unit_def); // FIXME change formula
+    int amount = CalcDamage(unit_atk, unit_def);  // FIXME change formula
     unit_def->Heal(amount);
     LOG_INFO("Magic heals HP by %d", amount);
   }
@@ -63,13 +56,9 @@ int Magic::CalcAccuracy(Unit* unit_atk, Unit* unit_def) {
   return Formulae::ComputeMagicAccuracy(unit_atk, unit_def, 100 /* force */);
 }
 
-bool Magic::TryPerform(Unit* unit_atk, Unit* unit_def) {
-  return GenRandom(100) < CalcAccuracy(unit_atk, unit_def);
-}
+bool Magic::TryPerform(Unit* unit_atk, Unit* unit_def) { return GenRandom(100) < CalcAccuracy(unit_atk, unit_def); }
 
-void Magic::AddLearnInfo(uint16_t class_id, uint16_t level) {
-  learn_info_list_.push_back({class_id, level});
-}
+void Magic::AddLearnInfo(uint16_t class_id, uint16_t level) { learn_info_list_.push_back({class_id, level}); }
 
 bool Magic::IsAvailible(Unit* unit) {
   for (auto e : learn_info_list_) {
@@ -80,9 +69,7 @@ bool Magic::IsAvailible(Unit* unit) {
   return false;
 }
 
-Vec2D* Magic::GetRange() {
-  return Range::kRanges[range_];
-}
+Vec2D* Magic::GetRange() { return Range::kRanges[range_]; }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

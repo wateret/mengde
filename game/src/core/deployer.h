@@ -1,8 +1,8 @@
 #ifndef DEPLOYER_H_
 #define DEPLOYER_H_
 
-#include <unordered_set>
 #include <set>
+#include <unordered_set>
 #include <utility>
 
 #include "util/common.h"
@@ -14,7 +14,7 @@ class Hero;
 
 struct DeployElement {
   const Hero* hero;
-  uint32_t no;
+  uint32_t    no;
 
   DeployElement() : hero(nullptr), no(0) {}
   DeployElement(const Hero* hero, uint32_t no) : hero(hero), no(no) {}
@@ -24,29 +24,26 @@ struct DeployerComparer {
   bool operator()(const DeployElement& lhs, const DeployElement& rhs);
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-namespace std
-{
+namespace std {
 
 // Hash functor for DeployElement
-template<>
-struct hash<mengde::core::DeployElement>
-{
-  size_t operator()(mengde::core::DeployElement const& o) const noexcept
-  {
+template <>
+struct hash<mengde::core::DeployElement> {
+  size_t operator()(mengde::core::DeployElement const& o) const noexcept {
     return hash<const mengde::core::Hero*>{}(o.hero);
   }
 };
 
-} // namespace std
+}  // namespace std
 
 namespace mengde {
 namespace core {
 
 struct DeployInfoUnselectable {
-  Vec2D position;
+  Vec2D       position;
   const Hero* hero;
 
   DeployInfoUnselectable(Vec2D position, const Hero* hero) : position(position), hero(hero) {}
@@ -60,15 +57,11 @@ struct DeployInfoSelectable {
 
 class Deployer {
  private:
-  enum class Type {
-    kNone,
-    kUnselectable,
-    kSelectable
-  };
+  enum class Type { kNone, kUnselectable, kSelectable };
 
  public:
   typedef std::unordered_set<DeployElement, std::hash<DeployElement>, DeployerComparer> AssignmentContainer;
-  typedef function<void(const DeployElement&)> ForEachFn;
+  typedef function<void(const DeployElement&)>                                          ForEachFn;
 
  public:
   Deployer(const vector<DeployInfoUnselectable>&, const vector<DeployInfoSelectable>&, uint32_t);
@@ -83,18 +76,18 @@ class Deployer {
 
  private:
   std::pair<Type, DeployElement> FindImpl(const Hero* hero);
-  static vector<DeployElement> AsOrderedVector(AssignmentContainer&);
+  static vector<DeployElement>   AsOrderedVector(AssignmentContainer&);
 
  private:
   vector<DeployInfoUnselectable> unselectable_info_list_;
-  vector<DeployInfoSelectable> selectable_info_list_;
-  uint32_t num_required_;
-  AssignmentContainer unselectable_assignment_;
-  AssignmentContainer selectable_assignment_;
-  std::set<uint32_t> available_no_;
+  vector<DeployInfoSelectable>   selectable_info_list_;
+  uint32_t                       num_required_;
+  AssignmentContainer            unselectable_assignment_;
+  AssignmentContainer            selectable_assignment_;
+  std::set<uint32_t>             available_no_;
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // DEPLOYER_H_
+#endif  // DEPLOYER_H_

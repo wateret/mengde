@@ -1,18 +1,18 @@
 #ifndef EQUIPMENT_SELECT_VIEW_H_
 #define EQUIPMENT_SELECT_VIEW_H_
 
+#include "core/assets.h"  // XXX temporary include for EquipmentWithAmount
 #include "gui/uifw/callback_view.h"
 #include "gui/uifw/composite_view.h"
-#include "core/assets.h" // XXX temporary include for EquipmentWithAmount
 
 #include "common.h"
 
 namespace mengde {
 namespace core {
-  class Assets;
-  class Hero;
-}
-}
+class Assets;
+class Hero;
+}  // namespace core
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -32,13 +32,13 @@ class EquipmentSelectView : public CompositeView {
   void SetEquipments(const vector<core::EquipmentWithAmount>&, core::Assets*);
 
  private:
-  const core::Hero* hero_;
-  RowMajorListView* equipment_list_view_;
+  const core::Hero*    hero_;
+  RowMajorListView*    equipment_list_view_;
   IEquipmentSetSetter* equipment_set_update_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // EQUIPMENT_SELECT_VIEW_H_
+#endif  // EQUIPMENT_SELECT_VIEW_H_

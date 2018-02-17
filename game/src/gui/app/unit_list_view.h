@@ -7,9 +7,9 @@
 
 namespace mengde {
 namespace core {
-  class Unit;
+class Unit;
 }
-}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -23,8 +23,8 @@ class UnitListView : public CompositeView {
     void SetUnit(core::Unit*);
 
    private:
-    core::Unit*     unit_;
-    TextView* tv_name_;
+    core::Unit* unit_;
+    TextView*   tv_name_;
   };
 
  public:
@@ -33,11 +33,11 @@ class UnitListView : public CompositeView {
 
  private:
   vector<core::Unit*> unit_list_;
-  UnitDetailView* unit_detail_view_;
+  UnitDetailView*     unit_detail_view_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // UNIT_LIST_VIEW_H_
+#endif  // UNIT_LIST_VIEW_H_

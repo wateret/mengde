@@ -12,14 +12,13 @@ class PathNode {
  public:
   PathNode(Vec2D, PathNode* = NULL);
   PathNode* GetParent() { return parent_; }
-  Vec2D GetData() { return data_; }
-  bool IsRoot() { return parent_ == NULL; }
+  Vec2D     GetData() { return data_; }
+  bool      IsRoot() { return parent_ == NULL; }
 
  private:
-  Vec2D data_;
+  Vec2D     data_;
   PathNode* parent_;
 };
-
 
 // PathTree is a tree data structure for saving unit's path
 //
@@ -33,20 +32,20 @@ class PathTree {
  public:
   PathTree(Vec2D);
   ~PathTree();
-  PathNode* Adopt(Vec2D, PathNode*);
+  PathNode*          Adopt(Vec2D, PathNode*);
   std::vector<Vec2D> GetNodeList();
-  PathNode* GetRoot() { return root_; }
+  PathNode*          GetRoot() { return root_; }
   std::vector<Vec2D> GetPathToRoot(PathNode*);
   std::vector<Vec2D> GetPathToRoot(Vec2D);
-  PathNode* FindNode(Vec2D);
-  bool IsNodeExist(Vec2D v) { return FindNode(v) != NULL; }
+  PathNode*          FindNode(Vec2D);
+  bool               IsNodeExist(Vec2D v) { return FindNode(v) != NULL; }
 
  private:
-  PathNode* root_;
+  PathNode*              root_;
   std::vector<PathNode*> node_list_;
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
 #endif

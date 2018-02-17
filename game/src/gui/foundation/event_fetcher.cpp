@@ -8,25 +8,24 @@ namespace foundation {
 
 bool EventFetcher::Poll() {
   SDL_Event e;
-  bool has_pending_event = SDL_PollEvent(&e);
+  bool      has_pending_event = SDL_PollEvent(&e);
   switch (e.type) {
     case SDL_QUIT: {
       event_type_ = EventType::kQuit;
       break;
     }
     case SDL_MOUSEMOTION: {
-      event_type_ = EventType::kMouseMotion;
-      Vec2D coords = {e.motion.x, e.motion.y};
-      Vec2D coords_rel = {e.motion.xrel, e.motion.yrel};
+      event_type_         = EventType::kMouseMotion;
+      Vec2D coords        = {e.motion.x, e.motion.y};
+      Vec2D coords_rel    = {e.motion.xrel, e.motion.yrel};
       event_.mouse_motion = MouseMotionEvent(MouseMotionEvent::Type::kOver, coords, coords_rel);
       break;
     }
     case SDL_MOUSEBUTTONUP:
     case SDL_MOUSEBUTTONDOWN: {
       event_type_ = EventType::kMouseButton;
-      MouseButtonEvent::State state = (e.type == SDL_MOUSEBUTTONUP) ?
-                                      MouseButtonEvent::State::kUp :
-                                      MouseButtonEvent::State::kDown;
+      MouseButtonEvent::State state =
+          (e.type == SDL_MOUSEBUTTONUP) ? MouseButtonEvent::State::kUp : MouseButtonEvent::State::kDown;
       MouseButtonEvent::Button button = MouseButtonEvent::Button::kNone;
       switch (e.button.button) {
         case SDL_BUTTON_LEFT:
@@ -53,7 +52,7 @@ bool EventFetcher::Poll() {
       if (e.wheel.x < 0) hor = MouseWheelEvent::Horizontal::kLeft;
       if (e.wheel.x > 0) hor = MouseWheelEvent::Horizontal::kRight;
       MouseWheelEvent::Vertical ver = MouseWheelEvent::Vertical::kNone;
-      if (e.wheel.y < 0) ver = MouseWheelEvent::Vertical::kDown;   // TODO check the direction
+      if (e.wheel.y < 0) ver = MouseWheelEvent::Vertical::kDown;  // TODO check the direction
       if (e.wheel.y > 0) ver = MouseWheelEvent::Vertical::kUp;
       event_.mouse_wheel = MouseWheelEvent(hor, ver, Vec2D(x, y));
     }
@@ -64,6 +63,6 @@ bool EventFetcher::Poll() {
   return has_pending_event;
 }
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde

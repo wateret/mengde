@@ -1,16 +1,16 @@
 #ifndef UNIT_DIALOG_VIEW_H_
 #define UNIT_DIALOG_VIEW_H_
 
-#include "util/common.h"
 #include "gui/uifw/composite_view.h"
+#include "util/common.h"
 
 #include "common.h"
 
 namespace mengde {
 namespace core {
-  class Unit;
+class Unit;
 }
-}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -26,15 +26,15 @@ class UnitDialogView : public CompositeView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
  private:
-  string         message_;
-  core::Unit*          unit_; // FIXME Do we really need this?
-  ImageView*     iv_portrait_;
-  TextView*      tv_name_;
-  TextView*      tv_message_;
+  string      message_;
+  core::Unit* unit_;  // FIXME Do we really need this?
+  ImageView*  iv_portrait_;
+  TextView*   tv_name_;
+  TextView*   tv_message_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // UNIT_DIALOG_VIEW_H_
+#endif  // UNIT_DIALOG_VIEW_H_

@@ -4,9 +4,9 @@
 #include <string>
 
 #include "event_effect_list.h"
+#include "i_event.h"
 #include "stat_modifier_list.h"
 #include "util/common.h"
-#include "i_event.h"
 
 namespace mengde {
 namespace core {
@@ -16,36 +16,31 @@ class StatModifier;
 
 class Equipment : public IEvent {
  public:
-  enum class Type {
-    kNone,
-    kWeapon,
-    kArmor,
-    kAid
-  };
+  enum class Type { kNone, kWeapon, kArmor, kAid };
 
  public:
   virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const override;
-  virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
+  virtual void            RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
 
  public:
   Equipment(const std::string&, Type);
-  string GetId() const { return id_; }
-  Type GetType() const { return type_; }
-  void AddModifier(StatModifier*);
-  void AddEffect(EventEffect*);
-  void AddGeneralEffect(GeneralEventEffect*);
-  void AddOnCmdEffect(OnCmdEventEffect*);
+  string    GetId() const { return id_; }
+  Type      GetType() const { return type_; }
+  void      AddModifier(StatModifier*);
+  void      AddEffect(EventEffect*);
+  void      AddGeneralEffect(GeneralEventEffect*);
+  void      AddOnCmdEffect(OnCmdEventEffect*);
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
 
  private:
-  string id_;
-  Type type_;
+  string           id_;
+  Type             type_;
   StatModifierList modifier_list_;
   EventEffectList  effect_list_;
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // EQUIPMENT_H_
+#endif  // EQUIPMENT_H_

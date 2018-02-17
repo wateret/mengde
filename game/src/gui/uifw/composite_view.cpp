@@ -4,14 +4,11 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-CompositeView::CompositeView() : View(), transparent_(false) {
-}
+CompositeView::CompositeView() : View(), transparent_(false) {}
 
-CompositeView::CompositeView(const Rect* rect) : View(rect), transparent_(false) {
-}
+CompositeView::CompositeView(const Rect* rect) : View(rect), transparent_(false) {}
 
-CompositeView::CompositeView(const Rect& rect) : View(rect), transparent_(false) {
-}
+CompositeView::CompositeView(const Rect& rect) : View(rect), transparent_(false) {}
 
 CompositeView::~CompositeView() {
   for (auto e : children_) {
@@ -111,6 +108,6 @@ bool CompositeView::OnMouseWheelEvent(const foundation::MouseWheelEvent e) {
   return true;
 }
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde

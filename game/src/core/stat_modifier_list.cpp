@@ -6,8 +6,7 @@
 namespace mengde {
 namespace core {
 
-StatModifierList::StatModifierList() {
-}
+StatModifierList::StatModifierList() {}
 
 StatModifierList::~StatModifierList() {
   for (auto e : elements_) {
@@ -35,7 +34,7 @@ void StatModifierList::AddModifier(StatModifier* m) {
 }
 
 void StatModifierList::NextTurn() {
-  elements_.erase(remove_if(elements_.begin(), elements_.end(), [] (StatModifier* m) -> bool {
+  elements_.erase(remove_if(elements_.begin(), elements_.end(), [](StatModifier* m) -> bool {
     bool remove = (m->GetTurnsLeft() == 0);
     if (remove) delete m;
     return remove;
@@ -62,5 +61,5 @@ Attribute StatModifierList::CalcMultipliers() const {
   return calc_mods;
 }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

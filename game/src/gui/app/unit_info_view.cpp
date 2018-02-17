@@ -1,11 +1,11 @@
 #include "unit_info_view.h"
 
-#include "core/unit.h"
 #include "core/cell.h"
+#include "core/unit.h"
+#include "gui/foundation/rect.h"
+#include "gui/uifw/drawer.h"
 #include "gui/uifw/gauge_view.h"
 #include "gui/uifw/text_view.h"
-#include "gui/uifw/drawer.h"
-#include "gui/foundation/rect.h"
 
 namespace mengde {
 namespace gui {
@@ -25,27 +25,18 @@ UnitInfoView::UnitInfoView(const Rect* frame, core::Unit* unit)
   padding(8);
 
   Rect gv_frame = {0, 22, 184, 16};
-  gv_hp_ = new GaugeView(&gv_frame,
-                         0,
-                         1,
-                         0,
-                         COLOR("gauge_hp", kAlpha),
-                         COLOR("gauge_bg", kAlpha),
+  gv_hp_        = new GaugeView(&gv_frame, 0, 1, 0, COLOR("gauge_hp", kAlpha), COLOR("gauge_bg", kAlpha),
                          COLOR("gauge_hp_damage", kAlpha));
   gv_frame.Move(0, 22);
-  gv_mp_ = new GaugeView(&gv_frame,
-                         0,
-                         1,
-                         COLOR("gauge_mp", kAlpha),
-                         COLOR("gauge_bg", kAlpha));
+  gv_mp_ = new GaugeView(&gv_frame, 0, 1, COLOR("gauge_mp", kAlpha), COLOR("gauge_bg", kAlpha));
   gv_hp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
   gv_mp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
 
   Rect tv_rect = GetActualFrame();
-  tv_name_   = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftTop);
-  tv_lv_     = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
-  tv_lftbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftBot);
-  tv_rgtbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtBot);
+  tv_name_     = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftTop);
+  tv_lv_       = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
+  tv_lftbot_   = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftBot);
+  tv_rgtbot_   = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtBot);
 
   AddChild(gv_hp_);
   AddChild(gv_mp_);
@@ -55,8 +46,7 @@ UnitInfoView::UnitInfoView(const Rect* frame, core::Unit* unit)
   AddChild(tv_rgtbot_);
 }
 
-UnitInfoView::~UnitInfoView() {
-}
+UnitInfoView::~UnitInfoView() {}
 
 void UnitInfoView::SetUnitTerrainInfo(core::Cell* cell) {
   ASSERT(cell->IsUnitPlaced());
@@ -65,8 +55,8 @@ void UnitInfoView::SetUnitTerrainInfo(core::Cell* cell) {
   if (unit_ == unit) return;
   SetUnit(unit);
 
-  string name = cell->GetTerrainName();
-  int effect = cell->GetTerrainEffectThisCell();
+  string name           = cell->GetTerrainName();
+  int    effect         = cell->GetTerrainEffectThisCell();
   string terrain_effect = name + " " + std::to_string(effect) + "%";
   tv_rgtbot_->SetText(terrain_effect);
 }
@@ -78,7 +68,7 @@ void UnitInfoView::SetUnitAttackInfo(core::Unit* unit, int accuracy, int expecte
 }
 
 void UnitInfoView::SetUnit(core::Unit* unit) {
-  unit_ = unit;
+  unit_                      = unit;
   const core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
   const core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
   gv_hp_->SetCurVal(cur_xtat.hp);
@@ -91,12 +81,9 @@ void UnitInfoView::SetUnit(core::Unit* unit) {
   tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
 }
 
-void UnitInfoView::SetContents(const std::string& name,
-                               int lv,
-                               const core::HpMp& hpmp_cur,
-                               const core::HpMp& hpmp_max,
+void UnitInfoView::SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max,
                                const core::HpMp& hpmp_ext) {
-  unit_ = nullptr; // Reset cache
+  unit_ = nullptr;  // Reset cache
   gv_hp_->SetCurVal(hpmp_cur.hp);
   gv_hp_->SetMaxVal(hpmp_max.hp);
   gv_hp_->SetExtVal(hpmp_ext.hp);
@@ -109,10 +96,8 @@ void UnitInfoView::SetContents(const std::string& name,
   tv_rgtbot_->SetText("");
 }
 
-bool UnitInfoView::OnMouseMotionEvent(const foundation::MouseMotionEvent) {
-  return false;
-}
+bool UnitInfoView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return false; }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

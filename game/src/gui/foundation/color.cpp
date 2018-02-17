@@ -36,7 +36,7 @@ Color ColorGen::Generate(const std::string& name) {
   auto elem = colors_.find(name);
   if (elem == colors_.end()) {
     LOG_ERROR("Color name '%s' is not registered", name.c_str());
-    return {0, 0, 0, 255}; // return black
+    return {0, 0, 0, 255};  // return black
   } else {
     Color color = elem->second;
     return color;
@@ -45,15 +45,12 @@ Color ColorGen::Generate(const std::string& name) {
 
 Color ColorGen::Generate(const std::string& name, uint8_t alpha) {
   Color color = Generate(name);
-  color.a = alpha;
+  color.a     = alpha;
   return color;
 }
 
-Color ColorGen::Generate(uint8_t r, uint8_t g, uint8_t b,  uint8_t alpha) {
-  return Color(r, g, b, alpha);
-}
+Color ColorGen::Generate(uint8_t r, uint8_t g, uint8_t b, uint8_t alpha) { return Color(r, g, b, alpha); }
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
-
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde

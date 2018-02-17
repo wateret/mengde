@@ -7,9 +7,9 @@
 
 namespace mengde {
 namespace core {
-  class EquipmentSet;
+class EquipmentSet;
 }
-}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -20,8 +20,8 @@ class IEquipmentSetSetter {
   virtual void SetEquipmentSet(const core::EquipmentSet*) = 0;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // I_EQUIPMENT_SET_SETTER_H_
+#endif  // I_EQUIPMENT_SET_SETTER_H_

@@ -11,15 +11,15 @@ namespace foundation {
 
 class Misc {
  public:
-  static void Init();
-  static void Quit();
-  static void Delay(int);
-  static void SetShowCursor(bool);
+  static void        Init();
+  static void        Quit();
+  static void        Delay(int);
+  static void        SetShowCursor(bool);
   static std::string GetErrorMessage();
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
-#endif // VIEW_FOUNDATION_MISC_H_
+#endif  // VIEW_FOUNDATION_MISC_H_

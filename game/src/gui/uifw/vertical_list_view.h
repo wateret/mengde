@@ -20,8 +20,8 @@ class VerticalListView : public CompositeView {
   int total_element_height_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // VERTICAL_LIST_VIEW_H_
+#endif  // VERTICAL_LIST_VIEW_H_

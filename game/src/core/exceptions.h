@@ -30,7 +30,7 @@ class ConfigLoadException : public CoreException {
   std::string message_;
 };
 
-} // namespace mengde
-} // namespace core
+}  // namespace core
+}  // namespace mengde
 
-#endif // CORE_EXCEPTIONS_H_
+#endif  // CORE_EXCEPTIONS_H_

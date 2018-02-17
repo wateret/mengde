@@ -5,9 +5,9 @@
 #define UNIT_EFFECT_LIST_H_
 
 /*
-#include "stat_modifier_list.h"
 #include "event_effect_list.h"
 #include "i_event.h"
+#include "stat_modifier_list.h"
 
 namespace mengde {
 namespace core {
@@ -33,4 +33,4 @@ class UnitEffectList : public IEvent {
 } // namespace mengde
 
 */
-#endif // UNIT_EFFECT_LIST_H_
+#endif  // UNIT_EFFECT_LIST_H_

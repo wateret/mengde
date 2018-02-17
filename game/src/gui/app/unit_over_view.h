@@ -7,9 +7,9 @@
 
 namespace mengde {
 namespace core {
-  class Unit;
+class Unit;
 }
-}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -31,7 +31,7 @@ class UnitOverView : public CompositeView {
   static const int kNumTabs  = 3;
 
  private:
-  core::Unit*       unit_;
+  core::Unit* unit_;
   ImageView*  iv_portrait_;
   TextView*   tv_name_;
   TextView*   tv_lv_;
@@ -39,8 +39,8 @@ class UnitOverView : public CompositeView {
   GaugeView*  gv_stats_[kNumGVs];
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // UNIT_OVER_VIEW_H_
+#endif  // UNIT_OVER_VIEW_H_

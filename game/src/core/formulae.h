@@ -24,10 +24,10 @@ class Formulae {
   static int ComputeDamageBase(int, int, int, int);
   static int ComputeAccuracyBase(int, int, int);
   static int ComputeDoubleCriticalBase(int, int);
-  Formulae(); // Prevent instantiation
+  Formulae();  // Prevent instantiation
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // FORMULAE_H_
+#endif  // FORMULAE_H_

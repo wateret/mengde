@@ -4,12 +4,9 @@
 namespace mengde {
 namespace core {
 
-Commander::Commander() : cmdq_current_(new CmdQueue()), cmdq_history_(new CmdQueue()) {
-}
+Commander::Commander() : cmdq_current_(new CmdQueue()), cmdq_history_(new CmdQueue()) {}
 
-bool Commander::HasNext() const {
-  return !cmdq_current_->IsEmpty();
-}
+bool Commander::HasNext() const { return !cmdq_current_->IsEmpty(); }
 
 const Cmd* Commander::GetNextCmdConst() const {
   ASSERT(HasNext());
@@ -23,15 +20,15 @@ void Commander::DoNext(Game* game) {
 }
 
 void Commander::Push(unique_ptr<Cmd> cmd) {
-///  ASSERT(cmd != nullptr);
+  ///  ASSERT(cmd != nullptr);
   cmdq_current_->Append(std::move(cmd));
 }
 
 void Commander::DebugPrint() const {
 #ifdef DEBUG
   cmdq_current_->DebugPrint();
-#endif // DEBUG
+#endif  // DEBUG
 }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

@@ -53,10 +53,10 @@ class Value {
     void*       v_userdata;
 
     U() {}
-    ~U() {} // For non-POD types the destructor will be called from Value destructor
+    ~U() {}  // For non-POD types the destructor will be called from Value destructor
   } value_;
 };
 
-} // namespace lua
+}  // namespace lua
 
-#endif // LUA_VALUE_H_
+#endif  // LUA_VALUE_H_

@@ -17,8 +17,8 @@ class Surface {
   SDL_Surface* handle_;
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
 #endif

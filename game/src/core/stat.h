@@ -7,13 +7,7 @@ namespace mengde {
 namespace core {
 
 struct Attribute {
-  enum {
-    kStatIdAtk,
-    kStatIdDef,
-    kStatIdDex,
-    kStatIdItl,
-    kStatIdMor
-  };
+  enum { kStatIdAtk, kStatIdDef, kStatIdDex, kStatIdItl, kStatIdMor };
 
   int atk;
   int def;
@@ -21,13 +15,9 @@ struct Attribute {
   int itl;
   int mor;
 
-  Attribute()
-      : atk(0), def(0), dex(0), itl(0), mor(0) {
-  }
+  Attribute() : atk(0), def(0), dex(0), itl(0), mor(0) {}
 
-  Attribute(int atk, int def, int dex, int itl, int mor)
-      : atk(atk), def(def), dex(dex), itl(itl), mor(mor) {
-  }
+  Attribute(int atk, int def, int dex, int itl, int mor) : atk(atk), def(def), dex(dex), itl(itl), mor(mor) {}
 
   void ApplyModifier(const Attribute& addend, const Attribute& multiplier);
 
@@ -47,21 +37,17 @@ struct Attribute {
   }
 };
 
-#define ATTRIBUTE_BIN_OP_DECL(OP) \
-  Attribute operator OP (const Attribute& lhs, const Attribute& rhs);
+#define ATTRIBUTE_BIN_OP_DECL(OP) Attribute operator OP(const Attribute& lhs, const Attribute& rhs);
 
-#define ATTRIBUTE_BIN_OP_NUMERIC_DECL(OP, TYPE) \
-  Attribute operator OP (const Attribute& lhs, TYPE rhs); \
-  Attribute operator OP (TYPE lhs, const Attribute& rhs);
+#define ATTRIBUTE_BIN_OP_NUMERIC_DECL(OP, TYPE)          \
+  Attribute operator OP(const Attribute& lhs, TYPE rhs); \
+  Attribute operator OP(TYPE lhs, const Attribute& rhs);
 
-#define ATTRIBUTE_ASSIGN_OP_DECL(OP) \
-  Attribute& operator OP (Attribute& lhs, const Attribute& rhs);
+#define ATTRIBUTE_ASSIGN_OP_DECL(OP) Attribute& operator OP(Attribute& lhs, const Attribute& rhs);
 
-#define ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(OP, TYPE) \
-  Attribute& operator OP (Attribute& lhs, TYPE rhs); \
+#define ATTRIBUTE_ASSIGN_OP_NUMERIC_DECL(OP, TYPE) Attribute& operator OP(Attribute& lhs, TYPE rhs);
 
-#define ATTRIBUTE_COMPARATOR_NUMERIC_DECL(OP, TYPE) \
-  bool operator OP (const Attribute& lhs, TYPE rhs);
+#define ATTRIBUTE_COMPARATOR_NUMERIC_DECL(OP, TYPE) bool operator OP(const Attribute& lhs, TYPE rhs);
 
 ATTRIBUTE_BIN_OP_DECL(+)
 ATTRIBUTE_BIN_OP_DECL(-)
@@ -99,11 +85,9 @@ struct HpMp {
   int hp;
   int mp;
 
-  HpMp() : hp(0), mp(0) {
-  }
+  HpMp() : hp(0), mp(0) {}
 
-  HpMp(int hp, int mp) : hp(hp), mp(mp) {
-  }
+  HpMp(int hp, int mp) : hp(hp), mp(mp) {}
 };
 
 struct Level {
@@ -115,7 +99,7 @@ struct Level {
   Level(uint16_t level, uint16_t exp) : level(level), exp(exp) {}
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // STAT_H_
+#endif  // STAT_H_

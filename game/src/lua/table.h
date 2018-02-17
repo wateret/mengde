@@ -39,6 +39,6 @@ class Table {
   std::unordered_map<std::string, Value*> values_;
 };
 
-} // namespace lua
+}  // namespace lua
 
-#endif // LUA_LUA_TABLE_H_
+#endif  // LUA_LUA_TABLE_H_

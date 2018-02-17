@@ -31,8 +31,8 @@ union Event {
   Event() {}
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
-#endif // EVENT_H_
+#endif  // EVENT_H_

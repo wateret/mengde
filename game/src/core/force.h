@@ -11,10 +11,10 @@ enum class Force {
   kAlly     = 0x02,
   kEnemy    = 0x04,
   kFriendly = kOwn | kAlly,
-  kLast     = 0x08                   // Not a real value
+  kLast     = 0x08  // Not a real value
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // FORCE_H_
+#endif  // FORCE_H_

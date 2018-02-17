@@ -5,10 +5,7 @@ namespace core {
 
 // PathNode
 
-PathNode::PathNode(Vec2D data, PathNode* parent)
-    : data_(data),
-      parent_(parent) {
-}
+PathNode::PathNode(Vec2D data, PathNode* parent) : data_(data), parent_(parent) {}
 
 // PathTree
 
@@ -17,8 +14,7 @@ PathTree::PathTree(Vec2D root_data) {
   node_list_.push_back(root_);
 }
 
-PathTree::~PathTree()
-{
+PathTree::~PathTree() {
   for (auto itr : node_list_) {
     delete itr;
   }
@@ -48,9 +44,7 @@ std::vector<Vec2D> PathTree::GetPathToRoot(PathNode* node) {
   return path;
 }
 
-std::vector<Vec2D> PathTree::GetPathToRoot(Vec2D vec) {
-  return GetPathToRoot(FindNode(vec));
-}
+std::vector<Vec2D> PathTree::GetPathToRoot(Vec2D vec) { return GetPathToRoot(FindNode(vec)); }
 
 PathNode* PathTree::FindNode(Vec2D vec) {
   for (auto itr : node_list_) {
@@ -59,5 +53,5 @@ PathNode* PathTree::FindNode(Vec2D vec) {
   return NULL;
 }
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde

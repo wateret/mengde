@@ -1,20 +1,19 @@
 #ifndef LUA_SCRIPT_H_
 #define LUA_SCRIPT_H_
 
+#include <functional>
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <functional>
 
-#include "util/common.h"
 #include "table.h"
+#include "util/common.h"
 
 extern "C" {
 
-#include "lua.h"
 #include "lauxlib.h"
+#include "lua.h"
 #include "lualib.h"
-
 }
 
 namespace lua {
@@ -60,11 +59,11 @@ class LuaClass {
   template <typename T>
   LuaClass(T* pointer, const std::string& name) : pointer_(static_cast<void*>(pointer)), name_(name) {}
 
-  void* pointer() const { return pointer_; }
+  void*              pointer() const { return pointer_; }
   const std::string& name() const { return name_; }
 
  private:
-  void* pointer_;
+  void*       pointer_;
   std::string name_;
 };
 
@@ -80,21 +79,19 @@ class Lua {
   void RunScript(const string& code);
   void Register(const string& name, lua_CFunction);
 
-  void PopStack(unsigned n) {
-    lua_pop(L, n);
-  }
+  void PopStack(unsigned n) { lua_pop(L, n); }
 
   // Call a function with variadic template
-  template<typename R, typename... Args>
+  template <typename R, typename... Args>
   R Call(const string& name, Args... args) {
-    GetToStack(name); // XXX should pop more when name is nested
+    GetToStack(name);  // XXX should pop more when name is nested
     return CallImpl<R>(0, args...);
   }
 
-  template<typename T>
+  template <typename T>
   vector<T> GetVector(const string& name = "") {
     vector<T> vec;
-    ForEachTableEntry(name, [&] (Lua* lua, const std::string&) {
+    ForEachTableEntry(name, [&](Lua* lua, const std::string&) {
       T val = lua->GetTop<T>();
       vec.push_back(val);
     });
@@ -104,12 +101,12 @@ class Lua {
 
   // Get a required entry
   // If the entry is not exist, emits an error.
-  template<typename T>
+  template <typename T>
   T Get(const string& var_expr = "") {
     ASSERT(L != nullptr);
 
     int to_be_popped = GetToStack(var_expr);
-    T result = GetTop<T>();
+    T   result       = GetTop<T>();
 
     PopStack(to_be_popped);
 
@@ -118,12 +115,12 @@ class Lua {
 
   // Get an optional entry
   // If the entry is not exist, returns default value.
-  template<typename T>
+  template <typename T>
   T GetOpt(const string& var_expr = "") {
     ASSERT(L != nullptr);
 
     int to_be_popped = GetToStackOpt(var_expr);
-    T result = GetTopOpt<T>();
+    T   result       = GetTopOpt<T>();
 
     PopStack(to_be_popped);
 
@@ -131,14 +128,14 @@ class Lua {
   }
 
   // Get a required entry and remove it from stack
-  template<typename T>
+  template <typename T>
   T Pop() {
     T result = Get<T>();
     PopStack(1);
     return result;
   }
 
-  template<typename T>
+  template <typename T>
   void SetGlobal(const string& name, T val) {
     lua_pushnumber(L, (double)val);
     lua_setglobal(L, name.c_str());
@@ -148,17 +145,17 @@ class Lua {
 
   void NewGlobalTable(const string&);
 
-  template<typename T>
+  template <typename T>
   void Set(const string& var_expr, T val) {
     int initial_stack_size = GetStackSize();
 
-    string var = "";
-    int level = 0;
+    string var   = "";
+    int    level = 0;
     for (unsigned int i = 0, size = var_expr.size(); i < size; i++) {
-      if (var_expr[i] == '.') { // Handle a var name in the middle
+      if (var_expr[i] == '.') {  // Handle a var name in the middle
         // Find field
         GetField(var);
-        if (lua_isnil(L, -1)) { // Field not found
+        if (lua_isnil(L, -1)) {  // Field not found
           // Create a new table
           lua_pop(L, 1);
           lua_newtable(L);
@@ -182,12 +179,12 @@ class Lua {
   // PushToStack is public for pushing return value from lua C function
   // and it is also used frequently internally.
 
-  template<typename T>
+  template <typename T>
   void PushToStack(T val) {
     lua_pushnumber(L, (double)val);
   }
 
-  template<typename T>
+  template <typename T>
   void PushToStack(T* val) {
     lua_pushlightuserdata(L, static_cast<void*>(val));
   }
@@ -206,12 +203,11 @@ class Lua {
   void DumpStack();
 
  protected:
-
   int GetToStack(const string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
 
-    string var = "";
-    int level = 0;
+    string var   = "";
+    int    level = 0;
     for (unsigned int i = 0, size = var_expr.size(); i < size + 1; i++) {
       if (i == size || var_expr[i] == '.') {
         GetField(var);
@@ -233,27 +229,34 @@ class Lua {
     return level;
   }
 
-  int GetToStackOpt(const string& var_expr) {
-    return GetToStack(var_expr, true);
-  }
+  int GetToStackOpt(const string& var_expr) { return GetToStack(var_expr, true); }
 
   // type aliases
 
-  template<typename T> using is_bool   = std::is_same<bool,   T>;
-  template<typename T> using is_string = std::is_same<string, T>;
-  template<typename T> using is_table  = std::is_same<Table*, T>;
+  template <typename T>
+  using is_bool = std::is_same<bool, T>;
+  template <typename T>
+  using is_string = std::is_same<string, T>;
+  template <typename T>
+  using is_table = std::is_same<Table*, T>;
 
-  template<typename T> struct is_vector { static const bool value = false; };
-  template<typename T> struct is_vector<std::vector<T>> { static const bool value = true; };
+  template <typename T>
+  struct is_vector {
+    static const bool value = false;
+  };
+  template <typename T>
+  struct is_vector<std::vector<T>> {
+    static const bool value = true;
+  };
 
   // Arithmetic types except bool
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<std::is_arithmetic<T>::value && !is_bool<T>::value, T>::type GetDefault() {
     return static_cast<T>(0);
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<std::is_arithmetic<T>::value && !is_bool<T>::value, T>::type GetTop() {
     if (!lua_isnumber(L, -1)) {
       throw WrongTypeException("number", "?");
@@ -261,7 +264,7 @@ class Lua {
     return (T)lua_tonumber(L, -1);
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<std::is_arithmetic<T>::value && !is_bool<T>::value, T>::type GetTopOpt() {
     if (!lua_isnumber(L, -1)) {
       LogDebug("Not a number. Returning default value.");
@@ -272,12 +275,12 @@ class Lua {
 
   // bool
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_bool<T>::value, T>::type GetDefault() {
     return false;
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_bool<T>::value, T>::type GetTop() {
     if (lua_isboolean(L, -1)) {
       return (bool)lua_toboolean(L, -1);
@@ -286,7 +289,7 @@ class Lua {
     }
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_bool<T>::value, T>::type GetTopOpt() {
     if (lua_isboolean(L, -1)) {
       return (bool)lua_toboolean(L, -1);
@@ -297,12 +300,12 @@ class Lua {
 
   // string
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_string<T>::value, T>::type GetDefault() {
     return "nil";
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_string<T>::value, T>::type GetTop() {
     if (lua_isstring(L, -1)) {
       return string(lua_tostring(L, -1));
@@ -311,7 +314,7 @@ class Lua {
     }
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_string<T>::value, T>::type GetTopOpt() {
     if (lua_isstring(L, -1)) {
       return string(lua_tostring(L, -1));
@@ -322,10 +325,12 @@ class Lua {
 
   // Pointer types
 
-  template<typename T>
-  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetDefault() { return nullptr; }
+  template <typename T>
+  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetDefault() {
+    return nullptr;
+  }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetTop() {
     if (lua_islightuserdata(L, -1)) {
       return reinterpret_cast<T>(lua_touserdata(L, -1));
@@ -334,7 +339,7 @@ class Lua {
     }
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetTopOpt() {
     if (lua_islightuserdata(L, -1)) {
       return reinterpret_cast<T>(lua_touserdata(L, -1));
@@ -345,13 +350,15 @@ class Lua {
 
   // lua::Table type
 
-  template<typename T>
-  typename std::enable_if<is_table<T>::value, T>::type GetDefault() { return nullptr; }
+  template <typename T>
+  typename std::enable_if<is_table<T>::value, T>::type GetDefault() {
+    return nullptr;
+  }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_table<T>::value, T>::type GetTop() {
     Table* table = new Table();
-    ForEachTableEntry("", [&] (Lua*, const std::string& key) {
+    ForEachTableEntry("", [&](Lua*, const std::string& key) {
       if (lua_istable(L, -1)) {
         table->Add(key, Get<Table*>());
       } else if (lua_isnumber(L, -1)) {
@@ -376,15 +383,15 @@ class Lua {
 
   // Vector types
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_vector<T>::value, T>::type GetDefault() {
-    return T(); // Return default vector type
+    return T();  // Return default vector type
   }
 
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_vector<T>::value, T>::type GetTop() {
     T vec;
-    ForEachTableEntry("", [&] (Lua* lua, const std::string&) {
+    ForEachTableEntry("", [&](Lua* lua, const std::string&) {
       typename T::value_type val = lua->GetTop<typename T::value_type>();
       vec.push_back(val);
     });
@@ -410,7 +417,7 @@ class Lua {
   void SetField(const string& id);
   int  GetStackSize();
 
-  template<typename R>
+  template <typename R>
   R CallImpl(unsigned argc) {
     if (lua_pcall(L, argc, 1, 0)) {
       LogError("Error on Call");
@@ -420,7 +427,7 @@ class Lua {
     return ret;
   }
 
-  template<typename R, typename A, typename... Args>
+  template <typename R, typename A, typename... Args>
   R CallImpl(unsigned argc, A arg0, Args... args) {
     PushToStack(arg0);
     return CallImpl<R>(argc + 1, args...);
@@ -436,9 +443,9 @@ class Lua {
 //
 
 // method CallImpl - for return type of `void`
-template<>
+template <>
 void Lua::CallImpl<void>(unsigned argc);
 
-} // namespace lua
+}  // namespace lua
 
-#endif // LUA_SCRIPT_H_
+#endif  // LUA_SCRIPT_H_

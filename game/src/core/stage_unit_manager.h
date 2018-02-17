@@ -17,16 +17,16 @@ class StageUnitManager {
  public:
   StageUnitManager();
   uint32_t Deploy(Unit*);
-  void Kill(Unit*);
-  Unit* Get(uint32_t);
-  void ForEach(function<void(Unit*)>);
+  void     Kill(Unit*);
+  Unit*    Get(uint32_t);
+  void     ForEach(function<void(Unit*)>);
 
  private:
   vector<Unit*> units_;
-//  vector<bool>  units_status_;
+  //  vector<bool>  units_status_;
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // STAGE_UNIT_MANAGER_H_
+#endif  // STAGE_UNIT_MANAGER_H_

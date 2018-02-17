@@ -1,9 +1,9 @@
 #ifndef IMAGE_VIEW_H_
 #define IMAGE_VIEW_H_
 
-#include "view.h"
-#include "util/common.h"
 #include <string>
+#include "util/common.h"
+#include "view.h"
 
 #include "common.h"
 
@@ -27,12 +27,12 @@ class ImageView : public View {
 
  private:
   std::string path_;
-  Texture* texture_;
-  Rect src_rect_;
+  Texture*    texture_;
+  Rect        src_rect_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // IMAGE_VIEW_H_
+#endif  // IMAGE_VIEW_H_

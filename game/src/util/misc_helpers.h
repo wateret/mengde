@@ -14,4 +14,4 @@ int GenRandom(int, int);
 
 vector<string> SplitString(const string&, char);
 
-#endif // MISC_HELPERS_H_
+#endif  // MISC_HELPERS_H_

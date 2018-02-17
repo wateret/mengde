@@ -6,8 +6,7 @@ namespace gui {
 namespace uifw {
 
 TextView::TextView(const Rect* frame, const std::string& text)
-    : TextView(frame, text, COLOR("white"), 14, LayoutHelper::kAlignLftTop) {
-}
+    : TextView(frame, text, COLOR("white"), 14, LayoutHelper::kAlignLftTop) {}
 
 TextView::TextView(const Rect* frame, const std::string& text, Color color, int size, LayoutHelper::Align align)
     : View(frame), text_(text), color_(color), size_(size), align_(align) {
@@ -15,17 +14,11 @@ TextView::TextView(const Rect* frame, const std::string& text, Color color, int 
   padding(0);
 }
 
-void TextView::SetText(const std::string& text) {
-  text_ = text;
-}
+void TextView::SetText(const std::string& text) { text_ = text; }
 
-void TextView::SetAlign(LayoutHelper::Align align) {
-  align_ = align;
-}
+void TextView::SetAlign(LayoutHelper::Align align) { align_ = align; }
 
-void TextView::SetColor(Color c) {
-  color_ = c;
-}
+void TextView::SetColor(Color c) { color_ = c; }
 
 void TextView::Render(Drawer* drawer) {
   Rect frame(GetFrameCoords(), GetActualFrameSize());
@@ -41,11 +34,8 @@ bool TextView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   return true;
 }
 
-bool TextView::OnMouseMotionEvent(const foundation::MouseMotionEvent) {
-  return false;
-}
+bool TextView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return false; }
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
-
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde

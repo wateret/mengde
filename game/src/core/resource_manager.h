@@ -3,21 +3,20 @@
 
 #include <unordered_map>
 
-#include "util/common.h"
-#include "magic.h"
 #include "equipment.h"
-#include "unit_class.h"
-#include "terrain.h"
 #include "hero.h"
+#include "magic.h"
+#include "terrain.h"
+#include "unit_class.h"
+#include "util/common.h"
 
 namespace mengde {
 namespace core {
 
-template<typename T>
+template <typename T>
 class ResourceManager {
  public:
-  ResourceManager() {
-  }
+  ResourceManager() {}
 
   ~ResourceManager() {
     for (auto e : container_) {
@@ -69,17 +68,15 @@ struct ResourceManagers {
   EquipmentManager*    equipment_manager;
   HeroTemplateManager* hero_tpl_manager;
 
-  ResourceManagers() :
-      unit_class_manager(nullptr),
-      terrain_manager(nullptr),
-      magic_manager(nullptr),
-      equipment_manager(nullptr),
-      hero_tpl_manager(nullptr)
-  {
-  }
+  ResourceManagers()
+      : unit_class_manager(nullptr),
+        terrain_manager(nullptr),
+        magic_manager(nullptr),
+        equipment_manager(nullptr),
+        hero_tpl_manager(nullptr) {}
 };
 
-} // namespace core
-} // namespace mengde
+}  // namespace core
+}  // namespace mengde
 
-#endif // RESOURCE_MANAGER_H_
+#endif  // RESOURCE_MANAGER_H_

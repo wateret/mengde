@@ -29,8 +29,8 @@ enum class OnCmdEvent {
   kActionDone
 };
 
-} // namespace event
-} // namespace core
-} // namespace mengde
+}  // namespace event
+}  // namespace core
+}  // namespace mengde
 
-#endif // EVENT_TYPES_H_
+#endif  // EVENT_TYPES_H_

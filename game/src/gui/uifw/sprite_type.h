@@ -15,13 +15,7 @@ enum SpriteType {
   kSpriteCount
 };
 
-enum SpriteEffectType {
-  kEffectNone,
-  kEffectFade,
-  kEffectShade,
-  kEffectBright,
-  kEffectTint
-};
+enum SpriteEffectType { kEffectNone, kEffectFade, kEffectShade, kEffectBright, kEffectTint };
 
 struct SpriteEffect {
   SpriteEffectType effect;
@@ -35,8 +29,8 @@ extern const int   kSpriteOffset[];
 extern const int   kSpriteNumSprites[];
 extern const int   kSpriteBitmapSize[];
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // SPRITE_TYPE_H_
+#endif  // SPRITE_TYPE_H_

@@ -1,8 +1,8 @@
 #ifndef MODAL_DIALOG_VIEW_H_
 #define MODAL_DIALOG_VIEW_H_
 
-#include "util/common.h"
 #include "composite_view.h"
+#include "util/common.h"
 
 #include "common.h"
 
@@ -16,7 +16,7 @@ class TextView;
 
 class ModalDialogView : public CompositeView {
  public:
-  // Usually the value of frame that passed as first argument of the constructor is ({0, 0}, WindowSize) 
+  // Usually the value of frame that passed as first argument of the constructor is ({0, 0}, WindowSize)
   // so we can handle mouse click events anywhere in the screen.
   ModalDialogView(const Rect*, const string&);
   void SetText(const string&);
@@ -26,13 +26,13 @@ class ModalDialogView : public CompositeView {
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
 
  private:
-  string message_;
+  string         message_;
   CompositeView* frame_view_;
-  TextView* message_view_;
+  TextView*      message_view_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // MODAL_DIALOG_VIEW_H_
+#endif  // MODAL_DIALOG_VIEW_H_

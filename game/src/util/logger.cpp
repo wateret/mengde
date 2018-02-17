@@ -1,6 +1,6 @@
 #include "logger.h"
-#include <stdio.h>
 #include <stdarg.h>
+#include <stdio.h>
 
 #define TERM_USE_ANSI_COLOR
 
@@ -29,24 +29,20 @@ Logger* Logger::GetInstance() {
   return &logger;
 }
 
-void Logger::Log(LogLevel level,
-                 const char* module,
-                 const char* file,
-                 int         line,
-                 const char* func,
-                 const char* msg,
+void Logger::Log(LogLevel level, const char* module, const char* file, int line, const char* func, const char* msg,
                  ...) {
   if (level > level_) return;
 
-  static const char sep = '/';
-  unsigned last_sep_pos = 0;
+  static const char sep          = '/';
+  unsigned          last_sep_pos = 0;
   for (unsigned idx = 0; file[idx] != '\0'; idx++) {
     if (file[idx] == sep) last_sep_pos = idx;
   }
 
   va_list args;
   va_start(args, msg);
-  fprintf(stderr, "%s[%s]%s%s <%s:%d %s()> ", LogLevelToColor(level), LogLevelToString(level), color_reset_, module, file + last_sep_pos + 1, line, func);
+  fprintf(stderr, "%s[%s]%s%s <%s:%d %s()> ", LogLevelToColor(level), LogLevelToString(level), color_reset_, module,
+          file + last_sep_pos + 1, line, func);
   vfprintf(stderr, msg, args);
   fprintf(stderr, "\n");
   va_end(args);
@@ -79,4 +75,3 @@ const char* Logger::LogLevelToString(LogLevel level) {
   if (level == kLogFatal) return "FATAL";
   return "";
 }
-

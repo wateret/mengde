@@ -6,9 +6,9 @@
 class GameEnv {
  public:
   static const GameEnv* GetInstance();
-  const Path& GetGamePath() const { return game_path_; }
-  const Path& GetResourcePath() const { return resource_path_; }
-  const Path& GetScenarioPath() const { return scenario_path_; }
+  const Path&           GetGamePath() const { return game_path_; }
+  const Path&           GetResourcePath() const { return resource_path_; }
+  const Path&           GetScenarioPath() const { return scenario_path_; }
 
  private:
   GameEnv();
@@ -19,4 +19,4 @@ class GameEnv {
   Path scenario_path_;
 };
 
-#endif // GAME_ENV_H_
+#endif  // GAME_ENV_H_

@@ -1,8 +1,8 @@
 #ifndef LAYOUT_HELPER_H_
 #define LAYOUT_HELPER_H_
 
-#include "util/common.h"
 #include "gui/foundation/rect.h"
+#include "util/common.h"
 
 #include "common.h"
 
@@ -34,16 +34,16 @@ class LayoutHelper {
   };
 
  public:
-  static Rect CalcPosition(Vec2D, Vec2D, Align, int = 0);
-  static Rect CalcPosition(const Rect*, Vec2D, Align, int = 0);
+  static Rect  CalcPosition(Vec2D, Vec2D, Align, int = 0);
+  static Rect  CalcPosition(const Rect*, Vec2D, Align, int = 0);
   static Vec2D CalcFittedSize(Vec2D, Vec2D);
 
  public:
-  static const int kDefaultSpace = 8; // default value for margin and padding
+  static const int kDefaultSpace = 8;  // default value for margin and padding
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // LAYOUT_HELPER_H_
+#endif  // LAYOUT_HELPER_H_

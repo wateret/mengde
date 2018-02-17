@@ -21,8 +21,8 @@ class ModalView : public ViewDecorator {
   MouseButtonHandler handler_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // MODAL_VIEW_H_
+#endif  // MODAL_VIEW_H_

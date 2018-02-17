@@ -1,8 +1,8 @@
 #ifndef RECT_VIEW_H_
 #define RECT_VIEW_H_
 
-#include "view.h"
 #include "util/common.h"
+#include "view.h"
 
 #include "common.h"
 
@@ -24,8 +24,8 @@ class RectView : public View {
   Color border_color_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // RECT_VIEW_H_
+#endif  // RECT_VIEW_H_

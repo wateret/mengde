@@ -19,8 +19,8 @@ class QuitEvent {
   QuitEvent() = default;
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
-#endif // EVENTS_H_
+#endif  // EVENTS_H_

@@ -18,12 +18,9 @@ Rect::Rect(Vec2D pos, Vec2D size) {
   rect_.h = size.y;
 }
 
-Rect::Rect() : Rect(0, 0, 0, 0) {
-}
+Rect::Rect() : Rect(0, 0, 0, 0) {}
 
-Rect Rect::operator*(int m) const {
-  return Rect(rect_.x, rect_.y, rect_.w * m, rect_.h * m);
-}
+Rect Rect::operator*(int m) const { return Rect(rect_.x, rect_.y, rect_.w * m, rect_.h * m); }
 
 Rect& Rect::operator*=(int m) {
   rect_.w *= m;
@@ -77,18 +74,14 @@ Rect& Rect::Magnify(Vec2D v) {
   return *this;
 }
 
-const SDL_Rect* Rect::GetRawRectPtr() const {
-  return &rect_;
-}
+const SDL_Rect* Rect::GetRawRectPtr() const { return &rect_; }
 
 void Rect::Move(int dx, int dy) {
   rect_.x += dx;
   rect_.y += dy;
 }
 
-void Rect::Move(Vec2D v) {
-  Move(v.x, v.y);
-}
+void Rect::Move(Vec2D v) { Move(v.x, v.y); }
 
 void Rect::SetPos(Vec2D v) {
   rect_.x = v.x;
@@ -108,10 +101,9 @@ void Rect::Contract(int amount) {
 }
 
 bool Rect::Contains(Vec2D v) const {
-  return rect_.x <= v.x && v.x < rect_.x + rect_.w &&
-         rect_.y <= v.y && v.y < rect_.y + rect_.h;
+  return rect_.x <= v.x && v.x < rect_.x + rect_.w && rect_.y <= v.y && v.y < rect_.y + rect_.h;
 }
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde

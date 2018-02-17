@@ -7,10 +7,10 @@
 
 namespace mengde {
 namespace core {
-  class Game;
-  class Unit;
-}
-}
+class Game;
+class Unit;
+}  // namespace core
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -21,7 +21,7 @@ class RootView;
 class UnitActionView : public VerticalListView {
  public:
   UnitActionView(const Rect& frame, core::Game* game, RootView* rv);
-  void SetUnit(core::Unit* unit);
+  void         SetUnit(core::Unit* unit);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
  private:
@@ -32,8 +32,8 @@ class UnitActionView : public VerticalListView {
   ButtonView* btn_stay_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // UNIT_ACTION_VIEW_H_
+#endif  // UNIT_ACTION_VIEW_H_

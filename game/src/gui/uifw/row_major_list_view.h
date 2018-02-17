@@ -19,8 +19,8 @@ class RowMajorListView : public CompositeView {
   int last_x_;
 };
 
-} // namespace uifw
-} // namespace gui
-} // namespace mengde
+}  // namespace uifw
+}  // namespace gui
+}  // namespace mengde
 
-#endif // ROW_MAJOR_LIST_VIEW_H_
+#endif  // ROW_MAJOR_LIST_VIEW_H_

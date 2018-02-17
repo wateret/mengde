@@ -10,11 +10,11 @@
 
 namespace mengde {
 namespace core {
-  class Unit;
-  class Equipment;
-  class EquipmentSet;
-}
-}
+class Unit;
+class Equipment;
+class EquipmentSet;
+}  // namespace core
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {
@@ -45,16 +45,16 @@ class EquipmentSetView : public CompositeView, public IEquipmentSetSetter {
 
  private:
   const core::EquipmentSet* equipment_set_;
-  TextView* tv_weapon_label_;
-  TextView* tv_armor_label_;
-  TextView* tv_aid_label_;
-  EquipmentView* eqv_weapon_;
-  EquipmentView* eqv_armor_;
-  EquipmentView* eqv_aid_;
+  TextView*                 tv_weapon_label_;
+  TextView*                 tv_armor_label_;
+  TextView*                 tv_aid_label_;
+  EquipmentView*            eqv_weapon_;
+  EquipmentView*            eqv_armor_;
+  EquipmentView*            eqv_aid_;
 };
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde
 
-#endif // EQUIPMENT_SET_VIEW_H_
+#endif  // EQUIPMENT_SET_VIEW_H_

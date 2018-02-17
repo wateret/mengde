@@ -5,17 +5,17 @@
 #include "core/game.h"
 #include "core/scenario.h"
 #include "core/unit.h"
-#include "util/common.h"
-#include "util/game_env.h"
 #include "gui/foundation/color.h"
 #include "gui/foundation/event_fetcher.h"
 #include "gui/foundation/misc.h"
-#include "gui/foundation/texture.h"
 #include "gui/foundation/rect.h"
+#include "gui/foundation/texture.h"
 #include "gui/foundation/window.h"
 #include "gui/uifw/drawer.h"
 #include "main_view.h"
 #include "root_view.h"
+#include "util/common.h"
+#include "util/game_env.h"
 
 namespace mengde {
 namespace gui {
@@ -27,22 +27,16 @@ FrameConfig::FrameConfig(uint16_t max_frames_sec, float speed) : max_frames_sec_
   LOG_DEBUG("SPEED   : %fx", speed_);
 }
 
-uint32_t FrameConfig::MsecToFrame(uint32_t ms) const {
-  return SecToFrame(ms) / 1000;
-}
+uint32_t FrameConfig::MsecToFrame(uint32_t ms) const { return SecToFrame(ms) / 1000; }
 
-uint32_t FrameConfig::SecToFrame(uint32_t s) const {
-  return s * static_cast<uint32_t>(max_frames_sec_);
-}
+uint32_t FrameConfig::SecToFrame(uint32_t s) const { return s * static_cast<uint32_t>(max_frames_sec_); }
 
-void FpsTimer::Start() {
-  timer_.Start();
-}
+void FpsTimer::Start() { timer_.Start(); }
 
 void FpsTimer::Update() {
   int time_elapsed = timer_.Split();
   if (time_elapsed >= 1000) {
-    fps_ = frames_cur_sec_ / (time_elapsed / 1000.f);
+    fps_            = frames_cur_sec_ / (time_elapsed / 1000.f);
     frames_cur_sec_ = 0;
     timer_.Start();
   }
@@ -81,11 +75,11 @@ App::App(int width, int height, uint32_t max_frames_sec)
     UNREACHABLE("Scenario config load failure.");
   }
 
-  window_ = new Window("Game", width, height);
-  drawer_ = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString(),
-                                GameEnv::GetInstance()->GetResourcePath().ToString());
+  window_    = new Window("Game", width, height);
+  drawer_    = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString(),
+                       GameEnv::GetInstance()->GetResourcePath().ToString());
   root_view_ = new RootView(window_size_, scenario_, this);
-//  target_view_ = main_view_;
+  //  target_view_ = main_view_;
   target_view_ = root_view_;
 }
 
@@ -105,9 +99,7 @@ App::~App() {
   Misc::Quit();
 }
 
-Drawer* App::GetDrawer() {
-  return drawer_;
-}
+Drawer* App::GetDrawer() { return drawer_; }
 
 void App::Run() {
   static const int kDelayTime = frame_config_.GetDelay();
@@ -117,8 +109,7 @@ void App::Run() {
   fps_timer_.Start();
 
   // Main event loop
-  while (!quit_)
-  {
+  while (!quit_) {
     frame_cap_timer.Start();
 
     HandleEvents();
@@ -135,8 +126,7 @@ void App::Run() {
 }
 
 void App::HandleEvents() {
-  while (event_fetcher_.Poll())
-  {
+  while (event_fetcher_.Poll()) {
     const Event& e = event_fetcher_.event();
     switch (event_fetcher_.event_type()) {
       case EventType::kQuit:
@@ -156,9 +146,7 @@ void App::HandleEvents() {
   }
 }
 
-void App::Update() {
-  target_view_->Update();
-}
+void App::Update() { target_view_->Update(); }
 
 void App::Render() {
   drawer_->Start();
@@ -175,21 +163,18 @@ void App::Render() {
   drawer_->End();
 }
 
-void App::StartNewGame() {
-  target_view_ = root_view_;
-}
+void App::StartNewGame() { target_view_ = root_view_; }
 
 void App::EndGame() {
   // FIXME We can't delete these objects now since this function is called from
   //       these object methods.
-//  delete root_view_;
-//  delete game_;
+  //  delete root_view_;
+  //  delete game_;
 
-  root_view_ = nullptr;
+  root_view_   = nullptr;
   target_view_ = main_view_;
 }
 
-} // namespace app
-} // namespace gui
-} // namespace mengde
-
+}  // namespace app
+}  // namespace gui
+}  // namespace mengde

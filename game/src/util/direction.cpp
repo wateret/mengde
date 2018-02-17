@@ -40,4 +40,3 @@ Vec2D GenerateVec2DOffset(Direction d, int o) {
       return {0, 0};
   }
 }
-

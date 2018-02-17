@@ -6,12 +6,11 @@
 
 namespace {
 
-std::string string_replace_all(const std::string& str, const string& from, const string& to)
-{
+std::string string_replace_all(const std::string& str, const string& from, const string& to) {
   return std::regex_replace(str, std::regex(from), to);
 }
 
-} // namespace *anonymous*
+}  // namespace
 
 namespace lua {
 
@@ -20,8 +19,7 @@ Lua::Lua() : L(nullptr), destroy_(true) {
   if (L != nullptr) luaL_openlibs(L);
 }
 
-Lua::Lua(lua_State* L) : L(L), destroy_(false) {
-}
+Lua::Lua(lua_State* L) : L(L), destroy_(false) {}
 
 Lua::~Lua() {
   if (L != nullptr && destroy_) lua_close(L);
@@ -49,26 +47,20 @@ void Lua::RunScript(const string& code) {
   }
 }
 
-void Lua::Register(const string& name, lua_CFunction fn) {
-  lua_register(L, name.c_str(), fn);
-}
+void Lua::Register(const string& name, lua_CFunction fn) { lua_register(L, name.c_str(), fn); }
 
 void Lua::LogError(const string& msg) {
   DumpStack();
   LOGM_ERROR(Lua, "%s", msg.c_str());
 }
 
-void Lua::LogWarning(const string& msg) {
-  LOGM_WARNING(Lua, "%s", msg.c_str());
-}
+void Lua::LogWarning(const string& msg) { LOGM_WARNING(Lua, "%s", msg.c_str()); }
 
-void Lua::LogDebug(const string& msg) {
-  LOGM_DEBUG(Lua, "%s", msg.c_str());
-}
+void Lua::LogDebug(const string& msg) { LOGM_DEBUG(Lua, "%s", msg.c_str()); }
 
 void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
   int num_stack = GetToStack(name);
-  if (!lua_istable(L, -1)) { // Table not found
+  if (!lua_istable(L, -1)) {  // Table not found
     return;
   }
 
@@ -80,16 +72,12 @@ void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
     cb(this, key);
     lua_pop(L, 1);
   }
-  PopStack(num_stack); // Pop tables pushed by GetToStack
+  PopStack(num_stack);  // Pop tables pushed by GetToStack
 }
 
-void Lua::PushToStack(const string& s) {
-  lua_pushstring(L, s.c_str());
-}
+void Lua::PushToStack(const string& s) { lua_pushstring(L, s.c_str()); }
 
-void Lua::PushToStack(lua_CFunction fn) {
-  lua_pushcfunction(L, fn);
-}
+void Lua::PushToStack(lua_CFunction fn) { lua_pushcfunction(L, fn); }
 
 void Lua::PushToStack(const LuaClass& object) {
   // Specially handle LuaClass objects
@@ -132,7 +120,8 @@ void Lua::SetField(const string& id) {
 }
 
 void Lua::RegisterClass(const string& class_name) {
-  static const char tpl[] = "\
+  static const char tpl[] =
+      "\
 <C> = {} \n\
 <C>.__index = <C>\n\
 \n\
@@ -153,19 +142,18 @@ end\n\
 }
 
 void Lua::RegisterMethod(const string& class_name, const string& method_name) {
-  static const char tpl[] = "\
+  static const char tpl[] =
+      "\
 function <C>:<M>(...)\n\
   return <C>_<M>(self.__cobj, ...)\n\
 end\n\
 ";
   string code = string_replace_all(tpl, "<C>", class_name);
-  code = string_replace_all(code, "<M>", method_name);
+  code        = string_replace_all(code, "<M>", method_name);
   RunScript(code);
 }
 
-int Lua::GetStackSize() {
-  return lua_gettop(L);
-}
+int Lua::GetStackSize() { return lua_gettop(L); }
 
 void Lua::DumpStack() {
 #ifdef DEBUG
@@ -191,10 +179,10 @@ void Lua::DumpStack() {
     i--;
   }
   printf("--------------- Stack Dump End   ----------------\n");
-#endif // DEBUG
+#endif  // DEBUG
 }
 
-template<>
+template <>
 void Lua::CallImpl<void>(unsigned argc) {
   if (lua_pcall(L, argc, 0, 0)) {
     LogError("Error on Call(return type : void).");
@@ -206,4 +194,4 @@ void Lua::NewGlobalTable(const string& name) {
   lua_setglobal(L, name.c_str());
 }
 
-} // namespace lua
+}  // namespace lua

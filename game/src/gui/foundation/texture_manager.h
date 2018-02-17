@@ -28,15 +28,15 @@ class TextureManager {
   Texture* FetchTextTexture(const string&, int, Color, uint32_t = 0);
 
  private:
-  string base_path_;
-  FontManager* font_manager_;
+  string                               base_path_;
+  FontManager*                         font_manager_;
   std::unordered_map<string, Texture*> container_;
-  Texture*  dummy_texture_;
-  Renderer* renderer_;
+  Texture*                             dummy_texture_;
+  Renderer*                            renderer_;
 };
 
-} // namespace foundation
-} // namespace gui
-} // namespace mengde
+}  // namespace foundation
+}  // namespace gui
+}  // namespace mengde
 
-#endif // TEXTURE_MANAGER_H_
+#endif  // TEXTURE_MANAGER_H_
