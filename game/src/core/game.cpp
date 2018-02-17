@@ -56,7 +56,7 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
   {
 #define MACRO_LUA_GAME(cname, luaname) \
     lua->Register(GAME_PREFIX #luaname, Game_##cname);
-#include "lua_game.inc.h"
+#include "lua_game.h.inc"
 #undef MACRO_LUA_GAME
   }
 
@@ -66,7 +66,7 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
 
 #define MACRO_LUA_GAME(cname, luaname) \
     lua->RegisterMethod(lua_this_.name(), string(#luaname));
-#include "lua_game.inc.h"
+#include "lua_game.h.inc"
 #undef MACRO_LUA_GAME
   }
 

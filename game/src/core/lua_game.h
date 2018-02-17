@@ -15,7 +15,7 @@ extern "C" {
 #define MACRO_LUA_GAME(cname, luaname) \
   int Game_##cname(lua_State*);
 
-#include "lua_game.inc.h"
+#include "lua_game.h.inc"
 
 #undef MACRO_LUA_GAME
 

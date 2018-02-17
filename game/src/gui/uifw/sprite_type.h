@@ -11,7 +11,7 @@ namespace uifw {
 
 enum SpriteType {
 #define MACRO_SPRITE_TYPE(ename, bname, dir, ofs, snum, bsize) kSprite##ename,
-#include "sprite_type.inc.h"
+#include "sprite_type.h.inc"
   kSpriteCount
 };
 

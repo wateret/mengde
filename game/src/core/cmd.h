@@ -16,7 +16,7 @@ class Cmd {
  public:
   enum class Op {
 #define MACRO_CMD_OP(name) kCmd ## name,
-#include "cmd_op.inc.h"
+#include "cmd_op.h.inc"
   };
 
  public:

@@ -13,7 +13,7 @@ namespace core {
 
 const char* kCmdOpToString[] = {
 #define MACRO_CMD_OP(ename) #ename,
-#include "cmd_op.inc.h"
+#include "cmd_op.h.inc"
   nullptr
 };
 

@@ -9,20 +9,20 @@ namespace Range {
 
 #define MACRO_ATTACK_RANGE(name, ...) \
     Vec2D kRange##name[] = {__VA_ARGS__, {0, 0}};
-#include "attack_range.inc.h"
+#include "attack_range.h.inc"
 #undef MACRO_ATTACK_RANGE
 
 Vec2D* kRanges[kCount] = {
 #define MACRO_ATTACK_RANGE(name, ...) \
     kRange##name,
-#include "attack_range.inc.h"
+#include "attack_range.h.inc"
 #undef MACRO_ATTACK_RANGE
 };
 
 static const char* kToString[kCount] = {
 #define MACRO_ATTACK_RANGE(name, ...) \
     #name,
-#include "attack_range.inc.h"
+#include "attack_range.h.inc"
 #undef MACRO_ATTACK_RANGE
 };
 

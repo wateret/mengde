@@ -10,7 +10,7 @@ namespace Range {
 enum Type {
 #define MACRO_ATTACK_RANGE(name, ...) \
     k##name,
-#include "attack_range.inc.h"
+#include "attack_range.h.inc"
   kCount
 };
 
