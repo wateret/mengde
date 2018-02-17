@@ -58,7 +58,7 @@ UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL
   }
 }
 
-void UnitOverView::SetUnit(core::Unit* unit) {
+void UnitOverView::SetUnit(const core::IUnitBase* unit) {
   unit_ = unit;
   OnUnitUpdate();
 }
@@ -71,8 +71,8 @@ void UnitOverView::OnUnitUpdate() {
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
 
-  const core::Attribute& ori_attr = unit_->GetOriginalStat();
-  const core::Attribute& cur_attr = unit_->GetCurrentStat();
+  const core::Attribute& ori_attr = unit_->GetOriginalAttr();
+  const core::Attribute& cur_attr = unit_->GetCurrentAttr();
   const core::HpMp&      ori_hpmp = unit_->GetOriginalHpMp();
   const core::HpMp&      cur_hpmp = unit_->GetCurrentHpMp();
 

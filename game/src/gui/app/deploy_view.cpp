@@ -77,7 +77,7 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
           model_view->SetDeployNo(deploy_helper->AssignDeploy(hero));
         }
         equipment_select_view->SetHero(hero);
-        unit_over_view->SetUnit(new core::Unit(hero, core::Force::kOwn));
+        unit_over_view->SetUnit(hero);
         equipment_set_setter->SetEquipmentSet(hero->GetEquipmentSet());
         model_view->UpdateViews();
       }
@@ -97,9 +97,6 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   padding(8);
   bg_color(COLOR("darkgray"));
 
-  Rect unit_over_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtBot);
-  unit_over_view_ = new UnitOverView(unit_over_frame);
-
   Rect equipment_set_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtTop);
   equipment_set_view_      = new EquipmentSetView(&equipment_set_frame);
   Rect equipment_select_frame = GetActualFrame();
@@ -107,6 +104,8 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   equipment_select_view_ = new EquipmentSelectView(equipment_select_frame, equipment_set_view_);
 
   {  // Initialize unit_over_view_
+    Rect unit_over_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {220, 270}, LayoutHelper::kAlignRgtBot);
+    unit_over_view_ = new UnitOverView(unit_over_frame);
   }
 
   {  // Initialize equipment_select_view_

@@ -10,8 +10,8 @@ namespace core {
 Unit::Unit(const Hero* hero, Force force)
     : hero_(new Hero(*hero)),  // NOTE deep-copy is done here
       equipment_set_(new EquipmentSet(this)),
-      current_attr_(hero->GetUnitStat()),
-      current_hpmp_(hero->GetHpMp()),
+      current_attr_(hero->GetOriginalAttr()),
+      current_hpmp_(hero->GetOriginalHpMp()),
       modifier_list_(),
       effect_list_(),
       position_(0, 0),
@@ -44,7 +44,7 @@ bool Unit::IsHostile(Unit* u) const {
   return false;
 }
 
-std::string Unit::GetId() const { return hero_->GetId(); }
+string Unit::GetId() const { return hero_->GetId(); }
 
 uint16_t Unit::GetLevel() const { return hero_->GetLevel(); }
 
@@ -52,13 +52,14 @@ uint16_t Unit::GetExp() const { return hero_->GetExp(); }
 
 int Unit::GetMove() const { return hero_->GetMove(); }
 
-std::string Unit::GetModelId() const { return hero_->GetModelId(); }
+string Unit::GetModelId() const { return hero_->GetModelId(); }
 
-const Attribute& Unit::GetOriginalStat() const { return hero_->GetUnitPureStat(); }
+const Attribute& Unit::GetOriginalAttr() const { return hero_->GetUnitPureStat(); }
 
-const HpMp& Unit::GetOriginalHpMp() const { return hero_->GetHpMp(); }
+const HpMp& Unit::GetOriginalHpMp() const { return hero_->GetOriginalHpMp(); }
 
 void Unit::UpdateStat() {
+  // TODO update HpMp
   current_attr_ = hero_->GetUnitPureStat();
   {
     Attribute addends     = modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
@@ -113,7 +114,7 @@ void Unit::GainExp(uint16_t exp) { hero_->GainExp(exp); }
 void Unit::LevelUp() {
   // TODO check if Unit is alread in max level
   hero_->LevelUp();
-  current_attr_ = hero_->GetUnitStat();
+  UpdateStat();
   LOG_INFO("'%s' Level Up! (Level : %d)", hero_->GetId().c_str(), hero_->GetLevel());
 }
 

@@ -7,6 +7,7 @@
 #include "hero.h"
 #include "i_equipper.h"
 #include "i_event.h"
+#include "i_unit_base.h"
 #include "stat_modifier_list.h"
 #include "util/common.h"
 
@@ -16,58 +17,60 @@ namespace core {
 class UnitClass;
 class EquipmentSet;
 
-class Unit : public IEvent, public IEquipper {
+class Unit : public IUnitBase, public IEvent, public IEquipper {
  public:
   Unit(const Hero*, Force);
-  ~Unit();
+  virtual ~Unit();
 
  public:
+  // IEvent interfaces and wrappers
   virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const override;
   virtual void            RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
   unique_ptr<Cmd>         RaiseEvent(event::GeneralEvent);
   void                    RaiseEvent(event::OnCmdEvent, CmdAct*);
 
  public:
-  std::string         GetId() const;
-  uint16_t            GetLevel() const;
-  int                 GetMove() const;
-  uint16_t            GetExp() const;
-  std::string         GetModelId() const;
-  const Attribute&    GetOriginalStat() const;
-  const HpMp&         GetOriginalHpMp() const;
-  const Attribute&    GetCurrentStat() const { return current_attr_; }
-  const HpMp&         GetCurrentHpMp() const { return current_hpmp_; }
-  void                SetStat();
-  void                UpdateStat() override;
-  void                AddStatModifier(StatModifier*);
-  void                AddEventEffect(EventEffect*);
-  const EquipmentSet* GetEquipmentSet() const { return equipment_set_; }
-  uint16_t            GetMaxExp() { return Level::kExpLimit; }
-  void                SetPosition(Vec2D pos) { position_ = pos; }
-  Vec2D               GetPosition() { return position_; }
-  void                SetDirection(Direction direction) { direction_ = direction; }
-  Direction           GetDirection() { return direction_; }
-  void                SetNoRender(bool b) { no_render_ = b; }
-  const UnitClass*    GetClass() const override;
-  int                 GetClassIndex() const;
-  Force               GetForce() const { return force_; }
-  Vec2D*              GetAttackRange() const;
-  bool                IsNoRender() const { return no_render_; }
-  bool                IsHPLow() const;
-  bool                IsDead() const;
-  bool                DoDamage(int);
-  void                RestoreHP(int);
-  void                Heal(int);
-  void                Kill();
-  bool                IsHostile(Unit*) const;
-  bool                IsInRange(Vec2D, Vec2D*) const;
-  bool                IsInRange(Vec2D) const;
-  bool                IsDoneAction() const { return done_action_; }
-  void                GainExp(Unit*);
-  void                GainExp(uint16_t exp);
-  void                LevelUp();
-  void                EndAction();
-  void                ResetAction();
+  // IUnitBase interfaces
+  virtual string              GetId() const override;
+  virtual string              GetModelId() const override;
+  virtual const UnitClass*    GetClass() const override;
+  virtual int                 GetMove() const override;
+  virtual Vec2D*              GetAttackRange() const override;
+  virtual uint16_t            GetLevel() const override;
+  virtual uint16_t            GetExp() const override;
+  virtual const HpMp&         GetOriginalHpMp() const override;
+  virtual const Attribute&    GetOriginalAttr() const override;
+  virtual const HpMp&         GetCurrentHpMp() const override { return current_hpmp_; }
+  virtual const Attribute&    GetCurrentAttr() const override { return current_attr_; }
+  virtual const EquipmentSet* GetEquipmentSet() const override { return equipment_set_; }
+  virtual void                UpdateStat() override;
+
+  void      AddStatModifier(StatModifier*);
+  void      AddEventEffect(EventEffect*);
+  uint16_t  GetMaxExp() { return Level::kExpLimit; }
+  void      SetPosition(Vec2D pos) { position_ = pos; }
+  Vec2D     GetPosition() { return position_; }
+  void      SetDirection(Direction direction) { direction_ = direction; }
+  Direction GetDirection() { return direction_; }
+  void      SetNoRender(bool b) { no_render_ = b; }
+  int       GetClassIndex() const;
+  Force     GetForce() const { return force_; }
+  bool      IsNoRender() const { return no_render_; }
+  bool      IsHPLow() const;
+  bool      IsDead() const;
+  bool      DoDamage(int);
+  void      RestoreHP(int);
+  void      Heal(int);
+  void      Kill();
+  bool      IsHostile(Unit*) const;
+  bool      IsInRange(Vec2D, Vec2D*) const;
+  bool      IsInRange(Vec2D) const;
+  bool      IsDoneAction() const { return done_action_; }
+  void      GainExp(Unit*);
+  void      GainExp(uint16_t exp);
+  void      LevelUp();
+  void      EndAction();
+  void      ResetAction();
 
  private:
   Hero*            hero_;

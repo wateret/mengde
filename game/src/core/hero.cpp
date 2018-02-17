@@ -58,7 +58,7 @@ HpMp Hero::CalcHpMp() const {
   return xtat;
 }
 
-Attribute Hero::CalcUnitPureStat() const {
+Attribute Hero::CalcUnitPureAttr() const {
   Attribute unit_stat =
       ((hero_attr_ / 2) + ((100 + 10 * (GetClass()->GetStatGrade() - 1)) * level_.level * hero_attr_) / 2000);
   return unit_stat;
@@ -66,7 +66,7 @@ Attribute Hero::CalcUnitPureStat() const {
 
 void Hero::UpdateStat() {
   hpmp_           = CalcHpMp();
-  unit_pure_attr_ = CalcUnitPureStat();
+  unit_pure_attr_ = CalcUnitPureAttr();
   unit_attr_      = unit_pure_attr_;
   {  // FIXME code copied from Unit
     Attribute addends     = equipment_set_->CalcAddends();

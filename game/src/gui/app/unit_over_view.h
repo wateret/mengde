@@ -7,7 +7,9 @@
 
 namespace mengde {
 namespace core {
-class Unit;
+
+class IUnitBase;
+
 }
 }  // namespace mengde
 
@@ -18,7 +20,7 @@ namespace app {
 class UnitOverView : public CompositeView {
  public:
   UnitOverView(const Rect&);
-  void SetUnit(core::Unit* unit);
+  void SetUnit(const core::IUnitBase* unit);
 
  private:
   void OnUnitUpdate();
@@ -31,7 +33,7 @@ class UnitOverView : public CompositeView {
   static const int kNumTabs  = 3;
 
  private:
-  core::Unit* unit_;
+  const core::IUnitBase* unit_;
   ImageView*  iv_portrait_;
   TextView*   tv_name_;
   TextView*   tv_lv_;
