@@ -44,15 +44,15 @@ bool Unit::IsHostile(Unit* u) const {
   return false;
 }
 
-std::string Unit::GetId() { return hero_->GetId(); }
+std::string Unit::GetId() const { return hero_->GetId(); }
 
 uint16_t Unit::GetLevel() const { return hero_->GetLevel(); }
 
 uint16_t Unit::GetExp() const { return hero_->GetExp(); }
 
-int Unit::GetMove() { return hero_->GetMove(); }
+int Unit::GetMove() const { return hero_->GetMove(); }
 
-std::string Unit::GetModelId() { return hero_->GetModelId(); }
+std::string Unit::GetModelId() const { return hero_->GetModelId(); }
 
 const Attribute& Unit::GetOriginalStat() const { return hero_->GetUnitPureStat(); }
 

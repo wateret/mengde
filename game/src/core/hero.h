@@ -19,7 +19,7 @@ class Hero : public IEquipper {
   Hero(const Hero&);
   ~Hero();
   string              GetId() const;
-  string              GetModelId() const;  // TODO Rename this to GetModelId
+  string              GetModelId() const;
   const UnitClass*    GetClass() const override;
   int                 GetClassIndex() const;
   int                 GetMove() const;

@@ -9,9 +9,11 @@
 
 namespace mengde {
 namespace core {
+
 class Hero;
 class Assets;
 class IDeployHelper;
+
 }  // namespace core
 }  // namespace mengde
 
@@ -21,6 +23,7 @@ namespace app {
 
 class EquipmentSetView;
 class EquipmentSelectView;
+class UnitOverView;
 
 class HeroModelView : public CallbackView {
  public:
@@ -38,7 +41,7 @@ class HeroModelView : public CallbackView {
 
 class HeroModelListView : public CompositeView {
  public:
-  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, IEquipmentSetSetter*,
+  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, UnitOverView*, IEquipmentSetSetter*,
                     EquipmentSelectView*);
 };
 
@@ -49,6 +52,7 @@ class DeployView : public CompositeView {
   DeployView(const Rect&, core::Assets*, core::IDeployHelper*);
 
  private:
+  UnitOverView*        unit_over_view_;
   EquipmentSetView*    equipment_set_view_;
   EquipmentSelectView* equipment_select_view_;
 };

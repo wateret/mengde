@@ -10,7 +10,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitOverView::UnitOverView(const Rect* frame) : CompositeView(frame), unit_(NULL) {
+UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL) {
   bg_color(COLOR("darkgray"));
 
   Rect portrait_frame = {0, 0, 64, 80};

@@ -17,7 +17,7 @@ namespace app {
 
 class UnitOverView : public CompositeView {
  public:
-  UnitOverView(const Rect*);
+  UnitOverView(const Rect&);
   void SetUnit(core::Unit* unit);
 
  private:

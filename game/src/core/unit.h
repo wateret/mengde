@@ -28,11 +28,11 @@ class Unit : public IEvent, public IEquipper {
   void                    RaiseEvent(event::OnCmdEvent, CmdAct*);
 
  public:
-  std::string         GetId();
+  std::string         GetId() const;
   uint16_t            GetLevel() const;
-  int                 GetMove();
+  int                 GetMove() const;
   uint16_t            GetExp() const;
-  std::string         GetModelId();
+  std::string         GetModelId() const;
   const Attribute&    GetOriginalStat() const;
   const HpMp&         GetOriginalHpMp() const;
   const Attribute&    GetCurrentStat() const { return current_attr_; }
