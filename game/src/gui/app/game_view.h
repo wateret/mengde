@@ -72,6 +72,7 @@ class GameView : public View {
   TerrainInfoView* terrain_info_view() { return ui_views_->terrain_info_view(); }
   UnitListView*    unit_list_view() { return ui_views_->unit_list_view(); }
   UnitDialogView*  unit_dialog_view() { return ui_views_->unit_dialog_view(); }
+  ModalView*       unit_dialog_view_wrapper() { return ui_views_->unit_dialog_view_wrapper(); }
   UnitView*        unit_view() { return ui_views_->unit_view(); }
   UnitTooltipView* unit_tooltip_view() { return ui_views_->unit_tooltip_view(); }
   ControlView*     control_view() { return ui_views_->control_view(); }

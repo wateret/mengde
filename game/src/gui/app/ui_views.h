@@ -36,6 +36,7 @@ class UIViews : public CompositeView {
   TerrainInfoView* terrain_info_view() { return terrain_info_view_; }
   UnitListView*    unit_list_view() { return unit_list_view_; }
   UnitDialogView*  unit_dialog_view() { return unit_dialog_view_; }
+  ModalView*       unit_dialog_view_wrapper() { return unit_dialog_view_wrapper_; }
   UnitView*        unit_view() { return unit_view_; }
   UnitTooltipView* unit_tooltip_view() { return unit_tooltip_view_; }
   ControlView*     control_view() { return control_view_; }

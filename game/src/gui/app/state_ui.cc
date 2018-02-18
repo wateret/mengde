@@ -16,6 +16,7 @@
 #include "gui/foundation/texture_manager.h"
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/modal_dialog_view.h"
+#include "gui/uifw/modal_view.h"
 #include "layout_helper.h"
 #include "magic_list_view.h"
 #include "terrain_info_view.h"
@@ -920,17 +921,18 @@ StateUISpeak::StateUISpeak(StateUI::Base base, core::Unit* unit, const string& w
 
 void StateUISpeak::Enter() {
   auto unit_dialog_view = gv_->unit_dialog_view();
+  auto unit_dialog_view_wrapper = gv_->unit_dialog_view_wrapper();
   unit_dialog_view->SetUnit(unit_);
   unit_dialog_view->SetText(words_);
   unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(gv_->unit_dialog_view()->GetFrameSize(), gv_->GetFrameSize(),
                                                            gv_->GetCameraCoords(), unit_->GetPosition()));
-  unit_dialog_view->visible(true);
+  unit_dialog_view_wrapper->visible(true);
 }
 
-void StateUISpeak::Exit() { gv_->unit_dialog_view()->visible(false); }
+void StateUISpeak::Exit() { gv_->unit_dialog_view_wrapper()->visible(false); }
 
 void StateUISpeak::Update() {
-  if (!gv_->unit_dialog_view()->visible()) {
+  if (!gv_->unit_dialog_view_wrapper()->visible()) {
     gv_->PopUIState();
   }
 }
