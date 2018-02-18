@@ -61,7 +61,7 @@ class Game : public IDeployHelper {
   uint16_t      GetTurnCurrent() const;
   uint16_t      GetTurnLimit() const;
   bool          HasNext() const;
-  void          DoPendingCmd();
+  void          DoNext();
   void          Push(unique_ptr<Cmd>);
   const Cmd*    GetNextCmdConst() const;
   bool          UnitInCell(Vec2D) const;

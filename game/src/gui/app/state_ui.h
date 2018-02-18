@@ -24,7 +24,7 @@ namespace app {
 
 class RootView;
 class MagicListView;
-class UnitInfoView;
+class UnitTooltipView;
 
 class StateUI : public State, IView {
  public:

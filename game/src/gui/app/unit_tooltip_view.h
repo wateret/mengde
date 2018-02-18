@@ -1,5 +1,5 @@
-#ifndef UNIT_INFO_VIEW_H_
-#define UNIT_INFO_VIEW_H_
+#ifndef GUI_APP_UNIT_TOOLTIP_VIEW_H_
+#define GUI_APP_UNIT_TOOLTIP_VIEW_H_
 
 #include <string>
 #include "gui/uifw/composite_view.h"
@@ -18,10 +18,10 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-class UnitInfoView : public CompositeView {
+class UnitTooltipView : public CompositeView {
  public:
-  UnitInfoView(const Rect*, core::Unit* = NULL);
-  virtual ~UnitInfoView();
+  UnitTooltipView(const Rect*, core::Unit* = NULL);
+  virtual ~UnitTooltipView();
   void SetUnitTerrainInfo(core::Cell* cell);
   void SetUnitAttackInfo(core::Unit*, int, int);
   void SetUnit(core::Unit*);
@@ -45,4 +45,4 @@ class UnitInfoView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif  // GUI_APP_UNIT_TOOLTIP_VIEW_H_

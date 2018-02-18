@@ -23,8 +23,8 @@
 #include "terrain_info_view.h"
 #include "unit_action_view.h"
 #include "unit_dialog_view.h"
-#include "unit_info_view.h"
 #include "unit_list_view.h"
+#include "unit_tooltip_view.h"
 #include "unit_view.h"
 #include "util/state_machine.h"
 
@@ -38,7 +38,7 @@ RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
       app_(app),
       ui_views_(nullptr),
       deploy_view_(nullptr),
-      unit_info_view_(nullptr),
+      unit_tooltip_view_(nullptr),
       unit_view_(nullptr),
       control_view_(nullptr),
       dialog_view_(nullptr),
@@ -104,11 +104,11 @@ RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
     ui_views_->AddChild(magic_list_view_);
   }
 
-  {  // Initalize unit_info_view_
+  {  // Initalize unit_tooltip_view_
     Rect unit_info_frame =
         LayoutHelper::CalcPosition(GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot, LayoutHelper::kDefaultSpace);
-    unit_info_view_ = new UnitInfoView(&unit_info_frame);
-    ui_views_->AddChild(unit_info_view_);
+    unit_tooltip_view_ = new UnitTooltipView(&unit_info_frame);
+    ui_views_->AddChild(unit_tooltip_view_);
   }
 
   {  // Initialize unit_dialog_view_

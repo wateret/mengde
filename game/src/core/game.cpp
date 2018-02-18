@@ -226,7 +226,7 @@ const Cmd* Game::GetNextCmdConst() const {
 
 bool Game::UnitInCell(Vec2D c) const { return map_->UnitInCell(c); }
 
-void Game::DoPendingCmd() {
+void Game::DoNext() {
   ASSERT(HasNext());
 #ifdef DEBUG
   commander_->DebugPrint();

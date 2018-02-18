@@ -1,4 +1,4 @@
-#include "unit_info_view.h"
+#include "unit_tooltip_view.h"
 
 #include "core/cell.h"
 #include "core/unit.h"
@@ -12,7 +12,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitInfoView::UnitInfoView(const Rect* frame, core::Unit* unit)
+UnitTooltipView::UnitTooltipView(const Rect* frame, core::Unit* unit)
     : CompositeView(frame),
       unit_(unit),
       gv_hp_(nullptr),
@@ -47,9 +47,9 @@ UnitInfoView::UnitInfoView(const Rect* frame, core::Unit* unit)
   AddChild(tv_rgtbot_);
 }
 
-UnitInfoView::~UnitInfoView() {}
+UnitTooltipView::~UnitTooltipView() {}
 
-void UnitInfoView::SetUnitTerrainInfo(core::Cell* cell) {
+void UnitTooltipView::SetUnitTerrainInfo(core::Cell* cell) {
   ASSERT(cell->IsUnitPlaced());
 
   core::Unit* unit = cell->GetUnit();
@@ -62,13 +62,13 @@ void UnitInfoView::SetUnitTerrainInfo(core::Cell* cell) {
   tv_rgtbot_->SetText(terrain_effect);
 }
 
-void UnitInfoView::SetUnitAttackInfo(core::Unit* unit, int accuracy, int expected_damage) {
+void UnitTooltipView::SetUnitAttackInfo(core::Unit* unit, int accuracy, int expected_damage) {
   SetUnit(unit);
   gv_hp_->SetExtVal(expected_damage);
   tv_rgtbot_->SetText("Accuracy : " + std::to_string(accuracy) + "%");
 }
 
-void UnitInfoView::SetUnit(core::Unit* unit) {
+void UnitTooltipView::SetUnit(core::Unit* unit) {
   unit_                      = unit;
   const core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
   const core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
@@ -82,8 +82,8 @@ void UnitInfoView::SetUnit(core::Unit* unit) {
   tv_lv_->SetText("Lv " + std::to_string(unit_->GetLevel()));
 }
 
-void UnitInfoView::SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max,
-                               const core::HpMp& hpmp_ext) {
+void UnitTooltipView::SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur,
+                                  const core::HpMp& hpmp_max, const core::HpMp& hpmp_ext) {
   unit_ = nullptr;  // Reset cache
   gv_hp_->SetCurVal(hpmp_cur.hp);
   gv_hp_->SetMaxVal(hpmp_max.hp);
@@ -97,11 +97,11 @@ void UnitInfoView::SetContents(const std::string& name, int lv, const core::HpMp
   tv_rgtbot_->SetText("");
 }
 
-void UnitInfoView::SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame) {
+void UnitTooltipView::SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame) {
   SetCoords(layout::CalcPositionNearUnit(GetFrameSize(), game_frame, camera, unit));
 }
 
-bool UnitInfoView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return false; }
+bool UnitTooltipView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return false; }
 
 }  // namespace app
 }  // namespace gui

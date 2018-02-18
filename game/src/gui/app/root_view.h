@@ -34,7 +34,7 @@ class UnitDialogView;
 class ControlView;
 class MagicListView;
 class UnitActionView;
-class UnitInfoView;
+class UnitTooltipView;
 class UnitListView;
 class TerrainInfoView;
 
@@ -57,7 +57,7 @@ class RootView : public View {
   UnitListView*    unit_list_view() { return unit_list_view_; }
   UnitDialogView*  unit_dialog_view() { return unit_dialog_view_; }
   UnitView*        unit_view() { return unit_view_; }
-  UnitInfoView*    unit_info_view() { return unit_info_view_; }
+  UnitTooltipView* unit_tooltip_view() { return unit_tooltip_view_; }
   ControlView*     control_view() { return control_view_; }
   ModalDialogView* dialog_view() { return dialog_view_; }
   MagicListView*   magic_list_view() { return magic_list_view_; }
@@ -92,7 +92,7 @@ class RootView : public View {
 
   CompositeView*   ui_views_;
   DeployView*      deploy_view_;
-  UnitInfoView*    unit_info_view_;
+  UnitTooltipView* unit_tooltip_view_;
   UnitView*        unit_view_;
   ControlView*     control_view_;
   ModalDialogView* dialog_view_;

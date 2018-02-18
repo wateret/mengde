@@ -21,8 +21,8 @@
 #include "terrain_info_view.h"
 #include "unit_action_view.h"
 #include "unit_dialog_view.h"
-#include "unit_info_view.h"
 #include "unit_list_view.h"
+#include "unit_tooltip_view.h"
 #include "unit_view.h"
 
 namespace mengde {
@@ -47,7 +47,7 @@ void StateUIDoCmd::Enter() {
   if (cmd_to_do_) {
     // Run reserved command run
     ASSERT(game_->HasNext());
-    game_->DoPendingCmd();
+    game_->DoNext();
     cmd_to_do_ = false;
   }
   while (game_->HasNext()) {
@@ -59,7 +59,7 @@ void StateUIDoCmd::Enter() {
       break;
     } else {
       // If we do not have UIState for the command do it immediately
-      game_->DoPendingCmd();
+      game_->DoNext();
     }
   }
 }
@@ -161,7 +161,7 @@ StateUIOperable::StateUIOperable(Base base) : StateUI(base), cursor_cell_(0, 0) 
 void StateUIOperable::Enter() {}
 
 void StateUIOperable::Exit() {
-  rv_->unit_info_view()->visible(false);
+  rv_->unit_tooltip_view()->visible(false);
   rv_->unit_view()->visible(false);
 }
 
@@ -230,13 +230,13 @@ void StateUIView::Update() {
   if (map->UnitInCell(cursor_cell_)) {
     core::Cell* cell = map->GetCell(cursor_cell_);
     core::Unit* unit = map->GetUnit(cursor_cell_);
-    rv_->unit_info_view()->SetUnitTerrainInfo(cell);
-    rv_->unit_info_view()->SetCoordsByUnitCoords(unit->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
+    rv_->unit_tooltip_view()->SetUnitTerrainInfo(cell);
+    rv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
     rv_->unit_view()->SetUnit(unit);
 
-    rv_->unit_info_view()->visible(true);
+    rv_->unit_tooltip_view()->visible(true);
   } else {
-    rv_->unit_info_view()->visible(false);
+    rv_->unit_tooltip_view()->visible(false);
     rv_->unit_view()->visible(false);
   }
 
@@ -678,12 +678,12 @@ StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, core::Unit* u
 
 void StateUIUnitTooltipAnim::Enter() {
   Misc::SetShowCursor(false);
-  rv_->unit_info_view()->visible(true);
+  rv_->unit_tooltip_view()->visible(true);
 }
 
 void StateUIUnitTooltipAnim::Exit() {
   Misc::SetShowCursor(true);
-  rv_->unit_info_view()->visible(false);
+  rv_->unit_tooltip_view()->visible(false);
 }
 
 void StateUIUnitTooltipAnim::Update() {
@@ -712,8 +712,9 @@ void StateUIUnitTooltipAnim::Update() {
     hpmp_mod.mp += mp_ * cur_anim_frames / max_anim_frames;
   }
 
-  rv_->unit_info_view()->SetContents(unit_->GetId(), unit_->GetLevel(), hpmp_mod, unit_->GetOriginalHpMp(), hpmp_rem);
-  rv_->unit_info_view()->SetCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
+  rv_->unit_tooltip_view()->SetContents(unit_->GetId(), unit_->GetLevel(), hpmp_mod, unit_->GetOriginalHpMp(),
+                                        hpmp_rem);
+  rv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
 }
 
 void StateUIUnitTooltipAnim::Render(Drawer*) {}
@@ -738,7 +739,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, core::Unit* unit, const s
 void StateUITargeting::Enter() { StateUIOperable::Enter(); }
 
 void StateUITargeting::Exit() {
-  rv_->unit_info_view()->visible(false);
+  rv_->unit_tooltip_view()->visible(false);
   StateUIOperable::Exit();
 }
 
@@ -805,10 +806,10 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
 bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
-  auto       unit_info_view = rv_->unit_info_view();
-  core::Map* map            = game_->GetMap();
-  Vec2D      cursor_cell    = GetCursorCell();
-  bool       unit_in_cell   = map->UnitInCell(cursor_cell);
+  auto       unit_tooltip_view = rv_->unit_tooltip_view();
+  core::Map* map               = game_->GetMap();
+  Vec2D      cursor_cell       = GetCursorCell();
+  bool       unit_in_cell      = map->UnitInCell(cursor_cell);
   if (unit_in_cell) {
     core::Unit* unit_target = map->GetUnit(cursor_cell);
     bool        hostile     = unit_->IsHostile(unit_target);
@@ -818,13 +819,13 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) 
       int accuracy = is_basic_attack_ ? core::Formulae::ComputeBasicAttackAccuracy(unit_, unit_target)
                                       : core::Formulae::ComputeMagicAccuracy(unit_, unit_target);
 
-      unit_info_view->SetUnitAttackInfo(unit_target, accuracy, damage);
+      unit_tooltip_view->SetUnitAttackInfo(unit_target, accuracy, damage);
     } else {
-      unit_info_view->SetUnitTerrainInfo(map->GetCell(cursor_cell));
+      unit_tooltip_view->SetUnitTerrainInfo(map->GetCell(cursor_cell));
     }
-    unit_info_view->SetCoordsByUnitCoords(unit_target->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
+    unit_tooltip_view->SetCoordsByUnitCoords(unit_target->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
   }
-  unit_info_view->visible(unit_in_cell);
+  unit_tooltip_view->visible(unit_in_cell);
   return true;
 }
 
