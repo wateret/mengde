@@ -27,6 +27,7 @@ class UnitInfoView : public CompositeView {
   void SetUnit(core::Unit*);
   void SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max,
                    const core::HpMp& hpmp_ext);
+  void SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame);
 
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
 

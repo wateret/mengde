@@ -9,12 +9,14 @@
 
 namespace mengde {
 namespace core {
+
 class Assets;
 class Game;
 class Unit;
 class Cell;
 class Scenario;
 struct HpMp;
+
 }  // namespace core
 }  // namespace mengde
 
@@ -52,14 +54,6 @@ class RootView : public View {
   void   MoveCameraY(int d);
 
   // View wrappers
-  void SetUnitViewVisible(bool);
-  void SetUnitViewUnit(core::Unit*);
-  void SetUnitInfoViewUnitTerrainInfo(core::Cell* cell);
-  void SetUnitInfoViewUnitAttackInfo(core::Unit* unit, int, int);
-  void SetUnitInfoViewContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max,
-                               const core::HpMp& hpmp_ext);
-  void SetUnitInfoViewCoordsByUnitCoords(Vec2D, Vec2D);
-  void SetUnitInfoViewVisible(bool);
   void SetTerrainInfoViewVisible(bool);
   void SetTerrainInfoViewText(const string&);
   void SetUnitListViewVisible(bool);
@@ -71,6 +65,8 @@ class RootView : public View {
   bool  GetUnitDialogViewVisible() const;
   Vec2D GetUnitDialogViewFrameSize() const;
 
+  UnitView*        unit_view() { return unit_view_; }
+  UnitInfoView*    unit_info_view() { return unit_info_view_; }
   ControlView*     control_view() { return control_view_; }
   ModalDialogView* dialog_view() { return dialog_view_; }
   MagicListView*   magic_list_view() { return magic_list_view_; }
@@ -100,8 +96,9 @@ class RootView : public View {
   void RaiseMouseMotionEvent();
 
  private:
-  core::Game*      game_;
-  App*             app_;
+  core::Game* game_;
+  App*        app_;
+
   CompositeView*   ui_views_;
   DeployView*      deploy_view_;
   UnitInfoView*    unit_info_view_;
@@ -113,14 +110,16 @@ class RootView : public View {
   MagicListView*   magic_list_view_;
   TerrainInfoView* terrain_info_view_;
   UnitListView*    unit_list_view_;
-  //  EquipmentSelectView*   equipment_select_view_;
-  UnitActionView*          unit_action_view_;
-  StateMachine<StateUI*>   ui_state_machine_;
+  UnitActionView*  unit_action_view_;
+
+  StateMachine<StateUI*> ui_state_machine_;
+
   queue<NextFrameCallback> reserved_callbacks_;
-  Vec2D                    mouse_coords_;
-  Vec2D                    camera_coords_;
-  Vec2D                    max_camera_coords_;
-  int                      frame_count_;
+
+  Vec2D mouse_coords_;
+  Vec2D camera_coords_;
+  Vec2D max_camera_coords_;
+  int   frame_count_;
 };
 
 }  // namespace app

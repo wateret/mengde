@@ -6,6 +6,7 @@
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/gauge_view.h"
 #include "gui/uifw/text_view.h"
+#include "layout_helper.h"
 
 namespace mengde {
 namespace gui {
@@ -94,6 +95,10 @@ void UnitInfoView::SetContents(const std::string& name, int lv, const core::HpMp
   tv_lv_->SetText("Lv " + std::to_string(lv));
   tv_lftbot_->SetText("");
   tv_rgtbot_->SetText("");
+}
+
+void UnitInfoView::SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame) {
+  SetCoords(layout::CalcPositionNearUnit(GetFrameSize(), game_frame, camera, unit));
 }
 
 bool UnitInfoView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return false; }

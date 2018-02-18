@@ -20,6 +20,8 @@
 #include "root_view.h"
 #include "unit_action_view.h"
 #include "unit_dialog_view.h"
+#include "unit_info_view.h"
+#include "unit_view.h"
 
 namespace mengde {
 namespace gui {
@@ -157,8 +159,8 @@ StateUIOperable::StateUIOperable(Base base) : StateUI(base), cursor_cell_(0, 0) 
 void StateUIOperable::Enter() {}
 
 void StateUIOperable::Exit() {
-  rv_->SetUnitInfoViewVisible(false);
-  rv_->SetUnitViewVisible(false);
+  rv_->unit_info_view()->visible(false);
+  rv_->unit_view()->visible(false);
 }
 
 void StateUIOperable::Update() {
@@ -226,15 +228,14 @@ void StateUIView::Update() {
   if (map->UnitInCell(cursor_cell_)) {
     core::Cell* cell = map->GetCell(cursor_cell_);
     core::Unit* unit = map->GetUnit(cursor_cell_);
-    rv_->SetUnitInfoViewUnitTerrainInfo(cell);
-    rv_->SetUnitInfoViewCoordsByUnitCoords(unit->GetPosition(), rv_->GetCameraCoords());
-    rv_->SetUnitViewUnit(unit);
+    rv_->unit_info_view()->SetUnitTerrainInfo(cell);
+    rv_->unit_info_view()->SetCoordsByUnitCoords(unit->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
+    rv_->unit_view()->SetUnit(unit);
 
-    rv_->SetUnitInfoViewVisible(true);
-    //    rv_->SetUnitViewVisible(true);
+    rv_->unit_info_view()->visible(true);
   } else {
-    rv_->SetUnitInfoViewVisible(false);
-    rv_->SetUnitViewVisible(false);
+    rv_->unit_info_view()->visible(false);
+    rv_->unit_view()->visible(false);
   }
 
   if (game_->IsAITurn()) {
@@ -313,8 +314,9 @@ void StateUIUnitSelected::Render(Drawer* drawer) {
 void StateUIUnitSelected::Update() {
   StateUIOperable::Update();
 
-  rv_->SetUnitViewUnit(unit_);
-  rv_->SetUnitViewVisible(true);
+  auto unit_view = rv_->unit_view();
+  unit_view->SetUnit(unit_);
+  unit_view->visible(true);
 }
 
 bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
@@ -674,12 +676,12 @@ StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, core::Unit* u
 
 void StateUIUnitTooltipAnim::Enter() {
   Misc::SetShowCursor(false);
-  rv_->SetUnitInfoViewVisible(true);
+  rv_->unit_info_view()->visible(true);
 }
 
 void StateUIUnitTooltipAnim::Exit() {
   Misc::SetShowCursor(true);
-  rv_->SetUnitInfoViewVisible(false);
+  rv_->unit_info_view()->visible(false);
 }
 
 void StateUIUnitTooltipAnim::Update() {
@@ -708,8 +710,8 @@ void StateUIUnitTooltipAnim::Update() {
     hpmp_mod.mp += mp_ * cur_anim_frames / max_anim_frames;
   }
 
-  rv_->SetUnitInfoViewContents(unit_->GetId(), unit_->GetLevel(), hpmp_mod, unit_->GetOriginalHpMp(), hpmp_rem);
-  rv_->SetUnitInfoViewCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords());
+  rv_->unit_info_view()->SetContents(unit_->GetId(), unit_->GetLevel(), hpmp_mod, unit_->GetOriginalHpMp(), hpmp_rem);
+  rv_->unit_info_view()->SetCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
 }
 
 void StateUIUnitTooltipAnim::Render(Drawer*) {}
@@ -734,7 +736,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, core::Unit* unit, const s
 void StateUITargeting::Enter() { StateUIOperable::Enter(); }
 
 void StateUITargeting::Exit() {
-  rv_->SetUnitInfoViewVisible(false);
+  rv_->unit_info_view()->visible(false);
   StateUIOperable::Exit();
 }
 
@@ -801,9 +803,10 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
 bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
-  core::Map* map          = game_->GetMap();
-  Vec2D      cursor_cell  = GetCursorCell();
-  bool       unit_in_cell = map->UnitInCell(cursor_cell);
+  auto       unit_info_view = rv_->unit_info_view();
+  core::Map* map            = game_->GetMap();
+  Vec2D      cursor_cell    = GetCursorCell();
+  bool       unit_in_cell   = map->UnitInCell(cursor_cell);
   if (unit_in_cell) {
     core::Unit* unit_target = map->GetUnit(cursor_cell);
     bool        hostile     = unit_->IsHostile(unit_target);
@@ -813,13 +816,13 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) 
       int accuracy = is_basic_attack_ ? core::Formulae::ComputeBasicAttackAccuracy(unit_, unit_target)
                                       : core::Formulae::ComputeMagicAccuracy(unit_, unit_target);
 
-      rv_->SetUnitInfoViewUnitAttackInfo(unit_target, accuracy, damage);
+      unit_info_view->SetUnitAttackInfo(unit_target, accuracy, damage);
     } else {
-      rv_->SetUnitInfoViewUnitTerrainInfo(map->GetCell(cursor_cell));
+      unit_info_view->SetUnitTerrainInfo(map->GetCell(cursor_cell));
     }
-    rv_->SetUnitInfoViewCoordsByUnitCoords(unit_target->GetPosition(), rv_->GetCameraCoords());
+    unit_info_view->SetCoordsByUnitCoords(unit_target->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
   }
-  rv_->SetUnitInfoViewVisible(unit_in_cell);
+  unit_info_view->visible(unit_in_cell);
   return true;
 }
 

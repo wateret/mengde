@@ -43,7 +43,6 @@ RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
       magic_list_view_(nullptr),
       terrain_info_view_(nullptr),
       unit_list_view_(nullptr),
-      //      equipment_select_view_(nullptr),
       unit_action_view_(nullptr),
       ui_state_machine_(new StateUIView({game_, this})),
       reserved_callbacks_(),
@@ -282,28 +281,6 @@ void RootView::InitUIStateMachine() {
 
 int RootView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
   return (frame_count_ / frames_per_sprite) % num_sprites;
-}
-
-void RootView::SetUnitViewVisible(bool b) { unit_view_->visible(b); }
-
-void RootView::SetUnitViewUnit(core::Unit* unit) { unit_view_->SetUnit(unit); }
-
-void RootView::SetUnitInfoViewVisible(bool b) { unit_info_view_->visible(b); }
-
-void RootView::SetUnitInfoViewUnitTerrainInfo(core::Cell* cell) { unit_info_view_->SetUnitTerrainInfo(cell); }
-
-void RootView::SetUnitInfoViewUnitAttackInfo(core::Unit* unit, int accuracy, int damage) {
-  unit_info_view_->SetUnitAttackInfo(unit, accuracy, damage);
-}
-
-void RootView::SetUnitInfoViewContents(const std::string& name, int lv, const core::HpMp& hpmp_cur,
-                                       const core::HpMp& hpmp_max, const core::HpMp& hpmp_ext) {
-  unit_info_view_->SetContents(name, lv, hpmp_cur, hpmp_max, hpmp_ext);
-}
-
-void RootView::SetUnitInfoViewCoordsByUnitCoords(Vec2D unit, Vec2D camera) {
-  unit_info_view_->SetCoords(
-      layout::CalcPositionNearUnit(unit_info_view_->GetFrameSize(), GetFrameSize(), camera, unit));
 }
 
 void RootView::SetTerrainInfoViewVisible(bool b) { terrain_info_view_->visible(b); }
