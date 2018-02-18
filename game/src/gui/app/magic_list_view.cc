@@ -2,12 +2,12 @@
 #include "core/magic.h"
 #include "core/magic_list.h"
 #include "core/unit.h"
+#include "game_view.h"
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/scroll_view.h"
 #include "gui/uifw/text_view.h"
 #include "gui/uifw/vertical_list_view.h"
-#include "game_view.h"
 #include "state_ui.h"
 
 namespace mengde {

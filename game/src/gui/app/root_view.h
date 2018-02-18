@@ -29,7 +29,7 @@ class UIViews;
 
 class RootView : public View {
  public:
-  RootView(const Vec2D, core::Scenario*, App*);
+  RootView(const Rect& frame, core::Scenario*, App*);
   ~RootView();
 
   // Overriden method (View)

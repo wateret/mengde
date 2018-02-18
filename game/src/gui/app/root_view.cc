@@ -2,28 +2,21 @@
 
 #include "app.h"
 #include "control_view.h"
-#include "core/scenario.h"
 #include "core/game.h"
+#include "core/scenario.h"
 #include "deploy_view.h"
+#include "game_view.h"
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/layout_helper.h"
 #include "layout_helper.h"
 #include "ui_views.h"
-#include "game_view.h"
 
 namespace mengde {
 namespace gui {
 namespace app {
 
-RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
-    : View(),
-      game_(scenario->GetGame()),
-      app_(app),
-      game_view_(nullptr),
-      ui_views_(nullptr) {
-  const Rect frame({0, 0}, size);
-  SetFrame(&frame);
-
+RootView::RootView(const Rect& frame, core::Scenario* scenario, App* app)
+    : View(frame), game_(scenario->GetGame()), app_(app), game_view_(nullptr), ui_views_(nullptr) {
   game_view_ = new GameView(frame, game_, app_);
 
   ui_views_ = new UIViews(frame, scenario, game_view_);

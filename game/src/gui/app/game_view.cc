@@ -1,14 +1,14 @@
 #include "game_view.h"
 
+#include "app.h"
 #include "config.h"
 #include "core/assets.h"
 #include "core/game.h"
 #include "core/unit.h"
 #include "gui/foundation/texture_manager.h"
+#include "gui/uifw/drawer.h"
 #include "gui/uifw/sprite_type.h"
 #include "ui_views.h"
-#include "app.h"
-#include "gui/uifw/drawer.h"
 
 namespace mengde {
 namespace gui {
@@ -26,13 +26,9 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
       frame_count_(-1),
       ui_views_(nullptr) {
   // Calculate max_camera_coords_
-  const int kMapWidth     = game_->GetMapSize().x * config::kBlockSize;
-  const int kMapHeight    = game_->GetMapSize().y * config::kBlockSize;
-  const int kWindowWidth  = GetFrame()->GetW();
-  const int kWindowHeight = GetFrame()->GetH();
-  const int kMaxCameraX   = kMapWidth - kWindowWidth;
-  const int kMaxCameraY   = kMapHeight - kWindowHeight;
-  max_camera_coords_      = {kMaxCameraX, kMaxCameraY};
+  const Vec2D kMapSize    = game_->GetMapSize() * config::kBlockSize;
+  const Vec2D kWindowSize = GetFrameSize();
+  max_camera_coords_      = kMapSize - kWindowSize;
 }
 
 void GameView::Update() {
@@ -45,13 +41,14 @@ void GameView::Render(Drawer* drawer) {
   drawer->SetOffset(camera_coords_);
 
   // Render Background
-  const int       kScreenWidth  = drawer->GetWindowSize().x;
-  const int       kScreenHeight = drawer->GetWindowSize().y;
-  string          path          = game_->GetMapBitmapPath();
-  TextureManager* tm            = drawer->GetTextureManager();
-  Texture*        background    = tm->FetchTexture(path);
-  Rect            src_rect      = {0, 0, kScreenWidth, kScreenHeight};
-  Rect            dst_rect      = {0, 0, kScreenWidth, kScreenHeight};
+  string          path       = game_->GetMapBitmapPath();
+  TextureManager* tm         = drawer->GetTextureManager();
+  Texture*        background = tm->FetchTexture(path);
+
+  const Vec2D kScreenSize = drawer->GetWindowSize();
+  Rect        src_rect({0, 0}, kScreenSize);
+  Rect        dst_rect({0, 0}, kScreenSize);
+
   drawer->CopyTextureBackground(background, &src_rect, &dst_rect);
 
   // Render by UI State
@@ -131,7 +128,7 @@ void GameView::MoveCameraY(int d) {
 }
 
 void GameView::CenterCamera(Vec2D center) {
-  Vec2D coords = center - (GetFrameSize() / 2);
+  Vec2D coords   = center - (GetFrameSize() / 2);
   camera_coords_ = coords.Bound({0, 0}, max_camera_coords_);
 }
 
@@ -163,4 +160,3 @@ int GameView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
 }  // namespace app
 }  // namespace gui
 }  // namespace mengde
-

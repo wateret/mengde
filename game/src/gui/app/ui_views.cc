@@ -1,21 +1,21 @@
 #include "ui_views.h"
 
+#include "control_view.h"
+#include "core/game.h"
+#include "core/scenario.h"
+#include "deploy_view.h"
+#include "game_view.h"
+#include "gui/uifw/layout_helper.h"
 #include "gui/uifw/modal_dialog_view.h"
 #include "gui/uifw/modal_view.h"
 #include "gui/uifw/scroll_view.h"
-#include "gui/uifw/layout_helper.h"
-#include "deploy_view.h"
-#include "unit_tooltip_view.h"
-#include "unit_view.h"
-#include "control_view.h"
-#include "unit_dialog_view.h"
 #include "magic_list_view.h"
 #include "terrain_info_view.h"
-#include "unit_list_view.h"
 #include "unit_action_view.h"
-#include "game_view.h"
-#include "core/scenario.h"
-#include "core/game.h"
+#include "unit_dialog_view.h"
+#include "unit_list_view.h"
+#include "unit_tooltip_view.h"
+#include "unit_view.h"
 
 namespace mengde {
 namespace gui {
@@ -110,4 +110,3 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
 }  // namespace app
 }  // namespace gui
 }  // namespace mengde
-

@@ -2,8 +2,8 @@
 
 #include "core/cmd.h"
 #include "core/game.h"
-#include "gui/uifw/button_view.h"
 #include "game_view.h"
+#include "gui/uifw/button_view.h"
 #include "state_ui.h"
 
 namespace mengde {

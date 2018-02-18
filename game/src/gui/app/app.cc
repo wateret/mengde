@@ -78,7 +78,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
   window_    = new Window("Game", width, height);
   drawer_    = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString(),
                        GameEnv::GetInstance()->GetResourcePath().ToString());
-  root_view_ = new RootView(window_size_, scenario_, this);
+  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
   //  target_view_ = main_view_;
   target_view_ = root_view_;
 }

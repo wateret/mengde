@@ -3,10 +3,10 @@
 #include "config.h"
 #include "core/cmd.h"
 #include "core/game.h"
+#include "game_view.h"
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/text_view.h"
 #include "minimap_view.h"
-#include "game_view.h"
 
 namespace mengde {
 namespace gui {
