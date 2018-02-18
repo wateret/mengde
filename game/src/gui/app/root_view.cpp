@@ -1,4 +1,7 @@
 #include "root_view.h"
+
+#include "app.h"
+#include "config.h"
 #include "control_view.h"
 #include "core/assets.h"
 #include "core/cell.h"
@@ -7,7 +10,6 @@
 #include "core/scenario.h"
 #include "deploy_view.h"
 #include "equipment_select_view.h"
-#include "gui/app/app.h"
 #include "gui/foundation/texture_manager.h"
 #include "gui/uifw/composite_view.h"
 #include "gui/uifw/drawer.h"
@@ -65,8 +67,8 @@ RootView::RootView(const Vec2D size, core::Scenario* scenario, App* app)
   }
 
   // Calculate max_camera_coords_
-  const int kMapWidth     = game_->GetMapSize().x * App::kBlockSize;
-  const int kMapHeight    = game_->GetMapSize().y * App::kBlockSize;
+  const int kMapWidth     = game_->GetMapSize().x * config::kBlockSize;
+  const int kMapHeight    = game_->GetMapSize().y * config::kBlockSize;
   const int kWindowWidth  = GetFrame()->GetW();
   const int kWindowHeight = GetFrame()->GetH();
   const int kMaxCameraX   = kMapWidth - kWindowWidth;

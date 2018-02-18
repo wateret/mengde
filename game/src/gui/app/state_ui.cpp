@@ -1,5 +1,6 @@
 #include "state_ui.h"
 
+#include "config.h"
 #include "control_view.h"
 #include "core/cmd.h"
 #include "core/formulae.h"
@@ -9,7 +10,6 @@
 #include "core/map.h"
 #include "core/path_tree.h"
 #include "core/unit.h"
-#include "gui/app/app.h"  // FIXME Remove this dependency
 #include "gui/foundation/misc.h"
 #include "gui/foundation/texture_animator.h"
 #include "gui/foundation/texture_manager.h"
@@ -170,7 +170,7 @@ void StateUIOperable::Update() {
   if (IsScrollRight()) rv_->MoveCameraX(kScrollAmount);
   if (IsScrollUp()) rv_->MoveCameraY(-kScrollAmount);
   if (IsScrollDown()) rv_->MoveCameraY(kScrollAmount);
-  cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / App::kBlockSize;
+  cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / config::kBlockSize;
 }
 
 void StateUIOperable::Render(Drawer* drawer) {
@@ -183,7 +183,7 @@ bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
     // mouse scroll
     const int window_width  = rv_->GetFrameSize().x;
     const int window_height = rv_->GetFrameSize().y;
-    const int kScrollRange  = App::kBlockSize;
+    const int kScrollRange  = config::kBlockSize;
     const int kLeftScroll   = kScrollRange;
     const int kRightScroll  = window_width - kScrollRange;
     const int kUpScroll     = kScrollRange;
@@ -407,9 +407,9 @@ void StateUIMoving::Render(Drawer* drawer) {
   float     percentage     = frames_current / (float)kFramesPerCell;
   Direction dir            = Vec2DRelativePosition(path_[path_idx], path_[path_idx - 1]);
   Vec2D     diff           = path_[path_idx - 1] - path_[path_idx];
-  Vec2D     diff_pos       = diff * (percentage * (float)App::kBlockSize);
+  Vec2D     diff_pos       = diff * (percentage * (float)config::kBlockSize);
   drawer->CopySprite(unit_->GetModelId(), kSpriteMove, dir, sprite_no, {kEffectNone, 0}, path_[path_idx], diff_pos);
-  rv_->CenterCamera(path_[path_idx] * App::kBlockSize + diff_pos + (App::kBlockSize / 2));
+  rv_->CenterCamera(path_[path_idx] * config::kBlockSize + diff_pos + (config::kBlockSize / 2));
 }
 
 // StateUIMagic
@@ -620,7 +620,7 @@ void StateUIAttack::Render(Drawer* drawer) {
   // Render Damage Text
   if (frames_ >= 5 * kFramesPerCut) {
     const int text_size       = 13;
-    Vec2D     damage_text_pos = def_pos * App::kBlockSize;
+    Vec2D     damage_text_pos = def_pos * config::kBlockSize;
     string    damage_text;
     if (!hit_) {
       damage_text = "miss";

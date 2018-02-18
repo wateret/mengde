@@ -6,6 +6,7 @@
 namespace mengde {
 namespace gui {
 namespace uifw {
+
 class ButtonView;
 class CompositeView;
 class Drawer;

@@ -1,7 +1,7 @@
 #include "control_view.h"
+#include "config.h"
 #include "core/cmd.h"
 #include "core/game.h"
-#include "gui/app/app.h"  // FIXME Remove this dependency
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/text_view.h"
 #include "minimap_view.h"
@@ -34,7 +34,7 @@ ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv) : Com
   });
   AddChild(btn_end_turn_);
 
-  const Vec2D map_size = game_->GetMapSize() * App::kBlockSize;
+  const Vec2D map_size = game_->GetMapSize() * config::kBlockSize;
 
   const Vec2D minimap_max_size(184, 120);
   const Vec2D minimap_size = LayoutHelper::CalcFittedSize(map_size, minimap_max_size);

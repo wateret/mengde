@@ -11,8 +11,10 @@
 
 namespace mengde {
 namespace core {
+
 class Game;
 class Scenario;
+
 }  // namespace core
 }  // namespace mengde
 
@@ -64,9 +66,6 @@ class App {
   void     EndGame();
 
   void StartNewGame();
-
- public:
-  static const int kBlockSize = 48;
 
  private:
   void HandleEvents();
