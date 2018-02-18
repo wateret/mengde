@@ -13,7 +13,7 @@
 #include "util/path.h"
 
 // XXX temporary include
-#include "lua_game.h"
+#include "lua_api.h"
 
 namespace mengde {
 namespace core {
@@ -55,7 +55,7 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
   // Register API functions
   {
 #define MACRO_LUA_GAME(cname, luaname) lua->Register(GAME_PREFIX #luaname, Game_##cname);
-#include "lua_game.h.inc"
+#include "lua_api_game.h.inc"
 #undef MACRO_LUA_GAME
   }
 
@@ -64,7 +64,7 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
     lua->RegisterClass(lua_this_.name());
 
 #define MACRO_LUA_GAME(cname, luaname) lua->RegisterMethod(lua_this_.name(), string(#luaname));
-#include "lua_game.h.inc"
+#include "lua_api_game.h.inc"
 #undef MACRO_LUA_GAME
   }
 
@@ -106,14 +106,13 @@ Deployer* Game::CreateDeployer() {
   ASSERT(lua_ != nullptr);
 
   vector<DeployInfoUnselectable> unselectable_info_list;
-  lua_->ForEachTableEntry("gdata.deploy.unselectables",
-                          [=, &unselectable_info_list](lua::Lua* l, const string&) mutable {
-                            vector<int> pos_vec = l->Get<vector<int>>("position");
-                            string      hero_id = l->Get<string>("hero");
-                            Vec2D       position(pos_vec[0], pos_vec[1]);
-                            Hero*       hero = assets_->GetHero(hero_id);  // TODO Check if Hero exists in our assets
-                            unselectable_info_list.push_back({position, hero});
-                          });
+  lua_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list](lua::Lua* l, const string&) {
+    vector<int> pos_vec = l->Get<vector<int>>("position");
+    string      hero_id = l->Get<string>("hero");
+    Vec2D       position(pos_vec[0], pos_vec[1]);
+    Hero*       hero = assets_->GetHero(hero_id);  // TODO Check if Hero exists in our assets
+    unselectable_info_list.push_back({position, hero});
+  });
   uint32_t                     num_required = lua_->Get<uint32_t>("gdata.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
   lua_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list](lua::Lua* l, const string&) mutable {

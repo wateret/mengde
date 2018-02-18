@@ -9,7 +9,6 @@ namespace mengde {
 namespace core {
 
 class IUnitBase;
-
 }
 }  // namespace mengde
 
@@ -34,11 +33,11 @@ class UnitOverView : public CompositeView {
 
  private:
   const core::IUnitBase* unit_;
-  ImageView*  iv_portrait_;
-  TextView*   tv_name_;
-  TextView*   tv_lv_;
-  TextView*   tv_stats_[kNumGVs];
-  GaugeView*  gv_stats_[kNumGVs];
+  ImageView*             iv_portrait_;
+  TextView*              tv_name_;
+  TextView*              tv_lv_;
+  TextView*              tv_stats_[kNumGVs];
+  GaugeView*             gv_stats_[kNumGVs];
 };
 
 }  // namespace app

@@ -42,8 +42,8 @@ class HeroModelView : public CallbackView {
 
 class HeroModelListView : public CompositeView {
  public:
-  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, UnitOverView*, IEquipmentSetSetter*,
-                    EquipmentSelectView*);
+  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, UnitOverView*,
+                    IEquipmentSetSetter*, EquipmentSelectView*);
 };
 
 // DeployView is a UI view for deploying heroes

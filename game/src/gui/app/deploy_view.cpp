@@ -98,13 +98,13 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   padding(8);
   bg_color(COLOR("darkgray"));
 
-  Rect unit_view_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {204, 320}, LayoutHelper::kAlignRgtTop);
-  UnitView* unit_view = new UnitView(unit_view_frame);
+  Rect      unit_view_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {204, 320}, LayoutHelper::kAlignRgtTop);
+  UnitView* unit_view       = new UnitView(unit_view_frame);
   unit_view->padding(0);
   AddChild(unit_view);
 
   equipment_set_view_ = unit_view->equipment_set_view();
-  unit_over_view_ = unit_view->unit_over_view();
+  unit_over_view_     = unit_view->unit_over_view();
 
   Rect equipment_select_frame = GetActualFrame();
   equipment_select_frame.SetW(4 * 96);
@@ -140,8 +140,9 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   {
     Rect hero_model_list_frame = GetActualFrame();
     hero_model_list_frame.SetW(4 * 96);
-    HeroModelListView* hero_model_list_view = new HeroModelListView(
-        hero_model_list_frame, assets->GetHeroes(), deploy_helper, unit_over_view_, equipment_set_view_, equipment_select_view_);
+    HeroModelListView* hero_model_list_view =
+        new HeroModelListView(hero_model_list_frame, assets->GetHeroes(), deploy_helper, unit_over_view_,
+                              equipment_set_view_, equipment_select_view_);
     AddChild(hero_model_list_view);
   }
 

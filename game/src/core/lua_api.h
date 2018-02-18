@@ -1,5 +1,5 @@
-#ifndef LUA_GAME_H_
-#define LUA_GAME_H_
+#ifndef CORE_LUA_API_H_
+#define CORE_LUA_API_H_
 
 // C API for Lua binding
 
@@ -14,9 +14,9 @@ extern "C" {
 
 #define MACRO_LUA_GAME(cname, luaname) int Game_##cname(lua_State*);
 
-#include "lua_game.h.inc"
+#include "lua_api_game.h.inc"
 
 #undef MACRO_LUA_GAME
 }
 
-#endif  // LUA_GAME_H_
+#endif  // CORE_LUA_API_H_

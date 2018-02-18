@@ -1,4 +1,4 @@
-#include "lua_game.h"
+#include "lua_api.h"
 
 #include "cmd.h"
 #include "game.h"
