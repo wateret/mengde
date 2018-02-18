@@ -3,15 +3,15 @@
 #include "core/cmd.h"
 #include "core/game.h"
 #include "gui/uifw/button_view.h"
-#include "root_view.h"
+#include "game_view.h"
 #include "state_ui.h"
 
 namespace mengde {
 namespace gui {
 namespace app {
 
-UnitActionView::UnitActionView(const Rect& frame, core::Game* game, RootView* rv)
-    : VerticalListView(frame), game_(game), rv_(rv) {
+UnitActionView::UnitActionView(const Rect& frame, core::Game* game, GameView* gv)
+    : VerticalListView(frame), game_(game), gv_(gv) {
   bg_color(COLOR("darkgray", 212));
   padding(8);
   Rect btn_frame = GetActualFrame();
@@ -29,13 +29,13 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, RootView* rv
 void UnitActionView::SetUnit(core::Unit* unit) {
   btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      rv_->PushUIState(new StateUITargeting({game_, rv_}, unit));
+      gv_->PushUIState(new StateUITargeting({game_, gv_}, unit));
     }
     return true;
   });
   btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      rv_->PushUIState(new StateUIMagicSelection({game_, rv_}, unit));
+      gv_->PushUIState(new StateUIMagicSelection({game_, gv_}, unit));
     }
     return true;
   });
@@ -45,7 +45,7 @@ void UnitActionView::SetUnit(core::Unit* unit) {
       action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
       action->SetCmdAct(unique_ptr<core::CmdStay>(new core::CmdStay(unit)));
       game_->Push(std::move(action));
-      rv_->InitUIStateMachine();
+      gv_->InitUIStateMachine();
     }
     return true;
   });

@@ -7,15 +7,15 @@
 #include "gui/uifw/scroll_view.h"
 #include "gui/uifw/text_view.h"
 #include "gui/uifw/vertical_list_view.h"
-#include "root_view.h"
+#include "game_view.h"
 #include "state_ui.h"
 
 namespace mengde {
 namespace gui {
 namespace app {
 
-MagicListView::MagicListView(const Rect& frame, core::Game* const game, RootView* const rv)
-    : CompositeView(frame), game_(game), rv_(rv), item_height_(24), lv_magics_(nullptr), lv_magics_wrap_(nullptr) {
+MagicListView::MagicListView(const Rect& frame, core::Game* const game, GameView* const gv)
+    : CompositeView(frame), game_(game), gv_(gv), item_height_(24), lv_magics_(nullptr), lv_magics_wrap_(nullptr) {
   bg_color(COLOR("darkgray", 212));
   padding(LayoutHelper::kDefaultSpace);
 
@@ -58,13 +58,13 @@ void MagicListView::SetUnitAndMagicList(core::Unit* unit, shared_ptr<core::Magic
 
     // Variables to be captured for callback
     core::Game* game = game_;
-    RootView*   rv   = rv_;
+    GameView*   gv   = gv_;
 
     Rect        button_frame({0, 0}, {frame_size.x, item_height_});
     ButtonView* button = new ButtonView(&button_frame, name);
-    button->SetMouseButtonHandler([game, rv, unit, id](const foundation::MouseButtonEvent e) {
+    button->SetMouseButtonHandler([game, gv, unit, id](const foundation::MouseButtonEvent e) {
       if (e.IsLeftButtonUp()) {
-        rv->PushUIState(new StateUITargeting({game, rv}, unit, id));
+        gv->PushUIState(new StateUITargeting({game, gv}, unit, id));
         return true;
       }
       return false;

@@ -16,17 +16,17 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-class RootView;
+class GameView;
 
 class UnitActionView : public VerticalListView {
  public:
-  UnitActionView(const Rect& frame, core::Game* game, RootView* rv);
+  UnitActionView(const Rect& frame, core::Game* game, GameView* gv);
   void         SetUnit(core::Unit* unit);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
  private:
   core::Game* game_;
-  RootView*   rv_;
+  GameView*   gv_;
   ButtonView* btn_attack_;
   ButtonView* btn_magic_;
   ButtonView* btn_stay_;

@@ -1,17 +1,18 @@
 #include "control_view.h"
+
 #include "config.h"
 #include "core/cmd.h"
 #include "core/game.h"
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/text_view.h"
 #include "minimap_view.h"
-#include "root_view.h"
+#include "game_view.h"
 
 namespace mengde {
 namespace gui {
 namespace app {
 
-ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv) : CompositeView(rect), game_(game) {
+ControlView::ControlView(const Rect* rect, core::Game* game, GameView* gv) : CompositeView(rect), game_(game) {
   bg_color(COLOR("darkgray", 192));
   padding(8);
 
@@ -22,12 +23,12 @@ ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv) : Com
 
   Rect button_coords = {0, 30, 100, 20};
   btn_end_turn_      = new ButtonView(&button_coords, "EndTurn");
-  btn_end_turn_->SetMouseButtonHandler([this, rv](const foundation::MouseButtonEvent e) {
+  btn_end_turn_->SetMouseButtonHandler([this, gv](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
       // TODO Handle clicked twice in a frame
       this->SetEndTurnVisible(false);
       this->game_->Push(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
-      rv->InitUIStateMachine();
+      gv->InitUIStateMachine();
       return true;
     }
     return true;
@@ -40,7 +41,7 @@ ControlView::ControlView(const Rect* rect, core::Game* game, RootView* rv) : Com
   const Vec2D minimap_size = LayoutHelper::CalcFittedSize(map_size, minimap_max_size);
   Rect minimap_frame       = LayoutHelper::CalcPosition(GetActualFrameSize(), minimap_size, LayoutHelper::kAlignRgtMid);
   MinimapView* minimap_view =
-      new MinimapView(&minimap_frame, game, rv->GetCameraCoordsPtr(), rv->GetFrameSize(), map_size);
+      new MinimapView(&minimap_frame, game, gv->GetCameraCoordsPtr(), gv->GetFrameSize(), map_size);
   AddChild(minimap_view);
 }
 

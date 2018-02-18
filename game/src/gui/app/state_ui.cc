@@ -17,7 +17,7 @@
 #include "gui/uifw/modal_dialog_view.h"
 #include "layout_helper.h"
 #include "magic_list_view.h"
-#include "root_view.h"
+#include "game_view.h"
 #include "terrain_info_view.h"
 #include "unit_action_view.h"
 #include "unit_dialog_view.h"
@@ -31,7 +31,7 @@ namespace app {
 
 // StateUI
 
-StateUI::StateUI(Base base) : game_(base.game), rv_(base.rv) {}
+StateUI::StateUI(Base base) : game_(base.game), gv_(base.gv) {}
 
 // StateUIMain
 
@@ -53,7 +53,7 @@ void StateUIDoCmd::Enter() {
   while (game_->HasNext()) {
     StateUI* state = GenerateNextCmdUIState();
     if (state != nullptr) {
-      rv_->PushUIState(state);
+      gv_->PushUIState(state);
       // Reserve doing the command. Cmd will be run when coming back(pop from the pushed state) to this State
       cmd_to_do_ = true;
       break;
@@ -146,7 +146,7 @@ void StateUIDoCmd::Render(Drawer*) {}
 
 void StateUIDoCmd::Update() {
   if (!game_->HasNext()) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
 }
 
@@ -161,18 +161,18 @@ StateUIOperable::StateUIOperable(Base base) : StateUI(base), cursor_cell_(0, 0) 
 void StateUIOperable::Enter() {}
 
 void StateUIOperable::Exit() {
-  rv_->unit_tooltip_view()->visible(false);
-  rv_->unit_view()->visible(false);
+  gv_->unit_tooltip_view()->visible(false);
+  gv_->unit_view()->visible(false);
 }
 
 void StateUIOperable::Update() {
   // Update camera coords
   static const int kScrollAmount = 8;
-  if (IsScrollLeft()) rv_->MoveCameraX(-kScrollAmount);
-  if (IsScrollRight()) rv_->MoveCameraX(kScrollAmount);
-  if (IsScrollUp()) rv_->MoveCameraY(-kScrollAmount);
-  if (IsScrollDown()) rv_->MoveCameraY(kScrollAmount);
-  cursor_cell_ = (rv_->GetMouseCoords() + rv_->GetCameraCoords()) / config::kBlockSize;
+  if (IsScrollLeft()) gv_->MoveCameraX(-kScrollAmount);
+  if (IsScrollRight()) gv_->MoveCameraX(kScrollAmount);
+  if (IsScrollUp()) gv_->MoveCameraY(-kScrollAmount);
+  if (IsScrollDown()) gv_->MoveCameraY(kScrollAmount);
+  cursor_cell_ = (gv_->GetMouseCoords() + gv_->GetCameraCoords()) / config::kBlockSize;
 }
 
 void StateUIOperable::Render(Drawer* drawer) {
@@ -183,8 +183,8 @@ void StateUIOperable::Render(Drawer* drawer) {
 bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   if (e.IsMotionOver()) {
     // mouse scroll
-    const int window_width  = rv_->GetFrameSize().x;
-    const int window_height = rv_->GetFrameSize().y;
+    const int window_width  = gv_->GetFrameSize().x;
+    const int window_height = gv_->GetFrameSize().y;
     const int kScrollRange  = config::kBlockSize;
     const int kLeftScroll   = kScrollRange;
     const int kRightScroll  = window_width - kScrollRange;
@@ -192,7 +192,7 @@ bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
     const int kDownScroll   = window_height - kScrollRange;
 
     ClearScrolls();
-    Vec2D mouse_coords = rv_->GetMouseCoords();
+    Vec2D mouse_coords = gv_->GetMouseCoords();
     if (mouse_coords.x < kLeftScroll) SetScrollLeft();
     if (mouse_coords.x > kRightScroll) SetScrollRight();
     if (mouse_coords.y < kUpScroll) SetScrollUp();
@@ -230,14 +230,14 @@ void StateUIView::Update() {
   if (map->UnitInCell(cursor_cell_)) {
     core::Cell* cell = map->GetCell(cursor_cell_);
     core::Unit* unit = map->GetUnit(cursor_cell_);
-    rv_->unit_tooltip_view()->SetUnitTerrainInfo(cell);
-    rv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
-    rv_->unit_view()->SetUnit(unit);
+    gv_->unit_tooltip_view()->SetUnitTerrainInfo(cell);
+    gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
+    gv_->unit_view()->SetUnit(unit);
 
-    rv_->unit_tooltip_view()->visible(true);
+    gv_->unit_tooltip_view()->visible(true);
   } else {
-    rv_->unit_tooltip_view()->visible(false);
-    rv_->unit_view()->visible(false);
+    gv_->unit_tooltip_view()->visible(false);
+    gv_->unit_view()->visible(false);
   }
 
   if (game_->IsAITurn()) {
@@ -245,7 +245,7 @@ void StateUIView::Update() {
   }
 
   if (game_->HasNext()) {
-    rv_->PushUIState(new StateUIDoCmd({game_, rv_}));
+    gv_->PushUIState(new StateUIDoCmd({game_, gv_}));
   }
 }
 
@@ -260,21 +260,21 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
           LOG_INFO("The chosen unit is already done his action");
         } else {
           core::PathTree* pathtree = map->FindMovablePath(unit);
-          rv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit, pathtree));
+          gv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit, pathtree));
         }
       } else {
         // TODO alert this is not your unit
       }
     } else {
-      rv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
+      gv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
     }
   } else if (e.IsRightButtonUp()) {
     Vec2D      pos = GetCursorCell();
     core::Map* map = game_->GetMap();
     if (map->UnitInCell(pos)) {
       core::Unit* unit = map->GetUnit(pos);
-      rv_->unit_list_view()->SetUnit(unit);
-      rv_->unit_list_view()->visible(true);
+      gv_->unit_list_view()->SetUnit(unit);
+      gv_->unit_list_view()->visible(true);
     }
   }
   return true;
@@ -316,7 +316,7 @@ void StateUIUnitSelected::Render(Drawer* drawer) {
 void StateUIUnitSelected::Update() {
   StateUIOperable::Update();
 
-  auto unit_view = rv_->unit_view();
+  auto unit_view = gv_->unit_view();
   unit_view->SetUnit(unit_);
   unit_view->visible(true);
 }
@@ -329,12 +329,12 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent 
     if (map->UnitInCell(pos) && map->GetUnit(pos) != unit_) {
       // XXX Other unit clicked
     } else if (std::find(movable_cells.begin(), movable_cells.end(), pos) != movable_cells.end()) {
-      rv_->PushUIState(new StateUIMoving({game_, rv_}, unit_, GetPathToRoot(pos)));
+      gv_->PushUIState(new StateUIMoving({game_, gv_}, unit_, GetPathToRoot(pos)));
     } else {
-      //      rv_->ChangeStateUI(new StateUIView(game_, rv_));
+      //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
     }
   } else if (e.IsRightButtonUp()) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
   return true;
 }
@@ -388,9 +388,9 @@ void StateUIMoving::Update() {
       unit_->SetDirection(dir);  // Do this here?
     }
     if (flag_ == Flag::kInputActNext) {
-      rv_->ChangeUIState(new StateUIAction(WrapBase(), unit_));
+      gv_->ChangeUIState(new StateUIAction(WrapBase(), unit_));
     } else {
-      rv_->PopUIState();
+      gv_->PopUIState();
     }
   }
 }
@@ -411,7 +411,7 @@ void StateUIMoving::Render(Drawer* drawer) {
   Vec2D     diff           = path_[path_idx - 1] - path_[path_idx];
   Vec2D     diff_pos       = diff * (percentage * (float)config::kBlockSize);
   drawer->CopySprite(unit_->GetModelId(), kSpriteMove, dir, sprite_no, {kEffectNone, 0}, path_[path_idx], diff_pos);
-  rv_->CenterCamera(path_[path_idx] * config::kBlockSize + diff_pos + (config::kBlockSize / 2));
+  gv_->CenterCamera(path_[path_idx] * config::kBlockSize + diff_pos + (config::kBlockSize / 2));
 }
 
 // StateUIMagic
@@ -464,9 +464,9 @@ void StateUIMagic::Update() {
     animator_->NextFrame();
     if (animator_->DoneAnimate()) {
       if (hit_) {
-        rv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
+        gv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
       } else {
-        rv_->PopUIState();
+        gv_->PopUIState();
       }
     }
   }
@@ -500,7 +500,7 @@ void StateUIKilled::Render(Drawer* drawer) {
 void StateUIKilled::Update() {
   frames_++;
   if (frames_ == kStateDuration) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
 }
 
@@ -511,11 +511,11 @@ StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords) : StateUI(ba
 void StateUIEmptySelected::Enter() {
   core::Map*  map  = game_->GetMap();
   std::string name = map->GetTerrain(coords_)->GetName();
-  rv_->terrain_info_view()->SetText(name);
-  rv_->terrain_info_view()->visible(true);
+  gv_->terrain_info_view()->SetText(name);
+  gv_->terrain_info_view()->visible(true);
 }
 
-void StateUIEmptySelected::Exit() { rv_->terrain_info_view()->visible(false); }
+void StateUIEmptySelected::Exit() { gv_->terrain_info_view()->visible(false); }
 
 void StateUIEmptySelected::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
@@ -524,7 +524,7 @@ void StateUIEmptySelected::Render(Drawer* drawer) {
 
 bool StateUIEmptySelected::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (e.IsLeftButtonUp() || e.IsRightButtonUp()) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
   return true;
 }
@@ -645,9 +645,9 @@ void StateUIAttack::Update() {
   frames_++;
   if (LastFrame()) {
     if (hit_) {
-      rv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
+      gv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
     } else {
-      rv_->PopUIState();
+      gv_->PopUIState();
     }
   }
 }
@@ -678,18 +678,18 @@ StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, core::Unit* u
 
 void StateUIUnitTooltipAnim::Enter() {
   Misc::SetShowCursor(false);
-  rv_->unit_tooltip_view()->visible(true);
+  gv_->unit_tooltip_view()->visible(true);
 }
 
 void StateUIUnitTooltipAnim::Exit() {
   Misc::SetShowCursor(true);
-  rv_->unit_tooltip_view()->visible(false);
+  gv_->unit_tooltip_view()->visible(false);
 }
 
 void StateUIUnitTooltipAnim::Update() {
   frames_++;
   if (LastFrame()) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
 
   const int max_anim_frames = (kFrames - 1) * 1 / 2;
@@ -712,9 +712,9 @@ void StateUIUnitTooltipAnim::Update() {
     hpmp_mod.mp += mp_ * cur_anim_frames / max_anim_frames;
   }
 
-  rv_->unit_tooltip_view()->SetContents(unit_->GetId(), unit_->GetLevel(), hpmp_mod, unit_->GetOriginalHpMp(),
+  gv_->unit_tooltip_view()->SetContents(unit_->GetId(), unit_->GetLevel(), hpmp_mod, unit_->GetOriginalHpMp(),
                                         hpmp_rem);
-  rv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit_->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
+  gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit_->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
 }
 
 void StateUIUnitTooltipAnim::Render(Drawer*) {}
@@ -731,7 +731,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, core::Unit* unit, const s
     core::Magic* magic = game_->GetMagic(magic_id_);
     range_itr_         = magic->GetRange();  // FIXME
   }
-  Rect frame = LayoutHelper::CalcPosition(rv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
+  Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
   frame.Move(frame.GetW() + LayoutHelper::kDefaultSpace, 0);
 }
@@ -739,7 +739,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, core::Unit* unit, const s
 void StateUITargeting::Enter() { StateUIOperable::Enter(); }
 
 void StateUITargeting::Exit() {
-  rv_->unit_tooltip_view()->visible(false);
+  gv_->unit_tooltip_view()->visible(false);
   StateUIOperable::Exit();
 }
 
@@ -776,7 +776,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
             action->SetCmdAct(unique_ptr<core::CmdBasicAttack>(
                 new core::CmdBasicAttack(atk, def, core::CmdBasicAttack::Type::kActive)));
             game_->Push(std::move(action));
-            rv_->InitUIStateMachine();
+            gv_->InitUIStateMachine();
           } else {
             LOG_INFO("Cannot attack the unit. It is not enemy");
           }
@@ -789,7 +789,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
             action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
             action->SetCmdAct(unique_ptr<core::CmdMagic>(new core::CmdMagic(atk, def, magic)));
             game_->Push(std::move(action));
-            rv_->InitUIStateMachine();
+            gv_->InitUIStateMachine();
           } else {
             // TODO alert
             LOG_INFO("Cannot perform magic to the unit chosen.");
@@ -798,7 +798,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
       }
     }
   } else if (e.IsRightButtonUp()) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
   return true;
 }
@@ -806,7 +806,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
 bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
-  auto       unit_tooltip_view = rv_->unit_tooltip_view();
+  auto       unit_tooltip_view = gv_->unit_tooltip_view();
   core::Map* map               = game_->GetMap();
   Vec2D      cursor_cell       = GetCursorCell();
   bool       unit_in_cell      = map->UnitInCell(cursor_cell);
@@ -823,7 +823,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) 
     } else {
       unit_tooltip_view->SetUnitTerrainInfo(map->GetCell(cursor_cell));
     }
-    unit_tooltip_view->SetCoordsByUnitCoords(unit_target->GetPosition(), rv_->GetCameraCoords(), rv_->GetFrameSize());
+    unit_tooltip_view->SetCoordsByUnitCoords(unit_target->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
   }
   unit_tooltip_view->visible(unit_in_cell);
   return true;
@@ -834,14 +834,14 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) 
 StateUIAction::StateUIAction(StateUI::Base base, core::Unit* unit) : StateUI(base), unit_(unit) {}
 
 void StateUIAction::Enter() {
-  UnitActionView* unit_action_view = rv_->unit_action_view();
+  UnitActionView* unit_action_view = gv_->unit_action_view();
   unit_action_view->SetUnit(unit_);
-  unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), rv_->GetFrameSize(),
-                                                           rv_->GetCameraCoords(), unit_->GetPosition()));
+  unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), gv_->GetFrameSize(),
+                                                           gv_->GetCameraCoords(), unit_->GetPosition()));
   unit_action_view->visible(true);
 }
 
-void StateUIAction::Exit() { rv_->unit_action_view()->visible(false); }
+void StateUIAction::Exit() { gv_->unit_action_view()->visible(false); }
 
 void StateUIAction::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
@@ -850,7 +850,7 @@ void StateUIAction::Render(Drawer* drawer) {
 
 bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (e.IsRightButtonUp()) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
   return true;
 }
@@ -861,14 +861,14 @@ StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, core::Unit* uni
 
 void StateUIMagicSelection::Enter() {
   auto           magic_list = std::make_shared<core::MagicList>(game_->GetMagicManager(), unit_);
-  MagicListView* mlv        = rv_->magic_list_view();
+  MagicListView* mlv        = gv_->magic_list_view();
   mlv->SetUnitAndMagicList(unit_, magic_list);
-  mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), rv_->GetFrameSize(), rv_->GetCameraCoords(),
+  mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(),
                                               unit_->GetPosition()));
   mlv->visible(true);
 }
 
-void StateUIMagicSelection::Exit() { rv_->magic_list_view()->visible(false); }
+void StateUIMagicSelection::Exit() { gv_->magic_list_view()->visible(false); }
 
 void StateUIMagicSelection::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
@@ -877,7 +877,7 @@ void StateUIMagicSelection::Render(Drawer* drawer) {
 
 bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (e.IsRightButtonUp()) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
   return true;
 }
@@ -889,25 +889,25 @@ StateUINextTurn::StateUINextTurn(StateUI::Base base) : StateUI(base), frames_(-1
 void StateUINextTurn::Update() {
   frames_++;
   if (frames_ >= 15 /*60*2*/) {
-    rv_->PopUIState();
+    gv_->PopUIState();
   }
 }
 
 void StateUINextTurn::Render(Drawer*) {}
 
 void StateUINextTurn::Enter() {
-  ModalDialogView* modal_dialog_view = rv_->dialog_view();
+  ModalDialogView* modal_dialog_view = gv_->dialog_view();
   modal_dialog_view->SetText("End Turn");
   modal_dialog_view->visible(true);
 }
 
 void StateUINextTurn::Exit() {
-  rv_->dialog_view()->visible(false);
+  gv_->dialog_view()->visible(false);
 
-  RootView*   rv   = rv_;
+  GameView*   gv   = gv_;
   core::Game* game = game_;
-  rv_->NextFrame([=]() {
-    ControlView* control_view = rv->control_view();
+  gv_->NextFrame([=]() {
+    ControlView* control_view = gv->control_view();
     control_view->SetTurnText(game->GetTurnCurrent(), game->GetTurnLimit());
     control_view->SetEndTurnVisible(game->IsUserTurn());
   });
@@ -919,25 +919,25 @@ StateUISpeak::StateUISpeak(StateUI::Base base, core::Unit* unit, const string& w
     : StateUI(base), unit_(unit), words_(words) {}
 
 void StateUISpeak::Enter() {
-  auto unit_dialog_view = rv_->unit_dialog_view();
+  auto unit_dialog_view = gv_->unit_dialog_view();
   unit_dialog_view->SetUnit(unit_);
   unit_dialog_view->SetText(words_);
-  unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(rv_->unit_dialog_view()->GetFrameSize(), rv_->GetFrameSize(),
-                                                           rv_->GetCameraCoords(), unit_->GetPosition()));
+  unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(gv_->unit_dialog_view()->GetFrameSize(), gv_->GetFrameSize(),
+                                                           gv_->GetCameraCoords(), unit_->GetPosition()));
   unit_dialog_view->visible(true);
 }
 
-void StateUISpeak::Exit() { rv_->unit_dialog_view()->visible(false); }
+void StateUISpeak::Exit() { gv_->unit_dialog_view()->visible(false); }
 
 void StateUISpeak::Update() {
-  if (!rv_->unit_dialog_view()->visible()) {
-    rv_->PopUIState();
+  if (!gv_->unit_dialog_view()->visible()) {
+    gv_->PopUIState();
   }
 }
 
 bool StateUISpeak::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
-    //    rv_->PopUIState();
+    //    gv_->PopUIState();
     return true;
   }
   return true;
@@ -948,15 +948,15 @@ bool StateUISpeak::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
 StateUIEnd::StateUIEnd(StateUI::Base base, bool is_victory) : StateUI(base), is_victory_(is_victory) {}
 
 void StateUIEnd::Enter() {
-  ModalDialogView* modal_dialog_view = rv_->dialog_view();
+  ModalDialogView* modal_dialog_view = gv_->dialog_view();
   modal_dialog_view->SetText(is_victory_ ? "Victory" : "Defeat");
   modal_dialog_view->visible(true);
 }
 
 void StateUIEnd::Update() {
-  ModalDialogView* modal_dialog_view = rv_->dialog_view();
+  ModalDialogView* modal_dialog_view = gv_->dialog_view();
   if (modal_dialog_view->visible() == false) {
-    rv_->EndGame();
+    gv_->EndGame();
   }
 }
 

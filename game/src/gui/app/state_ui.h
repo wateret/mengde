@@ -22,15 +22,15 @@ namespace app {
 
 // StateUI
 
-class RootView;
+class GameView;
 class MagicListView;
 class UnitTooltipView;
 
-class StateUI : public State, IView {
+class StateUI : public State, public IView {
  public:
   struct Base {
     core::Game* game;
-    RootView*   rv;
+    GameView*   gv;
   };
 
  public:
@@ -43,7 +43,7 @@ class StateUI : public State, IView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override { return false; }
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override { return true; }
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override { return false; }
-  Base         WrapBase() { return {game_, rv_}; }
+  Base         WrapBase() { return {game_, gv_}; }
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUI"; }
@@ -51,7 +51,7 @@ class StateUI : public State, IView {
 
  protected:
   core::Game* game_;
-  RootView*   rv_;
+  GameView*   gv_;
 };
 
 // StateUIMain

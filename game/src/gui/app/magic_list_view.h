@@ -8,9 +8,11 @@
 
 namespace mengde {
 namespace core {
+
 class Game;
 class Unit;
 class MagicList;
+
 }  // namespace core
 }  // namespace mengde
 
@@ -18,14 +20,14 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-class RootView;
+class GameView;
 
 class MagicListView : public CompositeView {
  public:
   static const int kTitleHeight = 24;
 
  public:
-  MagicListView(const Rect&, core::Game* const, RootView* const);
+  MagicListView(const Rect&, core::Game* const, GameView* const);
   ~MagicListView();
   void         SetUnitAndMagicList(core::Unit*, shared_ptr<core::MagicList>);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
@@ -35,7 +37,7 @@ class MagicListView : public CompositeView {
 
  private:
   core::Game* const game_;
-  RootView* const   rv_;
+  GameView* const   gv_;
 
  private:
   int item_height_;
