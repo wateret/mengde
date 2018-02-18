@@ -1,13 +1,13 @@
 project(game)
 
-file(GLOB SOURCES src/*.cpp
-                  src/gui/*.cpp
-                  src/gui/app/*.cpp
-                  src/gui/foundation/*.cpp
-                  src/gui/uifw/*.cpp
-                  src/util/*.cpp
-                  src/core/*.cpp
-                  src/lua/*.cpp)
+file(GLOB SOURCES src/*.cc
+                  src/gui/*.cc
+                  src/gui/app/*.cc
+                  src/gui/foundation/*.cc
+                  src/gui/uifw/*.cc
+                  src/util/*.cc
+                  src/core/*.cc
+                  src/lua/*.cc)
 
 file(GLOB HEADERS src/*.h
                   src/gui/*.h
