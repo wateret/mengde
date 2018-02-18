@@ -181,8 +181,8 @@ void StateUIOperable::Render(Drawer* drawer) {
 bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
   if (e.IsMotionOver()) {
     // mouse scroll
-    int       window_width  = rv_->GetFrameSize().x;
-    int       window_height = rv_->GetFrameSize().y;
+    const int window_width  = rv_->GetFrameSize().x;
+    const int window_height = rv_->GetFrameSize().y;
     const int kScrollRange  = App::kBlockSize;
     const int kLeftScroll   = kScrollRange;
     const int kRightScroll  = window_width - kScrollRange;

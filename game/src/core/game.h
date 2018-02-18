@@ -90,6 +90,9 @@ class Game : public IDeployHelper {
   PathTree*     FindMovablePath(Unit*);
   Unit*         GetOneHostileInRange(Unit*, Vec2D);
 
+ public:
+  const lua::LuaClass& lua_this() { return lua_this_; }
+
  private:
   lua::Lua* CreateLua(const Path&);
   Map*      CreateMap();
