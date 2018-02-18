@@ -18,9 +18,11 @@
 #include "layout_helper.h"
 #include "magic_list_view.h"
 #include "root_view.h"
+#include "terrain_info_view.h"
 #include "unit_action_view.h"
 #include "unit_dialog_view.h"
 #include "unit_info_view.h"
+#include "unit_list_view.h"
 #include "unit_view.h"
 
 namespace mengde {
@@ -271,8 +273,8 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
     core::Map* map = game_->GetMap();
     if (map->UnitInCell(pos)) {
       core::Unit* unit = map->GetUnit(pos);
-      rv_->SetUnitListViewUnit(unit);
-      rv_->SetUnitListViewVisible(true);
+      rv_->unit_list_view()->SetUnit(unit);
+      rv_->unit_list_view()->visible(true);
     }
   }
   return true;
@@ -509,11 +511,11 @@ StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords) : StateUI(ba
 void StateUIEmptySelected::Enter() {
   core::Map*  map  = game_->GetMap();
   std::string name = map->GetTerrain(coords_)->GetName();
-  rv_->SetTerrainInfoViewText(name);
-  rv_->SetTerrainInfoViewVisible(true);
+  rv_->terrain_info_view()->SetText(name);
+  rv_->terrain_info_view()->visible(true);
 }
 
-void StateUIEmptySelected::Exit() { rv_->SetTerrainInfoViewVisible(false); }
+void StateUIEmptySelected::Exit() { rv_->terrain_info_view()->visible(false); }
 
 void StateUIEmptySelected::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
@@ -916,16 +918,18 @@ StateUISpeak::StateUISpeak(StateUI::Base base, core::Unit* unit, const string& w
     : StateUI(base), unit_(unit), words_(words) {}
 
 void StateUISpeak::Enter() {
-  rv_->SetUnitDialogViewUnitAndText(unit_, words_);
-  rv_->SetUnitDialogViewCoords(layout::CalcPositionNearUnit(rv_->GetUnitDialogViewFrameSize(), rv_->GetFrameSize(),
-                                                            rv_->GetCameraCoords(), unit_->GetPosition()));
-  rv_->SetUnitDialogViewVisible(true);
+  auto unit_dialog_view = rv_->unit_dialog_view();
+  unit_dialog_view->SetUnit(unit_);
+  unit_dialog_view->SetText(words_);
+  unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(rv_->unit_dialog_view()->GetFrameSize(), rv_->GetFrameSize(),
+                                                           rv_->GetCameraCoords(), unit_->GetPosition()));
+  unit_dialog_view->visible(true);
 }
 
-void StateUISpeak::Exit() { rv_->SetUnitDialogViewVisible(false); }
+void StateUISpeak::Exit() { rv_->unit_dialog_view()->visible(false); }
 
 void StateUISpeak::Update() {
-  if (!rv_->GetUnitDialogViewVisible()) {
+  if (!rv_->unit_dialog_view()->visible()) {
     rv_->PopUIState();
   }
 }

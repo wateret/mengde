@@ -53,18 +53,9 @@ class RootView : public View {
   void   MoveCameraX(int d);
   void   MoveCameraY(int d);
 
-  // View wrappers
-  void SetTerrainInfoViewVisible(bool);
-  void SetTerrainInfoViewText(const string&);
-  void SetUnitListViewVisible(bool);
-  void SetUnitListViewUnit(core::Unit* unit);
-
-  void  SetUnitDialogViewUnitAndText(core::Unit*, const string&);
-  void  SetUnitDialogViewCoords(Vec2D v);
-  void  SetUnitDialogViewVisible(bool b);
-  bool  GetUnitDialogViewVisible() const;
-  Vec2D GetUnitDialogViewFrameSize() const;
-
+  TerrainInfoView* terrain_info_view() { return terrain_info_view_; }
+  UnitListView*    unit_list_view() { return unit_list_view_; }
+  UnitDialogView*  unit_dialog_view() { return unit_dialog_view_; }
   UnitView*        unit_view() { return unit_view_; }
   UnitInfoView*    unit_info_view() { return unit_info_view_; }
   ControlView*     control_view() { return control_view_; }

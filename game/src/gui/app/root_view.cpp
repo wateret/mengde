@@ -285,30 +285,6 @@ int RootView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
   return (frame_count_ / frames_per_sprite) % num_sprites;
 }
 
-void RootView::SetTerrainInfoViewVisible(bool b) { terrain_info_view_->visible(b); }
-
-void RootView::SetTerrainInfoViewText(const string& s) { terrain_info_view_->SetText(s); }
-
-void RootView::SetUnitListViewVisible(bool b) { unit_list_view_->visible(b); }
-
-void RootView::SetUnitListViewUnit(core::Unit* unit) { unit_list_view_->SetUnit(unit); }
-
-void RootView::SetUnitDialogViewUnitAndText(core::Unit* unit, const string& words) {
-  unit_dialog_view_->SetUnit(unit);
-  unit_dialog_view_->SetText(words);
-}
-
-void RootView::SetUnitDialogViewCoords(Vec2D v) { return unit_dialog_view_->SetCoords(v); }
-
-void RootView::SetUnitDialogViewVisible(bool b) { return unit_dialog_view_wrapper_->visible(b); }
-
-bool RootView::GetUnitDialogViewVisible() const { return unit_dialog_view_wrapper_->visible(); }
-
-Vec2D RootView::GetUnitDialogViewFrameSize() const {
-  LOG_DEBUG("DIALOG VIEW FRAME SIZE : %d %d", unit_dialog_view_->GetFrameSize().x, unit_dialog_view_->GetFrameSize().y);
-  return unit_dialog_view_->GetFrameSize();
-}
-
 void RootView::EndGame() {
   NextFrame([=]() { app_->EndGame(); });
 }
