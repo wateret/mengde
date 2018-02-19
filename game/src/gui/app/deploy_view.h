@@ -3,7 +3,6 @@
 
 #include "gui/uifw/callback_view.h"
 #include "gui/uifw/composite_view.h"
-#include "i_equipment_set_setter.h"
 
 #include "common.h"
 
@@ -43,7 +42,7 @@ class HeroModelView : public CallbackView {
 class HeroModelListView : public CompositeView {
  public:
   HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, UnitOverView*,
-                    IEquipmentSetSetter*, EquipmentSelectView*);
+                    EquipmentSetView*, EquipmentSelectView*);
 };
 
 // DeployView is a UI view for deploying heroes

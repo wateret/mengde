@@ -4,7 +4,6 @@
 #include "gui/uifw/callback_view.h"
 #include "gui/uifw/composite_view.h"
 #include "gui/uifw/layout_helper.h"
-#include "i_equipment_set_setter.h"
 
 #include "common.h"
 
@@ -32,10 +31,10 @@ class EquipmentView : public CallbackView {
   TextView*  tv_desc_;
 };
 
-class EquipmentSetView : public CompositeView, public IEquipmentSetSetter {
+class EquipmentSetView : public CompositeView {
  public:
   EquipmentSetView(const Rect*);
-  void SetEquipmentSet(const core::EquipmentSet*) override;
+  void SetEquipmentSet(const core::EquipmentSet*);
   void SetWeaponMouseButtonHandler(const CallbackView::MouseButtonHandler&);
   void SetArmorMouseButtonHandler(const CallbackView::MouseButtonHandler&);
   void SetAidMouseButtonHandler(const CallbackView::MouseButtonHandler&);

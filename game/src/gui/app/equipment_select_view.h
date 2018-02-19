@@ -18,7 +18,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-class IEquipmentSetSetter;
+class EquipmentSetView;
 
 class ItemIconView : public CallbackView {
  public:
@@ -27,14 +27,14 @@ class ItemIconView : public CallbackView {
 
 class EquipmentSelectView : public CompositeView {
  public:
-  EquipmentSelectView(const Rect&, IEquipmentSetSetter*);
+  EquipmentSelectView(const Rect&, EquipmentSetView*);
   void SetHero(const core::Hero* hero) { hero_ = hero; }
   void SetEquipments(const vector<core::EquipmentWithAmount>&, core::Assets*);
 
  private:
   const core::Hero*    hero_;
   RowMajorListView*    equipment_list_view_;
-  IEquipmentSetSetter* equipment_set_update_;
+  EquipmentSetView*    equipment_set_view_;
 };
 
 }  // namespace app

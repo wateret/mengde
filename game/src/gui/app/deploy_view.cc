@@ -61,7 +61,7 @@ void HeroModelView::UpdateViews() {
 
 HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core::Hero*>& hero_list,
                                      core::IDeployHelper* deploy_helper, UnitOverView* unit_over_view,
-                                     IEquipmentSetSetter* equipment_set_setter,
+                                     EquipmentSetView* equipment_set_view,
                                      EquipmentSelectView* equipment_select_view)
     : CompositeView(frame) {
   bg_color(COLOR("navy"));
@@ -69,7 +69,7 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
   Rect               hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
     HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
-    model_view->SetMouseButtonHandler([this, model_view, hero, deploy_helper, unit_over_view, equipment_set_setter,
+    model_view->SetMouseButtonHandler([this, model_view, hero, deploy_helper, unit_over_view, equipment_set_view,
                                        equipment_select_view](const foundation::MouseButtonEvent e) -> bool {
       if (e.IsLeftButtonUp()) {
         if (model_view->IsSelected()) {
@@ -79,7 +79,7 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
         }
         equipment_select_view->SetHero(hero);
         unit_over_view->SetUnit(hero);
-        equipment_set_setter->SetEquipmentSet(hero->GetEquipmentSet());
+        equipment_set_view->SetEquipmentSet(hero->GetEquipmentSet());
         model_view->UpdateViews();
       }
       return true;

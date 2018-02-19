@@ -8,7 +8,7 @@
 #include "gui/uifw/layout_helper.h"
 #include "gui/uifw/row_major_list_view.h"
 #include "gui/uifw/text_view.h"
-#include "i_equipment_set_setter.h"
+#include "equipment_set_view.h"
 
 namespace mengde {
 namespace gui {
@@ -46,8 +46,8 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
 // EquipmentSelectView
 //
 
-EquipmentSelectView::EquipmentSelectView(const Rect& frame, IEquipmentSetSetter* equipment_set_update)
-    : CompositeView(frame), hero_(nullptr), equipment_list_view_(nullptr), equipment_set_update_(equipment_set_update) {
+EquipmentSelectView::EquipmentSelectView(const Rect& frame, EquipmentSetView* equipment_set_view)
+    : CompositeView(frame), hero_(nullptr), equipment_list_view_(nullptr), equipment_set_view_(equipment_set_view) {
   bg_color(COLOR("black"));
 }
 
@@ -58,16 +58,16 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   ASSERT(hero_ != nullptr);
   if (hero_ == nullptr) return;
   auto hero                 = assets->GetHero(hero_->GetId());  // For non-const core::Hero and capture
-  auto equipment_set_update = equipment_set_update_;
+  auto equipment_set_view   = equipment_set_view_;
   for (auto equipment : equipments) {
     ItemIconView* item_icon_view =
         new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);
     item_icon_view->SetMouseButtonHandler(
-        [this, assets, hero, equipment, equipment_set_update](const foundation::MouseButtonEvent e) {
+        [this, assets, hero, equipment, equipment_set_view](const foundation::MouseButtonEvent e) {
           if (e.IsLeftButtonUp()) {
             ASSERT(hero != nullptr);
             assets->HeroPutEquipmentOn(hero, equipment.object);
-            equipment_set_update->SetEquipmentSet(hero->GetEquipmentSet());
+            equipment_set_view->SetEquipmentSet(hero->GetEquipmentSet());
             this->visible(false);
           }
           return true;
