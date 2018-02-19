@@ -8,6 +8,7 @@
 #include "core/hero.h"
 #include "core/i_deploy_helper.h"
 #include "core/unit.h"
+#include "deploy_director.h"
 #include "equipment_select_view.h"
 #include "equipment_set_view.h"
 #include "gui/uifw/button_view.h"
@@ -60,30 +61,27 @@ void HeroModelView::UpdateViews() {
 }
 
 HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core::Hero*>& hero_list,
-                                     core::IDeployHelper* deploy_helper, UnitOverView* unit_over_view,
-                                     EquipmentSetView* equipment_set_view,
-                                     EquipmentSelectView* equipment_select_view)
+                                     core::IDeployHelper* deploy_helper, DeployDirector* director)
     : CompositeView(frame) {
   bg_color(COLOR("navy"));
   static const Vec2D kHeroModelSize = {96, 80};
   Rect               hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
     HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
-    model_view->SetMouseButtonHandler([this, model_view, hero, deploy_helper, unit_over_view, equipment_set_view,
-                                       equipment_select_view](const foundation::MouseButtonEvent e) -> bool {
-      if (e.IsLeftButtonUp()) {
-        if (model_view->IsSelected()) {
-          model_view->SetDeployNo(deploy_helper->UnassignDeploy(hero));
-        } else {
-          model_view->SetDeployNo(deploy_helper->AssignDeploy(hero));
-        }
-        equipment_select_view->SetHero(hero);
-        unit_over_view->SetUnit(hero);
-        equipment_set_view->SetEquipmentSet(hero->GetEquipmentSet());
-        model_view->UpdateViews();
-      }
-      return true;
-    });
+    model_view->SetMouseButtonHandler(
+        [this, model_view, hero, deploy_helper, director](const foundation::MouseButtonEvent e) -> bool {
+          if (e.IsLeftButtonUp()) {
+            int deploy_no = 0;
+            if (model_view->IsSelected()) {
+              deploy_no = deploy_helper->UnassignDeploy(hero);
+            } else {
+              deploy_no = deploy_helper->AssignDeploy(hero);
+            }
+            director->OnDeployNoChanged(model_view, deploy_no);
+            director->OnHeroChosen(hero);
+          }
+          return true;
+        });
     AddChild(model_view);
     hero_model_frame.SetX(hero_model_frame.GetX() + kHeroModelSize.x);
     if (hero_model_frame.GetRight() > GetActualFrameSize().x) {
@@ -98,20 +96,21 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   padding(8);
   bg_color(COLOR("darkgray"));
 
+  director_ = new DeployDirector();
+
   Rect      unit_view_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {204, 320}, LayoutHelper::kAlignRgtTop);
   UnitView* unit_view       = new UnitView(unit_view_frame);
   unit_view->padding(0);
   AddChild(unit_view);
 
-  equipment_set_view_ = unit_view->equipment_set_view();
-  unit_over_view_     = unit_view->unit_over_view();
+  EquipmentSetView* equipment_set_view = unit_view->equipment_set_view();
 
   Rect equipment_select_frame = GetActualFrame();
   equipment_select_frame.SetW(4 * 96);
-  equipment_select_view_ = new EquipmentSelectView(equipment_select_frame, equipment_set_view_);
+  equipment_select_view_ = new EquipmentSelectView(equipment_select_frame, equipment_set_view);
   equipment_select_view_->visible(false);
 
-  {  // Initialize equipment_set_view_
+  {  // Initialize equipment_set_view
     EquipmentSelectView* select_view = equipment_select_view_;
 
     auto mouse_handler_gen = [select_view, assets](core::Equipment::Type type) {
@@ -132,17 +131,16 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
         return true;
       };
     };
-    equipment_set_view_->SetWeaponMouseButtonHandler(mouse_handler_gen(core::Equipment::Type::kWeapon));
-    equipment_set_view_->SetArmorMouseButtonHandler(mouse_handler_gen(core::Equipment::Type::kArmor));
-    equipment_set_view_->SetAidMouseButtonHandler(mouse_handler_gen(core::Equipment::Type::kAid));
+    equipment_set_view->SetWeaponMouseButtonHandler(mouse_handler_gen(core::Equipment::Type::kWeapon));
+    equipment_set_view->SetArmorMouseButtonHandler(mouse_handler_gen(core::Equipment::Type::kArmor));
+    equipment_set_view->SetAidMouseButtonHandler(mouse_handler_gen(core::Equipment::Type::kAid));
   }
 
+  HeroModelListView* hero_model_list_view;
   {
     Rect hero_model_list_frame = GetActualFrame();
     hero_model_list_frame.SetW(4 * 96);
-    HeroModelListView* hero_model_list_view =
-        new HeroModelListView(hero_model_list_frame, assets->GetHeroes(), deploy_helper, unit_over_view_,
-                              equipment_set_view_, equipment_select_view_);
+    hero_model_list_view = new HeroModelListView(hero_model_list_frame, assets->GetHeroes(), deploy_helper, director_);
     AddChild(hero_model_list_view);
   }
 
@@ -159,6 +157,8 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
 
   AddChild(equipment_select_view_);
   AddChild(btn_ok);
+
+  director_->Init(hero_model_list_view, unit_view->unit_over_view(), equipment_set_view, equipment_select_view_);
 }
 
 }  // namespace app

@@ -920,7 +920,7 @@ StateUISpeak::StateUISpeak(StateUI::Base base, core::Unit* unit, const string& w
     : StateUI(base), unit_(unit), words_(words) {}
 
 void StateUISpeak::Enter() {
-  auto unit_dialog_view = gv_->unit_dialog_view();
+  auto unit_dialog_view         = gv_->unit_dialog_view();
   auto unit_dialog_view_wrapper = gv_->unit_dialog_view_wrapper();
   unit_dialog_view->SetUnit(unit_);
   unit_dialog_view->SetText(words_);

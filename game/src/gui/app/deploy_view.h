@@ -24,6 +24,7 @@ class EquipmentSetView;
 class EquipmentSelectView;
 class UnitOverView;
 class UnitView;
+class DeployDirector;
 
 class HeroModelView : public CallbackView {
  public:
@@ -41,8 +42,7 @@ class HeroModelView : public CallbackView {
 
 class HeroModelListView : public CompositeView {
  public:
-  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, UnitOverView*,
-                    EquipmentSetView*, EquipmentSelectView*);
+  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, DeployDirector*);
 };
 
 // DeployView is a UI view for deploying heroes
@@ -52,9 +52,8 @@ class DeployView : public CompositeView {
   DeployView(const Rect&, core::Assets*, core::IDeployHelper*);
 
  private:
-  UnitOverView*        unit_over_view_;
-  EquipmentSetView*    equipment_set_view_;
   EquipmentSelectView* equipment_select_view_;
+  DeployDirector*      director_;
 };
 
 }  // namespace app

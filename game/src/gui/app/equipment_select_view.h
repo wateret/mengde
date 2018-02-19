@@ -32,9 +32,9 @@ class EquipmentSelectView : public CompositeView {
   void SetEquipments(const vector<core::EquipmentWithAmount>&, core::Assets*);
 
  private:
-  const core::Hero*    hero_;
-  RowMajorListView*    equipment_list_view_;
-  EquipmentSetView*    equipment_set_view_;
+  const core::Hero* hero_;
+  RowMajorListView* equipment_list_view_;
+  EquipmentSetView* equipment_set_view_;
 };
 
 }  // namespace app

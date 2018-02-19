@@ -4,11 +4,11 @@
 #include "core/equipment.h"
 #include "core/equipment_set.h"
 #include "core/hero.h"
+#include "equipment_set_view.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/layout_helper.h"
 #include "gui/uifw/row_major_list_view.h"
 #include "gui/uifw/text_view.h"
-#include "equipment_set_view.h"
 
 namespace mengde {
 namespace gui {
@@ -57,8 +57,8 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   RowMajorListView* new_list_view = new RowMajorListView(GetActualFrame(), kItemSize);
   ASSERT(hero_ != nullptr);
   if (hero_ == nullptr) return;
-  auto hero                 = assets->GetHero(hero_->GetId());  // For non-const core::Hero and capture
-  auto equipment_set_view   = equipment_set_view_;
+  auto hero               = assets->GetHero(hero_->GetId());  // For non-const core::Hero and capture
+  auto equipment_set_view = equipment_set_view_;
   for (auto equipment : equipments) {
     ItemIconView* item_icon_view =
         new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);
