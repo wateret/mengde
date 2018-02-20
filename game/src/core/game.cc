@@ -94,7 +94,7 @@ Map* Game::CreateMap() {
   uint32_t         cols    = size[0];
   uint32_t         rows    = size[1];
   vector<string>   terrain = lua_->GetVector<string>("gdata.map.terrain");
-  string           file    = lua_->Get<string>("gdata.map.file");
+  string           file    = lua_->Get<string>("gdata.map.file"); // FIXME filename should be same as stage id + .bmp
   ASSERT(rows == terrain.size());
   for (auto e : terrain) {
     ASSERT(cols == e.size());

@@ -19,7 +19,7 @@ Scenario::Scenario(const string& scenario_id) : rc_(), assets_(nullptr), game_(n
 }
 
 Game* Scenario::NewGame(const string& id, const string& first_stage_script) {
-  const Path path = GameEnv::GetInstance()->GetScenarioPath() / id / first_stage_script;
+  const Path path = GameEnv::GetInstance()->GetScenarioPath() / id / "stage" / first_stage_script;
   return new Game(rc_, assets_, path);
 }
 
