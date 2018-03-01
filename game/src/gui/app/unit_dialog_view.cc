@@ -4,6 +4,7 @@
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
+#include "resource_path.h"
 
 namespace mengde {
 namespace gui {
@@ -40,9 +41,10 @@ UnitDialogView::UnitDialogView(const Rect* frame, const string& message, core::U
 void UnitDialogView::SetText(const string& s) { tv_message_->SetText(s); }
 
 void UnitDialogView::SetUnit(core::Unit* u) {
-  unit_                = u;
-  string portrait_path = "portrait/" + unit_->GetId() + ".bmp";
-  iv_portrait_->SetPath(portrait_path);
+  unit_ = u;
+
+  Path portrait_path = rcpath::PortraitPath(unit_->GetId());
+  iv_portrait_->SetPath(portrait_path.ToString());
   tv_name_->SetText(unit_->GetId());
 }
 

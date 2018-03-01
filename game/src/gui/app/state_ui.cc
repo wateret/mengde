@@ -19,6 +19,7 @@
 #include "gui/uifw/modal_view.h"
 #include "layout_helper.h"
 #include "magic_list_view.h"
+#include "resource_path.h"
 #include "terrain_info_view.h"
 #include "unit_action_view.h"
 #include "unit_dialog_view.h"
@@ -439,7 +440,7 @@ void StateUIMagic::Exit() {
 void StateUIMagic::Render(Drawer* drawer) {
   if (animator_ == NULL) {
     TextureManager* tm      = drawer->GetTextureManager();
-    Texture*        texture = tm->FetchTexture("magic/" + magic_->GetId() + ".bmp");
+    Texture*        texture = tm->FetchTexture(rcpath::MagicPath(magic_->GetId()).ToString());
     texture->SetAlpha(160);  // FIXME non-fixed alpha value
     animator_ = new TextureAnimator(texture, kFramesPerCut);
   }

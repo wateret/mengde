@@ -14,7 +14,7 @@
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
-#include "misc.h"
+#include "resource_path.h"
 #include "unit_over_view.h"
 #include "unit_view.h"
 
@@ -28,7 +28,7 @@ HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::ID
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.GetSize(), LayoutHelper::kAlignCenter);
   iv_frame.SetY(iv_frame.GetY() - 8);
-  ImageView* iv_hero = new ImageView(iv_frame, GetModelPath(hero->GetModelId(), kSpriteStand));
+  ImageView* iv_hero = new ImageView(iv_frame, rcpath::UnitModelPath(hero->GetModelId(), kSpriteStand).ToString());
   iv_hero->SetSourceRect(img_src_rect);
   AddChild(iv_hero);
 

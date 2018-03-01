@@ -4,6 +4,7 @@
 #include "core/equipment_set.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
+#include "resource_path.h"
 
 namespace mengde {
 namespace gui {
@@ -15,7 +16,7 @@ namespace app {
 
 EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment) : CallbackView(frame) {
   Rect iv_frame      = LayoutHelper::CalcPosition(GetActualFrame().GetSize(), {32, 32}, LayoutHelper::kAlignLftMid);
-  iv_image_          = new ImageView(&iv_frame, "equipment/60-1.bmp");  // FIXME path hardcoded
+  iv_image_          = new ImageView(&iv_frame, rcpath::EquipmentModelPath("60-1").ToString());  // FIXME hardcoded
   Rect tv_name_frame = {32 + 8, 0, 164, 16};
   tv_name_           = new TextView(&tv_name_frame, "");
   Rect tv_desc_frame = {32 + 8, 16, 164, 52};
@@ -28,16 +29,16 @@ EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment
 }
 
 void EquipmentView::SetEquipment(const core::Equipment* equipment) {
-  string image_path = "equipment/60-1.bmp";
+  Path   image_path = rcpath::EquipmentModelPath("60-1");
   string name       = "No Equipment";
   string desc       = "No Desc";
   if (equipment != nullptr) {
-    image_path = "equipment/" + equipment->GetId() + ".bmp";
+    image_path = rcpath::EquipmentModelPath(equipment->GetId());
     name       = equipment->GetId();
     desc       = equipment->GetId() + "_desc";
   }
 
-  iv_image_->SetPath(image_path);
+  iv_image_->SetPath(image_path.ToString());
   tv_name_->SetText(name);
   tv_desc_->SetText(desc);
 }

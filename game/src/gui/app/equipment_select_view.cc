@@ -9,6 +9,7 @@
 #include "gui/uifw/layout_helper.h"
 #include "gui/uifw/row_major_list_view.h"
 #include "gui/uifw/text_view.h"
+#include "resource_path.h"
 
 namespace mengde {
 namespace gui {
@@ -23,7 +24,7 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
   padding(8);
 
   Rect       iv_icon_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {32, 32}, LayoutHelper::kAlignCenter);
-  ImageView* iv_icon       = new ImageView(iv_icon_frame, "equipment/" + equipment_id + ".bmp");
+  ImageView* iv_icon       = new ImageView(iv_icon_frame, rcpath::EquipmentModelPath(equipment_id).ToString());
   AddChild(iv_icon);
 
   Rect      tv_amount_frame = GetActualFrame();

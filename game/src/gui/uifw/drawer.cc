@@ -1,6 +1,7 @@
 #include "drawer.h"
 
-#include "gui/app/config.h"  // XXX Remove this depenency
+#include "gui/app/config.h"         // XXX Remove this depenency
+#include "gui/app/resource_path.h"  // XXX Remove this depenency
 #include "gui/foundation/rect.h"
 #include "gui/foundation/renderer.h"
 #include "gui/foundation/texture.h"
@@ -53,11 +54,11 @@ void Drawer::CopyTextureBackground(Texture* texture, Rect* rect_src, Rect* rect_
   renderer_->CopyTexture(texture, &rr, rect_dst);
 }
 
-void Drawer::CopySprite(const std::string& path, SpriteType type, Direction dir, int sprite_no, SpriteEffect effect,
+void Drawer::CopySprite(const std::string& id, SpriteType type, Direction dir, int sprite_no, SpriteEffect effect,
                         Vec2D dst_coords, Vec2D offset) {
-  std::string fullpath    = "model/" + path + "/" + kSpriteBitmapName[type] + ".bmp";
-  Texture*    bitmap      = texture_manager_->FetchTexture(fullpath);
-  const int   bitmap_size = kSpriteBitmapSize[type];
+  Path      fullpath    = app::rcpath::UnitModelPath(id, type);
+  Texture*  bitmap      = texture_manager_->FetchTexture(fullpath.ToString());
+  const int bitmap_size = kSpriteBitmapSize[type];
 
   int  sprite_offset = 0;
   bool flip_hor      = false;
@@ -102,7 +103,7 @@ void Drawer::CopySprite(const std::string& path, SpriteType type, Direction dir,
       break;
     case kEffectBright: {
       bitmap->SetAlpha(255 - effect.progress);
-      Texture* whitened_bitmap = texture_manager_->FetchWhitenedTexture(fullpath);
+      Texture* whitened_bitmap = texture_manager_->FetchWhitenedTexture(fullpath.ToString());
       CopyTexture(whitened_bitmap, &src_rect, &dst_rect, flip_hor);
       break;
     }

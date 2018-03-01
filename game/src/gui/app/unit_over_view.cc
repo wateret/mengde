@@ -4,7 +4,7 @@
 #include "gui/uifw/gauge_view.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
-#include "util/path.h"
+#include "resource_path.h"
 
 namespace mengde {
 namespace gui {
@@ -90,7 +90,7 @@ void UnitOverView::OnUnitUpdate() {
     gv_stats_[j]->SetMaxVal(400);
     gv_stats_[j]->SetExtVal(cur_attr.GetValueByIndex(i) - ori_attr.GetValueByIndex(i));
   }
-  Path portrait_path = Path("portrait") / (unit_->GetId() + ".bmp");
+  Path portrait_path = rcpath::PortraitPath(unit_->GetId());
   iv_portrait_->SetPath(portrait_path.ToString());
 }
 
