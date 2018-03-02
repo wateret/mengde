@@ -18,7 +18,7 @@ $ build/Darwin.x86_64/game/game
 ### Ubuntu
 
 ```
-$ apt-get install lbsdl2-dev libsdl2-ttf-dev liblua5.2-dev
+$ apt-get install libsdl2-dev libsdl2-ttf-dev liblua5.2-dev
 $ ./build.py
 $ build/Linux.x86_64/game/game
 ```
