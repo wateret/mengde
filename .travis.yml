@@ -1,0 +1,17 @@
+language: cpp
+
+os: osx
+osx_image: xcode8
+compiler:
+  - clang
+
+before_install:
+  - ./ci/install_deps_osx.sh
+
+stages:
+  - build
+
+jobs:
+  include:
+    - stage:  build
+      script: ./build.py
