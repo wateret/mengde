@@ -23,13 +23,13 @@ void EventEffectList::AddGeneralEffect(GeneralEventEffect* e) { general_elements
 void EventEffectList::AddOnCmdEffect(OnCmdEventEffect* e) { oncmd_elements_.push_back(e); }
 
 unique_ptr<Cmd> EventEffectList::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
-  auto cmdq = unique_ptr<CmdQueue>(new CmdQueue());
+  CmdQueue* cmdq = new CmdQueue();
   for (auto e : general_elements_) {
     if (e->typeof(type)) {
       *cmdq += e->OnEvent(unit);
     }
   }
-  return cmdq;
+  return unique_ptr<Cmd>(cmdq);
 }
 
 void EventEffectList::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) const {

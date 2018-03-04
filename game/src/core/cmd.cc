@@ -202,7 +202,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   LOG_INFO("%s(%s) '%s' -> '%s'", IsCounter() ? "CounterAttack" : "Attack", IsSecond() ? "2nd" : "1st",
            atk_->GetId().c_str(), def_->GetId().c_str());
 
-  unique_ptr<CmdQueue> ret(new CmdQueue());
+  CmdQueue* ret = new CmdQueue();
 
   if (!IsCounter()) {
     atk_->RaiseEvent(event::OnCmdEvent::kNormalAttack, this);
@@ -243,7 +243,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
     LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def_->GetId().c_str(), atk_->GetId().c_str());
     ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(def_, atk_, CmdBasicAttack::Type::kCounter)));
   }
-  return ret;
+  return unique_ptr<Cmd>(ret);
 }
 
 bool CmdBasicAttack::TryBasicAttack() {

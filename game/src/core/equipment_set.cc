@@ -94,14 +94,14 @@ Attribute EquipmentSet::CalcMultipliers() const {
 }
 
 unique_ptr<Cmd> EquipmentSet::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
-  auto             cmdq   = unique_ptr<CmdQueue>(new CmdQueue());
+  CmdQueue*        cmdq   = new CmdQueue();
   const Equipment* weapon = GetWeapon();
   const Equipment* armor  = GetArmor();
   const Equipment* aid    = GetAid();
   if (weapon != nullptr) cmdq->Append(weapon->RaiseEvent(type, unit));
   if (armor != nullptr) cmdq->Append(armor->RaiseEvent(type, unit));
   if (aid != nullptr) cmdq->Append(aid->RaiseEvent(type, unit));
-  return cmdq;
+  return unique_ptr<Cmd>(cmdq);
 }
 
 void EquipmentSet::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) const {
