@@ -8,6 +8,10 @@ compiler:
 before_install:
   - ./ci/install_deps_osx.sh
 
+cache:
+  directories:
+    - $HOME/Library/Caches/Homebrew
+
 stages:
   - build
 
