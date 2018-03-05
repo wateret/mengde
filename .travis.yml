@@ -9,13 +9,17 @@ before_install:
   - ./ci/install_deps_osx.sh
 
 cache:
+  ccache: true
   directories:
     - $HOME/Library/Caches/Homebrew
 
 stages:
+  - c++format
   - build
 
 jobs:
   include:
+    - stage:  c++format
+      script: ./ci/clang-format.sh
     - stage:  build
       script: ./build.py
