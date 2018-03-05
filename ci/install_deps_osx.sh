@@ -2,7 +2,7 @@
 
 brew update
 
-PACKAGES=(python2 cmake sdl2 sdl2_ttf lua boost)
+PACKAGES=(python2 cmake sdl2 sdl2_ttf lua boost clang-format)
 
 for dep in "${PACKAGES[@]}"; do
   brew info "${dep}" | grep --quiet 'Not installed' && brew install "${dep}"
