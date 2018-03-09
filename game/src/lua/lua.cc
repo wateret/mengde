@@ -6,7 +6,7 @@
 
 namespace {
 
-std::string string_replace_all(const std::string& str, const string& from, const string& to) {
+std::string string_replace_all(const std::string& str, const std::string& from, const std::string& to) {
   return std::regex_replace(str, std::regex(from), to);
 }
 
@@ -25,7 +25,7 @@ Lua::~Lua() {
   if (L != nullptr && destroy_) lua_close(L);
 }
 
-void Lua::RunFile(const string& filename) {
+void Lua::RunFile(const std::string& filename) {
   if (luaL_loadfile(L, filename.c_str())) {
     // TODO Throw appropriate exception;
     throw "Loadfile error";
@@ -36,9 +36,9 @@ void Lua::RunFile(const string& filename) {
   }
 }
 
-void Lua::RunScript(const string& code) {
+void Lua::RunScript(const std::string& code) {
   if (luaL_loadstring(L, code.c_str())) {
-    // TODO Dump lua error (the string on the stack top)
+    // TODO Dump lua error (the std::string on the stack top)
     throw "Loadfile error";
   }
   if (lua_pcall(L, 0, 0, 0)) {
@@ -47,18 +47,22 @@ void Lua::RunScript(const string& code) {
   }
 }
 
-void Lua::Register(const string& name, lua_CFunction fn) { lua_register(L, name.c_str(), fn); }
+void Lua::Register(const std::string& name, lua_CFunction fn) { lua_register(L, name.c_str(), fn); }
 
-void Lua::LogError(const string& msg) {
+void Lua::LogError(const std::string&) {
   DumpStack();
-  LOGM_ERROR(Lua, "%s", msg.c_str());
+  //  LOGM_ERROR(Lua, "%s", msg.c_str());
 }
 
-void Lua::LogWarning(const string& msg) { LOGM_WARNING(Lua, "%s", msg.c_str()); }
+void Lua::LogWarning(const std::string&) {
+  //  LOGM_WARNING(Lua, "%s", msg.c_str());
+}
 
-void Lua::LogDebug(const string& msg) { LOGM_DEBUG(Lua, "%s", msg.c_str()); }
+void Lua::LogDebug(const std::string&) {
+  //  LOGM_DEBUG(Lua, "%s", msg.c_str());
+}
 
-void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
+void Lua::ForEachTableEntry(const std::string& name, ForEachEntryFunc cb) {
   int num_stack = GetToStack(name);
   if (!lua_istable(L, -1)) {  // Table not found
     return;
@@ -66,7 +70,7 @@ void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
 
   lua_pushnil(L);
   while (lua_next(L, -2)) {
-    // Lua can have any type for table key, but we support only string keys.
+    // Lua can have any type for table key, but we support only std::string keys.
     std::string key = "";
     if (!lua_isnumber(L, -2) && lua_isstring(L, -2)) key = lua_tostring(L, -2);
     cb(this, key);
@@ -75,7 +79,7 @@ void Lua::ForEachTableEntry(const string& name, ForEachEntryFunc cb) {
   PopStack(num_stack);  // Pop tables pushed by GetToStack
 }
 
-void Lua::PushToStack(const string& s) { lua_pushstring(L, s.c_str()); }
+void Lua::PushToStack(const std::string& s) { lua_pushstring(L, s.c_str()); }
 
 void Lua::PushToStack(lua_CFunction fn) { lua_pushcfunction(L, fn); }
 
@@ -90,27 +94,27 @@ void Lua::PushToStack(const LuaClass& object) {
   Set("__cobj", object.pointer());
 }
 
-void Lua::SetGlobal(const string& name, const string& val) {
+void Lua::SetGlobal(const std::string& name, const std::string& val) {
   lua_pushstring(L, val.c_str());
   lua_setglobal(L, name.c_str());
 }
 
-void Lua::GetField(const string& id) {
+void Lua::GetField(const std::string& id) {
   if (GetStackSize() == 0) {
     lua_getglobal(L, id.c_str());
   } else {
-    ASSERT(GetStackSize() > 0);
+    assert(GetStackSize() > 0);
     // At this point Lua Stack must be
     // Index -1 : value
     lua_getfield(L, -1, id.c_str());
   }
 }
 
-void Lua::SetField(const string& id) {
+void Lua::SetField(const std::string& id) {
   if (GetStackSize() == 1) {
     lua_setglobal(L, id.c_str());
   } else {
-    ASSERT(GetStackSize() > 1);
+    assert(GetStackSize() > 1);
     // At this point Lua Stack must be look like
     // Index -1 : value (to be set)
     // Index -2 : table (to set a field)
@@ -119,7 +123,7 @@ void Lua::SetField(const string& id) {
   }
 }
 
-void Lua::RegisterClass(const string& class_name) {
+void Lua::RegisterClass(const std::string& class_name) {
   static const char tpl[] =
       "\
 <C> = {} \n\
@@ -137,19 +141,19 @@ function <C>.new(cobj)\n\
   return self\n\
 end\n\
 ";
-  string code = string_replace_all(tpl, "<C>", class_name);
+  std::string code = string_replace_all(tpl, "<C>", class_name);
   RunScript(code);
 }
 
-void Lua::RegisterMethod(const string& class_name, const string& method_name) {
+void Lua::RegisterMethod(const std::string& class_name, const std::string& method_name) {
   static const char tpl[] =
       "\
 function <C>:<M>(...)\n\
   return <C>_<M>(self.__cobj, ...)\n\
 end\n\
 ";
-  string code = string_replace_all(tpl, "<C>", class_name);
-  code        = string_replace_all(code, "<M>", method_name);
+  std::string code = string_replace_all(tpl, "<C>", class_name);
+  code             = string_replace_all(code, "<M>", method_name);
   RunScript(code);
 }
 
@@ -189,7 +193,7 @@ void Lua::CallImpl<void>(unsigned argc) {
   }
 }
 
-void Lua::NewGlobalTable(const string& name) {
+void Lua::NewGlobalTable(const std::string& name) {
   lua_newtable(L);
   lua_setglobal(L, name.c_str());
 }

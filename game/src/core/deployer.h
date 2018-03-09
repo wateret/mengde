@@ -20,24 +20,18 @@ struct DeployElement {
   DeployElement(const Hero* hero, uint32_t no) : hero(hero), no(no) {}
 };
 
+struct DeployElementHash {
+  size_t operator()(const mengde::core::DeployElement& o) const noexcept {
+    return std::hash<const mengde::core::Hero*>{}(o.hero);
+  }
+};
+
 struct DeployerComparer {
-  bool operator()(const DeployElement& lhs, const DeployElement& rhs);
+  bool operator()(const DeployElement& lhs, const DeployElement& rhs) const;
 };
 
 }  // namespace core
 }  // namespace mengde
-
-namespace std {
-
-// Hash functor for DeployElement
-template <>
-struct hash<mengde::core::DeployElement> {
-  size_t operator()(mengde::core::DeployElement const& o) const noexcept {
-    return hash<const mengde::core::Hero*>{}(o.hero);
-  }
-};
-
-}  // namespace std
 
 namespace mengde {
 namespace core {
@@ -60,8 +54,8 @@ class Deployer {
   enum class Type { kNone, kUnselectable, kSelectable };
 
  public:
-  typedef std::unordered_set<DeployElement, std::hash<DeployElement>, DeployerComparer> AssignmentContainer;
-  typedef function<void(const DeployElement&)>                                          ForEachFn;
+  typedef std::unordered_set<DeployElement, DeployElementHash, DeployerComparer> AssignmentContainer;
+  typedef function<void(const DeployElement&)>                                   ForEachFn;
 
  public:
   Deployer(const vector<DeployInfoUnselectable>&, const vector<DeployInfoSelectable>&, uint32_t);

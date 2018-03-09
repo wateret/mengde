@@ -10,7 +10,7 @@ namespace app {
 MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
   bg_color(COLOR("white"));
   const Vec2D kButtonSize = {100, 100};
-  Rect        start_frame = LayoutHelper::CalcPosition(frame, {100, 100}, LayoutHelper::kAlignHMid);
+  Rect        start_frame = LayoutHelper::CalcPosition(frame, kButtonSize, LayoutHelper::kAlignHMid);
   start_frame.Move(0, 100);
   Rect quit_frame = start_frame;
   quit_frame.Move(0, 150);

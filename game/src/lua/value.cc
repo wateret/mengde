@@ -1,5 +1,7 @@
 #include "value.h"
 
+#include <string.h>
+
 #include "table.h"
 
 namespace lua {

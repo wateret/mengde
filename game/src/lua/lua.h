@@ -1,13 +1,13 @@
 #ifndef LUA_SCRIPT_H_
 #define LUA_SCRIPT_H_
 
+#include <cassert>
 #include <functional>
 #include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "table.h"
-#include "util/common.h"
 
 extern "C" {
 
@@ -69,28 +69,28 @@ class LuaClass {
 
 class Lua {
  public:
-  typedef function<void(Lua* lua, const std::string& key)> ForEachEntryFunc;
+  typedef std::function<void(Lua* lua, const std::string& key)> ForEachEntryFunc;
   Lua();
   Lua(lua_State*);
   virtual ~Lua();
 
-  void ForEachTableEntry(const string&, ForEachEntryFunc);
-  void RunFile(const string& filename);
-  void RunScript(const string& code);
-  void Register(const string& name, lua_CFunction);
+  void ForEachTableEntry(const std::string&, ForEachEntryFunc);
+  void RunFile(const std::string& filename);
+  void RunScript(const std::string& code);
+  void Register(const std::string& name, lua_CFunction);
 
   void PopStack(unsigned n) { lua_pop(L, n); }
 
   // Call a function with variadic template
   template <typename R, typename... Args>
-  R Call(const string& name, Args... args) {
+  R Call(const std::string& name, Args... args) {
     GetToStack(name);  // XXX should pop more when name is nested
     return CallImpl<R>(0, args...);
   }
 
   template <typename T>
-  vector<T> GetVector(const string& name = "") {
-    vector<T> vec;
+  std::vector<T> GetVector(const std::string& name = "") {
+    std::vector<T> vec;
     ForEachTableEntry(name, [&](Lua* lua, const std::string&) {
       T val = lua->GetTop<T>();
       vec.push_back(val);
@@ -102,8 +102,8 @@ class Lua {
   // Get a required entry
   // If the entry is not exist, emits an error.
   template <typename T>
-  T Get(const string& var_expr = "") {
-    ASSERT(L != nullptr);
+  T Get(const std::string& var_expr = "") {
+    assert(L != nullptr);
 
     int to_be_popped = GetToStack(var_expr);
     T   result       = GetTop<T>();
@@ -116,8 +116,8 @@ class Lua {
   // Get an optional entry
   // If the entry is not exist, returns default value.
   template <typename T>
-  T GetOpt(const string& var_expr = "") {
-    ASSERT(L != nullptr);
+  T GetOpt(const std::string& var_expr = "") {
+    assert(L != nullptr);
 
     int to_be_popped = GetToStackOpt(var_expr);
     T   result       = GetTopOpt<T>();
@@ -136,21 +136,21 @@ class Lua {
   }
 
   template <typename T>
-  void SetGlobal(const string& name, T val) {
+  void SetGlobal(const std::string& name, T val) {
     lua_pushnumber(L, (double)val);
     lua_setglobal(L, name.c_str());
   }
 
-  void SetGlobal(const string&, const string&);
+  void SetGlobal(const std::string&, const std::string&);
 
-  void NewGlobalTable(const string&);
+  void NewGlobalTable(const std::string&);
 
   template <typename T>
-  void Set(const string& var_expr, T val) {
+  void Set(const std::string& var_expr, T val) {
     int initial_stack_size = GetStackSize();
 
-    string var   = "";
-    int    level = 0;
+    std::string var   = "";
+    int         level = 0;
     for (unsigned int i = 0, size = var_expr.size(); i < size; i++) {
       if (var_expr[i] == '.') {  // Handle a var name in the middle
         // Find field
@@ -173,7 +173,7 @@ class Lua {
     SetField(var);
     lua_pop(L, level);
 
-    ASSERT(initial_stack_size == GetStackSize());
+    assert(initial_stack_size == GetStackSize());
   }
 
   // PushToStack is public for pushing return value from lua C function
@@ -189,25 +189,25 @@ class Lua {
     lua_pushlightuserdata(L, static_cast<void*>(val));
   }
 
-  void PushToStack(const string& s);
+  void PushToStack(const std::string& s);
   void PushToStack(lua_CFunction fn);
   void PushToStack(const LuaClass& object);
 
   // OO-style registering class and method
 
-  void RegisterClass(const string& class_name);
-  void RegisterMethod(const string& class_name, const string& method_name);
+  void RegisterClass(const std::string& class_name);
+  void RegisterMethod(const std::string& class_name, const std::string& method_name);
 
   // For debugging
 
   void DumpStack();
 
  protected:
-  int GetToStack(const string& var_expr, bool optional = false) {
+  int GetToStack(const std::string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
 
-    string var   = "";
-    int    level = 0;
+    std::string var   = "";
+    int         level = 0;
     for (unsigned int i = 0, size = var_expr.size(); i < size + 1; i++) {
       if (i == size || var_expr[i] == '.') {
         GetField(var);
@@ -229,14 +229,14 @@ class Lua {
     return level;
   }
 
-  int GetToStackOpt(const string& var_expr) { return GetToStack(var_expr, true); }
+  int GetToStackOpt(const std::string& var_expr) { return GetToStack(var_expr, true); }
 
   // type aliases
 
   template <typename T>
   using is_bool = std::is_same<bool, T>;
   template <typename T>
-  using is_string = std::is_same<string, T>;
+  using is_string = std::is_same<std::string, T>;
   template <typename T>
   using is_table = std::is_same<Table*, T>;
 
@@ -298,7 +298,7 @@ class Lua {
     }
   }
 
-  // string
+  // std::string
 
   template <typename T>
   typename std::enable_if<is_string<T>::value, T>::type GetDefault() {
@@ -308,18 +308,18 @@ class Lua {
   template <typename T>
   typename std::enable_if<is_string<T>::value, T>::type GetTop() {
     if (lua_isstring(L, -1)) {
-      return string(lua_tostring(L, -1));
+      return std::string(lua_tostring(L, -1));
     } else {
-      throw WrongTypeException("string", "?");
+      throw WrongTypeException("std::string", "?");
     }
   }
 
   template <typename T>
   typename std::enable_if<is_string<T>::value, T>::type GetTopOpt() {
     if (lua_isstring(L, -1)) {
-      return string(lua_tostring(L, -1));
+      return std::string(lua_tostring(L, -1));
     } else {
-      return GetDefault<string>();
+      return GetDefault<std::string>();
     }
   }
 
@@ -381,11 +381,11 @@ class Lua {
   }
   */
 
-  // Vector types
+  // std::vector types
 
   template <typename T>
   typename std::enable_if<is_vector<T>::value, T>::type GetDefault() {
-    return T();  // Return default vector type
+    return T();  // Return default std::vector type
   }
 
   template <typename T>
@@ -402,19 +402,19 @@ class Lua {
   template<typename T>
   typename std::enable_if<is_vector<T>::value, T>::type GetTopOpt() {
     if (lua_isstring(L, -1)) {
-      return string(lua_tostring(L, -1));
+      return std::string(lua_tostring(L, -1));
     } else {
-      return GetDefault<string>();
+      return GetDefault<std::string>();
     }
   }
   */
 
-  void LogError(const string&);
-  void LogWarning(const string&);
-  void LogDebug(const string&);
+  void LogError(const std::string&);
+  void LogWarning(const std::string&);
+  void LogDebug(const std::string&);
 
-  void GetField(const string& id);
-  void SetField(const string& id);
+  void GetField(const std::string& id);
+  void SetField(const std::string& id);
   int  GetStackSize();
 
   template <typename R>

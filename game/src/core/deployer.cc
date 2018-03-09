@@ -7,7 +7,7 @@ namespace core {
 // DeployerComparer
 //
 
-bool DeployerComparer::operator()(const DeployElement& lhs, const DeployElement& rhs) {
+bool DeployerComparer::operator()(const DeployElement& lhs, const DeployElement& rhs) const {
   // NOTE comparing hero pointer is just enough for this case
   return lhs.hero == rhs.hero;
 }

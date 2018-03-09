@@ -57,6 +57,21 @@ class Value {
   } value_;
 };
 
+template <>
+int32_t Value::Get<int32_t>() const;
+
+template <>
+double Value::Get<double>() const;
+
+template <>
+std::string Value::Get<std::string>() const;
+
+template <>
+Table* Value::Get<Table*>() const;
+
+template <>
+void* Value::Get<void*>() const;
+
 }  // namespace lua
 
 #endif  // LUA_VALUE_H_
