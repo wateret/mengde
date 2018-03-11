@@ -126,7 +126,7 @@ uint16_t ConfigLoader::StatStrToIdx(const string& s) {
 void ConfigLoader::ParseUnitClassesAndTerrains() {
   rc_.unit_class_manager = new UnitClassManager();
   int class_idx          = 0;
-  lua_config_->ForEachTableEntry("gconf.unit_classes", [&](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.unit_classes", [&](lua::Lua* l, const string&) {
     string      id         = l->Get<string>("id");
     int         promotions = l->Get<int>("promotions");
     string      grades     = l->Get<string>("stat_grades");
@@ -155,7 +155,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   rc_.terrain_manager = new TerrainManager();
   vector<string> ids;
   vector<char>   cmaps;
-  lua_config_->ForEachTableEntry("gconf.terrains", [=, &ids, &cmaps](lua::Lua* l, const string&) mutable {
+  lua_config_->ForEachTableEntry("gconfig.terrains", [=, &ids, &cmaps](lua::Lua* l, const string&) mutable {
     string id   = l->Get<string>("id");
     char   cmap = l->Get<string>("char")[0];
     ids.push_back(id);
@@ -163,7 +163,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   });
   uint32_t terrain_count = ids.size();
 
-  vector<vector<int>> cost_list = lua_config_->Get<vector<vector<int>>>("gconf.terrain_movecost");
+  vector<vector<int>> cost_list = lua_config_->Get<vector<vector<int>>>("gconfig.terrain_movecost");
 
   // Check row and column size
   if (cost_list.size() != terrain_count) throw DataFormatException("Incorrect size of terrain_movecost");
@@ -171,7 +171,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
     if (e.size() != class_count) throw DataFormatException("Incorrect size of terrain_movecost");
   }
 
-  vector<vector<int>> effect_list = lua_config_->Get<vector<vector<int>>>("gconf.terrain_effect");
+  vector<vector<int>> effect_list = lua_config_->Get<vector<vector<int>>>("gconfig.terrain_effect");
 
   // Check row and column size
   if (effect_list.size() != terrain_count) throw DataFormatException("Incorrect size of terrain_effect");
@@ -187,7 +187,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
 void ConfigLoader::ParseMagics() {
   rc_.magic_manager = new MagicManager();
-  lua_config_->ForEachTableEntry("gconf.magics", [this](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.magics", [this](lua::Lua* l, const string&) {
     string id       = l->Get<string>("id");
     string range_s  = l->Get<string>("range");
     string target_s = l->Get<string>("target");
@@ -237,7 +237,7 @@ void ConfigLoader::ParseMagics() {
 
 void ConfigLoader::ParseEquipments() {
   rc_.equipment_manager = new EquipmentManager();
-  lua_config_->ForEachTableEntry("gconf.equipments", [this](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.equipments", [this](lua::Lua* l, const string&) {
     string          id        = l->Get<string>("id");
     string          type_s    = l->Get<string>("type");
     string          equipable = l->Get<string>("equipable");
@@ -277,7 +277,7 @@ void ConfigLoader::ParseEquipments() {
 
 void ConfigLoader::ParseHeroTemplates() {
   rc_.hero_tpl_manager = new HeroTemplateManager();
-  lua_config_->ForEachTableEntry("gconf.heroes", [this](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.heroes", [this](lua::Lua* l, const string&) {
     string      id     = l->Get<string>("id");
     string      uclass = l->Get<string>("class");
     vector<int> statr  = l->Get<vector<int>>("stat");
@@ -291,7 +291,7 @@ void ConfigLoader::ParseHeroTemplates() {
   });
 }
 
-void ConfigLoader::ParseStages() { stages_ = lua_config_->Get<vector<string>>("gconf.stages"); }
+void ConfigLoader::ParseStages() { stages_ = lua_config_->Get<vector<string>>("gconfig.stages"); }
 
 }  // namespace core
 }  // namespace mengde

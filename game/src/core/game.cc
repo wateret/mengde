@@ -90,11 +90,11 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
 Map* Game::CreateMap() {
   ASSERT(lua_ != nullptr);
 
-  vector<uint32_t> size    = lua_->GetVector<uint32_t>("gdata.map.size");
+  vector<uint32_t> size    = lua_->GetVector<uint32_t>("gstage.map.size");
   uint32_t         cols    = size[0];
   uint32_t         rows    = size[1];
-  vector<string>   terrain = lua_->GetVector<string>("gdata.map.terrain");
-  string           file    = lua_->Get<string>("gdata.map.file");  // FIXME filename should be same as stage id + .bmp
+  vector<string>   terrain = lua_->GetVector<string>("gstage.map.terrain");
+  string           file    = lua_->Get<string>("gstage.map.file");  // FIXME filename should be same as stage id + .bmp
   ASSERT(rows == terrain.size());
   for (auto e : terrain) {
     ASSERT(cols == e.size());
@@ -106,16 +106,16 @@ Deployer* Game::CreateDeployer() {
   ASSERT(lua_ != nullptr);
 
   vector<DeployInfoUnselectable> unselectable_info_list;
-  lua_->ForEachTableEntry("gdata.deploy.unselectables", [=, &unselectable_info_list](lua::Lua* l, const string&) {
+  lua_->ForEachTableEntry("gstage.deploy.unselectables", [=, &unselectable_info_list](lua::Lua* l, const string&) {
     vector<int> pos_vec = l->Get<vector<int>>("position");
     string      hero_id = l->Get<string>("hero");
     Vec2D       position(pos_vec[0], pos_vec[1]);
     Hero*       hero = assets_->GetHero(hero_id);  // TODO Check if Hero exists in our assets
     unselectable_info_list.push_back({position, hero});
   });
-  uint32_t                     num_required = lua_->Get<uint32_t>("gdata.deploy.num_required_selectables");
+  uint32_t                     num_required = lua_->Get<uint32_t>("gstage.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
-  lua_->ForEachTableEntry("gdata.deploy.selectables", [=, &selectable_info_list](lua::Lua* l, const string&) mutable {
+  lua_->ForEachTableEntry("gstage.deploy.selectables", [=, &selectable_info_list](lua::Lua* l, const string&) mutable {
     vector<int> pos_vec = l->Get<vector<int>>("position");
     Vec2D       position(pos_vec[0], pos_vec[1]);
     selectable_info_list.push_back({position});
