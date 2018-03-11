@@ -46,7 +46,7 @@ $ build/Darwin.x86_64.Debug/game/game
 #### Ubuntu
 
 ```
-$ apt-get install cmake libsdl2-dev libsdl2-ttf-dev liblua5.2-dev libboost-dev
+$ apt-get install cmake libsdl2-dev libsdl2-ttf-dev liblua5.2-dev libboost-system-dev libboost-filesystem-dev
 $ ./build.py
 $ build/Linux.x86_64.Debug/game/game
 ```
