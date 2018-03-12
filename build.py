@@ -7,6 +7,7 @@ import os
 import platform
 import multiprocessing
 import time
+import urllib2
 
 def wrap_gen(color):
     return lambda s: color + s + "\033[0m"
@@ -39,6 +40,27 @@ def check_run_cmd(cmd, args = []):
     retcode = run_cmd(cmd, args)
     if retcode != 0:
         fail("[Failed %d] %s" % (retcode, cmd_to_string(cmd, args)))
+
+
+def download_file(url, filename):
+    try:
+        f = urllib2.urlopen(url)
+        print_header("Downloading " + url)
+
+        # Open our local file for writing
+        with open(filename, "wb") as local:
+            local.write(f.read())
+    except urllib2.HTTPError, e:
+        print "HTTP Error:", e.code, url
+    except urllib2.URLError, e:
+        print "URL Error:", e.reason, url
+
+def path_exists(path):
+    try:
+        os.stat(path)
+        return True
+    except:
+        return False
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -76,6 +98,20 @@ def main():
     check_run_cmd("make", make_args)
     elapsed_time = time.time() - start_time
     print("Build Time is %d:%02d.%02d" % (elapsed_time // 60, elapsed_time % 60, (elapsed_time * 100) % 100))
+
+    # Temporary works for res (Font)
+
+    os.chdir("game")
+
+    res_path = "res"
+    if not path_exists(res_path):
+        os.mkdir(res_path)
+
+    font_url = "https://github.com/powerline/fonts/raw/master/LiberationMono/Literation%20Mono%20Powerline.ttf"
+    font_filename = "Literation Mono Powerline.ttf"
+    os.chdir("res")
+    if not path_exists(font_filename):
+        download_file(font_url, font_filename)
 
 if __name__ == "__main__":
     main()
