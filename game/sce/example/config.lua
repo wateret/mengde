@@ -269,5 +269,5 @@ gconfig = {
             }
         }
     },
-    stages = { "01.lua" }
+    stages = { "01.lua", "02.lua" }
 }

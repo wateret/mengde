@@ -959,6 +959,7 @@ void StateUIEnd::Enter() {
 void StateUIEnd::Update() {
   ModalDialogView* modal_dialog_view = gv_->dialog_view();
   if (modal_dialog_view->visible() == false) {
+    // Advance to next stage unless we're in the last stage
     gv_->EndGame();
   }
 }
