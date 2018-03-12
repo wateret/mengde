@@ -147,7 +147,9 @@ class Lua {
 
   template <typename T>
   void Set(const std::string& var_expr, T val) {
+#ifdef DEBUG
     int initial_stack_size = GetStackSize();
+#endif
 
     std::string var   = "";
     int         level = 0;
@@ -173,7 +175,9 @@ class Lua {
     SetField(var);
     lua_pop(L, level);
 
+#ifdef DEBUG
     assert(initial_stack_size == GetStackSize());
+#endif
   }
 
   // PushToStack is public for pushing return value from lua C function
