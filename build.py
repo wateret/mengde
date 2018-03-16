@@ -67,6 +67,7 @@ def parse_args():
     parser.add_argument("buildtype",   default="Debug", help="build type", choices=["Debug", "Release"], nargs="?")
     parser.add_argument("--buildpath", default="build", help="specify build path")
     parser.add_argument("--clean",     default=False,   help="clean before build", dest="clean", action="store_true")
+    parser.add_argument("--single",    default=False,   help="disalbe parallel build", dest="single", action="store_true")
 
     return parser.parse_args()
 
@@ -85,13 +86,15 @@ def main():
                             ("../" * (build_dir.count("/") + 1))])
 
     # From here, support `Makefile` project only 
+    make_args = []
 
     if options.clean:
         print_header("Clean build directory")
         check_run_cmd("make", ["clean"])
 
-    jobs = "-j" + str(cpu_count * 2)
-    make_args = [jobs]
+    if not options.single:
+        jobs = "-j" + str(cpu_count * 2)
+        make_args.append(jobs)
 
     print_header("Start build")
     start_time = time.time()
