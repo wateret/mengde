@@ -51,6 +51,22 @@ $ ./build.py
 $ build/Linux.x86_64.Debug/game/game
 ```
 
+##### Building with Docker
+
+Take the following steps to build mengde through Docker:
+
+1. Install Docker on your machine as described in the [Docker documentation](https://docs.docker.com/install/).
+2. Optionally, create a Linux group called docker to allow launching containers without sudo as described in the [Docker documentation](https://docs.docker.com/install/linux/linux-postinstall/). (If you don't do this step, you'll have to use sudo each time you invoke Docker.)
+3. Create a Docker image for building the mengde.
+```
+$ docker build -t {image_tag_name} docker
+```
+
+4. Launch a Docker container that contains one of created binary images for building.
+```
+$ docker run --rm -v `pwd`:{mount_path_on_container} -w={mount_path_on_container} {image_tag_name} ./build.py
+```
+
 #### Windows
 
 TBD
