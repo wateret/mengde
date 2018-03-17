@@ -85,7 +85,7 @@ def main():
     check_run_cmd("cmake", ["-DCMAKE_BUILD_TYPE=" + options.buildtype,
                             ("../" * (build_dir.count("/") + 1))])
 
-    # From here, support `Makefile` project only 
+    # From here, support `Makefile` project only
     make_args = []
 
     if options.clean:
