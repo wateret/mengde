@@ -65,8 +65,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
   Rect main_rect({0, 0}, window_size_);
   main_view_ = new MainView(&main_rect, this);
   window_    = new Window("Game", window_size_.x, window_size_.y);
-  // FIXME hardcoded path "example"
-  drawer_ = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / "example").ToString(),
+  drawer_    = new Drawer(window_, GameEnv::GetInstance()->GetScenarioPath().ToString(),
                        GameEnv::GetInstance()->GetResourcePath().ToString());
 
   target_view_ = main_view_;
@@ -98,6 +97,7 @@ void App::SetupScenario(const string& scenario_id) {
   }
 
   root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
+  drawer_->SetBitmapBasePath((GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString());
 }
 
 Drawer* App::GetDrawer() { return drawer_; }

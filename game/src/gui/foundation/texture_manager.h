@@ -19,16 +19,17 @@ class FontManager;
 
 class TextureManager {
  public:
-  TextureManager(Renderer* renderer, const string& scenario_path, const string& font_path);
+  TextureManager(Renderer* renderer, const string& bitmap_base_path, const string& font_base_path);
   ~TextureManager();
 
  public:
   Texture* FetchTexture(const string&);
   Texture* FetchWhitenedTexture(const string&);
   Texture* FetchTextTexture(const string&, int, Color, uint32_t = 0);
+  void     SetBitmapBasePath(const string& path) { bitmap_base_path_ = path; }
 
  private:
-  string                               base_path_;
+  string                               bitmap_base_path_;
   FontManager*                         font_manager_;
   std::unordered_map<string, Texture*> container_;
   Texture*                             dummy_texture_;

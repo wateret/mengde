@@ -7,9 +7,9 @@ namespace mengde {
 namespace gui {
 namespace foundation {
 
-TextureManager::TextureManager(Renderer* renderer, const string& scenario_path, const string& font_path)
-    : base_path_(scenario_path),
-      font_manager_(new FontManager(font_path)),
+TextureManager::TextureManager(Renderer* renderer, const string& bitmap_base_path, const string& font_base_path)
+    : bitmap_base_path_(bitmap_base_path),
+      font_manager_(new FontManager(font_base_path)),
       dummy_texture_(nullptr),
       renderer_(renderer) {
   // Create dummy texture : a big square fully filled white
@@ -28,9 +28,10 @@ TextureManager::~TextureManager() {
 }
 
 Texture* TextureManager::FetchTexture(const string& key) {
-  auto iter = container_.find(key);
+  static const Color color_key(247, 0, 255);  // XXX colorkey hardcoded
+  auto               iter = container_.find(key);
   if (iter == container_.end()) {
-    Texture* texture = new Texture(renderer_, base_path_ + "/" + key, Color(247, 0, 255));  // XXX colorkey hardcoded
+    Texture* texture = new Texture(renderer_, bitmap_base_path_ + "/" + key, color_key);
     if (texture->Loaded()) {
       container_[key] = texture;
       return texture;

@@ -24,6 +24,8 @@ Drawer::~Drawer() {
   delete renderer_;
 }
 
+void Drawer::SetBitmapBasePath(const string& path) { texture_manager_->SetBitmapBasePath(path); }
+
 void Drawer::Start() { renderer_->Clear(); }
 
 void Drawer::End() { renderer_->Present(); }

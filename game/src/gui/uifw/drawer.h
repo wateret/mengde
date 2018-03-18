@@ -28,11 +28,13 @@ class Drawer {
   Vec2D           GetWindowSize() { return window_size_; }
   TextureManager* GetTextureManager() { return texture_manager_; }
   Renderer*       GetRenderer() { return renderer_; }
-  void            Start();
-  void            End();
-  void            SetViewport(const Rect*);
-  void            ResetViewport();
-  void            SetOffset(Vec2D offset) { offset_ = offset; }
+  void            SetBitmapBasePath(const string& path);
+
+  void Start();
+  void End();
+  void SetViewport(const Rect*);
+  void ResetViewport();
+  void SetOffset(Vec2D offset) { offset_ = offset; }
 
   // Draw Functions
   void SetDrawColor(Color c);
