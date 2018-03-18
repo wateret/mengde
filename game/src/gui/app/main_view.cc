@@ -20,7 +20,7 @@ MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
   start_button->SetMouseButtonHandler([this, app](const foundation::MouseButtonEvent e) -> bool {
     if (e.IsLeftButtonUp()) {
       LOG_DEBUG("Start");
-      this->ShowScenarioSelectView();
+      this->SetScenarioSelectViewVisible(true);
     }
     return true;
   });
@@ -40,7 +40,7 @@ MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
   AddChild(scenario_select_view_);
 }
 
-void MainView::ShowScenarioSelectView() { scenario_select_view_->visible(true); }
+void MainView::SetScenarioSelectViewVisible(bool b) { scenario_select_view_->visible(b); }
 
 }  // namespace app
 }  // namespace gui

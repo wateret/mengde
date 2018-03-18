@@ -49,6 +49,7 @@ class FpsTimer {
 };
 
 class ScenarioSelectView;
+class MainView;
 
 class App {
  public:
@@ -80,7 +81,7 @@ class App {
   Vec2D           window_size_;
   Window*         window_;
   Drawer*         drawer_;
-  View*           main_view_;
+  MainView*       main_view_;
   View*           root_view_;
   View*           target_view_;
   core::Scenario* scenario_;

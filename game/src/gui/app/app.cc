@@ -165,6 +165,7 @@ void App::Render() {
 }
 
 void App::StartNewGame(const string& scenario_id) {
+  main_view_->SetScenarioSelectViewVisible(false);
   SetupScenario(scenario_id);
   target_view_ = root_view_;
 }
