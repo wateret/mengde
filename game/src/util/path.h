@@ -20,7 +20,6 @@ class Path {
   Path& operator/=(const string& rhs);
   Path& operator/=(const char* rhs);
 
- private:
   const boost::filesystem::path& path() const { return path_; }
 
  private:

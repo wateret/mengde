@@ -64,23 +64,12 @@ App::App(int width, int height, uint32_t max_frames_sec)
 
   Rect main_rect({0, 0}, window_size_);
   main_view_ = new MainView(&main_rect, this);
-
-  const string scenario_id = "example";
-
-  try {
-    scenario_ = new core::Scenario(scenario_id);
-  } catch (const core::ConfigLoadException& e) {
-    // TODO Show error message appropriately
-    LOG_ERROR("Scenario config load failure - %s", e.what());
-    UNREACHABLE("Scenario config load failure.");
-  }
-
-  window_    = new Window("Game", width, height);
-  drawer_    = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString(),
+  window_    = new Window("Game", window_size_.x, window_size_.y);
+  // FIXME hardcoded path "example"
+  drawer_ = new Drawer(window_, (GameEnv::GetInstance()->GetScenarioPath() / "example").ToString(),
                        GameEnv::GetInstance()->GetResourcePath().ToString());
-  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
-  //  target_view_ = main_view_;
-  target_view_ = root_view_;
+
+  target_view_ = main_view_;
 }
 
 App::~App() {
@@ -97,6 +86,18 @@ App::~App() {
     delete scenario_;
   }
   Misc::Quit();
+}
+
+void App::SetupScenario(const string& scenario_id) {
+  try {
+    scenario_ = new core::Scenario(scenario_id);
+  } catch (const core::ConfigLoadException& e) {
+    // TODO Show error message appropriately
+    LOG_FATAL("Scenario config load failure - %s", e.what());
+    UNREACHABLE("Scenario config load failure.");
+  }
+
+  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
 }
 
 Drawer* App::GetDrawer() { return drawer_; }
@@ -163,7 +164,10 @@ void App::Render() {
   drawer_->End();
 }
 
-void App::StartNewGame() { target_view_ = root_view_; }
+void App::StartNewGame(const string& scenario_id) {
+  SetupScenario(scenario_id);
+  target_view_ = root_view_;
+}
 
 void App::EndGame() {
   // FIXME We can't delete these objects now since this function is called from

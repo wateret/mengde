@@ -6,7 +6,9 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-ButtonView::ButtonView(const Rect* frame, const std::string& text)
+ButtonView::ButtonView(const Rect* frame, const std::string& text) : ButtonView(*frame, text) {}
+
+ButtonView::ButtonView(const Rect& frame, const std::string& text)
     : CallbackView(frame),
       checked_(false),
       tv_label_(nullptr),

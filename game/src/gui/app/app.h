@@ -48,6 +48,8 @@ class FpsTimer {
   float    fps_;
 };
 
+class ScenarioSelectView;
+
 class App {
  public:
   App(int, int, uint32_t /* max_frame_sec */ = 60);
@@ -65,7 +67,8 @@ class App {
   void     SetQuit(bool b) { quit_ = b; }
   void     EndGame();
 
-  void StartNewGame();
+  void StartNewGame(const string& scenario_id);
+  void SetupScenario(const string& scenario_id);
 
  private:
   void HandleEvents();

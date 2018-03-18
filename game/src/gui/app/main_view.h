@@ -10,12 +10,15 @@ namespace gui {
 namespace app {
 
 class App;
+class ScenarioSelectView;
 
 class MainView : public CompositeView {
  public:
   MainView(const Rect*, App*);
+  void ShowScenarioSelectView();
 
  private:
+  ScenarioSelectView* scenario_select_view_;
 };
 
 }  // namespace app

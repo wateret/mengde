@@ -15,6 +15,7 @@ class TextView;
 class ButtonView : public CallbackView {
  public:
   ButtonView(const Rect*, const std::string& = "");
+  ButtonView(const Rect&, const std::string& = "");
   bool checked() const { return checked_; }
   void check(bool);
 
