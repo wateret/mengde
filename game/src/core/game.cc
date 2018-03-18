@@ -20,7 +20,7 @@ namespace core {
 
 Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_path)
     : rc_(rc),
-      assets_(assets),
+      assets_(assets),  // FIXME Change this to clone the object as we need to rollback assets for some cases
       lua_(nullptr),
       lua_this_(this, "Game"),
       commander_(nullptr),

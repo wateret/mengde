@@ -20,11 +20,17 @@ class Scenario {
   Assets*                 GetAssets() { return assets_; }
   Game*                   GetGame() { return game_; }
 
- private:
-  Game* NewGame(const string&, const string&);
-  Game* LoadGame(const string&, const string&);
+ public:
+  void NextStage();
 
  private:
+  Game* NewGame(const string& stage_id);
+  Game* LoadGame(const string& save_file_path);
+
+ private:
+  string           scenario_id_;
+  vector<string>   stage_ids_;
+  uint32_t         stage_no_;
   ResourceManagers rc_;
   Assets*          assets_;
   Game*            game_;

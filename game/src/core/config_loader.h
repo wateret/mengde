@@ -43,7 +43,7 @@ class ConfigLoader {
   ConfigLoader(const Path&);
   ~ConfigLoader();
   const ResourceManagers& GetResources() const { return rc_; }
-  const string&           GetFirstStage() const { return stages_[0]; }
+  const vector<string>&   GetStages() const { return stages_; }
 
  private:
   void     ParseUnitClassesAndTerrains();

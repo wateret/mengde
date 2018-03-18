@@ -69,6 +69,7 @@ class Game : public IDeployHelper {
   uint32_t      GetNumOwnsAlive();
   bool          CheckStatus();
   Status        GetStatus() { return status_; }
+  Assets*       assets() { return assets_; }
 
   // IDeployHelper interfaces
   bool     SubmitDeploy() override;

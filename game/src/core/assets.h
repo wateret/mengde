@@ -14,6 +14,7 @@ class Equipment;
 class Money {
  public:
   Money() : amount_(0u) {}
+  Money(const Money&) = default;
   bool     Affordable(const Money& cost) const { return (amount_ >= cost.amount_); }
   void     Pay(const Money& cost);
   void     Gain(const Money& money);
@@ -29,6 +30,7 @@ struct Amount {
   uint32_t amount;
 
   Amount(T o, uint32_t a) : object(o), amount(a) {}
+  Amount(const Amount<T>&) = default;
   bool HasNone() { return amount == 0; }
 };
 
@@ -37,6 +39,8 @@ typedef Amount<const Equipment*> EquipmentWithAmount;
 class Assets {
  public:
   Assets();
+  // NOTE Default copy constructor does exactly what we want for now, but should be careful when members are added
+  Assets(const Assets&) = default;
   ~Assets();
 
   void                AddHero(Hero*);
