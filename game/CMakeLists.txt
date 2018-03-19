@@ -6,25 +6,24 @@ file(GLOB SOURCES src/*.cc
                   src/gui/*.cc
                   src/gui/app/*.cc
                   src/gui/foundation/*.cc
-                  src/gui/uifw/*.cc
-                  src/core/*.cc)
+                  src/gui/uifw/*.cc)
 
 file(GLOB HEADERS src/*.h
                   src/gui/*.h
                   src/gui/app/*.h
                   src/gui/foundation/*.h
-                  src/gui/uifw/*.h
-                  src/core/*.h)
+                  src/gui/uifw/*.h)
 
 include_directories(src)
 
 add_subdirectory(src/lua)
+add_subdirectory(src/core)
 add_subdirectory(src/util)
 
 add_executable(game ${SOURCES} ${HEADERS})
 
 # Project Libraries
-target_link_libraries(game lua util)
+target_link_libraries(game lua core util)
 
 # External Libraries
 target_link_libraries(game ${SDL2_LIBRARY})
