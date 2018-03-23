@@ -8,3 +8,5 @@ include_directories(.)
 add_library(lua SHARED ${SOURCES} ${HEADERS})
 
 target_link_libraries(lua ${LUA_LIBRARIES})
+
+install(TARGETS lua DESTINATION ${INSTALL_FOLDER})
