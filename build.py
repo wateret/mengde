@@ -8,6 +8,7 @@ import platform
 import multiprocessing
 import time
 import urllib2
+import shutil
 
 def wrap_gen(color):
     return lambda s: color + s + "\033[0m"
@@ -78,12 +79,17 @@ def main():
     system, node, release, version, machine, processor = platform.uname()
     cpu_count = multiprocessing.cpu_count()
 
+    # Set the install folder
+    install_folder = "mengde"
+
     print_header("Start CMake configuration")
     build_dir = "build/%s.%s.%s" % (system, machine, options.buildtype)
     check_run_cmd("mkdir", ["-p", build_dir])
     os.chdir(build_dir)
     check_run_cmd("cmake", ["-DCMAKE_BUILD_TYPE=" + options.buildtype,
-                            ("../" * (build_dir.count("/") + 1))])
+                            ("../" * (build_dir.count("/") + 1)),
+                            "-DCMAKE_INSTALL_PREFIX=./",
+                            "-DINSTALL_FOLDER=" + install_folder])
 
     # From here, support `Makefile` project only
     make_args = []
@@ -103,18 +109,27 @@ def main():
     print("Build Time is %d:%02d.%02d" % (elapsed_time // 60, elapsed_time % 60, (elapsed_time * 100) % 100))
 
     # Temporary works for res (Font)
-
-    os.chdir("game")
-
-    res_path = "res"
+    res_path = os.path.join("game", "res")
     if not path_exists(res_path):
         os.mkdir(res_path)
 
     font_url = "https://github.com/powerline/fonts/raw/master/LiberationMono/Literation%20Mono%20Powerline.ttf"
     font_filename = "Literation Mono Powerline.ttf"
-    os.chdir("res")
-    if not path_exists(font_filename):
-        download_file(font_url, font_filename)
+    font_filepath = os.path.join(res_path, font_filename)
+    if not path_exists(font_filepath):
+        download_file(font_url, font_filepath)
+
+    # Run install
+    check_run_cmd("make", ["install"])
+
+    # Copy font to install folder
+    res_ipath = os.path.join(install_folder, "res")
+    if not path_exists(res_ipath):
+        os.mkdir(res_ipath)
+
+    font_ifilepath = os.path.join(res_ipath, font_filename)
+    if not path_exists(font_ifilepath):
+        shutil.copyfile(font_filepath, font_ifilepath)
 
 if __name__ == "__main__":
     main()
