@@ -70,8 +70,8 @@ end
 
 function on_victory(game)
     game:push_cmd_speak(0, "So long, losers!")
-    game:push_cmd_move(0, {0, 9})
-    game:push_cmd_move(1, {0, 10})
+--    game:push_cmd_move(0, {0, 9})
+--    game:push_cmd_move(1, {0, 10})
 end
 
 

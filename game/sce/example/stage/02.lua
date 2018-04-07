@@ -32,12 +32,11 @@ gstage = {
             { position = {9, 2}, hero = "CaoCao" },
             { position = {9, 1}, hero = "ZhangLiao" },
             { position = {9, 9}, hero = "XunYu" },
-            { position = {5, 3}, hero = "DianWei" }
         },
         num_required_selectables = 0,
         selectables = {
             { position = {9, 4} },
---            { position = {5, 3} }
+            { position = {5, 3} }
         }
     },
     rewards = { -- NYI
@@ -50,12 +49,6 @@ gstage = {
 
 
 function on_deploy(game)
-    game:appoint_hero("CaoCao", 80)
-    game:appoint_hero("ZhangLiao", 4)
-    game:appoint_hero("DianWei", 25)
-    game:appoint_hero("ManChong", 20)
-    game:appoint_hero("XiahouDun", 23)
-    game:appoint_hero("XunYu", 33)
     game:obtain_equipment("short_sword", 10)
     game:obtain_equipment("heaven_sword", 1)
 end

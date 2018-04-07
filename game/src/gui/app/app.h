@@ -48,11 +48,13 @@ class FpsTimer {
   float    fps_;
 };
 
-class ScenarioSelectView;
 class MainView;
+class RootView;
 
 class App {
  public:
+  typedef function<void()> NextFrameCallback;
+
   App(int, int, uint32_t /* max_frame_sec */ = 60);
   ~App();
 
@@ -66,15 +68,19 @@ class App {
   uint32_t MsecToFrame(uint32_t ms) { return frame_config_.MsecToFrame(ms); }
   void     SetMagicListViewVisible(bool);
   void     SetQuit(bool b) { quit_ = b; }
-  void     EndGame();
+  void     EndStage();
 
-  void StartNewGame(const string& scenario_id);
+  void StartNewScenario(const string& scenario_id);
   void SetupScenario(const string& scenario_id);
+
+  void NextFrame(NextFrameCallback);
 
  private:
   void HandleEvents();
   void Update();
   void Render();
+
+  void RunCallbacks();
 
  private:
   EventFetcher    event_fetcher_;
@@ -82,9 +88,11 @@ class App {
   Window*         window_;
   Drawer*         drawer_;
   MainView*       main_view_;
-  View*           root_view_;
+  RootView*       root_view_;
   View*           target_view_;
   core::Scenario* scenario_;
+
+  queue<NextFrameCallback> frame_callbacks_;
 
   // fps
   const FrameConfig frame_config_;

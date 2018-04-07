@@ -132,8 +132,8 @@ void GameView::CenterCamera(Vec2D center) {
   camera_coords_ = coords.Bound({0, 0}, max_camera_coords_);
 }
 
-void GameView::EndGame() {
-  NextFrame([=]() { app_->EndGame(); });
+void GameView::EndStage() {
+  app_->NextFrame([=]() { app_->EndStage(); });
 }
 
 // private methods

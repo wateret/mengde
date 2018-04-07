@@ -36,15 +36,15 @@ Game* Scenario::LoadGame(const string& save_file_path) {
 void Scenario::NextStage() {
   // FIXME Currently the below condition is always false.
   //       Need to change Lua API `on_deploy(game)` to `on_deploy(assets)
-  ASSERT(assets_ != game_->assets());
+  // ASSERT(assets_ != game_->assets());
 
   // Update Assets
-  delete assets_;
+  // delete assets_;
   assets_ = game_->assets();
 
   // Advance to the next stage
   delete game_;
-  game_ = NewGame(stage_ids_[stage_no_++]);
+  game_ = NewGame(stage_ids_[++stage_no_]);
 }
 
 Scenario::~Scenario() {

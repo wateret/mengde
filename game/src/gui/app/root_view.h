@@ -45,7 +45,6 @@ class RootView : public View {
   void RaiseMouseOverEvent();
 
  private:
-  core::Game* game_;
   App*        app_;
 
   GameView* game_view_;

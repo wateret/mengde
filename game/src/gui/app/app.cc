@@ -147,7 +147,10 @@ void App::HandleEvents() {
   }
 }
 
-void App::Update() { target_view_->Update(); }
+void App::Update() {
+  RunCallbacks();
+  target_view_->Update();
+}
 
 void App::Render() {
   drawer_->Start();
@@ -164,20 +167,36 @@ void App::Render() {
   drawer_->End();
 }
 
-void App::StartNewGame(const string& scenario_id) {
+void App::StartNewScenario(const string& scenario_id) {
   main_view_->SetScenarioSelectViewVisible(false);
   SetupScenario(scenario_id);
   target_view_ = root_view_;
 }
 
-void App::EndGame() {
+void App::EndStage() {
+  delete root_view_;
+  scenario_->NextStage();
+  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
+  target_view_ = root_view_;
+  LOG_DEBUG("root_view_ changed.");
+
+  /* For the case of end of the scenario
   // FIXME We can't delete these objects now since this function is called from
   //       these object methods.
   //  delete root_view_;
-  //  delete game_;
 
   root_view_   = nullptr;
   target_view_ = main_view_;
+  */
+}
+
+void App::NextFrame(NextFrameCallback cb) { frame_callbacks_.push(cb); }
+
+void App::RunCallbacks() {
+  while (!frame_callbacks_.empty()) {
+    frame_callbacks_.front()();
+    frame_callbacks_.pop();
+  }
 }
 
 }  // namespace app

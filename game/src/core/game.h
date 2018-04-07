@@ -101,6 +101,8 @@ class Game : public IDeployHelper {
   bool      TryBasicAttack(Unit*, Unit*);
   bool      TryMagic(Unit*, Unit*);
 
+  void RunCallbacks();
+
  private:
   ResourceManagers  rc_;
   Assets*           assets_;

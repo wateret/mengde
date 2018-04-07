@@ -82,7 +82,7 @@ class GameView : public View {
 
  public:
   Vec2D GetMouseCoords() { return mouse_coords_; }
-  void  EndGame();
+  void  EndStage();
   void  NextFrame(NextFrameCallback);
   void  SetUIViews(UIViews* ui_views) { ui_views_ = ui_views; }
   void  RaiseMouseOverEvent();
