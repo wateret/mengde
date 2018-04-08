@@ -176,7 +176,7 @@ void App::StartNewScenario(const string& scenario_id) {
 void App::EndStage() {
   delete root_view_;
   scenario_->NextStage();
-  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
+  root_view_   = new RootView(Rect({0, 0}, window_size_), scenario_, this);
   target_view_ = root_view_;
   LOG_DEBUG("root_view_ changed.");
 

@@ -45,7 +45,7 @@ class RootView : public View {
   void RaiseMouseOverEvent();
 
  private:
-  App*        app_;
+  App* app_;
 
   GameView* game_view_;
   UIViews*  ui_views_;

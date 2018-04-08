@@ -69,7 +69,7 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
   for (auto hero : hero_list) {
     HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
     model_view->SetMouseButtonHandler(
-        [this, model_view, hero, deploy_helper, director](const foundation::MouseButtonEvent e) -> bool {
+        [model_view, hero, deploy_helper, director](const foundation::MouseButtonEvent e) -> bool {
           if (e.IsLeftButtonUp()) {
             int deploy_no = 0;
             if (model_view->IsSelected()) {
