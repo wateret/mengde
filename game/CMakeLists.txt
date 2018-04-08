@@ -9,9 +9,9 @@ if(NOT INSTALL_FOLDER)
   set(INSTALL_FOLDER, "mengde")
 endif()
 
-file(GLOB SOURCES src/*.cc)
+file(GLOB SOURCES src/main.cc)
 
-file(GLOB HEADERS src/*.h)
+#file(GLOB HEADERS src/*.h)
 
 include_directories(src)
 
