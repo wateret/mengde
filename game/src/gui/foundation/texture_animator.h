@@ -1,5 +1,5 @@
-#ifndef TEXTURE_ANIMATOR_H_
-#define TEXTURE_ANIMATOR_H_
+#ifndef MENGDE_GUI_FOUNDATION_TEXTURE_ANIMATOR_H_
+#define MENGDE_GUI_FOUNDATION_TEXTURE_ANIMATOR_H_
 
 #include "rect.h"
 #include "util/common.h"
@@ -31,4 +31,4 @@ class TextureAnimator {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // TEXTURE_ANIMATOR_H_
+#endif  // MENGDE_GUI_FOUNDATION_TEXTURE_ANIMATOR_H_

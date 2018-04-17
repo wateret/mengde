@@ -1,5 +1,5 @@
-#ifndef STAT_H_
-#define STAT_H_
+#ifndef MENGDE_CORE_STAT_H_
+#define MENGDE_CORE_STAT_H_
 
 #include <stdint.h>
 
@@ -102,4 +102,4 @@ struct Level {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // STAT_H_
+#endif  // MENGDE_CORE_STAT_H_

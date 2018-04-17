@@ -1,5 +1,5 @@
-#ifndef FORMULAE_H_
-#define FORMULAE_H_
+#ifndef MENGDE_CORE_FORMULAE_H_
+#define MENGDE_CORE_FORMULAE_H_
 
 namespace mengde {
 namespace core {
@@ -30,4 +30,4 @@ class Formulae {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // FORMULAE_H_
+#endif  // MENGDE_CORE_FORMULAE_H_

@@ -1,5 +1,5 @@
-#ifndef COMPOSITE_VIEW_H_
-#define COMPOSITE_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_COMPOSITE_VIEW_H_
+#define MENGDE_GUI_UIFW_COMPOSITE_VIEW_H_
 
 #include <vector>
 #include "view.h"
@@ -40,4 +40,4 @@ class CompositeView : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // COMPOSITE_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_COMPOSITE_VIEW_H_

@@ -1,5 +1,5 @@
-#ifndef CONFIG_LOADER_H_
-#define CONFIG_LOADER_H_
+#ifndef MENGDE_CORE_CONFIG_LOADER_H_
+#define MENGDE_CORE_CONFIG_LOADER_H_
 
 #include "resource_manager.h"
 #include "util/common.h"
@@ -62,4 +62,4 @@ class ConfigLoader {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // CONFIG_LOADER_H_
+#endif  // MENGDE_CORE_CONFIG_LOADER_H_

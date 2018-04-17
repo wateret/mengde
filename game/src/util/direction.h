@@ -1,5 +1,5 @@
-#ifndef DIRECTION_H_
-#define DIRECTION_H_
+#ifndef UTIL_DIRECTION_H_
+#define UTIL_DIRECTION_H_
 
 #include "vec2d.h"
 
@@ -10,4 +10,4 @@ Direction Vec2DRelativePosition(Vec2D, Vec2D);
 Direction OppositeDirection(Direction);
 Vec2D     GenerateVec2DOffset(Direction, int);
 
-#endif  // DIRECTION_H_
+#endif  // UTIL_DIRECTION_H_

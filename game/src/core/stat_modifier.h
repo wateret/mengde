@@ -1,5 +1,5 @@
-#ifndef STAT_MODIFIER_H_
-#define STAT_MODIFIER_H_
+#ifndef MENGDE_CORE_STAT_MODIFIER_H_
+#define MENGDE_CORE_STAT_MODIFIER_H_
 
 #include <limits>
 #include <string>
@@ -33,4 +33,4 @@ class StatModifier {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // STAT_MODIFIER_H_
+#endif  // MENGDE_CORE_STAT_MODIFIER_H_

@@ -1,5 +1,5 @@
-#ifndef UNIT_CLASS_H_
-#define UNIT_CLASS_H_
+#ifndef MENGDE_CORE_UNIT_CLASS_H_
+#define MENGDE_CORE_UNIT_CLASS_H_
 
 #include "attack_range.h"
 #include "stat.h"
@@ -41,4 +41,4 @@ class UnitClass {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // UNIT_CLASS_H_
+#endif  // MENGDE_CORE_UNIT_CLASS_H_

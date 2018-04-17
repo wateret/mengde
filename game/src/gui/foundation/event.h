@@ -1,5 +1,5 @@
-#ifndef EVENT_H_
-#define EVENT_H_
+#ifndef MENGDE_GUI_FOUNDATION_EVENT_H_
+#define MENGDE_GUI_FOUNDATION_EVENT_H_
 
 #include "events.h"
 
@@ -35,4 +35,4 @@ union Event {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // EVENT_H_
+#endif  // MENGDE_GUI_FOUNDATION_EVENT_H_

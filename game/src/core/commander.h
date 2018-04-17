@@ -1,5 +1,5 @@
-#ifndef COMMANDER_H_
-#define COMMANDER_H_
+#ifndef MENGDE_CORE_COMMANDER_H_
+#define MENGDE_CORE_COMMANDER_H_
 
 #include "util/common.h"
 
@@ -28,4 +28,4 @@ class Commander {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // COMMANDER_H_
+#endif  // MENGDE_CORE_COMMANDER_H_

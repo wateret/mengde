@@ -1,5 +1,5 @@
-#ifndef UNIT_VIEW_H_
-#define UNIT_VIEW_H_
+#ifndef MENGDE_GUI_APP_UNIT_VIEW_H_
+#define MENGDE_GUI_APP_UNIT_VIEW_H_
 
 #include "gui/uifw/tab_view.h"
 
@@ -36,4 +36,4 @@ class UnitView : public TabView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // UNIT_VIEW_H_
+#endif  // MENGDE_GUI_APP_UNIT_VIEW_H_

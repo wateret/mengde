@@ -1,5 +1,5 @@
-#ifndef IMAGE_VIEW_H_
-#define IMAGE_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_IMAGE_VIEW_H_
+#define MENGDE_GUI_UIFW_IMAGE_VIEW_H_
 
 #include <string>
 #include "util/common.h"
@@ -35,4 +35,4 @@ class ImageView : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // IMAGE_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_IMAGE_VIEW_H_

@@ -1,5 +1,5 @@
-#ifndef GUI_APP_SCENARIO_SELECT_VIEW_H_
-#define GUI_APP_SCENARIO_SELECT_VIEW_H_
+#ifndef MENGDE_GUI_APP_SCENARIO_SELECT_VIEW_H_
+#define MENGDE_GUI_APP_SCENARIO_SELECT_VIEW_H_
 
 #include "common.h"
 #include "gui/uifw/vertical_list_view.h"
@@ -21,4 +21,4 @@ class ScenarioSelectView : public VerticalListView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // GUI_APP_SCENARIO_SELECT_VIEW_H_
+#endif  // MENGDE_GUI_APP_SCENARIO_SELECT_VIEW_H_

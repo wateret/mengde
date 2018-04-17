@@ -1,5 +1,5 @@
-#ifndef VIEW_DECORATOR_H_
-#define VIEW_DECORATOR_H_
+#ifndef MENGDE_GUI_UIFW_VIEW_DECORATOR_H_
+#define MENGDE_GUI_UIFW_VIEW_DECORATOR_H_
 
 #include "view.h"
 
@@ -28,4 +28,4 @@ class ViewDecorator : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // VIEW_DECORATOR_H_
+#endif  // MENGDE_GUI_UIFW_VIEW_DECORATOR_H_

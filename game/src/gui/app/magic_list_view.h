@@ -1,5 +1,5 @@
-#ifndef MAGIC_LIST_VIEW_H_
-#define MAGIC_LIST_VIEW_H_
+#ifndef MENGDE_GUI_APP_MAGIC_LIST_VIEW_H_
+#define MENGDE_GUI_APP_MAGIC_LIST_VIEW_H_
 
 #include "gui/uifw/composite_view.h"
 #include "util/common.h"
@@ -52,4 +52,4 @@ class MagicListView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // MAGIC_LIST_VIEW_H_
+#endif  // MENGDE_GUI_APP_MAGIC_LIST_VIEW_H_

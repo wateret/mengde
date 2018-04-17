@@ -1,5 +1,5 @@
-#ifndef COMMAND_H_
-#define COMMAND_H_
+#ifndef MENGDE_CORE_COMMAND_H_
+#define MENGDE_CORE_COMMAND_H_
 
 #include "unit.h"
 #include "util/common.h"
@@ -302,4 +302,4 @@ class CmdRestoreHp : public CmdUnit {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // COMMAND_H_
+#endif  // MENGDE_CORE_COMMAND_H_

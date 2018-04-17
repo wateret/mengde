@@ -1,5 +1,5 @@
-#ifndef I_VIEW_H_
-#define I_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_I_VIEW_H_
+#define MENGDE_GUI_UIFW_I_VIEW_H_
 
 #include "gui/foundation/mouse_button_event.h"
 #include "gui/foundation/mouse_motion_event.h"
@@ -29,4 +29,4 @@ class IView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // I_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_I_VIEW_H_

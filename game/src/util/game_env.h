@@ -1,5 +1,5 @@
-#ifndef GAME_ENV_H_
-#define GAME_ENV_H_
+#ifndef UTIL_GAME_ENV_H_
+#define UTIL_GAME_ENV_H_
 
 #include "path.h"
 
@@ -19,4 +19,4 @@ class GameEnv {
   Path scenario_path_;
 };
 
-#endif  // GAME_ENV_H_
+#endif  // UTIL_GAME_ENV_H_

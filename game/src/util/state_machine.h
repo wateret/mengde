@@ -1,5 +1,5 @@
-#ifndef STATE_MACHINE_H_
-#define STATE_MACHINE_H_
+#ifndef UTIL_STATE_MACHINE_H_
+#define UTIL_STATE_MACHINE_H_
 
 #include <stack>
 
@@ -101,4 +101,4 @@ void StateMachine<T>::PopState() {
   }
 }
 
-#endif  // STATE_MACHINE_H_
+#endif  // UTIL_STATE_MACHINE_H_

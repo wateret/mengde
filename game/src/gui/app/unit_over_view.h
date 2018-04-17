@@ -1,5 +1,5 @@
-#ifndef UNIT_OVER_VIEW_H_
-#define UNIT_OVER_VIEW_H_
+#ifndef MENGDE_GUI_APP_UNIT_OVER_VIEW_H_
+#define MENGDE_GUI_APP_UNIT_OVER_VIEW_H_
 
 #include "gui/uifw/composite_view.h"
 
@@ -44,4 +44,4 @@ class UnitOverView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // UNIT_OVER_VIEW_H_
+#endif  // MENGDE_GUI_APP_UNIT_OVER_VIEW_H_

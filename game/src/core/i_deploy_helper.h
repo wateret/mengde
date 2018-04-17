@@ -1,5 +1,5 @@
-#ifndef I_DEPLOY_HELPER_H_
-#define I_DEPLOY_HELPER_H_
+#ifndef MENGDE_CORE_I_DEPLOY_HELPER_H_
+#define MENGDE_CORE_I_DEPLOY_HELPER_H_
 
 #include "util/common.h"
 
@@ -20,4 +20,4 @@ class IDeployHelper {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // I_DEPLOY_HELPER_H_
+#endif  // MENGDE_CORE_I_DEPLOY_HELPER_H_

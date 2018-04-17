@@ -1,5 +1,5 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef MENGDE_GUI_FOUNDATION_COLOR_H
+#define MENGDE_GUI_FOUNDATION_COLOR_H
 
 #include <SDL.h>
 #include <stdint.h>
@@ -52,4 +52,4 @@ class ColorGen {
 
 #define COLOR ColorGen::GetInstance()->Generate
 
-#endif
+#endif // MENGDE_GUI_FOUNDATION_COLOR_H_

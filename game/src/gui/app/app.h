@@ -1,5 +1,5 @@
-#ifndef WINDOW_VIEW_H_
-#define WINDOW_VIEW_H_
+#ifndef MENGDE_GUI_APP_APP_H_
+#define MENGDE_GUI_APP_APP_H_
 
 #include <functional>
 #include <vector>
@@ -105,4 +105,4 @@ class App {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_APP_APP_H_

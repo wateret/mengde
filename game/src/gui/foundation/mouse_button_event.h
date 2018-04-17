@@ -1,5 +1,5 @@
-#ifndef MOUSE_BUTTON_EVENT_H_
-#define MOUSE_BUTTON_EVENT_H_
+#ifndef MENGDE_GUI_FOUNDATION_MOUSE_BUTTON_EVENT_H_
+#define MENGDE_GUI_FOUNDATION_MOUSE_BUTTON_EVENT_H_
 
 #include "util/common.h"
 
@@ -36,4 +36,4 @@ class MouseButtonEvent {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // MOUSE_BUTTON_EVENT_H_
+#endif  // MENGDE_GUI_FOUNDATION_MOUSE_BUTTON_EVENT_H_

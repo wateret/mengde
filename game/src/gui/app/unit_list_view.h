@@ -1,5 +1,5 @@
-#ifndef UNIT_LIST_VIEW_H_
-#define UNIT_LIST_VIEW_H_
+#ifndef MENGDE_GUI_APP_UNIT_LIST_VIEW_H_
+#define MENGDE_GUI_APP_UNIT_LIST_VIEW_H_
 
 #include "gui/uifw/composite_view.h"
 
@@ -40,4 +40,4 @@ class UnitListView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // UNIT_LIST_VIEW_H_
+#endif  // MENGDE_GUI_APP_UNIT_LIST_VIEW_H_

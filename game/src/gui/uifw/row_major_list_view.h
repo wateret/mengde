@@ -1,5 +1,5 @@
-#ifndef ROW_MAJOR_LIST_VIEW_H_
-#define ROW_MAJOR_LIST_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_ROW_MAJOR_LIST_VIEW_H_
+#define MENGDE_GUI_UIFW_ROW_MAJOR_LIST_VIEW_H_
 
 #include "composite_view.h"
 
@@ -23,4 +23,4 @@ class RowMajorListView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // ROW_MAJOR_LIST_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_ROW_MAJOR_LIST_VIEW_H_

@@ -1,5 +1,5 @@
-#ifndef HERO_H_
-#define HERO_H_
+#ifndef MENGDE_CORE_HERO_H_
+#define MENGDE_CORE_HERO_H_
 
 #include "hero_template.h"
 #include "i_equipper.h"
@@ -61,4 +61,4 @@ class Hero : public IUnitBase, IEquipper {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // HERO_H_
+#endif  // MENGDE_CORE_HERO_H_

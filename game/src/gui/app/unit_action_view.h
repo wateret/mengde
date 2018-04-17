@@ -1,5 +1,5 @@
-#ifndef UNIT_ACTION_VIEW_H_
-#define UNIT_ACTION_VIEW_H_
+#ifndef MENGDE_GUI_APP_UNIT_ACTION_VIEW_H_
+#define MENGDE_GUI_APP_UNIT_ACTION_VIEW_H_
 
 #include "gui/uifw/vertical_list_view.h"
 
@@ -36,4 +36,4 @@ class UnitActionView : public VerticalListView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // UNIT_ACTION_VIEW_H_
+#endif  // MENGDE_GUI_APP_UNIT_ACTION_VIEW_H_

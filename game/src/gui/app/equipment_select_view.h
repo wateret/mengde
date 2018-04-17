@@ -1,5 +1,5 @@
-#ifndef EQUIPMENT_SELECT_VIEW_H_
-#define EQUIPMENT_SELECT_VIEW_H_
+#ifndef MENGDE_GUI_APP_EQUIPMENT_SELECT_VIEW_H_
+#define MENGDE_GUI_APP_EQUIPMENT_SELECT_VIEW_H_
 
 #include "core/assets.h"  // XXX temporary include for EquipmentWithAmount
 #include "gui/uifw/callback_view.h"
@@ -41,4 +41,4 @@ class EquipmentSelectView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // EQUIPMENT_SELECT_VIEW_H_
+#endif  // MENGDE_GUI_APP_EQUIPMENT_SELECT_VIEW_H_

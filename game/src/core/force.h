@@ -1,5 +1,5 @@
-#ifndef FORCE_H_
-#define FORCE_H_
+#ifndef MENGDE_CORE_FORCE_H_
+#define MENGDE_CORE_FORCE_H_
 
 namespace mengde {
 namespace core {
@@ -17,4 +17,4 @@ enum class Force {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // FORCE_H_
+#endif  // MENGDE_CORE_FORCE_H_

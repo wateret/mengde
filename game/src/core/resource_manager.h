@@ -1,5 +1,5 @@
-#ifndef RESOURCE_MANAGER_H_
-#define RESOURCE_MANAGER_H_
+#ifndef MENGDE_CORE_RESOURCE_MANAGER_H_
+#define MENGDE_CORE_RESOURCE_MANAGER_H_
 
 #include <unordered_map>
 
@@ -79,4 +79,4 @@ struct ResourceManagers {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // RESOURCE_MANAGER_H_
+#endif  // MENGDE_CORE_RESOURCE_MANAGER_H_

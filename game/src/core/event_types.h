@@ -1,5 +1,5 @@
-#ifndef EVENT_TYPES_H_
-#define EVENT_TYPES_H_
+#ifndef MENGDE_CORE_EVENT_EVENT_TYPES_H_
+#define MENGDE_CORE_EVENT_EVENT_TYPES_H_
 
 namespace mengde {
 namespace core {
@@ -33,4 +33,4 @@ enum class OnCmdEvent {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // EVENT_TYPES_H_
+#endif  // MENGDE_CORE_EVENT_EVENT_TYPES_H_

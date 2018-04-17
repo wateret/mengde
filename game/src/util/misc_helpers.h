@@ -1,5 +1,5 @@
-#ifndef MISC_HELPERS_H_
-#define MISC_HELPERS_H_
+#ifndef UTIL_MISC_HELPERS_H_
+#define UTIL_MISC_HELPERS_H_
 
 #include <string>
 #include <vector>
@@ -14,4 +14,4 @@ int GenRandom(int, int);
 
 vector<string> SplitString(const string&, char);
 
-#endif  // MISC_HELPERS_H_
+#endif  // UTIL_MISC_HELPERS_H_

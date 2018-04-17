@@ -1,5 +1,5 @@
-#ifndef CORE_LUA_API_H_
-#define CORE_LUA_API_H_
+#ifndef MENGDE_CORE_LUA_API_H_
+#define MENGDE_CORE_LUA_API_H_
 
 // C API for Lua binding
 
@@ -19,4 +19,4 @@ extern "C" {
 #undef MACRO_LUA_GAME
 }
 
-#endif  // CORE_LUA_API_H_
+#endif  // MENGDE_CORE_LUA_API_H_

@@ -1,5 +1,5 @@
-#ifndef GAME_H_
-#define GAME_H_
+#ifndef MENGDE_CORE_GAME_H_
+#define MENGDE_CORE_GAME_H_
 
 #include <functional>
 #include <string>
@@ -119,4 +119,4 @@ class Game : public IDeployHelper {
 }  // namespace core
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_CORE_GAME_H_

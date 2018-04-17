@@ -1,5 +1,5 @@
-#ifndef TEXTURE_MANAGER_H_
-#define TEXTURE_MANAGER_H_
+#ifndef MENGDE_GUI_FOUNDATION_TEXTURE_MANAGER_H_
+#define MENGDE_GUI_FOUNDATION_TEXTURE_MANAGER_H_
 
 #include <string>
 #include <unordered_map>
@@ -40,4 +40,4 @@ class TextureManager {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // TEXTURE_MANAGER_H_
+#endif  // MENGDE_GUI_FOUNDATION_TEXTURE_MANAGER_H_

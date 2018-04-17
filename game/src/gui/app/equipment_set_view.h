@@ -1,5 +1,5 @@
-#ifndef EQUIPMENT_SET_VIEW_H_
-#define EQUIPMENT_SET_VIEW_H_
+#ifndef MENGDE_GUI_APP_EQUIPMENT_SET_VIEW_H_
+#define MENGDE_GUI_APP_EQUIPMENT_SET_VIEW_H_
 
 #include "gui/uifw/callback_view.h"
 #include "gui/uifw/composite_view.h"
@@ -56,4 +56,4 @@ class EquipmentSetView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // EQUIPMENT_SET_VIEW_H_
+#endif  // MENGDE_GUI_APP_EQUIPMENT_SET_VIEW_H_

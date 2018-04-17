@@ -1,5 +1,5 @@
-#ifndef TURN_H_
-#define TURN_H_
+#ifndef MENGDE_CORE_TURN_H_
+#define MENGDE_CORE_TURN_H_
 
 #include "unit.h"
 
@@ -23,4 +23,4 @@ class Turn {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // TURN_H_
+#endif  // MENGDE_CORE_TURN_H_

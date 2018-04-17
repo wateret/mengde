@@ -1,5 +1,5 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#ifndef MENGDE_GUI_FOUNDATION_TEXTURE_H_
+#define MENGDE_GUI_FOUNDATION_TEXTURE_H_
 
 #include <SDL.h>
 #include <SDL_ttf.h>
@@ -50,4 +50,4 @@ class Texture {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // TEXTURE_H
+#endif  // MENGDE_GUI_FOUNDATION_TEXTURE_H_

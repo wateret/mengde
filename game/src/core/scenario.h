@@ -1,5 +1,5 @@
-#ifndef SCENARIO_H_
-#define SCENARIO_H_
+#ifndef MENGDE_CORE_SCENARIO_H_
+#define MENGDE_CORE_SCENARIO_H_
 
 #include "resource_manager.h"
 #include "util/common.h"
@@ -39,4 +39,4 @@ class Scenario {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // SCENARIO_H_
+#endif  // MENGDE_CORE_SCENARIO_H_

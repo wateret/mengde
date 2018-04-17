@@ -1,5 +1,5 @@
-#ifndef GUI_APP_COMMON_H_
-#define GUI_APP_COMMON_H_
+#ifndef MENGDE_GUI_UIFW_COMMON_H_
+#define MENGDE_GUI_UIFW_COMMON_H_
 
 #include "gui/uifw/common.h"
 
@@ -27,4 +27,4 @@ class View;
 using namespace mengde::gui::foundation;
 using namespace mengde::gui::uifw;
 
-#endif  // GUI_APP_COMMON_H_
+#endif  // MENGDE_GUI_UIFW_COMMON_H_

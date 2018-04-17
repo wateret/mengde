@@ -1,5 +1,5 @@
-#ifndef EQUIPMENT_H_
-#define EQUIPMENT_H_
+#ifndef MENGDE_CORE_EQUIPMENT_H_
+#define MENGDE_CORE_EQUIPMENT_H_
 
 #include <string>
 
@@ -43,4 +43,4 @@ class Equipment : public IEvent {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // EQUIPMENT_H_
+#endif  // MENGDE_CORE_EQUIPMENT_H_

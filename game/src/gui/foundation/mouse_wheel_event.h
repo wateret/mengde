@@ -1,5 +1,5 @@
-#ifndef MOUSE_WHEEL_EVENT_H_
-#define MOUSE_WHEEL_EVENT_H_
+#ifndef MENGDE_GUI_FOUNDATION_MOUSE_WHEEL_EVENT_H_
+#define MENGDE_GUI_FOUNDATION_MOUSE_WHEEL_EVENT_H_
 
 #include "util/common.h"
 
@@ -32,4 +32,4 @@ class MouseWheelEvent {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // MOUSE_WHEEL_EVENT_H_
+#endif  // MENGDE_GUI_FOUNDATION_MOUSE_WHEEL_EVENT_H_

@@ -1,5 +1,5 @@
-#ifndef STATE_H_
-#define STATE_H_
+#ifndef UTIL_STATE_H_
+#define UTIL_STATE_H_
 
 #include <string>
 
@@ -13,4 +13,4 @@ class State {
 #endif
 };
 
-#endif
+#endif // UTIL_STATE_H_

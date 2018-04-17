@@ -1,5 +1,5 @@
-#ifndef SCROLL_VIEW_H_
-#define SCROLL_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_SCROLL_VIEW_H_
+#define MENGDE_GUI_UIFW_SCROLL_VIEW_H_
 
 #include "view_decorator.h"
 
@@ -29,4 +29,4 @@ class ScrollView : public ViewDecorator {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // SCROLL_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_SCROLL_VIEW_H_

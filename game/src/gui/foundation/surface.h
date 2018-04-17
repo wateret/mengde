@@ -1,5 +1,5 @@
-#ifndef SURFACE_H
-#define SURFACE_H
+#ifndef MENGDE_GUI_FOUNDATION_SURFACE_H_
+#define MENGDE_GUI_FOUNDATION_SURFACE_H_
 
 #include <SDL.h>
 
@@ -21,4 +21,4 @@ class Surface {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_FOUNDATION_SURFACE_H_

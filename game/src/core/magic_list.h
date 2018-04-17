@@ -1,5 +1,5 @@
-#ifndef MAGIC_LIST_H_
-#define MAGIC_LIST_H_
+#ifndef MENGDE_CORE_MAGIC_LIST_H_
+#define MENGDE_CORE_MAGIC_LIST_H_
 
 #include "resource_manager.h"
 #include "util/common.h"
@@ -26,4 +26,4 @@ class MagicList {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // MAGIC_LIST_H_
+#endif  // MENGDE_CORE_MAGIC_LIST_H_

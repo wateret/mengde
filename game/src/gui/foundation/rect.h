@@ -1,5 +1,5 @@
-#ifndef RECT_H
-#define RECT_H
+#ifndef MENGDE_GUI_FOUNDATION_RECT_H_
+#define MENGDE_GUI_FOUNDATION_RECT_H_
 
 #include <SDL.h>
 #include "util/common.h"
@@ -52,4 +52,4 @@ class Rect {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_FOUNDATION_RECT_H_

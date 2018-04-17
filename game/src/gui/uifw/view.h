@@ -1,5 +1,5 @@
-#ifndef VIEW_H_
-#define VIEW_H_
+#ifndef MENGDE_GUI_UIFW_VIEW_H_
+#define MENGDE_GUI_UIFW_VIEW_H_
 
 #include "gui/foundation/color.h"
 #include "gui/foundation/rect.h"
@@ -67,4 +67,4 @@ class View : public IView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_UIFW_VIEW_H_

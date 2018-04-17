@@ -1,5 +1,5 @@
-#ifndef EQUIPMENT_SET_H_
-#define EQUIPMENT_SET_H_
+#ifndef MENGDE_CORE_EQUIPMENT_SET_H_
+#define MENGDE_CORE_EQUIPMENT_SET_H_
 
 #include "equipment_slot.h"
 #include "i_event.h"
@@ -40,4 +40,4 @@ class EquipmentSet : public IEvent {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // EQUIPMENT_SET_H_
+#endif  // MENGDE_CORE_EQUIPMENT_SET_H_

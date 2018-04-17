@@ -1,5 +1,5 @@
-#ifndef MAIN_VIEW_H_
-#define MAIN_VIEW_H_
+#ifndef MENGDE_GUI_APP_MAIN_VIEW_H_
+#define MENGDE_GUI_APP_MAIN_VIEW_H_
 
 #include "gui/uifw/composite_view.h"
 
@@ -25,4 +25,4 @@ class MainView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // MAIN_VIEW_H_
+#endif  // MENGDE_GUI_APP_MAIN_VIEW_H_

@@ -1,5 +1,5 @@
-#ifndef EVENT_EFFECT_LIST_H_
-#define EVENT_EFFECT_LIST_H_
+#ifndef MENGDE_CORE_EVENT_EFFECT_LIST_H_
+#define MENGDE_CORE_EVENT_EFFECT_LIST_H_
 
 #include <vector>
 
@@ -29,4 +29,4 @@ class EventEffectList : public IEvent {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // EVENT_EFFECT_LIST_H_
+#endif  // MENGDE_CORE_EVENT_EFFECT_LIST_H_

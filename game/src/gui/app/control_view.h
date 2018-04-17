@@ -1,5 +1,5 @@
-#ifndef CONTROL_VIEW_H_
-#define CONTROL_VIEW_H_
+#ifndef MENGDE_GUI_APP_CONTROL_VIEW_H_
+#define MENGDE_GUI_APP_CONTROL_VIEW_H_
 
 #include "gui/uifw/composite_view.h"
 
@@ -33,4 +33,4 @@ class ControlView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // CONTROL_VIEW_H_
+#endif  // MENGDE_GUI_APP_CONTROL_VIEW_H_
