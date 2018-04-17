@@ -1,5 +1,5 @@
-#ifndef VEC2D_H_
-#define VEC2D_H_
+#ifndef UTIL_VEC2D_H_
+#define UTIL_VEC2D_H_
 
 struct Vec2D {
   int x, y;
@@ -46,4 +46,4 @@ struct Vec2D {
   bool operator>=(const Vec2D o) const { return x >= o.x && y >= o.y; }
 };
 
-#endif  // Vec2D_H_
+#endif  // UTIL_Vec2D_H_

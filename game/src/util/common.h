@@ -1,5 +1,5 @@
-#ifndef COMMON_H_
-#define COMMON_H_
+#ifndef UTIL_COMMON_H_
+#define UTIL_COMMON_H_
 
 // Remove this after changing all NULL to nullptr
 #ifndef NULL
@@ -38,4 +38,4 @@ using std::vector;
 #include "misc_helpers.h"
 #include "vec2d.h"
 
-#endif  // COMMON_H_
+#endif  // UTIL_COMMON_H_

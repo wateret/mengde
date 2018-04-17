@@ -1,5 +1,5 @@
-#ifndef ASSERT_HELPER_H_
-#define ASSERT_HELPER_H_
+#ifndef UTIL_ASSERT_HELPER_H_
+#define UTIL_ASSERT_HELPER_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,4 +74,4 @@
 
 #endif  // !DEBUG
 
-#endif // ASSERT_HELPER_H_
+#endif // UTIL_ASSERT_HELPER_H_

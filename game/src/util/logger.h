@@ -1,5 +1,5 @@
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#ifndef UTIL_LOGGER_H_
+#define UTIL_LOGGER_H_
 
 class Logger {
  public:
@@ -49,4 +49,4 @@ class Logger {
 #define LOG_FATAL(...) \
   Logger::GetInstance()->Log(Logger::LogLevel::kLogFatal, "", __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__)
 
-#endif  // LOGGER_H_
+#endif  // UTIL_LOGGER_H_

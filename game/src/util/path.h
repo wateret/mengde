@@ -1,5 +1,5 @@
-#ifndef PATH_H_
-#define PATH_H_
+#ifndef UTIL_PATH_H_
+#define UTIL_PATH_H_
 
 #include <boost/filesystem.hpp>
 
@@ -26,4 +26,4 @@ class Path {
   boost::filesystem::path path_;
 };
 
-#endif  // PATH_H_
+#endif  // UTIL_PATH_H_
