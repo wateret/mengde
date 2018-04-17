@@ -1,5 +1,5 @@
-#ifndef DEPLOYER_H_
-#define DEPLOYER_H_
+#ifndef MENGDE_CORE_DEPLOYER_H_
+#define MENGDE_CORE_DEPLOYER_H_
 
 #include <set>
 #include <unordered_set>
@@ -84,4 +84,4 @@ class Deployer {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // DEPLOYER_H_
+#endif  // MENGDE_CORE_DEPLOYER_H_

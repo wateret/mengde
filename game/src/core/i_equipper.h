@@ -1,5 +1,5 @@
-#ifndef I_EQUIPPER_H_
-#define I_EQUIPPER_H_
+#ifndef MENGDE_CORE_I_EQUIPPER_H_
+#define MENGDE_CORE_I_EQUIPPER_H_
 
 namespace mengde {
 namespace core {
@@ -18,4 +18,4 @@ class IEquipper {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // I_EQUIPPER_H_
+#endif  // MENGDE_CORE_I_EQUIPPER_H_

@@ -1,4 +1,4 @@
-#ifndef CORE_EXCEPTIONS_H_
+#ifndef MENGDE_CORE_EXCEPTIONS_H_
 #define CORE_EXCEPTIONS_H_
 
 #include <stdexcept>
@@ -33,4 +33,4 @@ class ConfigLoadException : public CoreException {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // CORE_EXCEPTIONS_H_
+#endif  // MENGDE_CORE_EXCEPTIONS_H_

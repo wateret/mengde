@@ -1,5 +1,5 @@
-#ifndef ROOT_VIEW_H_
-#define ROOT_VIEW_H_
+#ifndef MENGDE_GUI_APP_ROOT_VIEW_H_
+#define MENGDE_GUI_APP_ROOT_VIEW_H_
 
 #include "common.h"
 #include "gui/uifw/view.h"
@@ -55,4 +55,4 @@ class RootView : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // ROOT_VIEW_H_
+#endif  // MENGDE_GUI_APP_ROOT_VIEW_H_

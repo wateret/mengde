@@ -1,5 +1,5 @@
-#ifndef SPRITE_TYPE_H_
-#define SPRITE_TYPE_H_
+#ifndef MENGDE_GUI_UIFW_SPRITE_TYPE_H_
+#define MENGDE_GUI_UIFW_SPRITE_TYPE_H_
 
 #include "common.h"
 
@@ -33,4 +33,4 @@ extern const int   kSpriteBitmapSize[];
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // SPRITE_TYPE_H_
+#endif  // MENGDE_GUI_UIFW_SPRITE_TYPE_H_

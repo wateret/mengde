@@ -1,5 +1,5 @@
-#ifndef GUI_APP_UNIT_TOOLTIP_VIEW_H_
-#define GUI_APP_UNIT_TOOLTIP_VIEW_H_
+#ifndef MENGDE_GUI_APP_UNIT_TOOLTIP_VIEW_H_
+#define MENGDE_GUI_APP_UNIT_TOOLTIP_VIEW_H_
 
 #include <string>
 #include "gui/uifw/composite_view.h"
@@ -45,4 +45,4 @@ class UnitTooltipView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // GUI_APP_UNIT_TOOLTIP_VIEW_H_
+#endif  // MENGDE_GUI_APP_UNIT_TOOLTIP_VIEW_H_

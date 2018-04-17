@@ -1,5 +1,5 @@
-#ifndef MODAL_VIEW_H_
-#define MODAL_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_MODAL_VIEW_H_
+#define MENGDE_GUI_UIFW_MODAL_VIEW_H_
 
 #include "view_decorator.h"
 
@@ -25,4 +25,4 @@ class ModalView : public ViewDecorator {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // MODAL_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_MODAL_VIEW_H_

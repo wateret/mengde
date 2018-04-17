@@ -1,5 +1,5 @@
-#ifndef TERRAIN_INFO_VIEW_H_
-#define TERRAIN_INFO_VIEW_H_
+#ifndef MENGDE_GUI_APP_TERRAIN_INFO_VIEW_H_
+#define MENGDE_GUI_APP_TERRAIN_INFO_VIEW_H_
 
 #include "core/terrain.h"
 #include "gui/uifw/composite_view.h"
@@ -25,4 +25,4 @@ class TerrainInfoView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // TERRAIN_INFO_VIEW_H_
+#endif  // MENGDE_GUI_APP_TERRAIN_INFO_VIEW_H_

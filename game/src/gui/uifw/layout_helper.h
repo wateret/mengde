@@ -1,5 +1,5 @@
-#ifndef LAYOUT_HELPER_H_
-#define LAYOUT_HELPER_H_
+#ifndef MENGDE_GUI_UIFW_LAYOUT_HELPER_H_
+#define MENGDE_GUI_UIFW_LAYOUT_HELPER_H_
 
 #include "gui/foundation/rect.h"
 #include "util/common.h"
@@ -46,4 +46,4 @@ class LayoutHelper {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // LAYOUT_HELPER_H_
+#endif  // MENGDE_GUI_UIFW_LAYOUT_HELPER_H_

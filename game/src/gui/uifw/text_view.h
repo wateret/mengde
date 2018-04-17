@@ -1,5 +1,5 @@
-#ifndef TEXT_VIEW_H_
-#define TEXT_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_TEXT_VIEW_H_
+#define MENGDE_GUI_UIFW_TEXT_VIEW_H_
 
 #include "layout_helper.h"
 #include "util/common.h"
@@ -38,4 +38,4 @@ class TextView : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // TEXT_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_TEXT_VIEW_H_

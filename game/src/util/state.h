@@ -13,4 +13,4 @@ class State {
 #endif
 };
 
-#endif
+#endif // STATE_H_

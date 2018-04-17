@@ -1,5 +1,5 @@
-#ifndef EVENT_FETCHER_H_
-#define EVENT_FETCHER_H_
+#ifndef MENGDE_GUI_FOUNDATION_EVENT_FETCHER_H_
+#define MENGDE_GUI_FOUNDATION_EVENT_FETCHER_H_
 
 #include "event.h"
 
@@ -23,4 +23,4 @@ class EventFetcher {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // EVENT_FETCHER_H_
+#endif  // MENGDE_GUI_FOUNDATION_EVENT_FETCHER_H_

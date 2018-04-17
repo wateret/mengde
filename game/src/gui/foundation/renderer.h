@@ -1,5 +1,5 @@
-#ifndef RENDERER_H
-#define RENDERER_H
+#ifndef MENGDE_GUI_FOUNDATION_RENDERER_H_
+#define MENGDE_GUI_FOUNDATION_RENDERER_H_
 
 #include <SDL.h>
 #include "color.h"
@@ -40,4 +40,4 @@ class Renderer {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // RENDERER_H
+#endif  // MENGDE_GUI_FOUNDATION_RENDERER_H_

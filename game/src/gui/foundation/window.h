@@ -1,5 +1,5 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef MENGDE_GUI_FOUNDATION_WINDOW_H_
+#define MENGDE_GUI_FOUNDATION_WINDOW_H_
 
 #include <SDL.h>
 #include <string>
@@ -27,4 +27,4 @@ class Window {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_FOUNDATION_WINDOW_H_

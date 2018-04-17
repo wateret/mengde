@@ -1,5 +1,5 @@
-#ifndef PATH_TREE_H_
-#define PATH_TREE_H_
+#ifndef MENGDE_CORE_PATH_TREE_H_
+#define MENGDE_CORE_PATH_TREE_H_
 
 #include <vector>
 
@@ -48,4 +48,4 @@ class PathTree {
 }  // namespace core
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_CORE_PATH_TREE_H_

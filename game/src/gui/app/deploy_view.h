@@ -1,5 +1,5 @@
-#ifndef DEPLOY_VIEW_H_
-#define DEPLOY_VIEW_H_
+#ifndef MENGDE_GUI_APP_DEPLOY_VIEW_H_
+#define MENGDE_GUI_APP_DEPLOY_VIEW_H_
 
 #include "gui/uifw/callback_view.h"
 #include "gui/uifw/composite_view.h"
@@ -60,4 +60,4 @@ class DeployView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // DEPLOY_VIEW_H_
+#endif  // MENGDE_GUI_APP_DEPLOY_VIEW_H_

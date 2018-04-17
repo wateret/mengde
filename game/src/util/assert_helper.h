@@ -1,3 +1,6 @@
+#ifndef ASSERT_HELPER_H_
+#define ASSERT_HELPER_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -70,3 +73,5 @@
 #define UNREACHABLE(x) ((void)0)
 
 #endif  // !DEBUG
+
+#endif // ASSERT_HELPER_H_

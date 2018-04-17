@@ -1,5 +1,5 @@
-#ifndef UNIT_DIALOG_VIEW_H_
-#define UNIT_DIALOG_VIEW_H_
+#ifndef MENGDE_GUI_APP_UNIT_DIALOG_VIEW_H_
+#define MENGDE_GUI_APP_UNIT_DIALOG_VIEW_H_
 
 #include "gui/uifw/composite_view.h"
 #include "util/common.h"
@@ -37,4 +37,4 @@ class UnitDialogView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // UNIT_DIALOG_VIEW_H_
+#endif  // MENGDE_GUI_APP_UNIT_DIALOG_VIEW_H_

@@ -1,5 +1,5 @@
-#ifndef ASSETS_H_
-#define ASSETS_H_
+#ifndef MENGDE_CORE_ASSETS_H_
+#define MENGDE_CORE_ASSETS_H_
 
 #include <map>
 
@@ -71,4 +71,4 @@ class Assets {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // ASSETS_H_
+#endif  // MENGDE_CORE_ASSETS_H_

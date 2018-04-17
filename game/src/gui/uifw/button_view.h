@@ -1,5 +1,5 @@
-#ifndef BUTTON_VIEW_H_
-#define BUTTON_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_BUTTON_VIEW_H_
+#define MENGDE_GUI_UIFW_BUTTON_VIEW_H_
 
 #include "callback_view.h"
 #include "util/common.h"
@@ -34,4 +34,4 @@ class ButtonView : public CallbackView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // BUTTON_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_BUTTON_VIEW_H_

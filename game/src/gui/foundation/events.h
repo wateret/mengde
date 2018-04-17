@@ -1,5 +1,5 @@
-#ifndef EVENTS_H_
-#define EVENTS_H_
+#ifndef MENGDE_GUI_FOUNDATION_EVENTS_H_
+#define MENGDE_GUI_FOUNDATION_EVENTS_H_
 
 #include "mouse_button_event.h"
 #include "mouse_motion_event.h"
@@ -23,4 +23,4 @@ class QuitEvent {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // EVENTS_H_
+#endif  // MENGDE_GUI_FOUNDATION_EVENTS_H_

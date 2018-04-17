@@ -1,5 +1,5 @@
-#ifndef ATTACK_RANGE_H_
-#define ATTACK_RANGE_H_
+#ifndef MENGDE_CORE_RANGE_ATTACK_RANGE_H_
+#define MENGDE_CORE_RANGE_ATTACK_RANGE_H_
 
 #include "util/common.h"
 
@@ -21,4 +21,4 @@ Type StringToRange(const string&);
 }  // namespace core
 }  // namespace mengde
 
-#endif  // ATTACK_RANGE_H_
+#endif  // MENGDE_CORE_RANGE_ATTACK_RANGE_H_

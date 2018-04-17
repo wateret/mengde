@@ -1,5 +1,5 @@
-#ifndef GAUGE_VIEW_H_
-#define GAUGE_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_GAUGE_VIEW_H_
+#define MENGDE_GUI_UIFW_GAUGE_VIEW_H_
 
 #include "gui/foundation/color.h"
 #include "gui/foundation/rect.h"
@@ -52,4 +52,4 @@ class GaugeView : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // GAUGE_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_GAUGE_VIEW_H_

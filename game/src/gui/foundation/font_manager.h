@@ -1,5 +1,5 @@
-#ifndef FONT_MANAGER_H
-#define FONT_MANAGER_H
+#ifndef MENGDE_GUI_FOUNDATION_FONT_MANAGER_H_
+#define MENGDE_GUI_FOUNDATION_FONT_MANAGER_H_
 
 #include <SDL_ttf.h>
 #include <unordered_map>
@@ -27,4 +27,4 @@ class FontManager {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_FOUNDATION_FONT_MANAGER_H_

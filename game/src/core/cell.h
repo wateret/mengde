@@ -1,5 +1,5 @@
-#ifndef CELL_H_
-#define CELL_H_
+#ifndef MENGDE_CORE_CELL_H_
+#define MENGDE_CORE_CELL_H_
 
 #include "terrain.h"
 #include "unit.h"
@@ -29,4 +29,4 @@ class Cell {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // CELL_H_
+#endif  // MENGDE_CORE_CELL_H_

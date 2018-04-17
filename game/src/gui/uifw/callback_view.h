@@ -1,5 +1,5 @@
-#ifndef CALLBACK_VIEW_H_
-#define CALLBACK_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_CALLBACK_VIEW_H_
+#define MENGDE_GUI_UIFW_CALLBACK_VIEW_H_
 
 #include <functional>
 #include "composite_view.h"
@@ -36,4 +36,4 @@ class CallbackView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // CALLBACK_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_CALLBACK_VIEW_H_

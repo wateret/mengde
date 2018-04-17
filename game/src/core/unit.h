@@ -1,5 +1,5 @@
-#ifndef UNIT_H_
-#define UNIT_H_
+#ifndef MENGDE_CORE_UNIT_H_
+#define MENGDE_CORE_UNIT_H_
 
 #include "equipment_set.h"
 #include "event_effect_list.h"
@@ -91,4 +91,4 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // UNIT_H_
+#endif  // MENGDE_CORE_UNIT_H_

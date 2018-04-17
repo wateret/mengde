@@ -1,5 +1,5 @@
-#ifndef GUI_APP_CONFIG_H_
-#define GUI_APP_CONFIG_H_
+#ifndef MENGDE_GUI_APP_CONFIG_CONFIG_H_
+#define MENGDE_GUI_APP_CONFIG_CONFIG_H_
 
 namespace mengde {
 namespace gui {
@@ -13,4 +13,4 @@ const int kBlockSize = 48;
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // GUI_APP_CONFIG_H_
+#endif  // MENGDE_GUI_APP_CONFIG_CONFIG_H_

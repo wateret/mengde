@@ -1,5 +1,5 @@
-#ifndef LUA_SCRIPT_H_
-#define LUA_SCRIPT_H_
+#ifndef LUA_LUA_H_
+#define LUA_LUA_H_
 
 #include <cassert>
 #include <functional>
@@ -452,4 +452,4 @@ void Lua::CallImpl<void>(unsigned argc);
 
 }  // namespace lua
 
-#endif  // LUA_SCRIPT_H_
+#endif  // LUA_LUA_H_

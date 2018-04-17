@@ -1,5 +1,5 @@
-#ifndef STAGE_UNIT_MANAGER_H_
-#define STAGE_UNIT_MANAGER_H_
+#ifndef MENGDE_CORE_STAGE_UNIT_MANAGER_H_
+#define MENGDE_CORE_STAGE_UNIT_MANAGER_H_
 
 #include "util/common.h"
 
@@ -29,4 +29,4 @@ class StageUnitManager {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // STAGE_UNIT_MANAGER_H_
+#endif  // MENGDE_CORE_STAGE_UNIT_MANAGER_H_

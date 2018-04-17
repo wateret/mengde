@@ -1,5 +1,5 @@
-#ifndef RECT_VIEW_H_
-#define RECT_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_RECT_VIEW_H_
+#define MENGDE_GUI_UIFW_RECT_VIEW_H_
 
 #include "util/common.h"
 #include "view.h"
@@ -28,4 +28,4 @@ class RectView : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // RECT_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_RECT_VIEW_H_

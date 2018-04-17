@@ -1,5 +1,5 @@
-#ifndef STAT_MODIFIER_LIST_H_
-#define STAT_MODIFIER_LIST_H_
+#ifndef MENGDE_CORE_STAT_MODIFIER_LIST_H_
+#define MENGDE_CORE_STAT_MODIFIER_LIST_H_
 
 #include <vector>
 
@@ -26,4 +26,4 @@ class StatModifierList {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // STAT_MODIFIER_LIST_H_
+#endif  // MENGDE_CORE_STAT_MODIFIER_LIST_H_

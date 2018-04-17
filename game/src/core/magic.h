@@ -1,5 +1,5 @@
-#ifndef MAGIC_H_
-#define MAGIC_H_
+#ifndef MENGDE_CORE_MAGIC_H_
+#define MENGDE_CORE_MAGIC_H_
 
 #include <string>
 
@@ -57,4 +57,4 @@ class Magic {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // MAGIC_H_
+#endif  // MENGDE_CORE_MAGIC_H_

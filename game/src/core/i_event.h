@@ -1,5 +1,5 @@
-#ifndef I_EVENT_H_
-#define I_EVENT_H_
+#ifndef MENGDE_CORE_I_EVENT_H_
+#define MENGDE_CORE_I_EVENT_H_
 
 #include <memory>
 
@@ -26,4 +26,4 @@ class IEvent {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // I_EVENT_H_
+#endif  // MENGDE_CORE_I_EVENT_H_

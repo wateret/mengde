@@ -1,5 +1,5 @@
-#ifndef MODAL_DIALOG_VIEW_H_
-#define MODAL_DIALOG_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_MODAL_DIALOG_VIEW_H_
+#define MENGDE_GUI_UIFW_MODAL_DIALOG_VIEW_H_
 
 #include "composite_view.h"
 #include "util/common.h"
@@ -35,4 +35,4 @@ class ModalDialogView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // MODAL_DIALOG_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_MODAL_DIALOG_VIEW_H_

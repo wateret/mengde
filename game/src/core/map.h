@@ -1,5 +1,5 @@
-#ifndef MAP_H_
-#define MAP_H_
+#ifndef MENGDE_CORE_MAP_H_
+#define MENGDE_CORE_MAP_H_
 
 #include "resource_manager.h"
 #include "util/common.h"
@@ -50,4 +50,4 @@ class Map {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // MAP_H_
+#endif  // MENGDE_CORE_MAP_H_

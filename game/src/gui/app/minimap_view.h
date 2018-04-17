@@ -1,5 +1,5 @@
-#ifndef MINIMAP_VIEW_H_
-#define MINIMAP_VIEW_H_
+#ifndef MENGDE_GUI_APP_MINIMAP_VIEW_H_
+#define MENGDE_GUI_APP_MINIMAP_VIEW_H_
 
 #include "gui/uifw/composite_view.h"
 #include "util/common.h"
@@ -49,4 +49,4 @@ class MinimapUnitsView : public View {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // MINIMAP_VIEW_H_
+#endif  // MENGDE_GUI_APP_MINIMAP_VIEW_H_

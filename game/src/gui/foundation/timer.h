@@ -1,5 +1,5 @@
-#ifndef TIMER_H_
-#define TIMER_H_
+#ifndef MENGDE_GUI_FOUNDATION_TIMER_H_
+#define MENGDE_GUI_FOUNDATION_TIMER_H_
 
 #include "util/common.h"
 
@@ -25,4 +25,4 @@ class Timer {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_FOUNDATION_TIMER_H_

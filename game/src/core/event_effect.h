@@ -1,5 +1,5 @@
-#ifndef EVENT_EFFECT_H_
-#define EVENT_EFFECT_H_
+#ifndef MENGDE_CORE_EVENT_EFFECT_H_
+#define MENGDE_CORE_EVENT_EFFECT_H_
 
 #include <limits>
 
@@ -93,4 +93,4 @@ class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // EVENT_EFFECT_H_
+#endif  // MENGDE_CORE_EVENT_EFFECT_H_

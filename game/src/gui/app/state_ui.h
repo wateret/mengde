@@ -1,5 +1,5 @@
-#ifndef STATE_UI_H_
-#define STATE_UI_H_
+#ifndef MENGDE_GUI_APP_STATE_UI_H_
+#define MENGDE_GUI_APP_STATE_UI_H_
 
 #include "gui/foundation/texture_animator.h"
 #include "gui/uifw/i_view.h"
@@ -416,4 +416,4 @@ class StateUIEnd : public StateUI {
 }  // namespace gui
 }  // namespace mengde
 
-#endif
+#endif // MENGDE_GUI_APP_STATE_UI_H_

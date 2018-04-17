@@ -1,5 +1,5 @@
-#ifndef CORE_I_UNIT_BASE_H_
-#define CORE_I_UNIT_BASE_H_
+#ifndef MENGDE_CORE_I_UNIT_BASE_H_
+#define MENGDE_CORE_I_UNIT_BASE_H_
 
 #include <string>
 
@@ -37,4 +37,4 @@ class IUnitBase {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // CORE_I_UNIT_BASE_H_
+#endif  // MENGDE_CORE_I_UNIT_BASE_H_

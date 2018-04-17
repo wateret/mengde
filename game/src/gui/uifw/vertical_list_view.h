@@ -1,5 +1,5 @@
-#ifndef VERTICAL_LIST_VIEW_H_
-#define VERTICAL_LIST_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_VERTICAL_LIST_VIEW_H_
+#define MENGDE_GUI_UIFW_VERTICAL_LIST_VIEW_H_
 
 #include "composite_view.h"
 
@@ -24,4 +24,4 @@ class VerticalListView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // VERTICAL_LIST_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_VERTICAL_LIST_VIEW_H_

@@ -1,5 +1,5 @@
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#ifndef MENGDE_CORE_TERRAIN_H_
+#define MENGDE_CORE_TERRAIN_H_
 
 #include <string>
 #include <vector>
@@ -26,4 +26,4 @@ class Terrain {
 }  // namespace core
 }  // namespace mengde
 
-#endif /* TERRAIN_H */
+#endif // MENGDE_CORE_TERRAIN_H_

@@ -1,5 +1,5 @@
-#ifndef GUI_UIFW_COMMON_H_
-#define GUI_UIFW_COMMON_H_
+#ifndef MENGDE_GUI_FOUNDATION_COMMON_H_
+#define MENGDE_GUI_FOUNDATION_COMMON_H_
 
 namespace mengde {
 namespace gui {
@@ -16,4 +16,4 @@ class Window;
 
 using namespace mengde::gui::foundation;
 
-#endif  // GUI_UIFW_COMMON_H_
+#endif  // MENGDE_GUI_FOUNDATION_COMMON_H_

@@ -1,5 +1,5 @@
-#ifndef VIEW_APP_LAYOUT_HELPER_H_
-#define VIEW_APP_LAYOUT_HELPER_H_
+#ifndef MENGDE_GUI_APP_LAYOUT_HELPER_H_
+#define MENGDE_GUI_APP_LAYOUT_HELPER_H_
 
 #include "util/vec2d.h"
 
@@ -19,4 +19,4 @@ Vec2D CalcPositionNearUnit(Vec2D element_size, Vec2D frame_size, Vec2D camera_co
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // VIEW_APP_LAYOUT_HELPER_H_
+#endif  // MENGDE_GUI_APP_LAYOUT_HELPER_H_

@@ -1,5 +1,5 @@
-#ifndef LUA_LUA_TABLE_H_
-#define LUA_LUA_TABLE_H_
+#ifndef LUA_TABLE_H_
+#define LUA_TABLE_H_
 
 #include "value.h"
 
@@ -41,4 +41,4 @@ class Table {
 
 }  // namespace lua
 
-#endif  // LUA_LUA_TABLE_H_
+#endif  // LUA_TABLE_H_

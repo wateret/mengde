@@ -1,5 +1,5 @@
-#ifndef EQUIPMENT_SLOT_H_
-#define EQUIPMENT_SLOT_H_
+#ifndef MENGDE_CORE_EQUIPMENT_SLOT_H_
+#define MENGDE_CORE_EQUIPMENT_SLOT_H_
 
 #include "equipment.h"
 #include "stat.h"
@@ -24,4 +24,4 @@ class EquipmentSlot {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // EQUIPMENT_SLOT_H_
+#endif  // MENGDE_CORE_EQUIPMENT_SLOT_H_

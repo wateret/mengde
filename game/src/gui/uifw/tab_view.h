@@ -1,5 +1,5 @@
-#ifndef TAB_VIEW_H_
-#define TAB_VIEW_H_
+#ifndef MENGDE_GUI_UIFW_TAB_VIEW_H_
+#define MENGDE_GUI_UIFW_TAB_VIEW_H_
 
 #include "composite_view.h"
 #include "util/common.h"
@@ -29,4 +29,4 @@ class TabView : public CompositeView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // TAB_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_TAB_VIEW_H_

@@ -1,5 +1,5 @@
-#ifndef HERO_TEMPLATE_H_
-#define HERO_TEMPLATE_H_
+#ifndef MENGDE_CORE_HERO_TEMPLATE_H_
+#define MENGDE_CORE_HERO_TEMPLATE_H_
 
 #include "stat.h"
 #include "unit_class.h"
@@ -29,4 +29,4 @@ class HeroTemplate {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // HERO_TEMPLATE_H_
+#endif  // MENGDE_CORE_HERO_TEMPLATE_H_

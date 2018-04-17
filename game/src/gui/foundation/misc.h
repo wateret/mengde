@@ -1,5 +1,5 @@
-#ifndef VIEW_FOUNDATION_MISC_H_
-#define VIEW_FOUNDATION_MISC_H_
+#ifndef MENGDE_GUI_FOUNDATION_MISC_H_
+#define MENGDE_GUI_FOUNDATION_MISC_H_
 
 #include <string>
 
@@ -22,4 +22,4 @@ class Misc {
 }  // namespace gui
 }  // namespace mengde
 
-#endif  // VIEW_FOUNDATION_MISC_H_
+#endif  // MENGDE_GUI_FOUNDATION_MISC_H_
