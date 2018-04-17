@@ -1,5 +1,5 @@
 #ifndef MENGDE_CORE_EXCEPTIONS_H_
-#define CORE_EXCEPTIONS_H_
+#define MENGDE_CORE_EXCEPTIONS_H_
 
 #include <stdexcept>
 #include <string>

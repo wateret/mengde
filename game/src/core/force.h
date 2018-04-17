@@ -1,5 +1,5 @@
 #ifndef MENGDE_CORE_FORCE_H_
-#define FORCE_H_
+#define MENGDE_CORE_FORCE_H_
 
 namespace mengde {
 namespace core {
