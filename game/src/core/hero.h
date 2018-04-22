@@ -26,7 +26,7 @@ class Hero : public IUnitBase, IEquipper {
   virtual string              GetModelId() const override;
   virtual const UnitClass*    GetClass() const override;
   virtual int                 GetMove() const override;
-  virtual Vec2D*              GetAttackRange() const override;
+  virtual const AttackRange&  GetAttackRange() const override;
   virtual uint16_t            GetLevel() const override { return level_.level; }
   virtual uint16_t            GetExp() const override { return level_.exp; }
   virtual const HpMp&         GetOriginalHpMp() const override { return hpmp_; }

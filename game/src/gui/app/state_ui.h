@@ -9,6 +9,7 @@
 
 namespace mengde {
 namespace core {
+class AttackRange;
 class Game;
 class UserInterface;
 class Magic;
@@ -363,10 +364,13 @@ class StateUITargeting : public StateUIOperable {
 #endif
 
  private:
-  core::Unit* unit_;
-  string      magic_id_;
-  Vec2D*      range_itr_;
-  bool        is_basic_attack_;
+  const core::AttackRange& GetRange(const std::string& magic_id);
+
+ private:
+  core::Unit*              unit_;
+  string                   magic_id_;
+  const core::AttackRange& range_;
+  bool                     is_basic_attack_;
 };
 
 class StateUINextTurn : public StateUI {

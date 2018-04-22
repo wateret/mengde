@@ -38,7 +38,7 @@ int Hero::GetClassIndex() const { return hero_tpl_->GetClassIndex(); }
 
 int Hero::GetMove() const { return hero_tpl_->GetMove(); }
 
-Vec2D* Hero::GetAttackRange() const { return hero_tpl_->GetAttackRange(); }
+const AttackRange& Hero::GetAttackRange() const { return hero_tpl_->GetAttackRange(); }
 
 const Attribute& Hero::GetHeroStatBase() const { return hero_tpl_->GetHeroStat(); }
 
