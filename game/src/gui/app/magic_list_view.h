@@ -11,6 +11,7 @@ namespace core {
 
 class Game;
 class Unit;
+class UserInterface;
 class MagicList;
 
 }  // namespace core
@@ -27,7 +28,7 @@ class MagicListView : public CompositeView {
   static const int kTitleHeight = 24;
 
  public:
-  MagicListView(const Rect&, core::Game* const, GameView* const);
+  MagicListView(const Rect&, core::Game*, core::UserInterface*, GameView*);
   ~MagicListView();
   void         SetUnitAndMagicList(core::Unit*, shared_ptr<core::MagicList>);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
@@ -36,8 +37,9 @@ class MagicListView : public CompositeView {
   void Cleanup();
 
  private:
-  core::Game* const game_;
-  GameView* const   gv_;
+  core::Game*          game_;
+  core::UserInterface* gi_;
+  GameView*            gv_;
 
  private:
   int item_height_;

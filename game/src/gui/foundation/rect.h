@@ -52,4 +52,4 @@ class Rect {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_FOUNDATION_RECT_H_
+#endif  // MENGDE_GUI_FOUNDATION_RECT_H_

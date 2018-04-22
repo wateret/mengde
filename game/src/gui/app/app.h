@@ -105,4 +105,4 @@ class App {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_APP_APP_H_
+#endif  // MENGDE_GUI_APP_APP_H_

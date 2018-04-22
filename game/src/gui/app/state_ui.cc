@@ -10,6 +10,7 @@
 #include "core/map.h"
 #include "core/path_tree.h"
 #include "core/unit.h"
+#include "core/user_interface.h"
 #include "game_view.h"
 #include "gui/foundation/misc.h"
 #include "gui/foundation/texture_animator.h"
@@ -33,7 +34,7 @@ namespace app {
 
 // StateUI
 
-StateUI::StateUI(Base base) : game_(base.game), gv_(base.gv) {}
+StateUI::StateUI(Base base) : game_(base.game), gi_(base.gi), gv_(base.gv) {}
 
 // StateUIMain
 
@@ -247,7 +248,7 @@ void StateUIView::Update() {
   }
 
   if (game_->HasNext()) {
-    gv_->PushUIState(new StateUIDoCmd({game_, gv_}));
+    gv_->PushUIState(new StateUIDoCmd(WrapBase()));
   }
 }
 
@@ -331,7 +332,7 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent 
     if (map->UnitInCell(pos) && map->GetUnit(pos) != unit_) {
       // XXX Other unit clicked
     } else if (std::find(movable_cells.begin(), movable_cells.end(), pos) != movable_cells.end()) {
-      gv_->PushUIState(new StateUIMoving({game_, gv_}, unit_, GetPathToRoot(pos)));
+      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_, GetPathToRoot(pos)));
     } else {
       //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
     }

@@ -10,6 +10,7 @@
 namespace mengde {
 namespace core {
 class Game;
+class UserInterface;
 class Magic;
 class PathTree;
 class Unit;
@@ -29,8 +30,9 @@ class UnitTooltipView;
 class StateUI : public State, public IView {
  public:
   struct Base {
-    core::Game* game;
-    GameView*   gv;
+    core::Game*          game;  // TODO We should eventually remove this, use core::UserInterface instead.
+    core::UserInterface* gi;
+    GameView*            gv;
   };
 
  public:
@@ -43,15 +45,16 @@ class StateUI : public State, public IView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override { return false; }
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override { return true; }
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override { return false; }
-  Base         WrapBase() { return {game_, gv_}; }
+  Base         WrapBase() { return {game_, gi_, gv_}; }
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUI"; }
 #endif
 
  protected:
-  core::Game* game_;
-  GameView*   gv_;
+  core::Game*          game_;
+  core::UserInterface* gi_;
+  GameView*            gv_;
 };
 
 // StateUIMain
@@ -416,4 +419,4 @@ class StateUIEnd : public StateUI {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_APP_STATE_UI_H_
+#endif  // MENGDE_GUI_APP_STATE_UI_H_

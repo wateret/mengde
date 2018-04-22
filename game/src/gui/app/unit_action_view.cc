@@ -10,8 +10,8 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitActionView::UnitActionView(const Rect& frame, core::Game* game, GameView* gv)
-    : VerticalListView(frame), game_(game), gv_(gv) {
+UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserInterface* gi, GameView* gv)
+    : VerticalListView(frame), game_(game), gi_(gi), gv_(gv) {
   bg_color(COLOR("darkgray", 212));
   padding(8);
   Rect btn_frame = GetActualFrame();
@@ -29,13 +29,13 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, GameView* gv
 void UnitActionView::SetUnit(core::Unit* unit) {
   btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUITargeting({game_, gv_}, unit));
+      gv_->PushUIState(new StateUITargeting({game_, gi_, gv_}, unit));
     }
     return true;
   });
   btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUIMagicSelection({game_, gv_}, unit));
+      gv_->PushUIState(new StateUIMagicSelection({game_, gi_, gv_}, unit));
     }
     return true;
   });

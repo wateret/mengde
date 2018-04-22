@@ -67,4 +67,4 @@ class View : public IView {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_UIFW_VIEW_H_
+#endif  // MENGDE_GUI_UIFW_VIEW_H_

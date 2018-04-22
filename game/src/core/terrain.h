@@ -26,4 +26,4 @@ class Terrain {
 }  // namespace core
 }  // namespace mengde
 
-#endif // MENGDE_CORE_TERRAIN_H_
+#endif  // MENGDE_CORE_TERRAIN_H_

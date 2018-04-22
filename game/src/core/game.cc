@@ -9,6 +9,7 @@
 #include "formulae.h"
 #include "magic.h"
 #include "stage_unit_manager.h"
+#include "user_interface.h"
 #include "util/game_env.h"
 #include "util/path.h"
 
@@ -23,6 +24,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       assets_(assets),  // FIXME Change this to clone the object as we need to rollback assets for some cases
       lua_(nullptr),
       lua_this_(this, "Game"),
+      user_interface_(new UserInterface(this)),
       commander_(nullptr),
       deployer_(nullptr),
       map_(nullptr),

@@ -13,6 +13,7 @@ namespace core {
 class Assets;
 class Game;
 class Scenario;
+class UserInterface;
 struct HpMp;
 
 }  // namespace core
@@ -41,6 +42,7 @@ class GameView : public View {
 
  public:
   GameView(const Rect& frame, core::Game* game, App* app);
+  ~GameView();
 
  public:
   // View interfaces
@@ -92,8 +94,10 @@ class GameView : public View {
   int  GetCurrentSpriteNo(int, int) const;
 
  private:
-  core::Game* game_;
-  App*        app_;
+  core::Game*          game_;  // TODO We should eventually remove this, use core::UserInterface instead.
+  core::UserInterface* gi_;
+
+  App* app_;
 
   StateMachine<StateUI*>   ui_state_machine_;
   queue<NextFrameCallback> frame_callbacks_;

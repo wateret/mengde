@@ -27,4 +27,4 @@ class Window {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_FOUNDATION_WINDOW_H_
+#endif  // MENGDE_GUI_FOUNDATION_WINDOW_H_

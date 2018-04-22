@@ -48,4 +48,4 @@ class PathTree {
 }  // namespace core
 }  // namespace mengde
 
-#endif // MENGDE_CORE_PATH_TREE_H_
+#endif  // MENGDE_CORE_PATH_TREE_H_

@@ -5,6 +5,7 @@
 #include "core/assets.h"
 #include "core/game.h"
 #include "core/unit.h"
+#include "core/user_interface.h"
 #include "gui/foundation/texture_manager.h"
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/sprite_type.h"
@@ -17,8 +18,9 @@ namespace app {
 GameView::GameView(const Rect& frame, core::Game* game, App* app)
     : View(frame),
       game_(game),
+      gi_(game->user_interface()),
       app_(app),
-      ui_state_machine_(new StateUIView({game_, this})),
+      ui_state_machine_(new StateUIView({game_, gi_, this})),
       frame_callbacks_(),
       mouse_coords_(0, 0),
       camera_coords_(0, 0),
@@ -30,6 +32,8 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
   const Vec2D kWindowSize = GetFrameSize();
   max_camera_coords_      = kMapSize - kWindowSize;
 }
+
+GameView::~GameView() { delete gi_; }
 
 void GameView::Update() {
   frame_count_++;
@@ -110,7 +114,7 @@ void GameView::InitUIStateMachine() {
   NextFrame([this]() {
     ui_state_machine_.InitState();
     if (game_->HasNext()) {
-      ui_state_machine_.PushState(new StateUIDoCmd({game_, this}));
+      ui_state_machine_.PushState(new StateUIDoCmd({game_, gi_, this}));
     }
   });
 }
