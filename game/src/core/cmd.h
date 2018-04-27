@@ -229,7 +229,7 @@ enum class ActionType {
   kStay,
   kBasicAttack,
   kMagic,
-// kUseConsumable
+  // kUseConsumable
   kCount
 };
 

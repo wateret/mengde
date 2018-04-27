@@ -66,6 +66,7 @@ class Game : public IDeployHelper {
   void          Push(unique_ptr<Cmd>);
   const Cmd*    GetNextCmdConst() const;
   bool          UnitInCell(Vec2D) const;
+  Unit*         GetUnitInCell(Vec2D) const;
   uint32_t      GetNumEnemiesAlive();
   uint32_t      GetNumOwnsAlive();
   bool          CheckStatus();

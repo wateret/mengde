@@ -1,17 +1,15 @@
 #include "user_interface.h"
 
+#include "cmd.h"
 #include "game.h"
 #include "unit.h"
-#include "cmd.h"
 
 namespace mengde {
 namespace core {
 
 // AvailableMoves
 
-AvailableMoves::AvailableMoves(Game* stage, Unit* unit) {
-  moves_ = stage->FindMovablePos(unit);
-}
+AvailableMoves::AvailableMoves(Game* stage, Unit* unit) { moves_ = stage->FindMovablePos(unit); }
 
 Vec2D AvailableMoves::Get(uint32_t idx) {
   ASSERT(idx < moves_.size());
@@ -21,18 +19,25 @@ Vec2D AvailableMoves::Get(uint32_t idx) {
 // AvailableActs
 
 AvailableActs::AvailableActs(Game* stage, Unit* unit, Vec2D move_pos, ActionType type) {
-  // We need these soon
-  UNUSED(stage);
-  UNUSED(move_pos);
-
   switch (type) {
     case ActionType::kStay:
       acts_.push_back(unique_ptr<CmdStay>(new CmdStay(unit)));
       break;
 
-    case ActionType::kBasicAttack:
-      UNREACHABLE("NYI for ActionType of kBasicAttack");
+    case ActionType::kBasicAttack: {
+      Unit* atk = unit;
+      unit->GetAttackRange().ForEach(
+          [&](Vec2D pos) {
+            if (!stage->IsValidCoords(pos)) return;
+            Unit* def = stage->GetUnitInCell(pos);
+            if (def != nullptr && atk->IsHostile(def)) {
+              acts_.push_back(unique_ptr<core::CmdBasicAttack>(
+                  new core::CmdBasicAttack(atk, def, core::CmdBasicAttack::Type::kActive)));
+            }
+          },
+          move_pos);
       break;
+    }
 
     case ActionType::kMagic:
       UNREACHABLE("NYI for ActionType of kMagic");
@@ -63,15 +68,15 @@ AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) {
 }
 
 AvailableActs UserInterface::QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type) {
-  Unit* unit = GetUnit(unit_id);
+  Unit* unit     = GetUnit(unit_id);
   Vec2D move_pos = GetMovedPosition(unit_id, move_id);
   return AvailableActs(stage_, unit, move_pos, type);
 }
 
 void UserInterface::PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
-  Unit* unit             = GetUnit(unit_id);
-  Vec2D move_pos         = GetMovedPosition(unit_id, move_id);
-  unique_ptr<CmdAct> act = GetActCmd(unit_id, move_id, type, act_id);
+  Unit*              unit     = GetUnit(unit_id);
+  Vec2D              move_pos = GetMovedPosition(unit_id, move_id);
+  unique_ptr<CmdAct> act      = GetActCmd(unit_id, move_id, type, act_id);
 
   CmdAction* cmd = new CmdAction();
   cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(unit, move_pos)));

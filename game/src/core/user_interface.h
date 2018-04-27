@@ -25,11 +25,11 @@ class AvailableMoves {
 class AvailableActs {
  public:
   AvailableActs(Game* stage, Unit* unit, Vec2D move_pos, ActionType type);
-  ActionType type() { return type_; }
+  ActionType         type() { return type_; }
   unique_ptr<CmdAct> Get(uint32_t idx);
 
  private:
-  ActionType type_;
+  ActionType                 type_;
   vector<unique_ptr<CmdAct>> acts_;
 };
 
@@ -43,8 +43,8 @@ class UserInterface {
   void           PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
 
  private:
-  Unit* GetUnit(uint32_t unit_id);
-  Vec2D GetMovedPosition(uint32_t unit_id, uint32_t move_id);
+  Unit*              GetUnit(uint32_t unit_id);
+  Vec2D              GetMovedPosition(uint32_t unit_id, uint32_t move_id);
   unique_ptr<CmdAct> GetActCmd(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
 
  private:
