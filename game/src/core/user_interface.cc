@@ -7,23 +7,27 @@
 namespace mengde {
 namespace core {
 
-UserInterface::UserInterface(Game* stage) : stage_(stage) {}
+// AvailableMoves
 
-Unit* UserInterface::GetUnit(uint32_t unit_id) { return stage_->GetUnit(unit_id); }
-
-vector<Vec2D> UserInterface::QueryMovablePositions(uint32_t unit_id) {
-  Unit* unit = GetUnit(unit_id);
-  return stage_->FindMovablePos(unit);
+AvailableMoves::AvailableMoves(Game* stage, Unit* unit) {
+  moves_ = stage->FindMovablePos(unit);
 }
 
-vector<unique_ptr<CmdAct>> UserInterface::QueryPossibleActs(uint32_t unit_id, uint32_t pos_id, ActionType type) {
-  Unit* unit = GetUnit(unit_id);
-  Vec2D move_pos = GetMovedPosition(unit_id, pos_id);
-  UNUSED(move_pos); // Later we may need move_pos
-  vector<unique_ptr<CmdAct>> list;
+Vec2D AvailableMoves::Get(uint32_t idx) {
+  ASSERT(idx < moves_.size());
+  return moves_[idx];
+}
+
+// AvailableActs
+
+AvailableActs::AvailableActs(Game* stage, Unit* unit, Vec2D move_pos, ActionType type) {
+  // We need these soon
+  UNUSED(stage);
+  UNUSED(move_pos);
+
   switch (type) {
     case ActionType::kStay:
-      list.push_back(unique_ptr<CmdStay>(new CmdStay(unit)));
+      acts_.push_back(unique_ptr<CmdStay>(new CmdStay(unit)));
       break;
 
     case ActionType::kBasicAttack:
@@ -38,7 +42,30 @@ vector<unique_ptr<CmdAct>> UserInterface::QueryPossibleActs(uint32_t unit_id, ui
       UNREACHABLE("Invalid ActionType");
       break;
   };
-  return list;
+
+  ASSERT(type != ActionType::kStay || acts_.size() == 1);
+}
+
+unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
+  ASSERT(idx < acts_.size());
+  return std::move(acts_[idx]);
+}
+
+// UserInterface
+
+UserInterface::UserInterface(Game* stage) : stage_(stage) {}
+
+Unit* UserInterface::GetUnit(uint32_t unit_id) { return stage_->GetUnit(unit_id); }
+
+AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) {
+  Unit* unit = GetUnit(unit_id);
+  return AvailableMoves(stage_, unit);
+}
+
+AvailableActs UserInterface::QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type) {
+  Unit* unit = GetUnit(unit_id);
+  Vec2D move_pos = GetMovedPosition(unit_id, move_id);
+  return AvailableActs(stage_, unit, move_pos, type);
 }
 
 void UserInterface::PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
@@ -54,15 +81,13 @@ void UserInterface::PushAction(uint32_t unit_id, uint32_t move_id, ActionType ty
 }
 
 Vec2D UserInterface::GetMovedPosition(uint32_t unit_id, uint32_t move_id) {
-  auto moves = QueryMovablePositions(unit_id);
-  ASSERT(unit_id < moves.size());
-  return moves[move_id];
+  auto moves = QueryMoves(unit_id);
+  return moves.Get(move_id);
 }
 
 unique_ptr<CmdAct> UserInterface::GetActCmd(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
-  auto acts = QueryPossibleActs(unit_id, move_id, type);
-  ASSERT(act_id < acts.size());
-  return std::move(acts[act_id]);
+  auto acts = QueryActs(unit_id, move_id, type);
+  return acts.Get(act_id);
 }
 
 }  // namespace core

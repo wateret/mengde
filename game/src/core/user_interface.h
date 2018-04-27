@@ -13,14 +13,34 @@ class Game;
 class Scenario;
 class Unit;
 
+class AvailableMoves {
+ public:
+  AvailableMoves(Game* stage, Unit* unit);
+  Vec2D Get(uint32_t idx);
+
+ private:
+  vector<Vec2D> moves_;
+};
+
+class AvailableActs {
+ public:
+  AvailableActs(Game* stage, Unit* unit, Vec2D move_pos, ActionType type);
+  ActionType type() { return type_; }
+  unique_ptr<CmdAct> Get(uint32_t idx);
+
+ private:
+  ActionType type_;
+  vector<unique_ptr<CmdAct>> acts_;
+};
+
 class UserInterface {
  public:
   UserInterface(Game* stage);
 
  public:
-  vector<Vec2D> QueryMovablePositions(uint32_t unit_id);
-  vector<unique_ptr<CmdAct>> QueryPossibleActs(uint32_t unit_id, uint32_t pos_id, ActionType type);
-  void PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
+  AvailableMoves QueryMoves(uint32_t unit_id);
+  AvailableActs  QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type);
+  void           PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
 
  private:
   Unit* GetUnit(uint32_t unit_id);
