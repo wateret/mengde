@@ -768,6 +768,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
   if (e.IsLeftButtonUp()) {
     Vec2D      map_pos = GetCursorCell();
     core::Map* map     = game_->GetMap();
+    // TODO DO NOT generate Cmd directly, use core::UserInterface instead
     if (map->UnitInCell(map_pos)) {
       core::Unit* atk = unit_;
       core::Unit* def = map->GetUnit(map_pos);

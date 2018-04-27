@@ -224,6 +224,15 @@ class CmdMove : public CmdUnit {
   Vec2D dest_;
 };
 
+enum class ActionType {
+  kNone,
+  kStay,
+  kBasicAttack,
+  kMagic,
+// kUseConsumable
+  kCount
+};
+
 class CmdAction : public Cmd {
  public:
   enum class Flag { kNone, kDecompose };
