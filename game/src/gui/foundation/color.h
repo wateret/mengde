@@ -52,4 +52,4 @@ class ColorGen {
 
 #define COLOR ColorGen::GetInstance()->Generate
 
-#endif // MENGDE_GUI_FOUNDATION_COLOR_H_
+#endif  // MENGDE_GUI_FOUNDATION_COLOR_H_

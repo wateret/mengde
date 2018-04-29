@@ -9,6 +9,7 @@
 #include "formulae.h"
 #include "magic.h"
 #include "stage_unit_manager.h"
+#include "user_interface.h"
 #include "util/game_env.h"
 #include "util/path.h"
 
@@ -23,6 +24,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
       assets_(assets),  // FIXME Change this to clone the object as we need to rollback assets for some cases
       lua_(nullptr),
       lua_this_(this, "Game"),
+      user_interface_(new UserInterface(this)),
       commander_(nullptr),
       deployer_(nullptr),
       map_(nullptr),
@@ -225,6 +227,11 @@ const Cmd* Game::GetNextCmdConst() const {
 }
 
 bool Game::UnitInCell(Vec2D c) const { return map_->UnitInCell(c); }
+
+Unit* Game::GetUnitInCell(Vec2D c) const {
+  if (map_->UnitInCell(c)) return nullptr;
+  return map_->GetUnit(c);
+}
 
 void Game::DoNext() {
   ASSERT(HasNext());

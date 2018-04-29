@@ -29,6 +29,7 @@ class Magic;
 class Deployer;
 class StageUnitManager;
 class UnitSupervisor;
+class UserInterface;
 
 class Game : public IDeployHelper {
  public:
@@ -65,6 +66,7 @@ class Game : public IDeployHelper {
   void          Push(unique_ptr<Cmd>);
   const Cmd*    GetNextCmdConst() const;
   bool          UnitInCell(Vec2D) const;
+  Unit*         GetUnitInCell(Vec2D) const;
   uint32_t      GetNumEnemiesAlive();
   uint32_t      GetNumOwnsAlive();
   bool          CheckStatus();
@@ -93,6 +95,7 @@ class Game : public IDeployHelper {
 
  public:
   const lua::LuaClass& lua_this() { return lua_this_; }
+  UserInterface*       user_interface() { return user_interface_; }
 
  private:
   lua::Lua* CreateLua(const Path&);
@@ -108,6 +111,7 @@ class Game : public IDeployHelper {
   Assets*           assets_;
   lua::Lua*         lua_;
   lua::LuaClass     lua_this_;  // LuaClass with this object
+  UserInterface*    user_interface_;
   Commander*        commander_;
   Deployer*         deployer_;
   Map*              map_;
@@ -119,4 +123,4 @@ class Game : public IDeployHelper {
 }  // namespace core
 }  // namespace mengde
 
-#endif // MENGDE_CORE_GAME_H_
+#endif  // MENGDE_CORE_GAME_H_

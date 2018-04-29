@@ -35,7 +35,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   virtual string              GetModelId() const override;
   virtual const UnitClass*    GetClass() const override;
   virtual int                 GetMove() const override;
-  virtual Vec2D*              GetAttackRange() const override;
+  virtual const AttackRange&  GetAttackRange() const override;
   virtual uint16_t            GetLevel() const override;
   virtual uint16_t            GetExp() const override;
   virtual const HpMp&         GetOriginalHpMp() const override;
@@ -63,7 +63,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   void      Heal(int);
   void      Kill();
   bool      IsHostile(Unit*) const;
-  bool      IsInRange(Vec2D, Vec2D*) const;
+  bool      IsInRange(Vec2D, const AttackRange&) const;
   bool      IsInRange(Vec2D) const;
   bool      IsDoneAction() const { return done_action_; }
   void      GainExp(Unit*);

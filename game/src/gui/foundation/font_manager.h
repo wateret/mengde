@@ -27,4 +27,4 @@ class FontManager {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_FOUNDATION_FONT_MANAGER_H_
+#endif  // MENGDE_GUI_FOUNDATION_FONT_MANAGER_H_

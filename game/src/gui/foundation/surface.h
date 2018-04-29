@@ -21,4 +21,4 @@ class Surface {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_FOUNDATION_SURFACE_H_
+#endif  // MENGDE_GUI_FOUNDATION_SURFACE_H_

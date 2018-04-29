@@ -12,6 +12,7 @@ namespace core {
 
 struct Attribute;
 struct HpMp;
+class AttackRange;
 class EquipmentSet;
 class UnitClass;
 
@@ -23,7 +24,7 @@ class IUnitBase {
   virtual string              GetModelId() const      = 0;
   virtual const UnitClass*    GetClass() const        = 0;
   virtual int                 GetMove() const         = 0;
-  virtual Vec2D*              GetAttackRange() const  = 0;
+  virtual const AttackRange&  GetAttackRange() const  = 0;
   virtual uint16_t            GetLevel() const        = 0;
   virtual uint16_t            GetExp() const          = 0;
   virtual const HpMp&         GetOriginalHpMp() const = 0;

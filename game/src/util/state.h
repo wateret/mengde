@@ -13,4 +13,4 @@ class State {
 #endif
 };
 
-#endif // UTIL_STATE_H_
+#endif  // UTIL_STATE_H_

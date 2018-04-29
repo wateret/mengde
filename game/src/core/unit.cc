@@ -84,16 +84,16 @@ const UnitClass* Unit::GetClass() const { return hero_->GetClass(); }
 
 int Unit::GetClassIndex() const { return hero_->GetClassIndex(); }
 
-Vec2D* Unit::GetAttackRange() const { return hero_->GetAttackRange(); }
+const AttackRange& Unit::GetAttackRange() const { return hero_->GetAttackRange(); }
 
-bool Unit::IsInRange(Vec2D c, Vec2D* r) const {
-  Vec2D  dv     = c - position_;
-  Vec2D* ranges = r;
-  while (*ranges != Vec2D(0, 0)) {
-    if (*ranges == dv) return true;
-    ranges++;
-  }
-  return false;
+bool Unit::IsInRange(Vec2D c, const AttackRange& range) const {
+  Vec2D dv  = c - position_;
+  bool  res = false;
+  range.ForEach([&](Vec2D d) {
+    // TODO Minor Optimization : Break when found
+    res |= (dv == d);
+  });
+  return res;
 }
 
 bool Unit::IsInRange(Vec2D c) const { return IsInRange(c, GetAttackRange()); }

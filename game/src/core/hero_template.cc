@@ -11,7 +11,7 @@ int HeroTemplate::GetClassIndex() const { return unit_class_->GetIndex(); }
 
 int HeroTemplate::GetMove() const { return unit_class_->GetMove(); }
 
-Vec2D* HeroTemplate::GetAttackRange() const { return unit_class_->GetAttackRange(); }
+const AttackRange& HeroTemplate::GetAttackRange() const { return unit_class_->GetAttackRange(); }
 
 }  // namespace core
 }  // namespace mengde

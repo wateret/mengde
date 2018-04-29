@@ -74,4 +74,4 @@
 
 #endif  // !DEBUG
 
-#endif // UTIL_ASSERT_HELPER_H_
+#endif  // UTIL_ASSERT_HELPER_H_

@@ -69,7 +69,7 @@ bool Magic::IsAvailible(Unit* unit) {
   return false;
 }
 
-Vec2D* Magic::GetRange() { return Range::kRanges[range_]; }
+const AttackRange& Magic::GetRange() { return AttackRangeManager::GetInstance().Get(range_); }
 
 }  // namespace core
 }  // namespace mengde

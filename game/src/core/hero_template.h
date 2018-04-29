@@ -11,13 +11,13 @@ namespace core {
 class HeroTemplate {
  public:
   HeroTemplate(const string&, const string&, const UnitClass*, const Attribute&);
-  string           GetId() const { return id_; }
-  string           GetModelId() const { return bitmap_path_; }
-  const UnitClass* GetClass() const { return unit_class_; }
-  int              GetClassIndex() const;
-  int              GetMove() const;
-  const Attribute& GetHeroStat() const { return hero_attr_; }
-  Vec2D*           GetAttackRange() const;
+  string             GetId() const { return id_; }
+  string             GetModelId() const { return bitmap_path_; }
+  const UnitClass*   GetClass() const { return unit_class_; }
+  int                GetClassIndex() const;
+  int                GetMove() const;
+  const Attribute&   GetHeroStat() const { return hero_attr_; }
+  const AttackRange& GetAttackRange() const;
 
  private:
   string           id_;

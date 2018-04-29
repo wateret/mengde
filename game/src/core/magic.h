@@ -31,7 +31,8 @@ class Magic {
   bool        GetIsTargetEnemy() { return is_target_enemy_; }
   void        Perform(Unit*, Unit*);
   void        AddLearnInfo(uint16_t, uint16_t);
-  Vec2D*      GetRange();
+
+  const AttackRange& GetRange();
 
  public:
   int  CalcDamage(Unit*, Unit*);

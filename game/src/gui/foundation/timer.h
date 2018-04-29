@@ -25,4 +25,4 @@ class Timer {
 }  // namespace gui
 }  // namespace mengde
 
-#endif // MENGDE_GUI_FOUNDATION_TIMER_H_
+#endif  // MENGDE_GUI_FOUNDATION_TIMER_H_

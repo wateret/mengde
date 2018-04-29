@@ -7,20 +7,21 @@ matrix:
           osx_image: xcode8
           compiler:
               - clang
-
           before_install:
               - ./ci/install_deps_osx.sh
-
           cache:
               directories:
                   - $HOME/Library/Caches/Homebrew
-          script: ./ci/clang-format.sh
-          script: ./build.py
+          script: 
+              - ./ci/clang-format.sh
+              - ./build.py
 
         - os: linux
+          sudo: required
           dist: xenial
           before_install:
-              - sudo apt-get -qq update
-              - sudo apt-get install -y cmake libsdl2-dev libsdl2-ttf-dev liblua5.2-dev libboost-system-dev libboost-filesystem-dev
-          script: ./ci/clang-format.sh
-          script: ./build.py
+              - ./ci/install_deps_ubuntu.sh
+          script:
+              # clang format is disabled for ubuntu due to version issue
+#              - ./ci/clang-format.sh
+              - ./build.py

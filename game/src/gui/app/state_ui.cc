@@ -2,6 +2,7 @@
 
 #include "config.h"
 #include "control_view.h"
+#include "core/attack_range.h"
 #include "core/cmd.h"
 #include "core/formulae.h"
 #include "core/game.h"
@@ -10,6 +11,7 @@
 #include "core/map.h"
 #include "core/path_tree.h"
 #include "core/unit.h"
+#include "core/user_interface.h"
 #include "game_view.h"
 #include "gui/foundation/misc.h"
 #include "gui/foundation/texture_animator.h"
@@ -33,7 +35,7 @@ namespace app {
 
 // StateUI
 
-StateUI::StateUI(Base base) : game_(base.game), gv_(base.gv) {}
+StateUI::StateUI(Base base) : game_(base.game), gi_(base.gi), gv_(base.gv) {}
 
 // StateUIMain
 
@@ -247,7 +249,7 @@ void StateUIView::Update() {
   }
 
   if (game_->HasNext()) {
-    gv_->PushUIState(new StateUIDoCmd({game_, gv_}));
+    gv_->PushUIState(new StateUIDoCmd(WrapBase()));
   }
 }
 
@@ -331,7 +333,7 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent 
     if (map->UnitInCell(pos) && map->GetUnit(pos) != unit_) {
       // XXX Other unit clicked
     } else if (std::find(movable_cells.begin(), movable_cells.end(), pos) != movable_cells.end()) {
-      gv_->PushUIState(new StateUIMoving({game_, gv_}, unit_, GetPathToRoot(pos)));
+      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_, GetPathToRoot(pos)));
     } else {
       //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
     }
@@ -724,18 +726,20 @@ void StateUIUnitTooltipAnim::Render(Drawer*) {}
 // StateUITargeting
 
 StateUITargeting::StateUITargeting(StateUI::Base base, core::Unit* unit, const string& magic_id)
-    : StateUIOperable(base), unit_(unit), magic_id_(magic_id), range_itr_(NULL), is_basic_attack_(true) {
-  if (!magic_id.compare("basic_attack")) {
-    is_basic_attack_ = true;
-    range_itr_       = unit_->GetAttackRange();
-  } else {
-    is_basic_attack_   = false;
-    core::Magic* magic = game_->GetMagic(magic_id_);
-    range_itr_         = magic->GetRange();  // FIXME
-  }
-  Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
+    : StateUIOperable(base), unit_(unit), magic_id_(magic_id), range_(GetRange(magic_id)), is_basic_attack_(true) {
+  is_basic_attack_ = !magic_id.compare("basic_attack");
+  Rect frame       = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
   frame.Move(frame.GetW() + LayoutHelper::kDefaultSpace, 0);
+}
+
+const core::AttackRange& StateUITargeting::GetRange(const std::string& magic_id) {
+  if (!magic_id.compare("basic_attack")) {
+    return unit_->GetAttackRange();
+  } else {
+    core::Magic* magic = game_->GetMagic(magic_id_);
+    return magic->GetRange();
+  }
 }
 
 void StateUITargeting::Enter() { StateUIOperable::Enter(); }
@@ -747,16 +751,13 @@ void StateUITargeting::Exit() {
 
 void StateUITargeting::Render(Drawer* drawer) {
   // Show Attack Range
-  ASSERT(range_itr_ != NULL);
-  Vec2D*      range_itr = range_itr_;
-  Vec2D       pos       = unit_->GetPosition();
-  const Vec2D nil       = {0, 0};
-  for (; *range_itr != nil; range_itr++) {
-    Vec2D cpos = pos + *range_itr;
-    if (!game_->IsValidCoords(cpos)) continue;
-    drawer->SetDrawColor(Color(255, 64, 64, 128));
-    drawer->FillCell(cpos);
-  }
+  range_.ForEach(
+      [&](Vec2D d) {
+        if (!game_->IsValidCoords(d)) return;
+        drawer->SetDrawColor(Color(255, 64, 64, 128));
+        drawer->FillCell(d);
+      },
+      unit_->GetPosition());
 
   StateUIOperable::Render(drawer);
 }
@@ -767,6 +768,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
   if (e.IsLeftButtonUp()) {
     Vec2D      map_pos = GetCursorCell();
     core::Map* map     = game_->GetMap();
+    // TODO DO NOT generate Cmd directly, use core::UserInterface instead
     if (map->UnitInCell(map_pos)) {
       core::Unit* atk = unit_;
       core::Unit* def = map->GetUnit(map_pos);
