@@ -67,6 +67,26 @@ $ docker build -t {image_tag_name} docker
 $ docker run --rm -v `pwd`:{mount_path_on_container} -w={mount_path_on_container} {image_tag_name} ./build.py
 ```
 
+##### Cross build for ARM(Raspberry Pi 2/3)
+
+You need to install required packages
+```
+sudo apt-get install qemu qemu-user-static binfmt-support debootstrap
+sudo apt-get install binutils-arm-linux-gnueabihf
+sudo apt-get install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf
+```
+
+You then need to prepare a root filesystem. Only ARMv7l is supported for now.
+```
+$ sudo ./cross/build-rootfs.sh
+```
+Root file system will be prepared in `./cross/rootfs/armv7l`
+
+After it's prepared, you can build with `--cross` option.
+```
+$ ./build.py --cross armv7l
+```
+
 #### Windows
 
 TBD

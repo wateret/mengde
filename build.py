@@ -69,6 +69,7 @@ def parse_args():
     parser.add_argument("--buildpath", default="build", help="specify build path")
     parser.add_argument("--clean",     default=False,   help="clean before build", dest="clean", action="store_true")
     parser.add_argument("--single",    default=False,   help="disalbe parallel build", dest="single", action="store_true")
+    parser.add_argument("--cross",     default="",      help="cross build target", choices=["", "armv7l"])
 
     return parser.parse_args()
 
@@ -79,17 +80,33 @@ def main():
     system, node, release, version, machine, processor = platform.uname()
     cpu_count = multiprocessing.cpu_count()
 
+    if options.cross == "armv7l":
+        machine = "armv7l"
+
     # Set the install folder
     install_folder = "mengde"
+
+    home_folder = os.getcwd()
 
     print_header("Start CMake configuration")
     build_dir = "build/%s.%s.%s" % (system, machine, options.buildtype)
     check_run_cmd("mkdir", ["-p", build_dir])
     os.chdir(build_dir)
-    check_run_cmd("cmake", ["-DCMAKE_BUILD_TYPE=" + options.buildtype,
-                            ("../" * (build_dir.count("/") + 1)),
-                            "-DCMAKE_INSTALL_PREFIX=./",
-                            "-DINSTALL_FOLDER=" + install_folder])
+
+    if options.cross == "armv7l":
+        if os.environ.get("ROOTFS_ARM") is None:
+            os.environ["ROOTFS_ARM"] = os.path.join(home_folder, "cross/rootfs/armv7l")
+        toolchain = os.path.join(home_folder, "cmake/toolchain-armv7l.cmake")
+        check_run_cmd("cmake", ["-DCMAKE_BUILD_TYPE=" + options.buildtype,
+                                ("../" * (build_dir.count("/") + 1)),
+                                "-DCMAKE_INSTALL_PREFIX=./",
+                                "-DINSTALL_FOLDER=" + install_folder,
+                                "-DCMAKE_TOOLCHAIN_FILE=" + toolchain])
+    else:
+        check_run_cmd("cmake", ["-DCMAKE_BUILD_TYPE=" + options.buildtype,
+                                ("../" * (build_dir.count("/") + 1)),
+                                "-DCMAKE_INSTALL_PREFIX=./",
+                                "-DINSTALL_FOLDER=" + install_folder])
 
     # From here, support `Makefile` project only
     make_args = []
