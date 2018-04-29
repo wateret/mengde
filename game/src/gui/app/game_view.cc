@@ -20,7 +20,7 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
       game_(game),
       gi_(game->user_interface()),
       app_(app),
-      ui_state_machine_(new StateUIView({game_, gi_, this})),
+      ui_state_machine_(),
       frame_callbacks_(),
       mouse_coords_(0, 0),
       camera_coords_(0, 0),
@@ -31,6 +31,8 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
   const Vec2D kMapSize    = game_->GetMapSize() * config::kBlockSize;
   const Vec2D kWindowSize = GetFrameSize();
   max_camera_coords_      = kMapSize - kWindowSize;
+
+  InitUIStateMachine();
 }
 
 GameView::~GameView() { delete gi_; }
@@ -113,6 +115,7 @@ void GameView::PopUIState() {
 void GameView::InitUIStateMachine() {
   NextFrame([this]() {
     ui_state_machine_.InitState();
+    ui_state_machine_.PushState(new StateUIView({game_, gi_, this}));
     if (game_->HasNext()) {
       ui_state_machine_.PushState(new StateUIDoCmd({game_, gi_, this}));
     }

@@ -159,6 +159,8 @@ Unit* Game::GetUnit(uint32_t id) { return stage_unit_manager_->Get(id); }
 
 Equipment* Game::GetEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
 
+Force Game::GetCurrentForce() const { return turn_.GetForce(); }
+
 bool Game::EndForceTurn() {
   ForEachUnit([this](Unit* u) {
     if (this->IsCurrentTurn(u)) {

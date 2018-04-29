@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+#include <boost/optional.hpp>
+#include <utility>
+
 #include "cmd.h"
 #include "util/common.h"
 
@@ -10,16 +13,18 @@ namespace mengde {
 namespace core {
 
 class Game;
+class PathTree;
 class Scenario;
 class Unit;
 
 class AvailableUnits {
  public:
-  AvailableUnits(Game* stage, Force force);
-  uint32_t Get(uint32_t idx);
+  AvailableUnits(Game* stage);
+  uint32_t                  Get(uint32_t idx);
+  boost::optional<uint32_t> FindByPos(Vec2D pos);
 
  private:
-  vector<uint32_t> unit_ids_;
+  vector<std::pair<uint32_t, Vec2D>> units_;
 };
 
 class AvailableMoves {
@@ -47,10 +52,11 @@ class UserInterface {
   UserInterface(Game* stage);
 
  public:
-  AvailableUnits QueryUnits(Force force);
+  AvailableUnits QueryUnits();
   AvailableMoves QueryMoves(uint32_t unit_id);
   AvailableActs  QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type);
   void           PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
+  PathTree*      FindMovablePath(uint32_t unit_id);
 
  private:
   Unit*              GetUnit(uint32_t unit_id);

@@ -225,7 +225,7 @@ bool StateUIOperable::IsScrollDown() { return scroll_down_; }
 
 // StateUIView
 
-StateUIView::StateUIView(Base base) : StateUIOperable(base) {}
+StateUIView::StateUIView(Base base) : StateUIOperable(base), units_(game_) {}
 
 void StateUIView::Update() {
   StateUIOperable::Update();
@@ -255,22 +255,22 @@ void StateUIView::Update() {
 
 bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   if (e.IsLeftButtonUp()) {
-    Vec2D      pos = GetCursorCell();
-    core::Map* map = game_->GetMap();
-    if (map->UnitInCell(pos)) {
-      core::Unit* unit = map->GetUnit(pos);
-      if (game_->IsCurrentTurn(unit)) {
-        if (unit->IsDoneAction()) {
-          LOG_INFO("The chosen unit is already done his action");
-        } else {
-          core::PathTree* pathtree = map->FindMovablePath(unit);
-          gv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit, pathtree));
-        }
-      } else {
-        // TODO alert this is not your unit
-      }
+    Vec2D pos         = GetCursorCell();
+    auto  unit_id_opt = units_.FindByPos(pos);
+    if (unit_id_opt) {
+      uint32_t unit_id = unit_id_opt.get();
+      // FIXME pathtree is a raw pointer which could be fragile.
+      core::PathTree* pathtree = gi_->FindMovablePath(unit_id);
+      gv_->PushUIState(new StateUIUnitSelected(WrapBase(), game_->GetUnit(unit_id), pathtree));
     } else {
-      gv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
+      LOG_DEBUG("Not valid unit");
+      // TODO Implement for 3 cases (Need UserInterface support)
+      //        1. Current turn unit but done action
+      //          - Show a message (TBD)
+      //        2. Other's unit
+      //          - Show a message (TBD)
+      //        3. Empty cell
+      //          - gv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
     }
   } else if (e.IsRightButtonUp()) {
     Vec2D      pos = GetCursorCell();

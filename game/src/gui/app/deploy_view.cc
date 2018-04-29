@@ -11,6 +11,7 @@
 #include "deploy_director.h"
 #include "equipment_select_view.h"
 #include "equipment_set_view.h"
+#include "game_view.h"
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
@@ -91,8 +92,8 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
   }
 }
 
-DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHelper* deploy_helper)
-    : CompositeView(frame) {
+DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHelper* deploy_helper, GameView* gv)
+    : CompositeView(frame), gv_(gv) {
   padding(8);
   bg_color(COLOR("darkgray"));
 
@@ -150,6 +151,7 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
     if (e.IsLeftButtonUp()) {
       if (deploy_helper->SubmitDeploy()) {
         this->visible(false);
+        gv_->InitUIStateMachine();
       }
     }
     return true;

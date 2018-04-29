@@ -2,6 +2,7 @@
 
 #include "cmd.h"
 #include "game.h"
+#include "path_tree.h"
 #include "unit.h"
 
 namespace mengde {
@@ -9,17 +10,28 @@ namespace core {
 
 // AvailableUnits
 
-AvailableUnits::AvailableUnits(Game* stage, Force force) {
+AvailableUnits::AvailableUnits(Game* stage) {
   stage->ForEachUnitIdxConst([&](uint32_t idx, const Unit* unit) {
-    if (unit->GetForce() == force && !unit->IsDoneAction()) {
-      unit_ids_.push_back(idx);
+    if (unit->GetForce() == stage->GetCurrentForce() && !unit->IsDoneAction()) {
+      LOG_DEBUG("AVAILABLEUNITS %d %d", unit->GetPosition().x, unit->GetPosition().y);
+      units_.push_back(std::make_pair(idx, unit->GetPosition()));
     }
   });
 }
 
 uint32_t AvailableUnits::Get(uint32_t idx) {
-  ASSERT(idx < unit_ids_.size());
-  return unit_ids_[idx];
+  ASSERT(idx < units_.size());
+  return units_[idx].first;
+}
+
+boost::optional<uint32_t> AvailableUnits::FindByPos(Vec2D pos) {
+  for (auto& e : units_) {
+    if (pos == e.second) {
+      LOG_DEBUG("%d %d / %d %d", pos.x, pos.y, e.second.x, e.second.y);
+      return e.first;
+    }
+  }
+  return boost::none;
 }
 
 // AvailableMoves
@@ -75,7 +87,7 @@ unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
 
 UserInterface::UserInterface(Game* stage) : stage_(stage) {}
 
-AvailableUnits UserInterface::QueryUnits(Force force) { return AvailableUnits(stage_, force); }
+AvailableUnits UserInterface::QueryUnits() { return AvailableUnits(stage_); }
 
 Unit* UserInterface::GetUnit(uint32_t unit_id) { return stage_->GetUnit(unit_id); }
 
@@ -111,6 +123,8 @@ unique_ptr<CmdAct> UserInterface::GetActCmd(uint32_t unit_id, uint32_t move_id, 
   auto acts = QueryActs(unit_id, move_id, type);
   return acts.Get(act_id);
 }
+
+PathTree* UserInterface::FindMovablePath(uint32_t unit_id) { return stage_->FindMovablePath(GetUnit(unit_id)); }
 
 }  // namespace core
 }  // namespace mengde

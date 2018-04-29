@@ -1,6 +1,7 @@
 #ifndef MENGDE_GUI_APP_STATE_UI_H_
 #define MENGDE_GUI_APP_STATE_UI_H_
 
+#include "core/user_interface.h"
 #include "gui/foundation/texture_animator.h"
 #include "gui/uifw/i_view.h"
 #include "util/state.h"
@@ -137,6 +138,9 @@ class StateUIView : public StateUIOperable {
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIView"; }
 #endif
+
+ private:
+  core::AvailableUnits units_;
 };
 
 // StateUIUnitSelected

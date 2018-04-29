@@ -49,9 +49,9 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   void      AddEventEffect(EventEffect*);
   uint16_t  GetMaxExp() { return Level::kExpLimit; }
   void      SetPosition(Vec2D pos) { position_ = pos; }
-  Vec2D     GetPosition() { return position_; }
+  Vec2D     GetPosition() const { return position_; }
   void      SetDirection(Direction direction) { direction_ = direction; }
-  Direction GetDirection() { return direction_; }
+  Direction GetDirection() const { return direction_; }
   void      SetNoRender(bool b) { no_render_ = b; }
   int       GetClassIndex() const;
   Force     GetForce() const { return force_; }

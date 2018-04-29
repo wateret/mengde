@@ -56,6 +56,7 @@ class Game : public IDeployHelper {
   Equipment*    GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
   lua::Lua*     GetLuaScript() { return lua_; }
+  Force         GetCurrentForce() const;
   bool          EndForceTurn();
   bool          IsCurrentTurn(Unit*) const;
   bool          IsAITurn() const;

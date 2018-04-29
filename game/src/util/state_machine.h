@@ -8,6 +8,7 @@
 template <typename T>
 class StateMachine {
  public:
+  StateMachine();
   StateMachine(T);
   ~StateMachine();
   T    GetCurrentState();
@@ -24,6 +25,9 @@ class StateMachine {
 };
 
 template <typename T>
+StateMachine<T>::StateMachine() {}
+
+template <typename T>
 StateMachine<T>::StateMachine(T state) {
   PushState(state);
 }
@@ -38,14 +42,13 @@ StateMachine<T>::~StateMachine() {
 
 template <typename T>
 void StateMachine<T>::InitState() {
-  if (stack_.size() > 1) {
+  if (stack_.size() > 0) {
     GetCurrentState()->Exit();
-    while (stack_.size() > 1) {
+    while (stack_.size() > 0) {
       T cur_state = GetCurrentState();
       delete cur_state;
       stack_.pop();
     }
-    GetCurrentState()->Enter();
   }
 }
 

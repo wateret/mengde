@@ -22,6 +22,7 @@ namespace app {
 
 class EquipmentSetView;
 class EquipmentSelectView;
+class GameView;
 class UnitOverView;
 class UnitView;
 class DeployDirector;
@@ -49,9 +50,10 @@ class HeroModelListView : public CompositeView {
 
 class DeployView : public CompositeView {
  public:
-  DeployView(const Rect&, core::Assets*, core::IDeployHelper*);
+  DeployView(const Rect&, core::Assets*, core::IDeployHelper*, GameView*);
 
  private:
+  GameView*            gv_;
   EquipmentSelectView* equipment_select_view_;
   DeployDirector*      director_;
 };

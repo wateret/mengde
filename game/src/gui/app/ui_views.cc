@@ -28,7 +28,7 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
     core::Assets* assets = scenario->GetAssets();
     Rect          frame  = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
 
-    deploy_view_ = new DeployView(frame, assets, game);
+    deploy_view_ = new DeployView(frame, assets, game, game_view);
     deploy_view_->visible(true);
     AddChild(deploy_view_);
   }
