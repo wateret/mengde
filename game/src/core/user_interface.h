@@ -13,6 +13,15 @@ class Game;
 class Scenario;
 class Unit;
 
+class AvailableUnits {
+ public:
+  AvailableUnits(Game* stage, Force force);
+  uint32_t Get(uint32_t idx);
+
+ private:
+  vector<uint32_t> unit_ids_;
+};
+
 class AvailableMoves {
  public:
   AvailableMoves(Game* stage, Unit* unit);
@@ -38,6 +47,7 @@ class UserInterface {
   UserInterface(Game* stage);
 
  public:
+  AvailableUnits QueryUnits(Force force);
   AvailableMoves QueryMoves(uint32_t unit_id);
   AvailableActs  QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type);
   void           PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);

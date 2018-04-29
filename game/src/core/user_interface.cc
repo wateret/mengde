@@ -7,6 +7,21 @@
 namespace mengde {
 namespace core {
 
+// AvailableUnits
+
+AvailableUnits::AvailableUnits(Game* stage, Force force) {
+  stage->ForEachUnitIdxConst([&](uint32_t idx, const Unit* unit) {
+    if (unit->GetForce() == force && !unit->IsDoneAction()) {
+      unit_ids_.push_back(idx);
+    }
+  });
+}
+
+uint32_t AvailableUnits::Get(uint32_t idx) {
+  ASSERT(idx < unit_ids_.size());
+  return unit_ids_[idx];
+}
+
 // AvailableMoves
 
 AvailableMoves::AvailableMoves(Game* stage, Unit* unit) { moves_ = stage->FindMovablePos(unit); }
@@ -59,6 +74,8 @@ unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
 // UserInterface
 
 UserInterface::UserInterface(Game* stage) : stage_(stage) {}
+
+AvailableUnits UserInterface::QueryUnits(Force force) { return AvailableUnits(stage_, force); }
 
 Unit* UserInterface::GetUnit(uint32_t unit_id) { return stage_->GetUnit(unit_id); }
 
