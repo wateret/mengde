@@ -261,11 +261,11 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
       uint32_t unit_id = unit_id_opt.get();
       // FIXME pathtree is a raw pointer which could be fragile.
       core::PathTree* pathtree = gi_->FindMovablePath(unit_id);
-      gv_->PushUIState(new StateUIUnitSelected(WrapBase(), game_->GetUnit(unit_id), pathtree));
+      gv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit_id, pathtree));
     } else {
       LOG_DEBUG("Not valid unit");
 
-      if (true) { // TODO Check if the position is empty
+      if (true) {  // TODO Check if the position is empty
         gv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
       } else {
         // TODO Implement for 2 cases (Need UserInterface support)
@@ -293,20 +293,29 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
 
 // StateUIUnitSelected
 
-StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, core::Unit* unit, core::PathTree* pathtree)
-    : StateUIOperable(base), unit_(unit), pathtree_(pathtree), origin_coords_(unit_->GetPosition()) {}
+StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, uint32_t unit_id, core::PathTree* pathtree)
+    : StateUIOperable(base), unit_id_(unit_id), pathtree_(pathtree) {
+  // TODO Change the way we handle temporary position (DO NOT move/restore the unit in stage_)
+  core::Unit* unit = gi_->GetUnit(unit_id_);
+  origin_coords_   = unit->GetPosition();
+}
 
 StateUIUnitSelected::~StateUIUnitSelected() {
   if (pathtree_ != nullptr) delete pathtree_;
 }
 
-void StateUIUnitSelected::Enter() { game_->MoveUnit(unit_, origin_coords_); }
+void StateUIUnitSelected::Enter() {
+  core::Unit* unit = gi_->GetUnit(unit_id_);
+  game_->MoveUnit(unit, origin_coords_);
+}
 
 void StateUIUnitSelected::Exit() {}
 
 void StateUIUnitSelected::Render(Drawer* drawer) {
+  core::Unit* unit = gi_->GetUnit(unit_id_);
+
   drawer->SetDrawColor(Color(0, 255, 0, 128));
-  drawer->BorderCell(unit_->GetPosition(), 4);
+  drawer->BorderCell(unit->GetPosition(), 4);
 
   std::vector<Vec2D> movable_cells = pathtree_->GetNodeList();
   drawer->SetDrawColor(Color(0, 0, 192, 96));
@@ -324,7 +333,7 @@ void StateUIUnitSelected::Update() {
   StateUIOperable::Update();
 
   auto unit_view = gv_->unit_view();
-  unit_view->SetUnit(unit_);
+  unit_view->SetUnit(gi_->GetUnit(unit_id_));
   unit_view->visible(true);
 }
 
@@ -333,10 +342,12 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent 
     std::vector<Vec2D> movable_cells = pathtree_->GetNodeList();
     Vec2D              pos           = GetCursorCell();
     core::Map*         map           = game_->GetMap();
-    if (map->UnitInCell(pos) && map->GetUnit(pos) != unit_) {
+    core::Unit*        unit          = gi_->GetUnit(unit_id_);  // TODO To be const
+
+    if (map->UnitInCell(pos) && map->GetUnit(pos) != unit) {
       // XXX Other unit clicked
     } else if (std::find(movable_cells.begin(), movable_cells.end(), pos) != movable_cells.end()) {
-      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_, GetPathToRoot(pos)));
+      gv_->PushUIState(new StateUIMoving(WrapBase(), unit, GetPathToRoot(pos)));
     } else {
       //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
     }

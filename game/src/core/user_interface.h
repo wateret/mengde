@@ -57,9 +57,9 @@ class UserInterface {
   AvailableActs  QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type);
   void           PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
   PathTree*      FindMovablePath(uint32_t unit_id);
+  Unit*          GetUnit(uint32_t unit_id);  // TODO Must be const
 
  private:
-  Unit*              GetUnit(uint32_t unit_id);
   Vec2D              GetMovedPosition(uint32_t unit_id, uint32_t move_id);
   unique_ptr<CmdAct> GetActCmd(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
 

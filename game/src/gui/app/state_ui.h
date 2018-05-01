@@ -147,10 +147,9 @@ class StateUIView : public StateUIOperable {
 
 class StateUIUnitSelected : public StateUIOperable {
  public:
-  StateUIUnitSelected(StateUI::Base, core::Unit*, core::PathTree*);
+  StateUIUnitSelected(StateUI::Base, uint32_t unit_id, core::PathTree*);
   ~StateUIUnitSelected();
   std::vector<Vec2D> GetPathToRoot(Vec2D pos);
-  core::Unit*        GetUnit() { return unit_; }
   virtual void       Enter() override;
   virtual void       Exit() override;
   virtual void       Render(Drawer*) override;
@@ -162,7 +161,7 @@ class StateUIUnitSelected : public StateUIOperable {
 #endif
 
  private:
-  core::Unit*     unit_;
+  uint32_t        unit_id_;
   core::PathTree* pathtree_;
   Vec2D           origin_coords_;
 };
