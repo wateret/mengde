@@ -18,9 +18,16 @@ matrix:
 
         - os: linux
           sudo: required
-          dist: xenial
-          before_install:
-              - ./ci/install_deps_ubuntu.sh
+          dist: trusty
+#          before_install:
+#              - ./ci/install_deps_ubuntu.sh # disabled since it emits an error (We use addons instead for now)
+          addons:
+              packages:
+                   - libsdl2-dev
+                   - libsdl2-ttf-dev
+                   - liblua5.2-dev
+                   - libboost-all-dev
+                   - clang-format
           script:
               # clang format is disabled for ubuntu due to version issue
 #              - ./ci/clang-format.sh
