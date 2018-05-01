@@ -264,13 +264,16 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
       gv_->PushUIState(new StateUIUnitSelected(WrapBase(), game_->GetUnit(unit_id), pathtree));
     } else {
       LOG_DEBUG("Not valid unit");
-      // TODO Implement for 3 cases (Need UserInterface support)
-      //        1. Current turn unit but done action
-      //          - Show a message (TBD)
-      //        2. Other's unit
-      //          - Show a message (TBD)
-      //        3. Empty cell
-      //          - gv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
+
+      if (true) { // TODO Check if the position is empty
+        gv_->PushUIState(new StateUIEmptySelected(WrapBase(), pos));
+      } else {
+        // TODO Implement for 2 cases (Need UserInterface support)
+        //        1. Current turn unit but done action
+        //          - Show a message (TBD)
+        //        2. Other's unit
+        //          - Show a message (TBD)
+      }
     }
   } else if (e.IsRightButtonUp()) {
     Vec2D      pos = GetCursorCell();
