@@ -62,7 +62,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   void      RestoreHP(int);
   void      Heal(int);
   void      Kill();
-  bool      IsHostile(Unit*) const;
+  bool      IsHostile(const Unit*) const;
   bool      IsInRange(Vec2D, const AttackRange&) const;
   bool      IsInRange(Vec2D) const;
   bool      IsDoneAction() const { return done_action_; }

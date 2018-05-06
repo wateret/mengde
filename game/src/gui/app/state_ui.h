@@ -147,23 +147,21 @@ class StateUIView : public StateUIOperable {
 
 class StateUIUnitSelected : public StateUIOperable {
  public:
-  StateUIUnitSelected(StateUI::Base, uint32_t unit_id, core::PathTree*);
-  ~StateUIUnitSelected();
-  std::vector<Vec2D> GetPathToRoot(Vec2D pos);
-  virtual void       Enter() override;
-  virtual void       Exit() override;
-  virtual void       Render(Drawer*) override;
-  virtual void       Update() override;
-  virtual bool       OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  StateUIUnitSelected(StateUI::Base, uint32_t unit_id);
+  virtual void Enter() override;
+  virtual void Exit() override;
+  virtual void Render(Drawer*) override;
+  virtual void Update() override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIUnitSelected"; }
 #endif
 
  private:
-  uint32_t        unit_id_;
-  core::PathTree* pathtree_;
-  Vec2D           origin_coords_;
+  uint32_t             unit_id_;
+  core::AvailableMoves moves_;
+  Vec2D                origin_coords_;
 };
 
 // StateUIMoving

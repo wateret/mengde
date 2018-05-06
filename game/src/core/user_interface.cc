@@ -91,6 +91,22 @@ AvailableUnits UserInterface::QueryUnits() { return AvailableUnits(stage_); }
 
 Unit* UserInterface::GetUnit(uint32_t unit_id) { return stage_->GetUnit(unit_id); }
 
+const Unit* UserInterface::GetUnit(Vec2D pos) const {
+  Map* map = stage_->GetMap();
+  if (map->UnitInCell(pos)) {
+    return map->GetUnit(pos);
+  } else {
+    return nullptr;
+  }
+}
+
+const Unit* UserInterface::GetUnit(uint32_t unit_id) const { return stage_->GetUnit(unit_id); }
+
+vector<Vec2D> UserInterface::GetPath(uint32_t unit_id, Vec2D pos) const {
+  Map* map = stage_->GetMap();
+  return map->FindPathTo(GetUnit(unit_id), pos);
+}
+
 AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) {
   Unit* unit = GetUnit(unit_id);
   return AvailableMoves(stage_, unit);
@@ -123,8 +139,6 @@ unique_ptr<CmdAct> UserInterface::GetActCmd(uint32_t unit_id, uint32_t move_id, 
   auto acts = QueryActs(unit_id, move_id, type);
   return acts.Get(act_id);
 }
-
-PathTree* UserInterface::FindMovablePath(uint32_t unit_id) { return stage_->FindMovablePath(GetUnit(unit_id)); }
 
 }  // namespace core
 }  // namespace mengde

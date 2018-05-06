@@ -37,7 +37,7 @@ void Unit::RestoreHP(int amount) { Heal(amount); }
 
 void Unit::Heal(int amount) { current_hpmp_.hp = std::min(current_hpmp_.hp + amount, GetOriginalHpMp().hp); }
 
-bool Unit::IsHostile(Unit* u) const {
+bool Unit::IsHostile(const Unit* u) const {
   Force uforce = u->force_;
   if (((uint32_t)force_ & (uint32_t)Force::kFriendly) && ((uint32_t)uforce & (uint32_t)Force::kEnemy)) return true;
   if (((uint32_t)uforce & (uint32_t)Force::kFriendly) && ((uint32_t)force_ & (uint32_t)Force::kEnemy)) return true;

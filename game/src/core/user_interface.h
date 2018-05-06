@@ -30,7 +30,8 @@ class AvailableUnits {
 class AvailableMoves {
  public:
   AvailableMoves(Game* stage, Unit* unit);
-  Vec2D Get(uint32_t idx);
+  Vec2D                Get(uint32_t idx);
+  const vector<Vec2D>& moves() { return moves_; }
 
  private:
   vector<Vec2D> moves_;
@@ -56,8 +57,10 @@ class UserInterface {
   AvailableMoves QueryMoves(uint32_t unit_id);
   AvailableActs  QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type);
   void           PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
-  PathTree*      FindMovablePath(uint32_t unit_id);
-  Unit*          GetUnit(uint32_t unit_id);  // TODO Must be const
+  Unit*          GetUnit(uint32_t unit_id);  // TODO Remove this and use only const version
+  const Unit*    GetUnit(uint32_t unit_id) const;
+  const Unit*    GetUnit(Vec2D pos) const;
+  vector<Vec2D>  GetPath(uint32_t unit_id, Vec2D pos) const;
 
  private:
   Vec2D              GetMovedPosition(uint32_t unit_id, uint32_t move_id);

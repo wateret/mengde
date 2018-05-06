@@ -54,6 +54,11 @@ Unit* Map::GetUnit(Vec2D c) {
   return grid_[c.y][c.x]->GetUnit();
 }
 
+const Unit* Map::GetUnit(Vec2D c) const {
+  ASSERT(UnitInCell(c));
+  return grid_[c.y][c.x]->GetUnit();
+}
+
 void Map::RemoveUnit(Vec2D c) {
   ASSERT(UnitInCell(c));
   grid_[c.y][c.x]->Empty();
@@ -66,7 +71,7 @@ Terrain* Map::GetTerrain(Vec2D c) {
 
 // Using Dijkstra Shortest Path Algorithm
 // ( O(N^2) where N is number of vertices )
-PathTree* Map::FindPath(Unit* unit, Vec2D dest) {
+PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
   static const int kDNum   = 4;
   static const int kDRow[] = {0, 0, -1, 1};
   static const int kDCol[] = {-1, 1, 0, 0};
@@ -140,9 +145,9 @@ PathTree* Map::FindPath(Unit* unit, Vec2D dest) {
   return pathtree;
 }
 
-PathTree* Map::FindMovablePath(Unit* unit) { return FindPath(unit, {-1, -1}); }
+PathTree* Map::FindMovablePath(const Unit* unit) { return FindPath(unit, {-1, -1}); }
 
-vector<Vec2D> Map::FindPathTo(Unit* unit, Vec2D dest) {
+vector<Vec2D> Map::FindPathTo(const Unit* unit, Vec2D dest) {
   unique_ptr<PathTree> pathtree(FindPath(unit, dest));
   vector<Vec2D>        path = pathtree->GetPathToRoot(dest);
   return path;
@@ -163,7 +168,7 @@ void Map::MoveUnit(Vec2D src, Vec2D dst) {
 
 void Map::EmptyCell(Vec2D c) { grid_[c.y][c.x]->Empty(); }
 
-bool Map::IsHostileAdjacent(Unit* unit, Vec2D coords) {
+bool Map::IsHostileAdjacent(const Unit* unit, Vec2D coords) const {
   static const int kDNum   = 5;
   static const int kDRow[] = {0, 0, 0, -1, 1};
   static const int kDCol[] = {0, -1, 1, 0, 0};
@@ -179,7 +184,7 @@ bool Map::IsHostileAdjacent(Unit* unit, Vec2D coords) {
   return false;
 }
 
-bool Map::IsHostilePlaced(Unit* unit, Vec2D coords) {
+bool Map::IsHostilePlaced(const Unit* unit, Vec2D coords) const {
   Cell* cell = grid_[coords.y][coords.x];
   ASSERT(cell != nullptr);
   if (cell->IsUnitPlaced() && unit->IsHostile(cell->GetUnit())) {
