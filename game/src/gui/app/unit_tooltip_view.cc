@@ -101,7 +101,7 @@ void UnitTooltipView::SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game
   SetCoords(layout::CalcPositionNearUnit(GetFrameSize(), game_frame, camera, unit));
 }
 
-bool UnitTooltipView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return false; }
+bool UnitTooltipView::OnMouseMotionEvent(const foundation::MouseMotionEvent&) { return false; }
 
 }  // namespace app
 }  // namespace gui

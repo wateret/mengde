@@ -42,18 +42,18 @@ void RootView::Render(Drawer* drawer) {
   ui_views_->Render(drawer);
 }
 
-bool RootView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool RootView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   return ui_views_->OnMouseButtonEvent(e) || game_view_->OnMouseButtonEvent(e);
 }
 
-bool RootView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
+bool RootView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   if (ui_views_->OnMouseMotionEvent(e)) return true;
   if (game_view_->OnMouseMotionEvent(e)) return true;
 
   return true;
 }
 
-bool RootView::OnMouseWheelEvent(const foundation::MouseWheelEvent e) {
+bool RootView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   if (ui_views_->DelegateMouseWheelEvent(e)) return true;
   if (game_view_->OnMouseWheelEvent(e)) return true;
 

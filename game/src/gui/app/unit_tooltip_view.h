@@ -29,7 +29,7 @@ class UnitTooltipView : public CompositeView {
                    const core::HpMp& hpmp_ext);
   void SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame);
 
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
  private:
   core::Unit* unit_;

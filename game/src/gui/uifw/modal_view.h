@@ -15,7 +15,7 @@ class ModalView : public ViewDecorator {
 
  public:
   ModalView(const Rect& frame, View* view, const MouseButtonHandler&);
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
   MouseButtonHandler handler_;

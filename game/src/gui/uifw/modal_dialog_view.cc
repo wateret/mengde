@@ -22,14 +22,14 @@ ModalDialogView::ModalDialogView(const Rect* frame, const string& message)
 
 void ModalDialogView::SetText(const string& s) { message_view_->SetText(s); }
 
-bool ModalDialogView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool ModalDialogView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
     visible(false);
   }
   return true;
 }
 
-bool ModalDialogView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return true; }
+bool ModalDialogView::OnMouseMotionEvent(const foundation::MouseMotionEvent&) { return true; }
 
 }  // namespace uifw
 }  // namespace gui

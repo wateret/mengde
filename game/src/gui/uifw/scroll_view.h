@@ -17,9 +17,9 @@ class ScrollView : public ViewDecorator {
 
  public:
   ScrollView(const Rect&, View*);
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
-  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override;
 
  private:
   Vec2D coords_;

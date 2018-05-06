@@ -51,7 +51,7 @@ void UnitActionView::SetUnit(core::Unit* unit) {
   });
 }
 
-bool UnitActionView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool UnitActionView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   // Refuse to handle RightButtonUp
   if (e.IsRightButtonUp()) {
     return false;

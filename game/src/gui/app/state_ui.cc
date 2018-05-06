@@ -154,9 +154,9 @@ void StateUIDoCmd::Update() {
   }
 }
 
-bool StateUIDoCmd::OnMouseButtonEvent(const foundation::MouseButtonEvent) { return false; }
+bool StateUIDoCmd::OnMouseButtonEvent(const foundation::MouseButtonEvent&) { return false; }
 
-bool StateUIDoCmd::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return true; }
+bool StateUIDoCmd::OnMouseMotionEvent(const foundation::MouseMotionEvent&) { return true; }
 
 // StateUIOperable
 
@@ -184,7 +184,7 @@ void StateUIOperable::Render(Drawer* drawer) {
   drawer->BorderCell(cursor_cell_, 4);
 }
 
-bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
+bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   if (e.IsMotionOver()) {
     // mouse scroll
     const int window_width  = gv_->GetFrameSize().x;
@@ -253,7 +253,7 @@ void StateUIView::Update() {
   }
 }
 
-bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
     Vec2D pos         = GetCursorCell();
     auto  unit_id_opt = units_.FindByPos(pos);
@@ -286,7 +286,7 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   return true;
 }
 
-bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
+bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   return StateUIOperable::OnMouseMotionEvent(e);
 }
 
@@ -330,7 +330,7 @@ void StateUIUnitSelected::Update() {
   unit_view->visible(true);
 }
 
-bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
     vector<Vec2D>     movable_cells = moves_.moves();
     Vec2D             pos           = GetCursorCell();
@@ -531,7 +531,7 @@ void StateUIEmptySelected::Render(Drawer* drawer) {
   drawer->BorderCell(coords_, 4);
 }
 
-bool StateUIEmptySelected::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool StateUIEmptySelected::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp() || e.IsRightButtonUp()) {
     gv_->PopUIState();
   }
@@ -769,7 +769,7 @@ void StateUITargeting::Render(Drawer* drawer) {
 
 void StateUITargeting::Update() { StateUIOperable::Update(); }
 
-bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
     Vec2D      map_pos = GetCursorCell();
     core::Map* map     = game_->GetMap();
@@ -812,7 +812,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent e) 
   return true;
 }
 
-bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
+bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
   auto       unit_tooltip_view = gv_->unit_tooltip_view();
@@ -857,7 +857,7 @@ void StateUIAction::Render(Drawer* drawer) {
   drawer->BorderCell(unit_->GetPosition(), 4);
 }
 
-bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsRightButtonUp()) {
     gv_->PopUIState();
   }
@@ -884,7 +884,7 @@ void StateUIMagicSelection::Render(Drawer* drawer) {
   drawer->BorderCell(unit_->GetPosition(), 4);
 }
 
-bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsRightButtonUp()) {
     gv_->PopUIState();
   }
@@ -945,7 +945,7 @@ void StateUISpeak::Update() {
   }
 }
 
-bool StateUISpeak::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool StateUISpeak::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
     //    gv_->PopUIState();
     return true;

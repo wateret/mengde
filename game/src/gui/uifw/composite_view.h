@@ -27,9 +27,9 @@ class CompositeView : public View {
  public:
   void         Render(Drawer*) override;
   void         Update() override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
-  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override;
 
  private:
   std::vector<View*> children_;

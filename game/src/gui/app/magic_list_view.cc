@@ -78,7 +78,7 @@ void MagicListView::SetUnitAndMagicList(core::Unit* unit, shared_ptr<core::Magic
   }
 }
 
-bool MagicListView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool MagicListView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   // Refuse to handle RightButtonUp
   if (e.IsRightButtonUp()) {
     return false;

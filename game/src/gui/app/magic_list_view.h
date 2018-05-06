@@ -31,7 +31,7 @@ class MagicListView : public CompositeView {
   MagicListView(const Rect&, core::Game*, core::UserInterface*, GameView*);
   ~MagicListView();
   void         SetUnitAndMagicList(core::Unit*, shared_ptr<core::MagicList>);
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
   void Cleanup();

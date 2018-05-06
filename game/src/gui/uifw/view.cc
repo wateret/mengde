@@ -68,7 +68,7 @@ bool View::RenderBegin(Drawer* drawer) {
 
 void View::RenderEnd(Drawer* drawer) { drawer->ResetViewport(); }
 
-bool View::DelegateMouseButtonEvent(foundation::MouseButtonEvent e) {
+bool View::DelegateMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (visible_ && GetFrame()->Contains(e.GetCoords())) {
     Vec2D                        conv_coords = e.GetCoords() - GetActualFrameCoords();
     foundation::MouseButtonEvent ec(e.GetButton(), e.GetState(), conv_coords);
@@ -77,7 +77,7 @@ bool View::DelegateMouseButtonEvent(foundation::MouseButtonEvent e) {
   return false;
 }
 
-bool View::DelegateMouseMotionEvent(foundation::MouseMotionEvent e) {
+bool View::DelegateMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   if (!visible_) return false;
   if (e.IsMotionOver()) {
     if (GetFrame()->Contains(e.GetCoords())) {
@@ -99,7 +99,7 @@ bool View::DelegateMouseMotionEvent(foundation::MouseMotionEvent e) {
   return false;
 }
 
-bool View::DelegateMouseWheelEvent(foundation::MouseWheelEvent e) {
+bool View::DelegateMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   // FIXME This is same routine with DelegateMouseButtonEvent
   if (visible_ && GetFrame()->Contains(e.GetCoords())) {
     Vec2D                       conv_coords = e.GetCoords() - GetActualFrameCoords();

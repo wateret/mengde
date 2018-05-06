@@ -23,7 +23,7 @@ class UnitDialogView : public CompositeView {
   void SetUnit(core::Unit* u);
 
  private:
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
   string      message_;
