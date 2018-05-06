@@ -174,8 +174,7 @@ class StateUIMoving : public StateUI {
   static const int kFramesPerCell = 12;
 
  public:
-  StateUIMoving(StateUI::Base, core::Unit*, const std::vector<Vec2D>&, Flag = Flag::kInputActNext);
-  StateUIMoving(StateUI::Base, core::Unit*, Vec2D, Flag = Flag::kInputActNext);
+  StateUIMoving(StateUI::Base, uint32_t unit_id, Vec2D, Flag = Flag::kInputActNext);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -190,11 +189,11 @@ class StateUIMoving : public StateUI {
   bool LastFrame();
 
  private:
-  core::Unit*   unit_;
+  uint32_t      unit_id_;
   Vec2D         dest_;
-  vector<Vec2D> path_;
   int           frames_;
   Flag          flag_;
+  vector<Vec2D> path_;
 };
 
 // StateUIMagic

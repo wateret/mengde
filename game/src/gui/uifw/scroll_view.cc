@@ -12,9 +12,13 @@ ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, vie
   view_->SetCoords({0, 0});
 }
 
-bool ScrollView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) { return view_->DelegateMouseButtonEvent(e); }
+bool ScrollView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
+  return view_->DelegateMouseButtonEvent(e);
+}
 
-bool ScrollView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) { return view_->DelegateMouseMotionEvent(e); }
+bool ScrollView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
+  return view_->DelegateMouseMotionEvent(e);
+}
 
 bool ScrollView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   Vec2D coords_o = coords_;

@@ -110,7 +110,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
       if (c->GetUnit()->GetPosition() == c->GetDest()) {
         return no_state_ui;
       } else {
-        return new StateUIMoving(WrapBase(), c->GetUnit(), c->GetDest(), flag);
+        return new StateUIMoving(WrapBase(), game_->GetUnitId(c->GetUnit()) /* FIXME */, c->GetDest(), flag);
       }
     }
     case core::Cmd::Op::kCmdKilled: {
@@ -332,15 +332,15 @@ void StateUIUnitSelected::Update() {
 
 bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
-    vector<Vec2D>     movable_cells = moves_.moves();
-    Vec2D             pos           = GetCursorCell();
-    core::Map*        map           = game_->GetMap();
-    const core::Unit* unit          = gi_->GetUnit(unit_id_);  // TODO unit_id_ instead
+    const vector<Vec2D>& cells = moves_.moves();
+    Vec2D                pos   = GetCursorCell();
+    core::Map*           map   = game_->GetMap();
+    const core::Unit*    unit  = gi_->GetUnit(unit_id_);  // TODO unit_id_ instead
 
     if (map->UnitInCell(pos) && map->GetUnit(pos) != unit) {
       // XXX Other unit clicked
-    } else if (std::find(movable_cells.begin(), movable_cells.end(), pos) != movable_cells.end()) {
-      gv_->PushUIState(new StateUIMoving(WrapBase(), const_cast<core::Unit*>(unit), gi_->GetPath(unit_id_, pos)));
+    } else if (std::find(cells.begin(), cells.end(), pos) != cells.end()) {
+      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_id_, pos, StateUIMoving::Flag::kInputActNext));
     } else {
       //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
     }
@@ -352,13 +352,10 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
 
 // StateUIMoving
 
-StateUIMoving::StateUIMoving(StateUI::Base base, core::Unit* unit, Vec2D dest, Flag flag)
-    : StateUI(base), unit_(unit), dest_(dest), path_(), frames_(-1), flag_(flag) {}
-
-StateUIMoving::StateUIMoving(StateUI::Base base, core::Unit* unit, const vector<Vec2D>& path, Flag flag)
-    : StateUI(base), unit_(unit), dest_(), path_(path), frames_(-1), flag_(flag) {
-  ASSERT(!path_.empty());
-  dest_ = path_[0];
+StateUIMoving::StateUIMoving(StateUI::Base base, uint32_t unit_id, Vec2D dest, Flag flag)
+    : StateUI(base), unit_id_(unit_id), dest_(dest), frames_(-1), flag_(flag) {
+  path_ = gi_->GetPath(unit_id, dest_);
+  ASSERT(dest_ == path_[0]);
 }
 
 int StateUIMoving::NumPaths() { return static_cast<int>(path_.size()) - 1; }
@@ -375,29 +372,25 @@ bool StateUIMoving::LastFrame() {
 }
 
 void StateUIMoving::Enter() {
-  unit_->SetNoRender(true);
-
-  if (path_.empty()) {
-    // Lazy path generation
-    core::Map* m = game_->GetMap();
-    path_        = m->FindPathTo(unit_, dest_);
-    ASSERT(dest_ == path_[0]);
-  }
+  core::Unit* unit = gi_->GetUnit(unit_id_);
+  unit->SetNoRender(true);
 }
 
-void StateUIMoving::Exit() { unit_->SetNoRender(false); }
+void StateUIMoving::Exit() {
+  core::Unit* unit = gi_->GetUnit(unit_id_);
+  unit->SetNoRender(false);
+}
 
 void StateUIMoving::Update() {
   frames_++;
   if (LastFrame()) {  // Arrived at the destination
-    ASSERT(dest_ == path_[0]);
-    game_->MoveUnit(unit_, dest_);
+    game_->MoveUnit(unit_id_, dest_);
     if (path_.size() > 1) {
-      Direction dir = Vec2DRelativePosition(path_[1], path_[0]);
-      unit_->SetDirection(dir);  // Do this here?
+      //      Direction dir = Vec2DRelativePosition(path_[1], path_[0]);
+      //      unit_->SetDirection(dir);  // Do this here?
     }
     if (flag_ == Flag::kInputActNext) {
-      gv_->ChangeUIState(new StateUIAction(WrapBase(), unit_));
+      gv_->ChangeUIState(new StateUIAction(WrapBase(), gi_->GetUnit(unit_id_)));
     } else {
       gv_->PopUIState();
     }
@@ -419,7 +412,8 @@ void StateUIMoving::Render(Drawer* drawer) {
   Direction dir            = Vec2DRelativePosition(path_[path_idx], path_[path_idx - 1]);
   Vec2D     diff           = path_[path_idx - 1] - path_[path_idx];
   Vec2D     diff_pos       = diff * (percentage * (float)config::kBlockSize);
-  drawer->CopySprite(unit_->GetModelId(), kSpriteMove, dir, sprite_no, {kEffectNone, 0}, path_[path_idx], diff_pos);
+  drawer->CopySprite(gi_->GetUnit(unit_id_)->GetModelId(), kSpriteMove, dir, sprite_no, {kEffectNone, 0},
+                     path_[path_idx], diff_pos);
   gv_->CenterCamera(path_[path_idx] * config::kBlockSize + diff_pos + (config::kBlockSize / 2));
 }
 

@@ -138,6 +138,8 @@ void Game::MoveUnit(Unit* unit, Vec2D dst) {
   unit->SetPosition(dst);
 }
 
+void Game::MoveUnit(uint32_t unit_id, Vec2D dst) { MoveUnit(GetUnit(unit_id), dst); }
+
 void Game::KillUnit(Unit* unit) {
   map_->RemoveUnit(unit->GetPosition());
   stage_unit_manager_->Kill(unit);
@@ -156,6 +158,19 @@ bool Game::IsValidCoords(Vec2D c) { return map_->IsValidCoords(c); }
 Magic* Game::GetMagic(const std::string& id) { return rc_.magic_manager->Get(id); }
 
 Unit* Game::GetUnit(uint32_t id) { return stage_unit_manager_->Get(id); }
+
+uint32_t Game::GetUnitId(const Unit* unit) {
+  // TODO The implementation is temoporary. Remove this method or write a safer implementation
+  uint32_t id  = 0;
+  uint32_t idx = 0;
+  ForEachUnit([&](Unit* u) {
+    if (unit == u) {
+      id = idx;
+    }
+    idx++;
+  });
+  return id;
+}
 
 Equipment* Game::GetEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
 
