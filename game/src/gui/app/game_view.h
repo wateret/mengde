@@ -48,9 +48,9 @@ class GameView : public View {
   // View interfaces
   virtual void Update() override;
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
-  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override;
 
  public:
   // UIStateMachine related

@@ -18,11 +18,11 @@ void ViewDecorator::Render(Drawer* drawer) {
 
 void ViewDecorator::Update() { view_->Update(); }
 
-bool ViewDecorator::OnMouseButtonEvent(const foundation::MouseButtonEvent e) { return view_->OnMouseButtonEvent(e); }
+bool ViewDecorator::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) { return view_->OnMouseButtonEvent(e); }
 
-bool ViewDecorator::OnMouseMotionEvent(const foundation::MouseMotionEvent e) { return view_->OnMouseMotionEvent(e); }
+bool ViewDecorator::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) { return view_->OnMouseMotionEvent(e); }
 
-bool ViewDecorator::OnMouseWheelEvent(const foundation::MouseWheelEvent e) { return view_->OnMouseWheelEvent(e); }
+bool ViewDecorator::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) { return view_->OnMouseWheelEvent(e); }
 
 }  // namespace uifw
 }  // namespace gui

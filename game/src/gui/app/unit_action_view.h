@@ -23,7 +23,7 @@ class UnitActionView : public VerticalListView {
  public:
   UnitActionView(const Rect& frame, core::Game* game, core::UserInterface*, GameView* gv);
   void         SetUnit(core::Unit* unit);
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
   core::Game*          game_;

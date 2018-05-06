@@ -22,8 +22,8 @@ class ModalDialogView : public CompositeView {
   void SetText(const string&);
 
  private:
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
  private:
   string         message_;

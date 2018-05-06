@@ -21,8 +21,8 @@ class TextView : public View {
   void SetColor(Color);
 
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
  private:
   void UpdateCoords();

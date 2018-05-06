@@ -38,16 +38,16 @@ class View : public IView {
   void  visible(bool b);
   bool  visible() const { return visible_; }
 
-  bool DelegateMouseButtonEvent(const foundation::MouseButtonEvent);
-  bool DelegateMouseMotionEvent(const foundation::MouseMotionEvent);
-  bool DelegateMouseWheelEvent(const foundation::MouseWheelEvent);
+  bool DelegateMouseButtonEvent(const foundation::MouseButtonEvent&);
+  bool DelegateMouseMotionEvent(const foundation::MouseMotionEvent&);
+  bool DelegateMouseWheelEvent(const foundation::MouseWheelEvent&);
 
  public:
   virtual void Render(Drawer*) override {}
   virtual void Update() override {}
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override { return false; }
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override { return false; }
-  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override { return false; }
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override { return false; }
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override { return false; }
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override { return false; }
 
  public:
   bool RenderBegin(Drawer*);

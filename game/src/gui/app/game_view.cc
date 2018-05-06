@@ -78,16 +78,16 @@ void GameView::Render(Drawer* drawer) {
   drawer->SetOffset({0, 0});
 }
 
-bool GameView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool GameView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   return GetCurrentState()->OnMouseButtonEvent(e);
 }
 
-bool GameView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
+bool GameView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   mouse_coords_ = e.GetCoords();
   return GetCurrentState()->OnMouseMotionEvent(e);
 }
 
-bool GameView::OnMouseWheelEvent(const foundation::MouseWheelEvent e) {
+bool GameView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   return GetCurrentState()->OnMouseWheelEvent(e);
 }
 

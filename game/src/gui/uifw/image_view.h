@@ -22,8 +22,8 @@ class ImageView : public View {
   void SetSourceRect(const Rect&);
 
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
  private:
   std::string path_;

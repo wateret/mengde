@@ -44,9 +44,9 @@ class StateUI : public State, public IView {
   virtual void Exit() override {}
   virtual void Render(Drawer*) override {}
   virtual void Update() override {}
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override { return false; }
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override { return true; }
-  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent) override { return false; }
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override { return false; }
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override { return true; }
+  virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override { return false; }
   Base         WrapBase() { return {game_, gi_, gv_}; }
 
 #ifdef DEBUG
@@ -68,8 +68,8 @@ class StateUIMain : public StateUI {
   //  virtual void Exit() override;
   //  virtual void Render(Drawer*) override;
   //  virtual void Update() override;
-  //  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  //  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  //  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  //  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIMain"; }
@@ -85,8 +85,8 @@ class StateUIDoCmd : public StateUI {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual void Update() override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIDoCmd"; }
@@ -106,7 +106,7 @@ class StateUIOperable : public StateUI {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual void Update() override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
   Vec2D        GetCursorCell() { return cursor_cell_; }
   void         ClearScrolls();
   void         SetScrollLeft();
@@ -132,8 +132,8 @@ class StateUIOperable : public StateUI {
 class StateUIView : public StateUIOperable {
  public:
   StateUIView(StateUI::Base);
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
   virtual void Update() override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIView"; }
@@ -152,7 +152,7 @@ class StateUIUnitSelected : public StateUIOperable {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual void Update() override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIUnitSelected"; }
@@ -253,7 +253,7 @@ class StateUIEmptySelected : public StateUI {
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIEmptySelected"; }
 #endif
@@ -323,7 +323,7 @@ class StateUIAction : public StateUI {
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIAction"; }
 #endif
@@ -340,7 +340,7 @@ class StateUIMagicSelection : public StateUI {
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIMagicSelection"; }
 #endif
@@ -358,8 +358,8 @@ class StateUITargeting : public StateUIOperable {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual void Update() override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUITargeting"; }
 #endif
@@ -381,8 +381,8 @@ class StateUINextTurn : public StateUI {
   virtual void Exit() override;
   virtual void Update() override;
   virtual void Render(Drawer*) override;
-//  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
-//  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override;
+//  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+//  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUINextTurn"; }
 #endif
@@ -397,7 +397,7 @@ class StateUISpeak : public StateUI {
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUISpeak"; }
 #endif

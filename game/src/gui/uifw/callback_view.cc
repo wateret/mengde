@@ -15,12 +15,12 @@ void CallbackView::InitHandlers() {
   mouse_motion_handler_ = [](const foundation::MouseMotionEvent) { return false; };
 }
 
-bool CallbackView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool CallbackView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   ASSERT(mouse_button_handler_);
   return mouse_button_handler_(e);
 }
 
-bool CallbackView::OnMouseMotionEvent(const foundation::MouseMotionEvent e) {
+bool CallbackView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   ASSERT(mouse_motion_handler_);
   return mouse_motion_handler_(e);
 }

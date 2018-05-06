@@ -26,7 +26,7 @@ void TextView::Render(Drawer* drawer) {
   drawer->DrawText(text_, size_, color_, &frame, align_);
 }
 
-bool TextView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
+bool TextView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonDown()) {
     LOG_DEBUG("LeftButtonDown on the TextView '%s'", text_.c_str());
     return true;
@@ -34,7 +34,7 @@ bool TextView::OnMouseButtonEvent(const foundation::MouseButtonEvent e) {
   return true;
 }
 
-bool TextView::OnMouseMotionEvent(const foundation::MouseMotionEvent) { return false; }
+bool TextView::OnMouseMotionEvent(const foundation::MouseMotionEvent&) { return false; }
 
 }  // namespace uifw
 }  // namespace gui

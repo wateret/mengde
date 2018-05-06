@@ -19,8 +19,8 @@ class CallbackView : public CompositeView {
   CallbackView();
   CallbackView(const Rect*);
   CallbackView(const Rect&);
-  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent) override final;
-  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent) override final;
+  virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override final;
+  virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override final;
   void         SetMouseButtonHandler(MouseButtonHandler);
   void         SetMouseMotionHandler(MouseMotionHandler);
 
