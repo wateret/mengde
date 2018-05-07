@@ -376,6 +376,8 @@ unique_ptr<Cmd> CmdAction::Do(Game* game) {
   unique_ptr<CmdQueue> ret(new CmdQueue());
 
   if (flag_ == Flag::kNone) {
+    UNREACHABLE("Unsupported");
+#if 0
     if (cmd_move_ != nullptr) {
       unique_ptr<Cmd> tmp = cmd_move_->Do(game);
       ASSERT(tmp == nullptr);
@@ -387,12 +389,17 @@ unique_ptr<Cmd> CmdAction::Do(Game* game) {
     }
 
     doer->EndAction();
+#endif
 
-    // TODO raise move event
-    //      Even if it didn't move, we can just send message that we are at some position...
-    //      BTW act event must have been notified by `cmd_act_`
-
-    //  ret->Append(commands that were generated - raised by move event);
+  } else if (flag_ == Flag::kUserInput) {
+    // Do cmd_move_ immediately (Not to play move animation)
+    if (cmd_move_ != nullptr) {
+      unique_ptr<Cmd> tmp = cmd_move_->Do(game);
+      ASSERT(tmp == nullptr);
+    }
+    if (cmd_act_ != nullptr) {
+      ret->Append(std::move(cmd_act_));
+    }
   } else {
     ASSERT(flag_ == Flag::kDecompose);
     LOG_DEBUG("DECOMPOSING Action");
@@ -402,8 +409,15 @@ unique_ptr<Cmd> CmdAction::Do(Game* game) {
     if (cmd_act_ != nullptr) {
       ret->Append(std::move(cmd_act_));
     }
-    ret->Append(unique_ptr<Cmd>(new CmdEndAction(doer)));
   }
+
+  ret->Append(unique_ptr<Cmd>(new CmdEndAction(doer)));
+
+  // TODO raise move event
+  //      Even if it didn't move, we can just send message that we are at some position...
+  //      BTW act event must have been notified by `cmd_act_`
+
+  //  ret->Append(commands that were generated - raised by move event);
 
   return std::move(ret);
 }

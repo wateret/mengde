@@ -774,7 +774,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
       if (is_basic_attack_) {
         if (atk->IsInRange(map_pos)) {
           if (atk->IsHostile(def)) {
-            unique_ptr<core::CmdAction> action(new core::CmdAction());
+            unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
             action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
             action->SetCmdAct(unique_ptr<core::CmdBasicAttack>(
                 new core::CmdBasicAttack(atk, def, core::CmdBasicAttack::Type::kActive)));
@@ -788,7 +788,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
         core::Magic* magic = game_->GetMagic(magic_id_);
         if (atk->IsInRange(map_pos, magic->GetRange())) {
           if (atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
-            unique_ptr<core::CmdAction> action(new core::CmdAction());
+            unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
             action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
             action->SetCmdAct(unique_ptr<core::CmdMagic>(new core::CmdMagic(atk, def, magic)));
             game_->Push(std::move(action));

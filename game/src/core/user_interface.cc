@@ -123,7 +123,7 @@ void UserInterface::PushAction(uint32_t unit_id, uint32_t move_id, ActionType ty
   Vec2D              move_pos = GetMovedPosition(unit_id, move_id);
   unique_ptr<CmdAct> act      = GetActCmd(unit_id, move_id, type, act_id);
 
-  CmdAction* cmd = new CmdAction();
+  CmdAction* cmd = new CmdAction(stage_->IsUserTurn() ? CmdAction::Flag::kUserInput : CmdAction::Flag::kDecompose);
   cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(unit, move_pos)));
   cmd->SetCmdAct(std::move(act));
 

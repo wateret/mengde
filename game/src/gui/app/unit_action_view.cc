@@ -41,7 +41,7 @@ void UnitActionView::SetUnit(core::Unit* unit) {
   });
   btn_stay_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
     if (e.IsLeftButtonUp()) {
-      unique_ptr<core::CmdAction> action(new core::CmdAction());
+      unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
       action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
       action->SetCmdAct(unique_ptr<core::CmdStay>(new core::CmdStay(unit)));
       game_->Push(std::move(action));

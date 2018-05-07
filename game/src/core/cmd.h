@@ -235,7 +235,7 @@ enum class ActionType {
 
 class CmdAction : public Cmd {
  public:
-  enum class Flag { kNone, kDecompose };
+  enum class Flag { kNone, kUserInput, kDecompose };
 
  public:
   CmdAction();

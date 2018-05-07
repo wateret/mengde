@@ -42,13 +42,8 @@ StateMachine<T>::~StateMachine() {
 
 template <typename T>
 void StateMachine<T>::InitState() {
-  if (stack_.size() > 0) {
-    GetCurrentState()->Exit();
-    while (stack_.size() > 0) {
-      T cur_state = GetCurrentState();
-      delete cur_state;
-      stack_.pop();
-    }
+  while (!IsStackEmpty()) {
+    PopState();
   }
 }
 
