@@ -12,7 +12,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitTooltipView::UnitTooltipView(const Rect* frame, core::Unit* unit)
+UnitTooltipView::UnitTooltipView(const Rect* frame, const core::Unit* unit)
     : CompositeView(frame),
       unit_(unit),
       gv_hp_(nullptr),
@@ -52,7 +52,7 @@ UnitTooltipView::~UnitTooltipView() {}
 void UnitTooltipView::SetUnitTerrainInfo(core::Cell* cell) {
   ASSERT(cell->IsUnitPlaced());
 
-  core::Unit* unit = cell->GetUnit();
+  const core::Unit* unit = cell->GetUnit();
   if (unit_ == unit) return;
   SetUnit(unit);
 
@@ -62,13 +62,13 @@ void UnitTooltipView::SetUnitTerrainInfo(core::Cell* cell) {
   tv_rgtbot_->SetText(terrain_effect);
 }
 
-void UnitTooltipView::SetUnitAttackInfo(core::Unit* unit, int accuracy, int expected_damage) {
+void UnitTooltipView::SetUnitAttackInfo(const core::Unit* unit, int accuracy, int expected_damage) {
   SetUnit(unit);
   gv_hp_->SetExtVal(expected_damage);
   tv_rgtbot_->SetText("Accuracy : " + std::to_string(accuracy) + "%");
 }
 
-void UnitTooltipView::SetUnit(core::Unit* unit) {
+void UnitTooltipView::SetUnit(const core::Unit* unit) {
   unit_                      = unit;
   const core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
   const core::HpMp& ori_xtat = unit_->GetOriginalHpMp();

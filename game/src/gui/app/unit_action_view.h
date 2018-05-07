@@ -22,11 +22,13 @@ class GameView;
 class UnitActionView : public VerticalListView {
  public:
   UnitActionView(const Rect& frame, core::Game* game, core::UserInterface*, GameView* gv);
-  void         SetUnit(core::Unit* unit);
+  void         SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
-  core::Game*          game_;
+  uint32_t             unit_id_;
+  uint32_t             move_id_;
+  core::Game*          game_;  // TODO remove this
   core::UserInterface* gi_;
   GameView*            gv_;
   ButtonView*          btn_attack_;

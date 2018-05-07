@@ -20,11 +20,11 @@ namespace app {
 
 class UnitTooltipView : public CompositeView {
  public:
-  UnitTooltipView(const Rect*, core::Unit* = NULL);
+  UnitTooltipView(const Rect*, const core::Unit* = NULL);
   virtual ~UnitTooltipView();
   void SetUnitTerrainInfo(core::Cell* cell);
-  void SetUnitAttackInfo(core::Unit*, int, int);
-  void SetUnit(core::Unit*);
+  void SetUnitAttackInfo(const core::Unit*, int, int);
+  void SetUnit(const core::Unit*);
   void SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max,
                    const core::HpMp& hpmp_ext);
   void SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame);
@@ -32,13 +32,14 @@ class UnitTooltipView : public CompositeView {
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
  private:
-  core::Unit* unit_;
-  GaugeView*  gv_hp_;
-  GaugeView*  gv_mp_;
-  TextView*   tv_name_;
-  TextView*   tv_lv_;
-  TextView*   tv_lftbot_;
-  TextView*   tv_rgtbot_;
+  const core::Unit* unit_;
+
+  GaugeView* gv_hp_;
+  GaugeView* gv_mp_;
+  TextView*  tv_name_;
+  TextView*  tv_lv_;
+  TextView*  tv_lftbot_;
+  TextView*  tv_rgtbot_;
 };
 
 }  // namespace app

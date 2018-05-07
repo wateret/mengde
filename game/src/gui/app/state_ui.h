@@ -174,7 +174,7 @@ class StateUIMoving : public StateUI {
   static const int kFramesPerCell = 12;
 
  public:
-  StateUIMoving(StateUI::Base, uint32_t unit_id, Vec2D, Flag = Flag::kInputActNext);
+  StateUIMoving(StateUI::Base, uint32_t unit_id, Vec2D, Flag = Flag::kInputActNext, uint32_t move_id = 0);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -194,6 +194,7 @@ class StateUIMoving : public StateUI {
   int           frames_;
   Flag          flag_;
   vector<Vec2D> path_;
+  uint32_t      move_id_;
 };
 
 // StateUIMagic
@@ -318,7 +319,7 @@ class StateUIUnitTooltipAnim : public StateUI {
 
 class StateUIAction : public StateUI {
  public:
-  StateUIAction(StateUI::Base, uint32_t unit_id);
+  StateUIAction(StateUI::Base, uint32_t unit_id, uint32_t move_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -329,6 +330,7 @@ class StateUIAction : public StateUI {
 
  private:
   uint32_t unit_id_;
+  uint32_t move_id_;
   Vec2D    pos_;
 };
 
@@ -336,7 +338,7 @@ class StateUIAction : public StateUI {
 
 class StateUIMagicSelection : public StateUI {
  public:
-  StateUIMagicSelection(StateUI::Base, core::Unit*);
+  StateUIMagicSelection(StateUI::Base, uint32_t unit_id, uint32_t move_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -346,14 +348,16 @@ class StateUIMagicSelection : public StateUI {
 #endif
 
  private:
-  core::Unit* unit_;
+  uint32_t unit_id_;
+  uint32_t move_id_;
+  Vec2D    pos_;
 };
 
 // StateUITargeting
 
 class StateUITargeting : public StateUIOperable {
  public:
-  StateUITargeting(StateUI::Base, core::Unit*, const string& = "basic_attack");
+  StateUITargeting(StateUI::Base, uint32_t unit_id, uint32_t move_id, const string& = "basic_attack");
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -365,13 +369,15 @@ class StateUITargeting : public StateUIOperable {
 #endif
 
  private:
-  const core::AttackRange& GetRange(const std::string& magic_id);
+  const core::AttackRange& GetRange();
 
  private:
-  core::Unit*              unit_;
+  uint32_t                 unit_id_;
+  uint32_t                 move_id_;
   string                   magic_id_;
-  const core::AttackRange& range_;
   bool                     is_basic_attack_;
+  const core::AttackRange& range_;
+  core::AvailableActs      acts_;
 };
 
 class StateUINextTurn : public StateUI {

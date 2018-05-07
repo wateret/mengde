@@ -38,7 +38,7 @@ class Magic {
   int  CalcDamage(Unit*, Unit*);
   int  CalcAccuracy(Unit*, Unit*);
   bool TryPerform(Unit*, Unit*);
-  bool IsAvailible(Unit*);
+  bool IsAvailible(const Unit*);
   bool IsTypeHeal() { return type_ & kMagicHeal; }
   bool IsTypeDeal() { return type_ & kMagicDeal; }
 

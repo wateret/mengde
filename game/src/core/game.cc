@@ -250,7 +250,7 @@ const Cmd* Game::GetNextCmdConst() const {
 bool Game::UnitInCell(Vec2D c) const { return map_->UnitInCell(c); }
 
 Unit* Game::GetUnitInCell(Vec2D c) const {
-  if (map_->UnitInCell(c)) return nullptr;
+  if (!map_->UnitInCell(c)) return nullptr;
   return map_->GetUnit(c);
 }
 

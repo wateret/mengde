@@ -195,7 +195,7 @@ bool Map::IsHostilePlaced(const Unit* unit, Vec2D coords) const {
 
 bool Map::IsValidCoords(Vec2D c) const { return c.x >= 0 && c.x < size_.x && c.y >= 0 && c.y < size_.y; }
 
-int Map::ApplyTerrainEffect(Unit* unit, int value) {
+int Map::ApplyTerrainEffect(const Unit* unit, int value) {
   Vec2D v = unit->GetPosition();
   return grid_[v.y][v.x]->ApplyTerrainEffect(unit->GetClassIndex(), value);
 }

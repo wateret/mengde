@@ -9,7 +9,7 @@ namespace core {
 
 Formulae::Formulae() {}
 
-int Formulae::ComputeBasicAttackDamage(Map* m, Unit* unit_atk, Unit* unit_def, int force) {
+int Formulae::ComputeBasicAttackDamage(Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
   const Attribute& a   = unit_atk->GetCurrentAttr();
   const Attribute& d   = unit_def->GetCurrentAttr();
   int              atk = m->ApplyTerrainEffect(unit_atk, a.atk);
@@ -17,7 +17,7 @@ int Formulae::ComputeBasicAttackDamage(Map* m, Unit* unit_atk, Unit* unit_def, i
   return ComputeDamageBase(atk, def, unit_atk->GetLevel(), force);
 }
 
-int Formulae::ComputeMagicDamage(Map* m, Unit* unit_atk, Unit* unit_def, int force) {
+int Formulae::ComputeMagicDamage(Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
   UNUSED(m);
   const Attribute& a   = unit_atk->GetCurrentAttr();
   const Attribute& d   = unit_def->GetCurrentAttr();
@@ -26,25 +26,25 @@ int Formulae::ComputeMagicDamage(Map* m, Unit* unit_atk, Unit* unit_def, int for
   return ComputeDamageBase(atk, def, unit_atk->GetLevel(), force);
 }
 
-int Formulae::ComputeBasicAttackAccuracy(Unit* unit_atk, Unit* unit_def, int cap) {
+int Formulae::ComputeBasicAttackAccuracy(const Unit* unit_atk, const Unit* unit_def, int cap) {
   const Attribute& a = unit_atk->GetCurrentAttr();
   const Attribute& d = unit_def->GetCurrentAttr();
   return ComputeAccuracyBase(a.dex, d.dex, cap);
 }
 
-int Formulae::ComputeMagicAccuracy(Unit* unit_atk, Unit* unit_def, int cap) {
+int Formulae::ComputeMagicAccuracy(const Unit* unit_atk, const Unit* unit_def, int cap) {
   const Attribute& a = unit_atk->GetCurrentAttr();
   const Attribute& d = unit_def->GetCurrentAttr();
   return ComputeAccuracyBase(a.itl + a.mor, d.itl + d.mor, cap);
 }
 
-int Formulae::ComputeBasicAttackDouble(Unit* unit_atk, Unit* unit_def) {
+int Formulae::ComputeBasicAttackDouble(const Unit* unit_atk, const Unit* unit_def) {
   const Attribute& a = unit_atk->GetCurrentAttr();
   const Attribute& d = unit_def->GetCurrentAttr();
   return ComputeDoubleCriticalBase(a.dex, d.dex);
 }
 
-int Formulae::ComputeBasicAttackCritical(Unit* unit_atk, Unit* unit_def) {
+int Formulae::ComputeBasicAttackCritical(const Unit* unit_atk, const Unit* unit_def) {
   const Attribute& a = unit_atk->GetCurrentAttr();
   const Attribute& d = unit_def->GetCurrentAttr();
   return ComputeDoubleCriticalBase(a.mor, d.mor);

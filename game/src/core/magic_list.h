@@ -13,9 +13,9 @@ class Unit;
 class MagicList {
  public:
   MagicList();
-  MagicList(MagicManager*, Unit*);
+  MagicList(MagicManager*, const Unit*);
   void   Clear();
-  void   AddMagicsForUnit(MagicManager*, Unit*);
+  void   AddMagicsForUnit(MagicManager*, const Unit*);
   int    NumMagics();
   Magic* GetMagic(int);
 

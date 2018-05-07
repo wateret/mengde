@@ -300,8 +300,10 @@ StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, uint32_t unit_id)
 }
 
 void StateUIUnitSelected::Enter() {
+  // Restore the original position
   core::Unit* unit = gi_->GetUnit(unit_id_);
   game_->MoveUnit(unit, origin_coords_);
+  LOG_DEBUG("Move unit back to original position (%d, %d)", origin_coords_.x, origin_coords_.y);
 }
 
 void StateUIUnitSelected::Exit() {}
@@ -339,10 +341,15 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
 
     if (map->UnitInCell(pos) && map->GetUnit(pos) != unit) {
       // XXX Other unit clicked
-    } else if (std::find(cells.begin(), cells.end(), pos) != cells.end()) {
-      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_id_, pos, StateUIMoving::Flag::kInputActNext));
     } else {
-      //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
+      auto found = std::find(cells.begin(), cells.end(), pos);
+      if (found != cells.end()) {
+        uint32_t move_id = found - cells.begin();
+        LOG_DEBUG("Move to pos (%d, %d) / move_id : %u", pos.x, pos.y, move_id);
+        gv_->PushUIState(new StateUIMoving(WrapBase(), unit_id_, pos, StateUIMoving::Flag::kInputActNext, move_id));
+      } else {
+        //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
+      }
     }
   } else if (e.IsRightButtonUp()) {
     gv_->PopUIState();
@@ -352,8 +359,10 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
 
 // StateUIMoving
 
-StateUIMoving::StateUIMoving(StateUI::Base base, uint32_t unit_id, Vec2D dest, Flag flag)
-    : StateUI(base), unit_id_(unit_id), dest_(dest), frames_(-1), flag_(flag) {
+StateUIMoving::StateUIMoving(StateUI::Base base, uint32_t unit_id, Vec2D dest, Flag flag, uint32_t move_id)
+    : StateUI(base), unit_id_(unit_id), dest_(dest), frames_(-1), flag_(flag), move_id_(move_id) {
+  //  ASSERT(flag_ != Flag::kInputActNext || !move_id); // TODO Enable this when move_id can be none
+
   path_ = gi_->GetPath(unit_id, dest_);
   ASSERT(dest_ == path_[0]);
 }
@@ -390,7 +399,7 @@ void StateUIMoving::Update() {
       //      unit_->SetDirection(dir);  // Do this here?
     }
     if (flag_ == Flag::kInputActNext) {
-      gv_->ChangeUIState(new StateUIAction(WrapBase(), unit_id_));
+      gv_->ChangeUIState(new StateUIAction(WrapBase(), unit_id_, move_id_));
     } else {
       gv_->PopUIState();
     }
@@ -724,17 +733,23 @@ void StateUIUnitTooltipAnim::Render(Drawer*) {}
 
 // StateUITargeting
 
-StateUITargeting::StateUITargeting(StateUI::Base base, core::Unit* unit, const string& magic_id)
-    : StateUIOperable(base), unit_(unit), magic_id_(magic_id), range_(GetRange(magic_id)), is_basic_attack_(true) {
-  is_basic_attack_ = !magic_id.compare("basic_attack");
-  Rect frame       = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
+StateUITargeting::StateUITargeting(StateUI::Base base, uint32_t unit_id, uint32_t move_id, const string& magic_id)
+    : StateUIOperable(base),
+      unit_id_(unit_id),
+      move_id_(move_id),
+      magic_id_(magic_id),
+      is_basic_attack_(!magic_id.compare("basic_attack")),
+      range_(GetRange()),
+      acts_(gi_->QueryActs(unit_id_, move_id_,
+                           is_basic_attack_ ? core::ActionType::kBasicAttack : core::ActionType::kMagic)) {
+  Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
   frame.Move(frame.GetW() + LayoutHelper::kDefaultSpace, 0);
 }
 
-const core::AttackRange& StateUITargeting::GetRange(const std::string& magic_id) {
-  if (!magic_id.compare("basic_attack")) {
-    return unit_->GetAttackRange();
+const core::AttackRange& StateUITargeting::GetRange() {
+  if (is_basic_attack_) {
+    return gi_->GetUnit(unit_id_)->GetAttackRange();
   } else {
     core::Magic* magic = game_->GetMagic(magic_id_);
     return magic->GetRange();
@@ -756,7 +771,7 @@ void StateUITargeting::Render(Drawer* drawer) {
         drawer->SetDrawColor(Color(255, 64, 64, 128));
         drawer->FillCell(d);
       },
-      unit_->GetPosition());
+      gi_->GetUnit(unit_id_)->GetPosition());
 
   StateUIOperable::Render(drawer);
 }
@@ -765,38 +780,32 @@ void StateUITargeting::Update() { StateUIOperable::Update(); }
 
 bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
-    Vec2D      map_pos = GetCursorCell();
-    core::Map* map     = game_->GetMap();
-    // TODO DO NOT generate Cmd directly, use core::UserInterface instead
-    if (map->UnitInCell(map_pos)) {
-      core::Unit* atk = unit_;
-      core::Unit* def = map->GetUnit(map_pos);
-      if (is_basic_attack_) {
-        if (atk->IsInRange(map_pos)) {
-          if (atk->IsHostile(def)) {
-            unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
-            action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
-            action->SetCmdAct(unique_ptr<core::CmdBasicAttack>(
-                new core::CmdBasicAttack(atk, def, core::CmdBasicAttack::Type::kActive)));
-            game_->Push(std::move(action));
-            gv_->InitUIStateMachine();
-          } else {
-            LOG_INFO("Cannot attack the unit. It is not enemy");
-          }
-        }
-      } else {
-        core::Magic* magic = game_->GetMagic(magic_id_);
-        if (atk->IsInRange(map_pos, magic->GetRange())) {
-          if (atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
-            unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
-            action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
-            action->SetCmdAct(unique_ptr<core::CmdMagic>(new core::CmdMagic(atk, def, magic)));
-            game_->Push(std::move(action));
-            gv_->InitUIStateMachine();
-          } else {
-            // TODO alert
-            LOG_INFO("Cannot perform magic to the unit chosen.");
-          }
+    Vec2D map_pos = GetCursorCell();
+
+    if (is_basic_attack_) {
+      uint32_t act_id = acts_.FindBasicAttack(map_pos);
+      gv_->InitUIStateMachine();
+      // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
+      gv_->NextFrame([=]() {
+        gi_->PushAction(unit_id_, move_id_, core::ActionType::kBasicAttack, act_id);
+        LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_id_, move_id_, act_id);
+      });
+    } else {
+      core::Map*   map   = game_->GetMap();
+      core::Unit*  atk   = gi_->GetUnit(unit_id_);
+      core::Unit*  def   = map->GetUnit(map_pos);
+      core::Magic* magic = game_->GetMagic(magic_id_);
+
+      if (atk->IsInRange(map_pos, magic->GetRange())) {
+        if (atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
+          unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
+          action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
+          action->SetCmdAct(unique_ptr<core::CmdMagic>(new core::CmdMagic(atk, def, magic)));
+          game_->Push(std::move(action));
+          gv_->InitUIStateMachine();
+        } else {
+          // TODO alert
+          LOG_INFO("Cannot perform magic to the unit chosen.");
         }
       }
     }
@@ -809,18 +818,19 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
 bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
-  auto       unit_tooltip_view = gv_->unit_tooltip_view();
-  core::Map* map               = game_->GetMap();
-  Vec2D      cursor_cell       = GetCursorCell();
-  bool       unit_in_cell      = map->UnitInCell(cursor_cell);
-  if (unit_in_cell) {
-    core::Unit* unit_target = map->GetUnit(cursor_cell);
-    bool        hostile     = unit_->IsHostile(unit_target);
+  auto              unit_tooltip_view = gv_->unit_tooltip_view();
+  core::Map*        map               = game_->GetMap();
+  Vec2D             cursor_cell       = GetCursorCell();
+  const core::Unit* unit_target       = gi_->GetUnit(cursor_cell);
+  const core::Unit* unit              = gi_->GetUnit(unit_id_);
+
+  if (unit_target) {
+    bool hostile = unit->IsHostile(unit_target);
     if (hostile) {
-      int damage = is_basic_attack_ ? core::Formulae::ComputeBasicAttackDamage(map, unit_, unit_target)
-                                    : core::Formulae::ComputeMagicDamage(map, unit_, unit_target);
-      int accuracy = is_basic_attack_ ? core::Formulae::ComputeBasicAttackAccuracy(unit_, unit_target)
-                                      : core::Formulae::ComputeMagicAccuracy(unit_, unit_target);
+      int damage = is_basic_attack_ ? core::Formulae::ComputeBasicAttackDamage(map, unit, unit_target)
+                                    : core::Formulae::ComputeMagicDamage(map, unit, unit_target);
+      int accuracy = is_basic_attack_ ? core::Formulae::ComputeBasicAttackAccuracy(unit, unit_target)
+                                      : core::Formulae::ComputeMagicAccuracy(unit, unit_target);
 
       unit_tooltip_view->SetUnitAttackInfo(unit_target, accuracy, damage);
     } else {
@@ -828,25 +838,29 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
     }
     unit_tooltip_view->SetCoordsByUnitCoords(unit_target->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
   }
-  unit_tooltip_view->visible(unit_in_cell);
+  unit_tooltip_view->visible(unit_target != nullptr);
   return true;
 }
 
 // StateUIAction
 
-StateUIAction::StateUIAction(StateUI::Base base, uint32_t unit_id) : StateUI(base), unit_id_(unit_id) {
+StateUIAction::StateUIAction(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
+    : StateUI(base), unit_id_(unit_id), move_id_(move_id) {
   pos_ = gi_->GetUnit(unit_id_)->GetPosition();
 }
 
 void StateUIAction::Enter() {
   UnitActionView* unit_action_view = gv_->unit_action_view();
-  unit_action_view->SetUnit(gi_->GetUnit(unit_id_));
+  unit_action_view->SetUnitAndMoveId(unit_id_, move_id_);
   unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), gv_->GetFrameSize(),
                                                            gv_->GetCameraCoords(), pos_));
   unit_action_view->visible(true);
 }
 
-void StateUIAction::Exit() { gv_->unit_action_view()->visible(false); }
+void StateUIAction::Exit() {
+  UnitActionView* unit_action_view = gv_->unit_action_view();
+  unit_action_view->visible(false);
+}
 
 void StateUIAction::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
@@ -862,14 +876,20 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
 
 // StateUIMagicSelection
 
-StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, core::Unit* unit) : StateUI(base), unit_(unit) {}
+StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
+    : StateUI(base), unit_id_(unit_id), move_id_(move_id) {
+  const core::Unit* unit = gi_->GetUnit(unit_id_);
+  pos_                   = unit->GetPosition();
+}
 
 void StateUIMagicSelection::Enter() {
-  auto           magic_list = std::make_shared<core::MagicList>(game_->GetMagicManager(), unit_);
+  const core::Unit* unit = gi_->GetUnit(unit_id_);
+
+  // TODO magic_list should not be acquired here (Move it to UserInterface)
+  auto           magic_list = std::make_shared<core::MagicList>(game_->GetMagicManager(), unit);
   MagicListView* mlv        = gv_->magic_list_view();
-  mlv->SetUnitAndMagicList(unit_, magic_list);
-  mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(),
-                                              unit_->GetPosition()));
+  mlv->SetData(unit_id_, move_id_, magic_list);
+  mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(), pos_));
   mlv->visible(true);
 }
 
@@ -877,7 +897,7 @@ void StateUIMagicSelection::Exit() { gv_->magic_list_view()->visible(false); }
 
 void StateUIMagicSelection::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
-  drawer->BorderCell(unit_->GetPosition(), 4);
+  drawer->BorderCell(pos_, 4);
 }
 
 bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {

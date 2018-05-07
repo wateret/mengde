@@ -24,31 +24,31 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserIn
   AddElement(btn_magic_);
   btn_stay_ = new ButtonView(&btn_frame, "Stay");
   AddElement(btn_stay_);
-}
 
-void UnitActionView::SetUnit(core::Unit* unit) {
   btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUITargeting({game_, gi_, gv_}, unit));
+      gv_->PushUIState(new StateUITargeting({game_, gi_, gv_}, unit_id_, move_id_));
     }
     return true;
   });
   btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUIMagicSelection({game_, gi_, gv_}, unit));
+      gv_->PushUIState(new StateUIMagicSelection({game_, gi_, gv_}, unit_id_, move_id_));
     }
     return true;
   });
   btn_stay_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
-      action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
-      action->SetCmdAct(unique_ptr<core::CmdStay>(new core::CmdStay(unit)));
-      game_->Push(std::move(action));
+      gi_->PushAction(unit_id_, move_id_, core::ActionType::kStay, 0);
       gv_->InitUIStateMachine();
     }
     return true;
   });
+}
+
+void UnitActionView::SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id) {
+  unit_id_ = unit_id;
+  move_id_ = move_id;
 }
 
 bool UnitActionView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {

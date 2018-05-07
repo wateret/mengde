@@ -32,7 +32,8 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
   const Vec2D kWindowSize = GetFrameSize();
   max_camera_coords_      = kMapSize - kWindowSize;
 
-  InitUIStateMachine();
+  ui_state_machine_.InitState();
+  ui_state_machine_.PushState(new StateUIView({game_, gi_, this}));
 }
 
 GameView::~GameView() { delete gi_; }

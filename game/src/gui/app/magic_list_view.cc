@@ -34,13 +34,13 @@ MagicListView::MagicListView(const Rect& frame, core::Game* game, core::UserInte
 
 MagicListView::~MagicListView() {}
 
-void MagicListView::SetUnitAndMagicList(core::Unit* unit, shared_ptr<core::MagicList> magic_list) {
-  ASSERT((unit == nullptr) == (magic_list == nullptr));  // Both should be null or non-null at the same time
-
-  if (unit == nullptr || magic_list == nullptr) return;
-
+void MagicListView::SetData(uint32_t unit_id, uint32_t move_id, shared_ptr<core::MagicList> magic_list) {
+  // TODO For decorators, who should remove the wrapped object? Manually managing it is too complicated
   if (lv_magics_wrap_ != nullptr) {
     this->RemoveChild(lv_magics_wrap_);
+  }
+  if (lv_magics_ != nullptr) {
+    delete lv_magics_wrap_;
   }
 
   Vec2D frame_size = GetActualFrameSize();
@@ -67,9 +67,9 @@ void MagicListView::SetUnitAndMagicList(core::Unit* unit, shared_ptr<core::Magic
 
     Rect        button_frame({0, 0}, {frame_size.x, item_height_});
     ButtonView* button = new ButtonView(&button_frame, name);
-    button->SetMouseButtonHandler([base, unit, id](const foundation::MouseButtonEvent& e) {
+    button->SetMouseButtonHandler([base, unit_id, move_id, id](const foundation::MouseButtonEvent& e) {
       if (e.IsLeftButtonUp()) {
-        base.gv->PushUIState(new StateUITargeting(base, unit, id));
+        base.gv->PushUIState(new StateUITargeting(base, unit_id, move_id, id));
         return true;
       }
       return false;

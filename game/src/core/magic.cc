@@ -60,7 +60,7 @@ bool Magic::TryPerform(Unit* unit_atk, Unit* unit_def) { return GenRandom(100) <
 
 void Magic::AddLearnInfo(uint16_t class_id, uint16_t level) { learn_info_list_.push_back({class_id, level}); }
 
-bool Magic::IsAvailible(Unit* unit) {
+bool Magic::IsAvailible(const Unit* unit) {
   for (auto e : learn_info_list_) {
     if (unit->GetClassIndex() == e.id && unit->GetLevel() >= e.lv) {
       return true;

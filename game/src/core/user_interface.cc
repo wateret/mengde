@@ -27,7 +27,6 @@ uint32_t AvailableUnits::Get(uint32_t idx) {
 boost::optional<uint32_t> AvailableUnits::FindByPos(Vec2D pos) {
   for (auto& e : units_) {
     if (pos == e.second) {
-      LOG_DEBUG("%d %d / %d %d", pos.x, pos.y, e.second.x, e.second.y);
       return e.first;
     }
   }
@@ -36,7 +35,10 @@ boost::optional<uint32_t> AvailableUnits::FindByPos(Vec2D pos) {
 
 // AvailableMoves
 
-AvailableMoves::AvailableMoves(Game* stage, Unit* unit) { moves_ = stage->FindMovablePos(unit); }
+AvailableMoves::AvailableMoves(Game* stage, uint32_t unit_id) {
+  Unit* unit = stage->GetUnit(unit_id);
+  moves_     = stage->FindMovablePos(unit);
+}
 
 Vec2D AvailableMoves::Get(uint32_t idx) {
   ASSERT(idx < moves_.size());
@@ -45,7 +47,10 @@ Vec2D AvailableMoves::Get(uint32_t idx) {
 
 // AvailableActs
 
-AvailableActs::AvailableActs(Game* stage, Unit* unit, Vec2D move_pos, ActionType type) {
+AvailableActs::AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, ActionType type) : type_(type) {
+  Unit* unit     = stage->GetUnit(unit_id);
+  Vec2D move_pos = AvailableMoves(stage, unit_id).Get(move_id);
+
   switch (type) {
     case ActionType::kStay:
       acts_.push_back(unique_ptr<CmdStay>(new CmdStay(unit)));
@@ -53,7 +58,7 @@ AvailableActs::AvailableActs(Game* stage, Unit* unit, Vec2D move_pos, ActionType
 
     case ActionType::kBasicAttack: {
       Unit* atk = unit;
-      unit->GetAttackRange().ForEach(
+      atk->GetAttackRange().ForEach(
           [&](Vec2D pos) {
             if (!stage->IsValidCoords(pos)) return;
             Unit* def = stage->GetUnitInCell(pos);
@@ -83,6 +88,22 @@ unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
   return std::move(acts_[idx]);
 }
 
+uint32_t AvailableActs::FindBasicAttack(Vec2D pos) {
+  ASSERT(type_ == ActionType::kBasicAttack);
+
+  uint32_t idx = 0;
+  for (auto&& e : acts_) {
+    CmdBasicAttack* cba = dynamic_cast<CmdBasicAttack*>(e.get());
+    ASSERT(cba != nullptr);
+    Unit* def = cba->GetUnitDef();
+    if (def->GetPosition() == pos) {
+      return idx;
+    }
+    idx++;
+  }
+  return 0;
+}
+
 // UserInterface
 
 UserInterface::UserInterface(Game* stage) : stage_(stage) {}
@@ -107,24 +128,19 @@ vector<Vec2D> UserInterface::GetPath(uint32_t unit_id, Vec2D pos) const {
   return map->FindPathTo(GetUnit(unit_id), pos);
 }
 
-AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) {
-  Unit* unit = GetUnit(unit_id);
-  return AvailableMoves(stage_, unit);
-}
+AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) { return AvailableMoves(stage_, unit_id); }
 
 AvailableActs UserInterface::QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type) {
-  Unit* unit     = GetUnit(unit_id);
-  Vec2D move_pos = GetMovedPosition(unit_id, move_id);
-  return AvailableActs(stage_, unit, move_pos, type);
+  return AvailableActs(stage_, unit_id, move_id, type);
 }
 
 void UserInterface::PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
-  Unit*              unit     = GetUnit(unit_id);
-  Vec2D              move_pos = GetMovedPosition(unit_id, move_id);
-  unique_ptr<CmdAct> act      = GetActCmd(unit_id, move_id, type, act_id);
+  Unit*              unit = GetUnit(unit_id);
+  Vec2D              pos  = GetMovedPosition(unit_id, move_id);
+  unique_ptr<CmdAct> act  = GetActCmd(unit_id, move_id, type, act_id);
 
   CmdAction* cmd = new CmdAction(stage_->IsUserTurn() ? CmdAction::Flag::kUserInput : CmdAction::Flag::kDecompose);
-  cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(unit, move_pos)));
+  cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(unit, pos)));
   cmd->SetCmdAct(std::move(act));
 
   stage_->Push(unique_ptr<CmdAction>(cmd));

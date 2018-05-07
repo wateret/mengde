@@ -26,7 +26,7 @@ class Map {
   Unit*         GetUnit(Vec2D);  // TODO remove this. Use const version instead
   const Unit*   GetUnit(Vec2D) const;
   Terrain*      GetTerrain(Vec2D);
-  int           ApplyTerrainEffect(Unit*, int);
+  int           ApplyTerrainEffect(const Unit*, int);
   void          EmptyCell(Vec2D);
   void          MoveUnit(Vec2D, Vec2D);
   void          RemoveUnit(Vec2D);

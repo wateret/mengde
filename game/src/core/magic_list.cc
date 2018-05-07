@@ -8,11 +8,11 @@ namespace core {
 
 MagicList::MagicList() {}
 
-MagicList::MagicList(MagicManager* mm, Unit* unit) { AddMagicsForUnit(mm, unit); }
+MagicList::MagicList(MagicManager* mm, const Unit* unit) { AddMagicsForUnit(mm, unit); }
 
 void MagicList::Clear() { magics_.clear(); }
 
-void MagicList::AddMagicsForUnit(MagicManager* mm, Unit* unit) {
+void MagicList::AddMagicsForUnit(MagicManager* mm, const Unit* unit) {
   mm->ForEach([this, unit](Magic* magic) {
     if (magic->IsAvailible(unit)) {
       this->magics_.push_back(magic);

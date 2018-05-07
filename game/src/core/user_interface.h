@@ -29,7 +29,7 @@ class AvailableUnits {
 
 class AvailableMoves {
  public:
-  AvailableMoves(Game* stage, Unit* unit);
+  AvailableMoves(Game* stage, uint32_t unit_id);
   Vec2D                Get(uint32_t idx);
   const vector<Vec2D>& moves() { return moves_; }
 
@@ -39,9 +39,10 @@ class AvailableMoves {
 
 class AvailableActs {
  public:
-  AvailableActs(Game* stage, Unit* unit, Vec2D move_pos, ActionType type);
+  AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, ActionType type);
   ActionType         type() { return type_; }
   unique_ptr<CmdAct> Get(uint32_t idx);
+  uint32_t           FindBasicAttack(Vec2D pos);
 
  private:
   ActionType                 type_;
