@@ -318,7 +318,7 @@ class StateUIUnitTooltipAnim : public StateUI {
 
 class StateUIAction : public StateUI {
  public:
-  StateUIAction(StateUI::Base, core::Unit*);
+  StateUIAction(StateUI::Base, uint32_t unit_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -328,7 +328,8 @@ class StateUIAction : public StateUI {
 #endif
 
  private:
-  core::Unit* unit_;
+  uint32_t unit_id_;
+  Vec2D    pos_;
 };
 
 // StateUIMagicSelection

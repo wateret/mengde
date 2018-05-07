@@ -390,7 +390,7 @@ void StateUIMoving::Update() {
       //      unit_->SetDirection(dir);  // Do this here?
     }
     if (flag_ == Flag::kInputActNext) {
-      gv_->ChangeUIState(new StateUIAction(WrapBase(), gi_->GetUnit(unit_id_)));
+      gv_->ChangeUIState(new StateUIAction(WrapBase(), unit_id_));
     } else {
       gv_->PopUIState();
     }
@@ -834,13 +834,15 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
 // StateUIAction
 
-StateUIAction::StateUIAction(StateUI::Base base, core::Unit* unit) : StateUI(base), unit_(unit) {}
+StateUIAction::StateUIAction(StateUI::Base base, uint32_t unit_id) : StateUI(base), unit_id_(unit_id) {
+  pos_ = gi_->GetUnit(unit_id_)->GetPosition();
+}
 
 void StateUIAction::Enter() {
   UnitActionView* unit_action_view = gv_->unit_action_view();
-  unit_action_view->SetUnit(unit_);
+  unit_action_view->SetUnit(gi_->GetUnit(unit_id_));
   unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), gv_->GetFrameSize(),
-                                                           gv_->GetCameraCoords(), unit_->GetPosition()));
+                                                           gv_->GetCameraCoords(), pos_));
   unit_action_view->visible(true);
 }
 
@@ -848,7 +850,7 @@ void StateUIAction::Exit() { gv_->unit_action_view()->visible(false); }
 
 void StateUIAction::Render(Drawer* drawer) {
   drawer->SetDrawColor(Color(0, 255, 0, 128));
-  drawer->BorderCell(unit_->GetPosition(), 4);
+  drawer->BorderCell(pos_, 4);
 }
 
 bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
