@@ -36,7 +36,7 @@ UnitListView::UnitListView(const Rect& frame, const vector<core::Unit*>& unit_li
   {
     Rect        btn_close_frame({0, list_view_size.y + margin}, btn_close_size);
     ButtonView* btn_close = new ButtonView(&btn_close_frame, "Close");
-    btn_close->SetMouseButtonHandler([this](const foundation::MouseButtonEvent e) {
+    btn_close->SetMouseButtonHandler([this](const foundation::MouseButtonEvent& e) {
       if (e.IsLeftButtonUp()) {
         this->visible(false);
       }
@@ -53,7 +53,7 @@ UnitListView::UnitListView(const Rect& frame, const vector<core::Unit*>& unit_li
       std::string name = unit->GetId();
       Rect        button_frame({0, 0}, {list_view_size.x, element_height});
       ButtonView* button = new ButtonView(&button_frame, name);
-      button->SetMouseButtonHandler([this, unit](const foundation::MouseButtonEvent e) {
+      button->SetMouseButtonHandler([this, unit](const foundation::MouseButtonEvent& e) {
         if (e.IsLeftButtonUp()) {
           this->SetUnit(unit);
         }

@@ -12,8 +12,8 @@ namespace uifw {
 
 class CallbackView : public CompositeView {
  public:
-  typedef std::function<bool(const foundation::MouseButtonEvent)> MouseButtonHandler;
-  typedef std::function<bool(const foundation::MouseMotionEvent)> MouseMotionHandler;
+  typedef std::function<bool(const foundation::MouseButtonEvent&)> MouseButtonHandler;
+  typedef std::function<bool(const foundation::MouseMotionEvent&)> MouseMotionHandler;
 
  public:
   CallbackView();

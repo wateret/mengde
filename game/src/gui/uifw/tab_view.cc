@@ -34,7 +34,7 @@ void TabView::AddTab(const string& button_text, View* view) {
   const int   index         = GetNumTabs();
   Rect        btn_frame  = {(kButtonWidth + LayoutHelper::kDefaultSpace / 2) * index, 0, kButtonWidth, kButtonHeight};
   ButtonView* tab_button = new ButtonView(&btn_frame, button_text);
-  tab_button->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) -> bool {
+  tab_button->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) -> bool {
     if (e.IsLeftButtonDown()) {
       this->SetViewIndex(index);
     }

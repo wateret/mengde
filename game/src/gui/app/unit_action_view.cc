@@ -27,19 +27,19 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserIn
 }
 
 void UnitActionView::SetUnit(core::Unit* unit) {
-  btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
+  btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
       gv_->PushUIState(new StateUITargeting({game_, gi_, gv_}, unit));
     }
     return true;
   });
-  btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
+  btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
       gv_->PushUIState(new StateUIMagicSelection({game_, gi_, gv_}, unit));
     }
     return true;
   });
-  btn_stay_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent e) {
+  btn_stay_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
       unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
       action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(unit, unit->GetPosition())));
