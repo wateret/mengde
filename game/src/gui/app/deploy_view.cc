@@ -70,7 +70,7 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
   for (auto hero : hero_list) {
     HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
     model_view->SetMouseButtonHandler(
-        [model_view, hero, deploy_helper, director](const foundation::MouseButtonEvent e) -> bool {
+        [model_view, hero, deploy_helper, director](const foundation::MouseButtonEvent& e) -> bool {
           if (e.IsLeftButtonUp()) {
             int deploy_no = 0;
             if (model_view->IsSelected()) {
@@ -147,7 +147,7 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
 
   Rect        btn_ok_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {100, 50}, LayoutHelper::kAlignRgtBot);
   ButtonView* btn_ok       = new ButtonView(&btn_ok_frame, "To Battle");
-  btn_ok->SetMouseButtonHandler([&, deploy_helper](foundation::MouseButtonEvent e) {
+  btn_ok->SetMouseButtonHandler([&, deploy_helper](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
       if (deploy_helper->SubmitDeploy()) {
         this->visible(false);

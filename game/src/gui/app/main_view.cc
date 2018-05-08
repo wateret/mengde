@@ -17,14 +17,14 @@ MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
   quit_frame.Move(0, 150);
   ButtonView* start_button = new ButtonView(&start_frame, "New Game");
   ButtonView* quit_button  = new ButtonView(&quit_frame, "Quit");
-  start_button->SetMouseButtonHandler([this](const foundation::MouseButtonEvent e) -> bool {
+  start_button->SetMouseButtonHandler([this](const foundation::MouseButtonEvent& e) -> bool {
     if (e.IsLeftButtonUp()) {
       LOG_DEBUG("Start");
       this->SetScenarioSelectViewVisible(true);
     }
     return true;
   });
-  quit_button->SetMouseButtonHandler([app](const foundation::MouseButtonEvent e) -> bool {
+  quit_button->SetMouseButtonHandler([app](const foundation::MouseButtonEvent& e) -> bool {
     if (e.IsLeftButtonUp()) {
       app->SetQuit(true);
     }

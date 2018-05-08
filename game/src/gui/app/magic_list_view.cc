@@ -67,7 +67,7 @@ void MagicListView::SetUnitAndMagicList(core::Unit* unit, shared_ptr<core::Magic
 
     Rect        button_frame({0, 0}, {frame_size.x, item_height_});
     ButtonView* button = new ButtonView(&button_frame, name);
-    button->SetMouseButtonHandler([base, unit, id](const foundation::MouseButtonEvent e) {
+    button->SetMouseButtonHandler([base, unit, id](const foundation::MouseButtonEvent& e) {
       if (e.IsLeftButtonUp()) {
         base.gv->PushUIState(new StateUITargeting(base, unit, id));
         return true;

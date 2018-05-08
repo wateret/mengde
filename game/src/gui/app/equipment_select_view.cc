@@ -32,7 +32,7 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
       new TextView(&tv_amount_frame, std::to_string(amount), COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
   AddChild(tv_amount);
 
-  SetMouseMotionHandler([this](const foundation::MouseMotionEvent e) {
+  SetMouseMotionHandler([this](const foundation::MouseMotionEvent& e) {
     if (e.IsMotionOver()) {
       this->bg_color(COLOR("darkgray"));
     } else {
@@ -64,7 +64,7 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
     ItemIconView* item_icon_view =
         new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);
     item_icon_view->SetMouseButtonHandler(
-        [this, assets, hero, equipment, equipment_set_view](const foundation::MouseButtonEvent e) {
+        [this, assets, hero, equipment, equipment_set_view](const foundation::MouseButtonEvent& e) {
           if (e.IsLeftButtonUp()) {
             ASSERT(hero != nullptr);
             assets->HeroPutEquipmentOn(hero, equipment.object);

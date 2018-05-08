@@ -29,7 +29,7 @@ ScenarioSelectView::ScenarioSelectView(const Rect& frame, App* app) : VerticalLi
       if (boost::filesystem::is_directory(*itr)) {
         const string scenario_id = itr->path().filename().string();
         ButtonView*  btn_element = new ButtonView(Rect({0, 0}, btn_size), scenario_id);
-        btn_element->SetMouseButtonHandler([=](const MouseButtonEvent e) {
+        btn_element->SetMouseButtonHandler([=](const MouseButtonEvent& e) {
           if (e.IsLeftButtonDown()) {
             app->StartNewScenario(scenario_id);
             return true;

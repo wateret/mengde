@@ -80,14 +80,14 @@ EquipmentSetView::EquipmentSetView(const Rect* frame) : CompositeView(frame), eq
   for (int i = 0; i < 3; i++) {
     EquipmentView* eqv = equipment_views[i];
 
-    eqv->SetMouseButtonHandler([](const foundation::MouseButtonEvent e) {
+    eqv->SetMouseButtonHandler([](const foundation::MouseButtonEvent& e) {
       if (e.IsLeftButtonUp()) {
         LOG_DEBUG("Show Equipment Info");
       }
       return true;
     });
 
-    eqv->SetMouseMotionHandler([eqv](const foundation::MouseMotionEvent e) {
+    eqv->SetMouseMotionHandler([eqv](const foundation::MouseMotionEvent& e) {
       if (e.IsMotionOver()) {
         eqv->bg_color(COLOR("darkgray"));
       } else {
