@@ -783,7 +783,7 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
     Vec2D map_pos = GetCursorCell();
 
     if (is_basic_attack_) {
-      uint32_t act_id = acts_.FindBasicAttack(map_pos);
+      uint32_t act_id = acts_.Find(map_pos);
       gv_->InitUIStateMachine();
       // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
       gv_->NextFrame([=]() {

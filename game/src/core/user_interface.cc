@@ -88,14 +88,11 @@ unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
   return std::move(acts_[idx]);
 }
 
-uint32_t AvailableActs::FindBasicAttack(Vec2D pos) {
-  ASSERT(type_ == ActionType::kBasicAttack);
-
+uint32_t AvailableActs::Find(Vec2D pos) {
   uint32_t idx = 0;
-  for (auto&& e : acts_) {
-    CmdBasicAttack* cba = dynamic_cast<CmdBasicAttack*>(e.get());
-    ASSERT(cba != nullptr);
-    Unit* def = cba->GetUnitDef();
+  for (auto&& act : acts_) {
+    ASSERT(act != nullptr);
+    Unit* def = act->GetUnitDef();
     if (def->GetPosition() == pos) {
       return idx;
     }
