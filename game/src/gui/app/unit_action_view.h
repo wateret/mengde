@@ -26,8 +26,6 @@ class UnitActionView : public VerticalListView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
-  uint32_t             unit_id_;
-  uint32_t             move_id_;
   core::Game*          game_;  // TODO remove this
   core::UserInterface* gi_;
   GameView*            gv_;

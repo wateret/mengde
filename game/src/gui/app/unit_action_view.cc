@@ -24,31 +24,32 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserIn
   AddElement(btn_magic_);
   btn_stay_ = new ButtonView(&btn_frame, "Stay");
   AddElement(btn_stay_);
+}
+
+void UnitActionView::SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id) {
+  auto game = game_;
+  auto gi   = gi_;
+  auto gv   = gv_;
 
   btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUITargeting({game_, gi_, gv_}, unit_id_, move_id_));
+      gv_->PushUIState(new StateUITargeting({game, gi, gv}, unit_id, move_id));
     }
     return true;
   });
   btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUIMagicSelection({game_, gi_, gv_}, unit_id_, move_id_));
+      gv_->PushUIState(new StateUIMagicSelection({game, gi, gv}, unit_id, move_id));
     }
     return true;
   });
   btn_stay_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gi_->PushAction(unit_id_, move_id_, core::ActionType::kStay, 0);
+      gi_->PushAction(unit_id, move_id, core::ActionType::kStay, 0);
       gv_->InitUIStateMachine();
     }
     return true;
   });
-}
-
-void UnitActionView::SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id) {
-  unit_id_ = unit_id;
-  move_id_ = move_id;
 }
 
 bool UnitActionView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {

@@ -2,6 +2,7 @@
 
 #include "cmd.h"
 #include "game.h"
+#include "magic_list.h"
 #include "path_tree.h"
 #include "unit.h"
 
@@ -63,17 +64,31 @@ AvailableActs::AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, Ac
             if (!stage->IsValidCoords(pos)) return;
             Unit* def = stage->GetUnitInCell(pos);
             if (def != nullptr && atk->IsHostile(def)) {
-              acts_.push_back(unique_ptr<core::CmdBasicAttack>(
-                  new core::CmdBasicAttack(atk, def, core::CmdBasicAttack::Type::kActive)));
+              acts_.push_back(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk, def, CmdBasicAttack::Type::kActive)));
             }
           },
           move_pos);
       break;
     }
 
-    case ActionType::kMagic:
-      UNREACHABLE("NYI for ActionType of kMagic");
+    case ActionType::kMagic: {
+      Unit*     atk = unit;
+      MagicList magic_list(stage->GetMagicManager(), unit);
+
+      for (int i = 0; i < magic_list.NumMagics(); i++) {
+        Magic* magic = magic_list.GetMagic(i);
+        magic->GetRange().ForEach(
+            [&](Vec2D pos) {
+              if (!stage->IsValidCoords(pos)) return;
+              Unit* def = stage->GetUnitInCell(pos);
+              if (def != nullptr && atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
+                acts_.push_back(unique_ptr<CmdMagic>(new CmdMagic(atk, def, magic)));
+              }
+            },
+            move_pos);
+      }
       break;
+    }
 
     default:
       UNREACHABLE("Invalid ActionType");
@@ -89,11 +104,29 @@ unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
 }
 
 uint32_t AvailableActs::Find(Vec2D pos) {
+  ASSERT(type_ == ActionType::kBasicAttack);
+
   uint32_t idx = 0;
   for (auto&& act : acts_) {
-    ASSERT(act != nullptr);
     Unit* def = act->GetUnitDef();
     if (def->GetPosition() == pos) {
+      return idx;
+    }
+    idx++;
+  }
+  return 0;
+}
+
+uint32_t AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
+  ASSERT(type_ == ActionType::kMagic);
+
+  uint32_t idx = 0;
+  for (auto&& act : acts_) {
+    CmdMagic* cm = dynamic_cast<CmdMagic*>(act.get());
+    ASSERT(cm != nullptr);
+    const Magic* magic = cm->magic();
+    Unit*        def   = cm->GetUnitDef();
+    if (magic->GetId() == magic_id && def->GetPosition() == pos) {
       return idx;
     }
     idx++;

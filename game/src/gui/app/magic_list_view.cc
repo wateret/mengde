@@ -39,9 +39,6 @@ void MagicListView::SetData(uint32_t unit_id, uint32_t move_id, shared_ptr<core:
   if (lv_magics_wrap_ != nullptr) {
     this->RemoveChild(lv_magics_wrap_);
   }
-  if (lv_magics_ != nullptr) {
-    delete lv_magics_wrap_;
-  }
 
   Vec2D frame_size = GetActualFrameSize();
 

@@ -27,10 +27,10 @@ class Magic {
 
  public:
   Magic(const std::string&, MagicType, Range::Type, bool, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
-  std::string GetId() { return id_; }
-  bool        GetIsTargetEnemy() { return is_target_enemy_; }
-  void        Perform(Unit*, Unit*);
-  void        AddLearnInfo(uint16_t, uint16_t);
+  const string& GetId() const { return id_; }
+  bool          GetIsTargetEnemy() { return is_target_enemy_; }
+  void          Perform(Unit*, Unit*);
+  void          AddLearnInfo(uint16_t, uint16_t);
 
   const AttackRange& GetRange();
 

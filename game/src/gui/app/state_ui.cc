@@ -782,32 +782,26 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
   if (e.IsLeftButtonUp()) {
     Vec2D map_pos = GetCursorCell();
 
+    // Variables to be captured (No better way for C++11)
+    auto unit_id = unit_id_;
+    auto move_id = move_id_;
+
     if (is_basic_attack_) {
       uint32_t act_id = acts_.Find(map_pos);
       gv_->InitUIStateMachine();
       // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
       gv_->NextFrame([=]() {
-        gi_->PushAction(unit_id_, move_id_, core::ActionType::kBasicAttack, act_id);
-        LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_id_, move_id_, act_id);
+        gi_->PushAction(unit_id, move_id, core::ActionType::kBasicAttack, act_id);
+        LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_id, move_id, act_id);
       });
     } else {
-      core::Map*   map   = game_->GetMap();
-      core::Unit*  atk   = gi_->GetUnit(unit_id_);
-      core::Unit*  def   = map->GetUnit(map_pos);
-      core::Magic* magic = game_->GetMagic(magic_id_);
-
-      if (atk->IsInRange(map_pos, magic->GetRange())) {
-        if (atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
-          unique_ptr<core::CmdAction> action(new core::CmdAction(core::CmdAction::Flag::kUserInput));
-          action->SetCmdMove(unique_ptr<core::CmdMove>(new core::CmdMove(atk, atk->GetPosition())));
-          action->SetCmdAct(unique_ptr<core::CmdMagic>(new core::CmdMagic(atk, def, magic)));
-          game_->Push(std::move(action));
-          gv_->InitUIStateMachine();
-        } else {
-          // TODO alert
-          LOG_INFO("Cannot perform magic to the unit chosen.");
-        }
-      }
+      uint32_t act_id = acts_.FindMagic(magic_id_, map_pos);
+      gv_->InitUIStateMachine();
+      // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
+      gv_->NextFrame([=]() {
+        gi_->PushAction(unit_id, move_id, core::ActionType::kMagic, act_id);
+        LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, Magic ActId:%u}", unit_id, move_id, act_id);
+      });
     }
   } else if (e.IsRightButtonUp()) {
     gv_->PopUIState();

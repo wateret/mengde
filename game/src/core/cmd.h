@@ -146,6 +146,7 @@ class CmdMagic : public CmdAct {
   CmdMagic(Unit*, Unit*, Magic*);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op         GetOp() const override { return Op::kCmdMagic; }
+  const Magic*            magic() { return magic_; }
 
  private:
   int ComputeDamage(Map*);
