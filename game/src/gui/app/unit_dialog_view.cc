@@ -10,10 +10,9 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitDialogView::UnitDialogView(const Rect* frame, const string& message, core::Unit* unit)
+UnitDialogView::UnitDialogView(const Rect* frame, const string& message, const core::Unit* unit)
     : CompositeView(frame),
-      message_(message),
-      unit_(unit),
+      message_(""),
       iv_portrait_(nullptr),
       tv_name_(nullptr),
       tv_message_(nullptr) {
@@ -36,16 +35,19 @@ UnitDialogView::UnitDialogView(const Rect* frame, const string& message, core::U
   AddChild(tv_name_);
   AddChild(tv_message_);
   AddChild(iv_portrait_);
+
+  SetText(message);
+  SetUnit(unit);
 }
 
 void UnitDialogView::SetText(const string& s) { tv_message_->SetText(s); }
 
-void UnitDialogView::SetUnit(core::Unit* u) {
-  unit_ = u;
+void UnitDialogView::SetUnit(const core::Unit* u) {
+  if (u == nullptr) return;
 
-  Path portrait_path = rcpath::PortraitPath(unit_->GetId());
+  Path portrait_path = rcpath::PortraitPath(u->GetId());
   iv_portrait_->SetPath(portrait_path.ToString());
-  tv_name_->SetText(unit_->GetId());
+  tv_name_->SetText(u->GetId());
 }
 
 bool UnitDialogView::OnMouseButtonEvent(const foundation::MouseButtonEvent&) {

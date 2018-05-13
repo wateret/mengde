@@ -400,7 +400,7 @@ class StateUINextTurn : public StateUI {
 
 class StateUISpeak : public StateUI {
  public:
-  StateUISpeak(StateUI::Base, core::Unit*, const string&);
+  StateUISpeak(StateUI::Base base, uint32_t unit_id, const string& words);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
@@ -410,7 +410,7 @@ class StateUISpeak : public StateUI {
 #endif
 
  private:
-  core::Unit* unit_;
+  uint32_t unit_id_;
   string words_;
 };
 

@@ -122,7 +122,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
 
     case core::Cmd::Op::kCmdSpeak: {
       const core::CmdSpeak* c = DYNAMIC_CAST_CHECK(core::CmdSpeak);
-      return new StateUISpeak(WrapBase(), c->GetUnit(), c->GetWords());
+      return new StateUISpeak(WrapBase(), game_->GetUnitId(c->GetUnit()) /* FIXME */, c->GetWords());
     }
     case core::Cmd::Op::kCmdGameEnd: {
       const core::CmdGameEnd* c = DYNAMIC_CAST_CHECK(core::CmdGameEnd);
@@ -941,16 +941,17 @@ void StateUINextTurn::Exit() {
 
 // StateUISpeak
 
-StateUISpeak::StateUISpeak(StateUI::Base base, core::Unit* unit, const string& words)
-    : StateUI(base), unit_(unit), words_(words) {}
+StateUISpeak::StateUISpeak(StateUI::Base base, uint32_t unit_id, const string& words)
+    : StateUI(base), unit_id_(unit_id), words_(words) {}
 
 void StateUISpeak::Enter() {
+  auto unit = gi_->GetUnit(unit_id_);
   auto unit_dialog_view = gv_->unit_dialog_view();
   auto unit_dialog_view_wrapper = gv_->unit_dialog_view_wrapper();
-  unit_dialog_view->SetUnit(unit_);
+  unit_dialog_view->SetUnit(unit);
   unit_dialog_view->SetText(words_);
   unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(gv_->unit_dialog_view()->GetFrameSize(), gv_->GetFrameSize(),
-                                                           gv_->GetCameraCoords(), unit_->GetPosition()));
+                                                           gv_->GetCameraCoords(), unit->GetPosition()));
   unit_dialog_view_wrapper->visible(true);
 }
 

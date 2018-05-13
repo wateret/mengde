@@ -18,16 +18,15 @@ namespace app {
 
 class UnitDialogView : public CompositeView {
  public:
-  UnitDialogView(const Rect*, const string& = "", core::Unit* = nullptr);
+  UnitDialogView(const Rect*, const string& = "", const core::Unit* = nullptr);
   void SetText(const string&);
-  void SetUnit(core::Unit* u);
+  void SetUnit(const core::Unit* u);
 
  private:
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
   string message_;
-  core::Unit* unit_;  // FIXME Do we really need this?
   ImageView* iv_portrait_;
   TextView* tv_name_;
   TextView* tv_message_;
