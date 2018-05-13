@@ -11,11 +11,7 @@ namespace gui {
 namespace app {
 
 UnitDialogView::UnitDialogView(const Rect* frame, const string& message, const core::Unit* unit)
-    : CompositeView(frame),
-      message_(""),
-      iv_portrait_(nullptr),
-      tv_name_(nullptr),
-      tv_message_(nullptr) {
+    : CompositeView(frame), message_(""), iv_portrait_(nullptr), tv_name_(nullptr), tv_message_(nullptr) {
   bg_color({64, 64, 64, 192});
 
   Rect portrait_frame =

@@ -201,7 +201,7 @@ class StateUIMoving : public StateUI {
 
 class StateUIMagic : public StateUI {
  public:
-  StateUIMagic(StateUI::Base, core::Unit*, core::Unit*, core::Magic*, bool, int);
+  StateUIMagic(StateUI::Base, uint32_t, uint32_t, core::Magic*, bool, int);
   virtual ~StateUIMagic();
   virtual void Enter() override;
   virtual void Exit() override;
@@ -216,8 +216,10 @@ class StateUIMagic : public StateUI {
   static const int kFramesPerCut = 5;
 
  private:
-  core::Unit* atk_;
-  core::Unit* def_;
+  uint32_t unit_id_atk_;
+  uint32_t unit_id_def_;
+  const core::Unit* atk_;
+  const core::Unit* def_;
   core::Magic* magic_;
   bool hit_;
   int damage_;
@@ -228,7 +230,7 @@ class StateUIMagic : public StateUI {
 
 class StateUIKilled : public StateUI {
  public:
-  StateUIKilled(StateUI::Base, core::Unit*);
+  StateUIKilled(StateUI::Base base, uint32_t unit_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -241,7 +243,7 @@ class StateUIKilled : public StateUI {
   static const int kStateDuration = 80;
 
  private:
-  core::Unit* unit_;
+  uint32_t unit_id_;
   int frames_;
 };
 
@@ -266,7 +268,7 @@ class StateUIEmptySelected : public StateUI {
 
 class StateUIAttack : public StateUI {
  public:
-  StateUIAttack(StateUI::Base, core::Unit*, core::Unit*, bool, bool, int);
+  StateUIAttack(StateUI::Base, uint32_t, uint32_t, bool, bool, int);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -284,8 +286,10 @@ class StateUIAttack : public StateUI {
   bool LastFrame() { return frames_ == kNumCuts * kFramesPerCut - 1; }
 
  private:
-  core::Unit* atk_;
-  core::Unit* def_;
+  uint32_t unit_id_atk_;
+  uint32_t unit_id_def_;
+  const core::Unit* atk_;
+  const core::Unit* def_;
   bool hit_;
   bool critical_;
   int damage_;
@@ -297,7 +301,7 @@ class StateUIUnitTooltipAnim : public StateUI {
   static const int kFrames = 90;
 
  public:
-  StateUIUnitTooltipAnim(StateUI::Base, core::Unit*, int hp, int mp);
+  StateUIUnitTooltipAnim(StateUI::Base, const core::Unit*, int hp, int mp);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
@@ -310,7 +314,7 @@ class StateUIUnitTooltipAnim : public StateUI {
 
  private:
   int frames_;
-  core::Unit* unit_;
+  const core::Unit* unit_;
   int hp_;  // Amount of hp changed
   int mp_;  // Amount of mp changed
 };

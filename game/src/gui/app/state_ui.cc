@@ -88,20 +88,23 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     case core::Cmd::Op::kCmdHit: {
       const core::CmdHit* c = DYNAMIC_CAST_CHECK(core::CmdHit);
       if (c->IsBasicAttack()) {
-        return new StateUIAttack(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), true,
+        return new StateUIAttack(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()), true,
                                  c->GetHitType() == core::CmdHit::HitType::kCritical, c->GetDamage());
       } else {
         ASSERT(c->IsMagic());
-        return new StateUIMagic(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), c->GetMagic(), true, c->GetDamage());
+        return new StateUIMagic(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()),
+                                c->GetMagic(), true, c->GetDamage());
       }
     }
     case core::Cmd::Op::kCmdMiss: {
       const core::CmdMiss* c = DYNAMIC_CAST_CHECK(core::CmdMiss);
       if (c->IsBasicAttack()) {
-        return new StateUIAttack(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), false, false, 0);
+        return new StateUIAttack(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()),
+                                 false, false, 0);
       } else {
         ASSERT(c->IsMagic());
-        return new StateUIMagic(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), c->GetMagic(), false, 0);
+        return new StateUIMagic(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()),
+                                c->GetMagic(), false, 0);
       }
     }
     case core::Cmd::Op::kCmdMove: {
@@ -115,7 +118,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     }
     case core::Cmd::Op::kCmdKilled: {
       const core::CmdKilled* c = DYNAMIC_CAST_CHECK(core::CmdKilled);
-      return new StateUIKilled(WrapBase(), c->GetUnit());
+      return new StateUIKilled(WrapBase(), game_->GetUnitId(c->GetUnit()));
     }
     case core::Cmd::Op::kCmdEndTurn:
       return new StateUINextTurn(WrapBase());
@@ -415,9 +418,17 @@ void StateUIMoving::Render(Drawer* drawer) {
 
 // StateUIMagic
 
-StateUIMagic::StateUIMagic(StateUI::Base base, core::Unit* atk, core::Unit* def, core::Magic* magic, bool hit,
+StateUIMagic::StateUIMagic(StateUI::Base base, uint32_t atk_id, uint32_t def_id, core::Magic* magic, bool hit,
                            int damage)
-    : StateUI(base), atk_(atk), def_(def), magic_(magic), hit_(hit), damage_(damage), animator_(nullptr) {}
+    : StateUI(base),
+      unit_id_atk_(atk_id),
+      unit_id_def_(def_id),
+      atk_(gi_->GetUnit(unit_id_atk_)),
+      def_(gi_->GetUnit(unit_id_def_)),
+      magic_(magic),
+      hit_(hit),
+      damage_(damage),
+      animator_(nullptr) {}
 
 StateUIMagic::~StateUIMagic() {
   ASSERT(animator_ != NULL);
@@ -425,13 +436,13 @@ StateUIMagic::~StateUIMagic() {
 }
 
 void StateUIMagic::Enter() {
-  gv_->SetSkipRender(game_->GetUnitId(atk_), true);
-  gv_->SetSkipRender(game_->GetUnitId(def_), true);
+  gv_->SetSkipRender(unit_id_atk_, true);
+  gv_->SetSkipRender(unit_id_def_, true);
 }
 
 void StateUIMagic::Exit() {
-  gv_->SetSkipRender(game_->GetUnitId(atk_), false);
-  gv_->SetSkipRender(game_->GetUnitId(def_), false);
+  gv_->SetSkipRender(unit_id_atk_, false);
+  gv_->SetSkipRender(unit_id_def_, false);
 }
 
 void StateUIMagic::Render(Drawer* drawer) {
@@ -473,15 +484,15 @@ void StateUIMagic::Update() {
 
 // StateUIKilled
 
-StateUIKilled::StateUIKilled(StateUI::Base base, core::Unit* unit) : StateUI(base), unit_(unit), frames_(0) {}
+StateUIKilled::StateUIKilled(StateUI::Base base, uint32_t unit_id) : StateUI(base), unit_id_(unit_id), frames_(0) {}
 
 void StateUIKilled::Enter() {
-  gv_->SetSkipRender(game_->GetUnitId(unit_), true);
+  gv_->SetSkipRender(unit_id_, true);
   Misc::SetShowCursor(false);
 }
 
 void StateUIKilled::Exit() {
-  gv_->SetSkipRender(game_->GetUnitId(unit_), false);
+  gv_->SetSkipRender(unit_id_, false);
   Misc::SetShowCursor(true);
 }
 
@@ -493,7 +504,8 @@ void StateUIKilled::Render(Drawer* drawer) {
     int f = frames_ - wait;
     if (f > hold) progress = (f - hold) * 255 / (kStateDuration - hold);
   }
-  drawer->CopySprite(unit_->GetModelId(), kSpriteLowHP, kDirNone, 0, {kEffectShade, progress}, unit_->GetPosition());
+  const core::Unit* unit = gi_->GetUnit(unit_id_);
+  drawer->CopySprite(unit->GetModelId(), kSpriteLowHP, kDirNone, 0, {kEffectShade, progress}, unit->GetPosition());
 }
 
 void StateUIKilled::Update() {
@@ -530,18 +542,26 @@ bool StateUIEmptySelected::OnMouseButtonEvent(const foundation::MouseButtonEvent
 
 // StateUIAttack
 
-StateUIAttack::StateUIAttack(StateUI::Base base, core::Unit* atk, core::Unit* def, bool hit, bool critical, int damage)
-    : StateUI(base), atk_(atk), def_(def), hit_(hit), critical_(critical), damage_(damage), frames_(-1) {}
+StateUIAttack::StateUIAttack(StateUI::Base base, uint32_t atk_id, uint32_t def_id, bool hit, bool critical, int damage)
+    : StateUI(base),
+      unit_id_atk_(atk_id),
+      unit_id_def_(def_id),
+      atk_(gi_->GetUnit(unit_id_atk_)),
+      def_(gi_->GetUnit(unit_id_def_)),
+      hit_(hit),
+      critical_(critical),
+      damage_(damage),
+      frames_(-1) {}
 
 void StateUIAttack::Enter() {
-  gv_->SetSkipRender(game_->GetUnitId(atk_), true);
-  gv_->SetSkipRender(game_->GetUnitId(def_), true);
+  gv_->SetSkipRender(unit_id_atk_, true);
+  gv_->SetSkipRender(unit_id_def_, true);
   Misc::SetShowCursor(false);
 }
 
 void StateUIAttack::Exit() {
-  gv_->SetSkipRender(game_->GetUnitId(atk_), false);
-  gv_->SetSkipRender(game_->GetUnitId(def_), false);
+  gv_->SetSkipRender(unit_id_atk_, false);
+  gv_->SetSkipRender(unit_id_def_, false);
   Misc::SetShowCursor(true);
 }
 
@@ -653,7 +673,7 @@ void StateUIAttack::Update() {
 
 // StateUIUnitTooltipAnim
 
-StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, core::Unit* unit, int hp, int mp)
+StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, const core::Unit* unit, int hp, int mp)
     : StateUI(base), frames_(-1), unit_(unit), hp_(hp), mp_(mp) {
   const core::HpMp& cur_hpmp = unit->GetCurrentHpMp();
   const core::HpMp& max_hpmp = unit->GetOriginalHpMp();
