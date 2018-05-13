@@ -64,16 +64,7 @@ void GameView::Render(Drawer* drawer) {
   // Render units
   gi_->ForEachUnit([this, drawer](uint32_t id, const core::Unit* unit) {
     if (this->SkipRender(id) || unit->IsDead()) return;
-
-    SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
-    int sprite_no = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);
-    SpriteEffect sprite_effect = {kEffectNone, 0};
-    if (unit->IsDoneAction()) {
-      stype = kSpriteStand;
-      sprite_no = 0;
-      sprite_effect = {kEffectShade, 128};
-    }
-    drawer->CopySprite(unit->GetModelId(), stype, unit->GetDirection(), sprite_no, sprite_effect, unit->GetPosition());
+    RenderUnit(drawer, unit, unit->GetPosition());
   });
 
   drawer->SetOffset({0, 0});
@@ -90,6 +81,18 @@ bool GameView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 bool GameView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   return GetCurrentState()->OnMouseWheelEvent(e);
+}
+
+void GameView::RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos) {
+  SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
+  int sprite_no = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);
+  SpriteEffect sprite_effect = {kEffectNone, 0};
+  if (unit->IsDoneAction()) {
+    stype = kSpriteStand;
+    sprite_no = 0;
+    sprite_effect = {kEffectShade, 128};
+  }
+  drawer->CopySprite(unit->GetModelId(), stype, unit->GetDirection(), sprite_no, sprite_effect, pos);
 }
 
 void GameView::ChangeUIState(StateUI* state_ui) {

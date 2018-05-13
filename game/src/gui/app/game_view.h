@@ -91,6 +91,7 @@ class GameView : public View {
   void SetUIViews(UIViews* ui_views) { ui_views_ = ui_views; }
   void RaiseMouseOverEvent();
   void SetSkipRender(uint32_t id, bool b);
+  void RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos);
 
  private:
   void RunCallbacks();

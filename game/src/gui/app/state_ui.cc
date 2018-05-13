@@ -259,7 +259,6 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
     auto unit_id_opt = units_.FindByPos(pos);
     if (unit_id_opt) {
       uint32_t unit_id = unit_id_opt.get();
-      // FIXME pathtree is a raw pointer which could be fragile.
       gv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit_id));
     } else {
       LOG_DEBUG("Not valid unit");
@@ -299,12 +298,7 @@ StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, uint32_t unit_id)
   origin_coords_ = unit->GetPosition();
 }
 
-void StateUIUnitSelected::Enter() {
-  // Restore the original position
-  core::Unit* unit = gi_->GetUnit(unit_id_);
-  game_->MoveUnit(unit, origin_coords_);
-  LOG_DEBUG("Move unit back to original position (%d, %d)", origin_coords_.x, origin_coords_.y);
-}
+void StateUIUnitSelected::Enter() {}
 
 void StateUIUnitSelected::Exit() {}
 
@@ -387,7 +381,6 @@ void StateUIMoving::Exit() { gv_->SetSkipRender(unit_id_, false); }
 void StateUIMoving::Update() {
   frames_++;
   if (LastFrame()) {  // Arrived at the destination
-    game_->MoveUnit(unit_id_, dest_);
     if (path_.size() > 1) {
       //      Direction dir = Vec2DRelativePosition(path_[1], path_[0]);
       //      unit_->SetDirection(dir);  // Do this here?
@@ -731,6 +724,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, uint32_t unit_id, uint32_
     : StateUIOperable(base),
       unit_id_(unit_id),
       move_id_(move_id),
+      pos_(gi_->QueryMoves(unit_id_).Get(move_id_)),
       magic_id_(magic_id),
       is_basic_attack_(!magic_id.compare("basic_attack")),
       range_(GetRange()),
@@ -750,14 +744,20 @@ const core::AttackRange& StateUITargeting::GetRange() {
   }
 }
 
-void StateUITargeting::Enter() { StateUIOperable::Enter(); }
+void StateUITargeting::Enter() {
+  StateUIOperable::Enter();
+  gv_->SetSkipRender(unit_id_, true);
+}
 
 void StateUITargeting::Exit() {
   gv_->unit_tooltip_view()->visible(false);
+  gv_->SetSkipRender(unit_id_, false);
   StateUIOperable::Exit();
 }
 
 void StateUITargeting::Render(Drawer* drawer) {
+  gv_->RenderUnit(drawer, gi_->GetUnit(unit_id_), pos_);
+
   // Show Attack Range
   range_.ForEach(
       [&](Vec2D d) {
@@ -765,7 +765,7 @@ void StateUITargeting::Render(Drawer* drawer) {
         drawer->SetDrawColor(Color(255, 64, 64, 128));
         drawer->FillCell(d);
       },
-      gi_->GetUnit(unit_id_)->GetPosition());
+      pos_);
 
   StateUIOperable::Render(drawer);
 }
@@ -781,21 +781,27 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
     auto move_id = move_id_;
 
     if (is_basic_attack_) {
-      uint32_t act_id = acts_.Find(map_pos);
-      gv_->InitUIStateMachine();
-      // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
-      gv_->NextFrame([=]() {
-        gi_->PushAction(unit_id, move_id, core::ActionType::kBasicAttack, act_id);
-        LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_id, move_id, act_id);
-      });
+      auto act_id_s = acts_.Find(map_pos);
+      if (act_id_s != boost::none) {
+        uint32_t act_id = act_id_s.get();
+        gv_->InitUIStateMachine();
+        // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
+        gv_->NextFrame([=]() {
+          gi_->PushAction(unit_id, move_id, core::ActionType::kBasicAttack, act_id);
+          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_id, move_id, act_id);
+        });
+      }
     } else {
-      uint32_t act_id = acts_.FindMagic(magic_id_, map_pos);
-      gv_->InitUIStateMachine();
-      // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
-      gv_->NextFrame([=]() {
-        gi_->PushAction(unit_id, move_id, core::ActionType::kMagic, act_id);
-        LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, Magic ActId:%u}", unit_id, move_id, act_id);
-      });
+      auto act_id_s = acts_.FindMagic(magic_id_, map_pos);
+      if (act_id_s != boost::none) {
+        uint32_t act_id = act_id_s.get();
+        gv_->InitUIStateMachine();
+        // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
+        gv_->NextFrame([=]() {
+          gi_->PushAction(unit_id, move_id, core::ActionType::kMagic, act_id);
+          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, Magic ActId:%u}", unit_id, move_id, act_id);
+        });
+      }
     }
   } else if (e.IsRightButtonUp()) {
     gv_->PopUIState();
@@ -834,10 +840,11 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
 StateUIAction::StateUIAction(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
     : StateUI(base), unit_id_(unit_id), move_id_(move_id) {
-  pos_ = gi_->GetUnit(unit_id_)->GetPosition();
+  pos_ = gi_->QueryMoves(unit_id_).Get(move_id_);
 }
 
 void StateUIAction::Enter() {
+  gv_->SetSkipRender(unit_id_, true);
   UnitActionView* unit_action_view = gv_->unit_action_view();
   unit_action_view->SetUnitAndMoveId(unit_id_, move_id_);
   unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), gv_->GetFrameSize(),
@@ -846,11 +853,13 @@ void StateUIAction::Enter() {
 }
 
 void StateUIAction::Exit() {
+  gv_->SetSkipRender(unit_id_, false);
   UnitActionView* unit_action_view = gv_->unit_action_view();
   unit_action_view->visible(false);
 }
 
 void StateUIAction::Render(Drawer* drawer) {
+  gv_->RenderUnit(drawer, gi_->GetUnit(unit_id_), pos_);
   drawer->SetDrawColor(Color(0, 255, 0, 128));
   drawer->BorderCell(pos_, 4);
 }
@@ -866,8 +875,7 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
 
 StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
     : StateUI(base), unit_id_(unit_id), move_id_(move_id) {
-  const core::Unit* unit = gi_->GetUnit(unit_id_);
-  pos_ = unit->GetPosition();
+  pos_ = gi_->QueryMoves(unit_id_).Get(move_id_);
 }
 
 void StateUIMagicSelection::Enter() {
@@ -879,11 +887,16 @@ void StateUIMagicSelection::Enter() {
   mlv->SetData(unit_id_, move_id_, magic_list);
   mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(), pos_));
   mlv->visible(true);
+  gv_->SetSkipRender(unit_id_, true);
 }
 
-void StateUIMagicSelection::Exit() { gv_->magic_list_view()->visible(false); }
+void StateUIMagicSelection::Exit() {
+  gv_->magic_list_view()->visible(false);
+  gv_->SetSkipRender(unit_id_, false);
+}
 
 void StateUIMagicSelection::Render(Drawer* drawer) {
+  gv_->RenderUnit(drawer, gi_->GetUnit(unit_id_), pos_);
   drawer->SetDrawColor(Color(0, 255, 0, 128));
   drawer->BorderCell(pos_, 4);
 }

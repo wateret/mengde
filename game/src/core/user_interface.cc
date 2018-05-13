@@ -103,7 +103,7 @@ unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
   return std::move(acts_[idx]);
 }
 
-uint32_t AvailableActs::Find(Vec2D pos) {
+boost::optional<uint32_t> AvailableActs::Find(Vec2D pos) {
   ASSERT(type_ == ActionType::kBasicAttack);
 
   uint32_t idx = 0;
@@ -114,10 +114,10 @@ uint32_t AvailableActs::Find(Vec2D pos) {
     }
     idx++;
   }
-  return 0;
+  return boost::none;
 }
 
-uint32_t AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
+boost::optional<uint32_t> AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
   ASSERT(type_ == ActionType::kMagic);
 
   uint32_t idx = 0;
@@ -131,7 +131,7 @@ uint32_t AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
     }
     idx++;
   }
-  return 0;
+  return boost::none;
 }
 
 // UserInterface

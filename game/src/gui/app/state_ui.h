@@ -374,6 +374,7 @@ class StateUITargeting : public StateUIOperable {
  private:
   uint32_t unit_id_;
   uint32_t move_id_;
+  Vec2D pos_;
   string magic_id_;
   bool is_basic_attack_;
   const core::AttackRange& range_;

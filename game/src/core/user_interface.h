@@ -42,8 +42,8 @@ class AvailableActs {
   AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, ActionType type);
   ActionType type() { return type_; }
   unique_ptr<CmdAct> Get(uint32_t idx);
-  uint32_t Find(Vec2D pos);
-  uint32_t FindMagic(const string& magic_id, Vec2D pos);
+  boost::optional<uint32_t> Find(Vec2D pos);
+  boost::optional<uint32_t> FindMagic(const string& magic_id, Vec2D pos);
 
  private:
   ActionType type_;
