@@ -158,6 +158,18 @@ vector<Vec2D> UserInterface::GetPath(uint32_t unit_id, Vec2D pos) const {
   return map->FindPathTo(GetUnit(unit_id), pos);
 }
 
+Vec2D UserInterface::GetMapSize() const {
+  return stage_->GetMapSize();
+}
+
+string UserInterface::GetMapId() const {
+  return stage_->GetMapBitmapPath();
+}
+
+bool UserInterface::HasNextCmd() const {
+  return stage_->HasNext();
+}
+
 AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) { return AvailableMoves(stage_, unit_id); }
 
 AvailableActs UserInterface::QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type) {
@@ -184,6 +196,10 @@ Vec2D UserInterface::GetMovedPosition(uint32_t unit_id, uint32_t move_id) {
 unique_ptr<CmdAct> UserInterface::GetActCmd(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
   auto acts = QueryActs(unit_id, move_id, type);
   return acts.Get(act_id);
+}
+
+void UserInterface::ForEachUnit(const std::function<void(uint32_t, const Unit*)>& fn) const {
+  stage_->ForEachUnitIdxConst(fn);
 }
 
 }  // namespace core

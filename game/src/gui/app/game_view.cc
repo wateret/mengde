@@ -28,7 +28,7 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
       frame_count_(-1),
       ui_views_(nullptr) {
   // Calculate max_camera_coords_
-  const Vec2D kMapSize    = game_->GetMapSize() * config::kBlockSize;
+  const Vec2D kMapSize    = gi_->GetMapSize() * config::kBlockSize;
   const Vec2D kWindowSize = GetFrameSize();
   max_camera_coords_      = kMapSize - kWindowSize;
 
@@ -48,7 +48,7 @@ void GameView::Render(Drawer* drawer) {
   drawer->SetOffset(camera_coords_);
 
   // Render Background
-  string          path       = game_->GetMapBitmapPath();
+  string          path       = gi_->GetMapId();
   TextureManager* tm         = drawer->GetTextureManager();
   Texture*        background = tm->FetchTexture(path);
 
@@ -62,7 +62,7 @@ void GameView::Render(Drawer* drawer) {
   GetCurrentState()->Render(drawer);
 
   // Render units
-  game_->ForEachUnit([this, drawer](core::Unit* unit) {
+  gi_->ForEachUnit([this, drawer](uint32_t, const core::Unit* unit) {
     if (unit->IsNoRender() || unit->IsDead()) return;
 
     SpriteType   stype         = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
@@ -117,7 +117,7 @@ void GameView::InitUIStateMachine() {
   NextFrame([this]() {
     ui_state_machine_.InitState();
     ui_state_machine_.PushState(new StateUIView({game_, gi_, this}));
-    if (game_->HasNext()) {
+    if (gi_->HasNextCmd()) {
       ui_state_machine_.PushState(new StateUIDoCmd({game_, gi_, this}));
     }
   });
