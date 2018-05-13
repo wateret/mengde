@@ -60,18 +60,17 @@ class UserInterface {
   AvailableActs  QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type);
   void           PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
 
-  Unit*          GetUnit(uint32_t unit_id);  // TODO Remove this and use only const version
-  const Unit*    GetUnit(uint32_t unit_id) const;
-  const Unit*    GetUnit(Vec2D pos) const;
-  vector<Vec2D>  GetPath(uint32_t unit_id, Vec2D pos) const;
+  Unit*         GetUnit(uint32_t unit_id);  // TODO Remove this and use only const version
+  const Unit*   GetUnit(uint32_t unit_id) const;
+  const Unit*   GetUnit(Vec2D pos) const;
+  vector<Vec2D> GetPath(uint32_t unit_id, Vec2D pos) const;
 
-  Vec2D GetMapSize() const;
+  Vec2D  GetMapSize() const;
   string GetMapId() const;
 
   bool HasNextCmd() const;
 
   void ForEachUnit(const std::function<void(uint32_t, const Unit*)>& fn) const;
-
 
  private:
   Vec2D              GetMovedPosition(uint32_t unit_id, uint32_t move_id);

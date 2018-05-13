@@ -52,10 +52,8 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   Vec2D     GetPosition() const { return position_; }
   void      SetDirection(Direction direction) { direction_ = direction; }
   Direction GetDirection() const { return direction_; }
-  void      SetNoRender(bool b) { no_render_ = b; }
   int       GetClassIndex() const;
   Force     GetForce() const { return force_; }
-  bool      IsNoRender() const { return no_render_; }
   bool      IsHPLow() const;
   bool      IsDead() const;
   bool      DoDamage(int);
@@ -84,7 +82,6 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   Vec2D     position_;     // Position on the map
   Direction direction_;    // Direction the unit is looking at
   Force     force_;        // Which force that the unit is belong to
-  bool      no_render_;    // FIXME this should be moved to some View related module
   bool      done_action_;  // action is done in current turn
 };
 

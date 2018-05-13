@@ -158,17 +158,11 @@ vector<Vec2D> UserInterface::GetPath(uint32_t unit_id, Vec2D pos) const {
   return map->FindPathTo(GetUnit(unit_id), pos);
 }
 
-Vec2D UserInterface::GetMapSize() const {
-  return stage_->GetMapSize();
-}
+Vec2D UserInterface::GetMapSize() const { return stage_->GetMapSize(); }
 
-string UserInterface::GetMapId() const {
-  return stage_->GetMapBitmapPath();
-}
+string UserInterface::GetMapId() const { return stage_->GetMapBitmapPath(); }
 
-bool UserInterface::HasNextCmd() const {
-  return stage_->HasNext();
-}
+bool UserInterface::HasNextCmd() const { return stage_->HasNext(); }
 
 AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) { return AvailableMoves(stage_, unit_id); }
 

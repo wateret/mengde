@@ -1,6 +1,8 @@
 #ifndef MENGDE_GUI_APP_GAME_VIEW_H_
 #define MENGDE_GUI_APP_GAME_VIEW_H_
 
+#include <unordered_set>
+
 #include "common.h"
 #include "gui/uifw/view.h"
 #include "state_ui.h"
@@ -88,10 +90,12 @@ class GameView : public View {
   void  NextFrame(NextFrameCallback);
   void  SetUIViews(UIViews* ui_views) { ui_views_ = ui_views; }
   void  RaiseMouseOverEvent();
+  void  SetSkipRender(uint32_t id, bool b);
 
  private:
   void RunCallbacks();
   int  GetCurrentSpriteNo(int, int) const;
+  bool SkipRender(uint32_t id) const;
 
  private:
   core::Game*          game_;  // TODO We should eventually remove this, use core::UserInterface instead.
@@ -101,6 +105,8 @@ class GameView : public View {
 
   StateMachine<StateUI*>   ui_state_machine_;
   queue<NextFrameCallback> frame_callbacks_;
+
+  std::unordered_set<uint32_t> skip_render_;
 
   Vec2D mouse_coords_;
   Vec2D camera_coords_;

@@ -17,7 +17,6 @@ Unit::Unit(const Hero* hero, Force force)
       position_(0, 0),
       direction_(kDirDown),
       force_(force),
-      no_render_(false),
       done_action_(false) {
   equipment_set_->CopyEquipmentSet(*hero_->GetEquipmentSet());
 }

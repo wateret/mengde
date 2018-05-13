@@ -380,15 +380,9 @@ bool StateUIMoving::LastFrame() {
   return frames_ == last_frame;
 }
 
-void StateUIMoving::Enter() {
-  core::Unit* unit = gi_->GetUnit(unit_id_);
-  unit->SetNoRender(true);
-}
+void StateUIMoving::Enter() { gv_->SetSkipRender(unit_id_, true); }
 
-void StateUIMoving::Exit() {
-  core::Unit* unit = gi_->GetUnit(unit_id_);
-  unit->SetNoRender(false);
-}
+void StateUIMoving::Exit() { gv_->SetSkipRender(unit_id_, false); }
 
 void StateUIMoving::Update() {
   frames_++;
@@ -438,13 +432,13 @@ StateUIMagic::~StateUIMagic() {
 }
 
 void StateUIMagic::Enter() {
-  atk_->SetNoRender(true);
-  def_->SetNoRender(true);
+  gv_->SetSkipRender(game_->GetUnitId(atk_), true);
+  gv_->SetSkipRender(game_->GetUnitId(def_), true);
 }
 
 void StateUIMagic::Exit() {
-  atk_->SetNoRender(false);
-  def_->SetNoRender(false);
+  gv_->SetSkipRender(game_->GetUnitId(atk_), false);
+  gv_->SetSkipRender(game_->GetUnitId(def_), false);
 }
 
 void StateUIMagic::Render(Drawer* drawer) {
@@ -489,12 +483,12 @@ void StateUIMagic::Update() {
 StateUIKilled::StateUIKilled(StateUI::Base base, core::Unit* unit) : StateUI(base), unit_(unit), frames_(0) {}
 
 void StateUIKilled::Enter() {
-  unit_->SetNoRender(true);
+  gv_->SetSkipRender(game_->GetUnitId(unit_), true);
   Misc::SetShowCursor(false);
 }
 
 void StateUIKilled::Exit() {
-  unit_->SetNoRender(false);
+  gv_->SetSkipRender(game_->GetUnitId(unit_), false);
   Misc::SetShowCursor(true);
 }
 
@@ -547,14 +541,14 @@ StateUIAttack::StateUIAttack(StateUI::Base base, core::Unit* atk, core::Unit* de
     : StateUI(base), atk_(atk), def_(def), hit_(hit), critical_(critical), damage_(damage), frames_(-1) {}
 
 void StateUIAttack::Enter() {
-  atk_->SetNoRender(true);
-  def_->SetNoRender(true);
+  gv_->SetSkipRender(game_->GetUnitId(atk_), true);
+  gv_->SetSkipRender(game_->GetUnitId(def_), true);
   Misc::SetShowCursor(false);
 }
 
 void StateUIAttack::Exit() {
-  atk_->SetNoRender(false);
-  def_->SetNoRender(false);
+  gv_->SetSkipRender(game_->GetUnitId(atk_), false);
+  gv_->SetSkipRender(game_->GetUnitId(def_), false);
   Misc::SetShowCursor(true);
 }
 

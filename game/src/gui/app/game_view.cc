@@ -62,8 +62,8 @@ void GameView::Render(Drawer* drawer) {
   GetCurrentState()->Render(drawer);
 
   // Render units
-  gi_->ForEachUnit([this, drawer](uint32_t, const core::Unit* unit) {
-    if (unit->IsNoRender() || unit->IsDead()) return;
+  gi_->ForEachUnit([this, drawer](uint32_t id, const core::Unit* unit) {
+    if (this->SkipRender(id) || unit->IsDead()) return;
 
     SpriteType   stype         = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
     int          sprite_no     = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);
@@ -164,6 +164,19 @@ void GameView::RunCallbacks() {
 int GameView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
   return (frame_count_ / frames_per_sprite) % num_sprites;
 }
+
+void GameView::SetSkipRender(uint32_t id, bool b) {
+  auto o     = skip_render_.find(id);
+  bool found = (o != skip_render_.end());
+  ASSERT(found != b);
+  if (found) {
+    skip_render_.erase(o);
+  } else {
+    skip_render_.insert(id);
+  }
+}
+
+bool GameView::SkipRender(uint32_t id) const { return skip_render_.find(id) != skip_render_.end(); }
 
 }  // namespace app
 }  // namespace gui
