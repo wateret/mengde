@@ -153,7 +153,7 @@ function <C>:<M>(...)\n\
 end\n\
 ";
   std::string code = string_replace_all(tpl, "<C>", class_name);
-  code             = string_replace_all(code, "<M>", method_name);
+  code = string_replace_all(code, "<M>", method_name);
   RunScript(code);
 }
 

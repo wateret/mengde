@@ -12,7 +12,7 @@ RectView::RectView(const Rect* frame, Color color)
 }
 
 void RectView::SetBorder(int width, Color color) {
-  border_       = width;
+  border_ = width;
   border_color_ = color;
 }
 

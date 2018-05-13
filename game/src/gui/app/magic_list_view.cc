@@ -49,20 +49,20 @@ void MagicListView::SetData(uint32_t unit_id, uint32_t move_id, shared_ptr<core:
 
   {
     const int kPositionFromTitle = kTitleHeight + LayoutHelper::kDefaultSpace;
-    Rect      frame(0, kPositionFromTitle, frame_size.x, frame_size.y - kPositionFromTitle);
+    Rect frame(0, kPositionFromTitle, frame_size.x, frame_size.y - kPositionFromTitle);
     lv_magics_wrap_ = new ScrollView(frame, lv_magics_);
     this->AddChild(lv_magics_wrap_);
   }
 
   for (int i = 0, sz = magic_list->NumMagics(); i < sz; i++) {
     core::Magic* magic = magic_list->GetMagic(i);
-    string       id    = magic->GetId();
-    string       name  = magic->GetId();
+    string id = magic->GetId();
+    string name = magic->GetId();
 
     // Variables to be captured for callback
     StateUI::Base base = {game_, gi_, gv_};
 
-    Rect        button_frame({0, 0}, {frame_size.x, item_height_});
+    Rect button_frame({0, 0}, {frame_size.x, item_height_});
     ButtonView* button = new ButtonView(&button_frame, name);
     button->SetMouseButtonHandler([base, unit_id, move_id, id](const foundation::MouseButtonEvent& e) {
       if (e.IsLeftButtonUp()) {

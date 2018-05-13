@@ -15,12 +15,12 @@ namespace app {
 //
 
 EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment) : CallbackView(frame) {
-  Rect iv_frame      = LayoutHelper::CalcPosition(GetActualFrame().GetSize(), {32, 32}, LayoutHelper::kAlignLftMid);
-  iv_image_          = new ImageView(&iv_frame, rcpath::EquipmentModelPath("60-1").ToString());  // FIXME hardcoded
+  Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(), {32, 32}, LayoutHelper::kAlignLftMid);
+  iv_image_ = new ImageView(&iv_frame, rcpath::EquipmentModelPath("60-1").ToString());  // FIXME hardcoded
   Rect tv_name_frame = {32 + 8, 0, 164, 16};
-  tv_name_           = new TextView(&tv_name_frame, "");
+  tv_name_ = new TextView(&tv_name_frame, "");
   Rect tv_desc_frame = {32 + 8, 16, 164, 52};
-  tv_desc_           = new TextView(&tv_desc_frame, "");
+  tv_desc_ = new TextView(&tv_desc_frame, "");
   AddChild(iv_image_);
   AddChild(tv_name_);
   AddChild(tv_desc_);
@@ -29,13 +29,13 @@ EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment
 }
 
 void EquipmentView::SetEquipment(const core::Equipment* equipment) {
-  Path   image_path = rcpath::EquipmentModelPath("60-1");
-  string name       = "No Equipment";
-  string desc       = "No Desc";
+  Path image_path = rcpath::EquipmentModelPath("60-1");
+  string name = "No Equipment";
+  string desc = "No Desc";
   if (equipment != nullptr) {
     image_path = rcpath::EquipmentModelPath(equipment->GetId());
-    name       = equipment->GetId();
-    desc       = equipment->GetId() + "_desc";
+    name = equipment->GetId();
+    desc = equipment->GetId() + "_desc";
   }
 
   iv_image_->SetPath(image_path.ToString());
@@ -48,9 +48,9 @@ void EquipmentView::SetEquipment(const core::Equipment* equipment) {
 //
 
 EquipmentSetView::EquipmentSetView(const Rect* frame) : CompositeView(frame), equipment_set_(nullptr) {
-  const int kMargin  = 80 + 8;
-  Rect      tv_frame = {0, 0, 200, 16};
-  tv_weapon_label_   = new TextView(&tv_frame, "Weapon");
+  const int kMargin = 80 + 8;
+  Rect tv_frame = {0, 0, 200, 16};
+  tv_weapon_label_ = new TextView(&tv_frame, "Weapon");
   tv_frame.Move({0, kMargin});
   tv_armor_label_ = new TextView(&tv_frame, "Armor");
   tv_frame.Move({0, kMargin});
@@ -60,16 +60,16 @@ EquipmentSetView::EquipmentSetView(const Rect* frame) : CompositeView(frame), eq
   AddChild(tv_aid_label_);
 
   const core::Equipment* weapon = nullptr;
-  const core::Equipment* armor  = nullptr;
-  const core::Equipment* aid    = nullptr;
+  const core::Equipment* armor = nullptr;
+  const core::Equipment* aid = nullptr;
   if (equipment_set_ != nullptr) {
     weapon = equipment_set_->GetWeapon();
-    armor  = equipment_set_->GetArmor();
-    aid    = equipment_set_->GetAid();
+    armor = equipment_set_->GetArmor();
+    aid = equipment_set_->GetAid();
   }
 
   Rect equipment_view_frame = {0, 24, 204, 60};
-  eqv_weapon_               = new EquipmentView(&equipment_view_frame, weapon);
+  eqv_weapon_ = new EquipmentView(&equipment_view_frame, weapon);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
   eqv_armor_ = new EquipmentView(&equipment_view_frame, armor);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});

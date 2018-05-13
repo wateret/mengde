@@ -56,54 +56,54 @@ class GameView : public View {
 
  public:
   // UIStateMachine related
-  void     ChangeUIState(StateUI*);
-  void     PushUIState(StateUI*);
-  void     PopUIState();
-  void     InitUIStateMachine();
+  void ChangeUIState(StateUI*);
+  void PushUIState(StateUI*);
+  void PopUIState();
+  void InitUIStateMachine();
   StateUI* GetCurrentState() { return ui_state_machine_.GetCurrentState(); }
 
  public:
   // Camera related
-  Vec2D  GetCameraCoords() { return camera_coords_; }
+  Vec2D GetCameraCoords() { return camera_coords_; }
   Vec2D* GetCameraCoordsPtr() { return &camera_coords_; }
-  Vec2D  GetMaxCameraCoords() { return max_camera_coords_; }
-  void   SetMaxCameraCoords(Vec2D c) { max_camera_coords_ = c; }
-  void   MoveCameraX(int d);
-  void   MoveCameraY(int d);
-  void   CenterCamera(Vec2D);
+  Vec2D GetMaxCameraCoords() { return max_camera_coords_; }
+  void SetMaxCameraCoords(Vec2D c) { max_camera_coords_ = c; }
+  void MoveCameraX(int d);
+  void MoveCameraY(int d);
+  void CenterCamera(Vec2D);
 
  public:
   TerrainInfoView* terrain_info_view() { return ui_views_->terrain_info_view(); }
-  UnitListView*    unit_list_view() { return ui_views_->unit_list_view(); }
-  UnitDialogView*  unit_dialog_view() { return ui_views_->unit_dialog_view(); }
-  ModalView*       unit_dialog_view_wrapper() { return ui_views_->unit_dialog_view_wrapper(); }
-  UnitView*        unit_view() { return ui_views_->unit_view(); }
+  UnitListView* unit_list_view() { return ui_views_->unit_list_view(); }
+  UnitDialogView* unit_dialog_view() { return ui_views_->unit_dialog_view(); }
+  ModalView* unit_dialog_view_wrapper() { return ui_views_->unit_dialog_view_wrapper(); }
+  UnitView* unit_view() { return ui_views_->unit_view(); }
   UnitTooltipView* unit_tooltip_view() { return ui_views_->unit_tooltip_view(); }
-  ControlView*     control_view() { return ui_views_->control_view(); }
+  ControlView* control_view() { return ui_views_->control_view(); }
   ModalDialogView* dialog_view() { return ui_views_->dialog_view(); }
-  MagicListView*   magic_list_view() { return ui_views_->magic_list_view(); }
-  UnitActionView*  unit_action_view() { return ui_views_->unit_action_view(); }
+  MagicListView* magic_list_view() { return ui_views_->magic_list_view(); }
+  UnitActionView* unit_action_view() { return ui_views_->unit_action_view(); }
 
  public:
   Vec2D GetMouseCoords() { return mouse_coords_; }
-  void  EndStage();
-  void  NextFrame(NextFrameCallback);
-  void  SetUIViews(UIViews* ui_views) { ui_views_ = ui_views; }
-  void  RaiseMouseOverEvent();
-  void  SetSkipRender(uint32_t id, bool b);
+  void EndStage();
+  void NextFrame(NextFrameCallback);
+  void SetUIViews(UIViews* ui_views) { ui_views_ = ui_views; }
+  void RaiseMouseOverEvent();
+  void SetSkipRender(uint32_t id, bool b);
 
  private:
   void RunCallbacks();
-  int  GetCurrentSpriteNo(int, int) const;
+  int GetCurrentSpriteNo(int, int) const;
   bool SkipRender(uint32_t id) const;
 
  private:
-  core::Game*          game_;  // TODO We should eventually remove this, use core::UserInterface instead.
+  core::Game* game_;  // TODO We should eventually remove this, use core::UserInterface instead.
   core::UserInterface* gi_;
 
   App* app_;
 
-  StateMachine<StateUI*>   ui_state_machine_;
+  StateMachine<StateUI*> ui_state_machine_;
   queue<NextFrameCallback> frame_callbacks_;
 
   std::unordered_set<uint32_t> skip_render_;
@@ -111,7 +111,7 @@ class GameView : public View {
   Vec2D mouse_coords_;
   Vec2D camera_coords_;
   Vec2D max_camera_coords_;
-  int   frame_count_;
+  int frame_count_;
 
   UIViews* ui_views_;
 };

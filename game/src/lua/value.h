@@ -46,11 +46,11 @@ class Value {
   Type type_;
   // FIXME Union is not a good way to implement any type
   union U {
-    int32_t     v_int32;
-    double      v_double;
+    int32_t v_int32;
+    double v_double;
     std::string v_string;
-    Table*      v_table;
-    void*       v_userdata;
+    Table* v_table;
+    void* v_userdata;
 
     U() {}
     ~U() {}  // For non-POD types the destructor will be called from Value destructor

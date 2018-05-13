@@ -23,11 +23,11 @@ class ButtonView : public CallbackView {
   const Color& GetNormalColor() { return checked_ ? checked_color_ : base_color_; }
 
  private:
-  bool      checked_;
+  bool checked_;
   TextView* tv_label_;
-  Color     base_color_;
-  Color     hover_color_;
-  Color     checked_color_;
+  Color base_color_;
+  Color hover_color_;
+  Color checked_color_;
 };
 
 }  // namespace uifw

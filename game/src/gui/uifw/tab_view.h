@@ -16,13 +16,13 @@ class TabView : public CompositeView {
  public:
   TabView(const Rect*);
   void AddTab(const string&, View*);
-  int  GetNumTabs() { return (int)v_tab_buttons_.size(); }
+  int GetNumTabs() { return (int)v_tab_buttons_.size(); }
   void SetViewIndex(int);
 
  private:
   std::vector<ButtonView*> v_tab_buttons_;
-  std::vector<View*>       v_tabs_;
-  int                      view_index_;
+  std::vector<View*> v_tabs_;
+  int view_index_;
 };
 
 }  // namespace uifw

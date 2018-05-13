@@ -36,7 +36,7 @@ Game::Game(const ResourceManagers& rc, Assets* assets, const Path& stage_script_
   lua_->Call<void>(string("on_deploy"), lua_this_);
   deployer_ = CreateDeployer();
 
-  commander_          = new Commander();
+  commander_ = new Commander();
   stage_unit_manager_ = new StageUnitManager();
 }
 
@@ -92,11 +92,11 @@ lua::Lua* Game::CreateLua(const Path& stage_script_path) {
 Map* Game::CreateMap() {
   ASSERT(lua_ != nullptr);
 
-  vector<uint32_t> size    = lua_->GetVector<uint32_t>("gstage.map.size");
-  uint32_t         cols    = size[0];
-  uint32_t         rows    = size[1];
-  vector<string>   terrain = lua_->GetVector<string>("gstage.map.terrain");
-  string           file    = lua_->Get<string>("gstage.map.file");  // FIXME filename should be same as stage id + .bmp
+  vector<uint32_t> size = lua_->GetVector<uint32_t>("gstage.map.size");
+  uint32_t cols = size[0];
+  uint32_t rows = size[1];
+  vector<string> terrain = lua_->GetVector<string>("gstage.map.terrain");
+  string file = lua_->Get<string>("gstage.map.file");  // FIXME filename should be same as stage id + .bmp
   ASSERT(rows == terrain.size());
   for (auto e : terrain) {
     ASSERT(cols == e.size());
@@ -110,16 +110,16 @@ Deployer* Game::CreateDeployer() {
   vector<DeployInfoUnselectable> unselectable_info_list;
   lua_->ForEachTableEntry("gstage.deploy.unselectables", [=, &unselectable_info_list](lua::Lua* l, const string&) {
     vector<int> pos_vec = l->Get<vector<int>>("position");
-    string      hero_id = l->Get<string>("hero");
-    Vec2D       position(pos_vec[0], pos_vec[1]);
-    Hero*       hero = assets_->GetHero(hero_id);  // TODO Check if Hero exists in our assets
+    string hero_id = l->Get<string>("hero");
+    Vec2D position(pos_vec[0], pos_vec[1]);
+    Hero* hero = assets_->GetHero(hero_id);  // TODO Check if Hero exists in our assets
     unselectable_info_list.push_back({position, hero});
   });
-  uint32_t                     num_required = lua_->Get<uint32_t>("gstage.deploy.num_required_selectables");
+  uint32_t num_required = lua_->Get<uint32_t>("gstage.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
   lua_->ForEachTableEntry("gstage.deploy.selectables", [=, &selectable_info_list](lua::Lua* l, const string&) mutable {
     vector<int> pos_vec = l->Get<vector<int>>("position");
-    Vec2D       position(pos_vec[0], pos_vec[1]);
+    Vec2D position(pos_vec[0], pos_vec[1]);
     selectable_info_list.push_back({position});
   });
   return new Deployer(unselectable_info_list, selectable_info_list, num_required);
@@ -161,7 +161,7 @@ Unit* Game::GetUnit(uint32_t id) { return stage_unit_manager_->Get(id); }
 
 uint32_t Game::GetUnitId(const Unit* unit) {
   // TODO The implementation is temoporary. Remove this method or write a safer implementation
-  uint32_t id  = 0;
+  uint32_t id = 0;
   uint32_t idx = 0;
   ForEachUnit([&](Unit* u) {
     if (unit == u) {
@@ -270,7 +270,7 @@ void Game::Push(unique_ptr<Cmd> cmd) {
 bool Game::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
   uint32_t res = lua_->Call<uint32_t>("end_condition", lua_this_);
-  status_      = static_cast<Status>(res);
+  status_ = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
 
@@ -313,8 +313,8 @@ uint32_t Game::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
 
 uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
-  Hero*         hero     = new Hero(hero_tpl, level);
-  Unit*         unit     = new Unit(hero, force);
+  Hero* hero = new Hero(hero_tpl, level);
+  Unit* unit = new Unit(hero, force);
   map_->PlaceUnit(unit, pos);
   return stage_unit_manager_->Deploy(unit);
 }

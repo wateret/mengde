@@ -65,11 +65,11 @@ Attribute Hero::CalcUnitPureAttr() const {
 }
 
 void Hero::UpdateStat() {
-  hpmp_           = CalcHpMp();
+  hpmp_ = CalcHpMp();
   unit_pure_attr_ = CalcUnitPureAttr();
-  unit_attr_      = unit_pure_attr_;
+  unit_attr_ = unit_pure_attr_;
   {  // FIXME code copied from Unit
-    Attribute addends     = equipment_set_->CalcAddends();
+    Attribute addends = equipment_set_->CalcAddends();
     Attribute multipliers = equipment_set_->CalcMultipliers();
 
     unit_attr_.ApplyModifier(multipliers, addends);

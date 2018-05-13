@@ -59,11 +59,11 @@ class LuaClass {
   template <typename T>
   LuaClass(T* pointer, const std::string& name) : pointer_(static_cast<void*>(pointer)), name_(name) {}
 
-  void*              pointer() const { return pointer_; }
+  void* pointer() const { return pointer_; }
   const std::string& name() const { return name_; }
 
  private:
-  void*       pointer_;
+  void* pointer_;
   std::string name_;
 };
 
@@ -106,7 +106,7 @@ class Lua {
     assert(L != nullptr);
 
     int to_be_popped = GetToStack(var_expr);
-    T   result       = GetTop<T>();
+    T result = GetTop<T>();
 
     PopStack(to_be_popped);
 
@@ -120,7 +120,7 @@ class Lua {
     assert(L != nullptr);
 
     int to_be_popped = GetToStackOpt(var_expr);
-    T   result       = GetTopOpt<T>();
+    T result = GetTopOpt<T>();
 
     PopStack(to_be_popped);
 
@@ -151,8 +151,8 @@ class Lua {
     int initial_stack_size = GetStackSize();
 #endif
 
-    std::string var   = "";
-    int         level = 0;
+    std::string var = "";
+    int level = 0;
     for (unsigned int i = 0, size = var_expr.size(); i < size; i++) {
       if (var_expr[i] == '.') {  // Handle a var name in the middle
         // Find field
@@ -210,8 +210,8 @@ class Lua {
   int GetToStack(const std::string& var_expr, bool optional = false) {
     if (var_expr.size() == 0) return 0;
 
-    std::string var   = "";
-    int         level = 0;
+    std::string var = "";
+    int level = 0;
     for (unsigned int i = 0, size = var_expr.size(); i < size + 1; i++) {
       if (i == size || var_expr[i] == '.') {
         GetField(var);
@@ -419,7 +419,7 @@ class Lua {
 
   void GetField(const std::string& id);
   void SetField(const std::string& id);
-  int  GetStackSize();
+  int GetStackSize();
 
   template <typename R>
   R CallImpl(unsigned argc) {
@@ -439,7 +439,7 @@ class Lua {
 
  protected:
   lua_State* L;
-  bool       destroy_;
+  bool destroy_;
 };
 
 //

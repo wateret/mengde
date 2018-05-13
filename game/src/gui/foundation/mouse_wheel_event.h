@@ -16,16 +16,16 @@ class MouseWheelEvent {
  public:
   MouseWheelEvent(Horizontal, Vertical, Vec2D);
   MouseWheelEvent(const MouseWheelEvent&, Vec2D);
-  bool  IsLeft() const { return hor_ == Horizontal::kLeft; }
-  bool  IsRight() const { return hor_ == Horizontal::kRight; }
-  bool  IsUp() const { return ver_ == Vertical::kUp; }
-  bool  IsDown() const { return ver_ == Vertical::kDown; }
+  bool IsLeft() const { return hor_ == Horizontal::kLeft; }
+  bool IsRight() const { return hor_ == Horizontal::kRight; }
+  bool IsUp() const { return ver_ == Vertical::kUp; }
+  bool IsDown() const { return ver_ == Vertical::kDown; }
   Vec2D GetCoords() const { return coords_; }
 
  private:
   Horizontal hor_;
-  Vertical   ver_;
-  Vec2D      coords_;
+  Vertical ver_;
+  Vec2D coords_;
 };
 
 }  // namespace foundation

@@ -20,7 +20,7 @@ class RectView : public View {
 
  private:
   Color color_;
-  int   border_;
+  int border_;
   Color border_color_;
 };
 

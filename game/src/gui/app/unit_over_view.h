@@ -25,19 +25,19 @@ class UnitOverView : public CompositeView {
   void OnUnitUpdate();
 
  private:
-  static const int kNumExp   = 1;
-  static const int kNumHpMp  = 2;
+  static const int kNumExp = 1;
+  static const int kNumHpMp = 2;
   static const int kNumStats = 5;
-  static const int kNumGVs   = kNumExp + kNumHpMp + kNumStats;
-  static const int kNumTabs  = 3;
+  static const int kNumGVs = kNumExp + kNumHpMp + kNumStats;
+  static const int kNumTabs = 3;
 
  private:
   const core::IUnitBase* unit_;
-  ImageView*             iv_portrait_;
-  TextView*              tv_name_;
-  TextView*              tv_lv_;
-  TextView*              tv_stats_[kNumGVs];
-  GaugeView*             gv_stats_[kNumGVs];
+  ImageView* iv_portrait_;
+  TextView* tv_name_;
+  TextView* tv_lv_;
+  TextView* tv_stats_[kNumGVs];
+  GaugeView* gv_stats_[kNumGVs];
 };
 
 }  // namespace app

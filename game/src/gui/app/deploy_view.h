@@ -36,9 +36,9 @@ class HeroModelView : public CallbackView {
 
  private:
   const core::Hero* hero_;
-  uint32_t          deploy_no_;
-  bool              required_unselectable_;
-  TextView*         tv_no_;
+  uint32_t deploy_no_;
+  bool required_unselectable_;
+  TextView* tv_no_;
 };
 
 class HeroModelListView : public CompositeView {
@@ -53,9 +53,9 @@ class DeployView : public CompositeView {
   DeployView(const Rect&, core::Assets*, core::IDeployHelper*, GameView*);
 
  private:
-  GameView*            gv_;
+  GameView* gv_;
   EquipmentSelectView* equipment_select_view_;
-  DeployDirector*      director_;
+  DeployDirector* director_;
 };
 
 }  // namespace app

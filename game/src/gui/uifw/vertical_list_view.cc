@@ -10,7 +10,7 @@ VerticalListView::VerticalListView(const Rect& frame) : CompositeView(frame), ma
 }
 
 void VerticalListView::AddElement(View* e) {
-  Vec2D frame_size   = GetFrameSize();
+  Vec2D frame_size = GetFrameSize();
   Vec2D element_size = e->GetFrameSize();
 
   // Restriction : element's height must be equal to frame

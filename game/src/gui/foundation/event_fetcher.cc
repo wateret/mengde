@@ -8,16 +8,16 @@ namespace foundation {
 
 bool EventFetcher::Poll() {
   SDL_Event e;
-  bool      has_pending_event = SDL_PollEvent(&e);
+  bool has_pending_event = SDL_PollEvent(&e);
   switch (e.type) {
     case SDL_QUIT: {
       event_type_ = EventType::kQuit;
       break;
     }
     case SDL_MOUSEMOTION: {
-      event_type_         = EventType::kMouseMotion;
-      Vec2D coords        = {e.motion.x, e.motion.y};
-      Vec2D coords_rel    = {e.motion.xrel, e.motion.yrel};
+      event_type_ = EventType::kMouseMotion;
+      Vec2D coords = {e.motion.x, e.motion.y};
+      Vec2D coords_rel = {e.motion.xrel, e.motion.yrel};
       event_.mouse_motion = MouseMotionEvent(MouseMotionEvent::Type::kOver, coords, coords_rel);
       break;
     }

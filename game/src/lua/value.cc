@@ -15,12 +15,12 @@ Value::Value(Value&& lua_value) {
 }
 
 Value::Value(int32_t value) {
-  type_          = Type::kInt32;
+  type_ = Type::kInt32;
   value_.v_int32 = value;
 }
 
 Value::Value(double value) {
-  type_           = Type::kDouble;
+  type_ = Type::kDouble;
   value_.v_double = value;
 }
 
@@ -30,12 +30,12 @@ Value::Value(const std::string& value) {
 }
 
 Value::Value(const Table& value) {
-  type_          = Type::kTable;
+  type_ = Type::kTable;
   value_.v_table = new Table(value);
 }
 
 Value::Value(void* value) {
-  type_             = Type::kUserdata;
+  type_ = Type::kUserdata;
   value_.v_userdata = value;
 }
 

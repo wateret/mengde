@@ -8,6 +8,6 @@ enum Direction { kDirNone, kDirLeft, kDirRight, kDirUp, kDirDown };
 
 Direction Vec2DRelativePosition(Vec2D, Vec2D);
 Direction OppositeDirection(Direction);
-Vec2D     GenerateVec2DOffset(Direction, int);
+Vec2D GenerateVec2DOffset(Direction, int);
 
 #endif  // UTIL_DIRECTION_H_

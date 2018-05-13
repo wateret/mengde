@@ -24,7 +24,7 @@ class UnitListView : public CompositeView {
 
    private:
     core::Unit* unit_;
-    TextView*   tv_name_;
+    TextView* tv_name_;
   };
 
  public:
@@ -33,7 +33,7 @@ class UnitListView : public CompositeView {
 
  private:
   vector<core::Unit*> unit_list_;
-  UnitDetailView*     unit_detail_view_;
+  UnitDetailView* unit_detail_view_;
 };
 
 }  // namespace app

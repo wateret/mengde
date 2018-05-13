@@ -193,9 +193,9 @@ CmdBasicAttack::CmdBasicAttack(Unit* atk, Unit* def, Type type)
 unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   if (atk_->IsDead() || def_->IsDead()) return nullptr;
 
-  Vec2D     atk_pos = atk_->GetPosition();
-  Vec2D     def_pos = def_->GetPosition();
-  Direction dir     = Vec2DRelativePosition(atk_pos, def_pos);
+  Vec2D atk_pos = atk_->GetPosition();
+  Vec2D def_pos = def_->GetPosition();
+  Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
   atk_->SetDirection(dir);
   def_->SetDirection(OppositeDirection(dir));
 
@@ -216,7 +216,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   bool success = TryBasicAttack();
   if (success) {
     CmdHit::HitType hit_type = TryBasicAttackCritical() ? CmdHit::HitType::kCritical : CmdHit::HitType::kNormal;
-    int             damage   = ComputeDamage(game->GetMap());
+    int damage = ComputeDamage(game->GetMap());
     if (hit_type == CmdHit::HitType::kCritical) {
       damage = damage * 3 / 2;  // 1.5x
     }
@@ -282,7 +282,7 @@ unique_ptr<Cmd> CmdMagic::Do(Game* game) {
   Cmd* ret = nullptr;
   if (hit) {
     int damage = ComputeDamage(game->GetMap());
-    ret        = new CmdHit(atk_, def_, CmdActResult::Type::kMagic, CmdHit::HitType::kNormal, magic_, damage);
+    ret = new CmdHit(atk_, def_, CmdActResult::Type::kMagic, CmdHit::HitType::kNormal, magic_, damage);
   } else {
     ret = new CmdMiss(atk_, def_, CmdActResult::Type::kMagic, magic_);
   }
@@ -368,7 +368,7 @@ CmdAction::CmdAction(Flag flag) : cmd_move_(nullptr), cmd_act_(nullptr), flag_(f
 
 void CmdAction::SetCmdMove(unique_ptr<CmdMove> cmd) { cmd_move_ = std::move(cmd); }
 
-void            CmdAction::SetCmdAct(unique_ptr<CmdAct> cmd) { cmd_act_ = std::move(cmd); }
+void CmdAction::SetCmdAct(unique_ptr<CmdAct> cmd) { cmd_act_ = std::move(cmd); }
 unique_ptr<Cmd> CmdAction::Do(Game* game) {
   Unit* doer = cmd_act_ ? cmd_act_->GetUnitAtk() : cmd_move_->GetUnit();
   ASSERT(doer != nullptr);
@@ -460,15 +460,15 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
   //  cmd->SetCmdAct(new CmdStay(unit));
 
   unique_ptr<PathTree> movable_path(game->FindMovablePath(unit));
-  vector<Vec2D>        movable_pos_list = movable_path->GetNodeList();
-  Vec2D                move_pos         = {-1, -1};
-  Unit*                target           = nullptr;
+  vector<Vec2D> movable_pos_list = movable_path->GetNodeList();
+  Vec2D move_pos = {-1, -1};
+  Unit* target = nullptr;
   for (auto pos : movable_pos_list) {
     if (!game->UnitInCell(pos) || unit->GetPosition() == pos) {
       Unit* u = game->GetOneHostileInRange(unit, pos);
       if (u != nullptr) {
         move_pos = pos;
-        target   = u;
+        target = u;
       }
     }
   }

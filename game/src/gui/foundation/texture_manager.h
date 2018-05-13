@@ -26,14 +26,14 @@ class TextureManager {
   Texture* FetchTexture(const string&);
   Texture* FetchWhitenedTexture(const string&);
   Texture* FetchTextTexture(const string&, int, Color, uint32_t = 0);
-  void     SetBitmapBasePath(const string& path) { bitmap_base_path_ = path; }
+  void SetBitmapBasePath(const string& path) { bitmap_base_path_ = path; }
 
  private:
-  string                               bitmap_base_path_;
-  FontManager*                         font_manager_;
+  string bitmap_base_path_;
+  FontManager* font_manager_;
   std::unordered_map<string, Texture*> container_;
-  Texture*                             dummy_texture_;
-  Renderer*                            renderer_;
+  Texture* dummy_texture_;
+  Renderer* renderer_;
 };
 
 }  // namespace foundation

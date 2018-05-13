@@ -24,11 +24,11 @@ FontManager::~FontManager() {
 
 TTF_Font* FontManager::FetchFont(const string& name, int size) {
   string full_path = base_path_ + "/" + name + ".ttf";
-  string key       = name + ":" + std::to_string(size);
+  string key = name + ":" + std::to_string(size);
 
   auto iter = container_.find(key);
   if (iter == container_.end()) {
-    TTF_Font* font  = TTF_OpenFont(full_path.c_str(), size);
+    TTF_Font* font = TTF_OpenFont(full_path.c_str(), size);
     container_[key] = font;
     return font;
   } else {

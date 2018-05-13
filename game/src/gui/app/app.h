@@ -32,20 +32,20 @@ class FrameConfig {
 
  private:
   uint16_t max_frames_sec_;
-  float    speed_;
+  float speed_;
 };
 
 class FpsTimer {
  public:
   FpsTimer() : timer_(), frames_cur_sec_(0), fps_(0.f) {}
-  void  Start();
-  void  Update();
+  void Start();
+  void Update();
   float GetLastFps() { return fps_; }
 
  private:
-  Timer    timer_;
+  Timer timer_;
   uint32_t frames_cur_sec_;
-  float    fps_;
+  float fps_;
 };
 
 class MainView;
@@ -62,13 +62,13 @@ class App {
   void Run();
 
   // Getters and Setters
-  Drawer*  GetDrawer();
-  Vec2D    GetWindowSize() { return window_size_; }
+  Drawer* GetDrawer();
+  Vec2D GetWindowSize() { return window_size_; }
   uint16_t GetMaxFps() { return frame_config_.GetMaxFps(); }
   uint32_t MsecToFrame(uint32_t ms) { return frame_config_.MsecToFrame(ms); }
-  void     SetMagicListViewVisible(bool);
-  void     SetQuit(bool b) { quit_ = b; }
-  void     EndStage();
+  void SetMagicListViewVisible(bool);
+  void SetQuit(bool b) { quit_ = b; }
+  void EndStage();
 
   void StartNewScenario(const string& scenario_id);
   void SetupScenario(const string& scenario_id);
@@ -83,20 +83,20 @@ class App {
   void RunCallbacks();
 
  private:
-  EventFetcher    event_fetcher_;
-  Vec2D           window_size_;
-  Window*         window_;
-  Drawer*         drawer_;
-  MainView*       main_view_;
-  RootView*       root_view_;
-  View*           target_view_;
+  EventFetcher event_fetcher_;
+  Vec2D window_size_;
+  Window* window_;
+  Drawer* drawer_;
+  MainView* main_view_;
+  RootView* root_view_;
+  View* target_view_;
   core::Scenario* scenario_;
 
   queue<NextFrameCallback> frame_callbacks_;
 
   // fps
   const FrameConfig frame_config_;
-  FpsTimer          fps_timer_;
+  FpsTimer fps_timer_;
 
   bool quit_;
 };

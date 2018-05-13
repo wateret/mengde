@@ -16,7 +16,7 @@ ScenarioSelectView::ScenarioSelectView(const Rect& frame, App* app) : VerticalLi
 
   // Add header text
   const Rect header_frame({0, 0}, {GetActualFrameSize().x, 32});
-  TextView*  header = new TextView(&header_frame, "Choose Scenario", COLOR("yellow"), 16, LayoutHelper::kAlignCenter);
+  TextView* header = new TextView(&header_frame, "Choose Scenario", COLOR("yellow"), 16, LayoutHelper::kAlignCenter);
   AddElement(header);
 
   // Add scenario entries
@@ -28,7 +28,7 @@ ScenarioSelectView::ScenarioSelectView(const Rect& frame, App* app) : VerticalLi
       const Vec2D btn_size = {GetActualFrameSize().x, 24};
       if (boost::filesystem::is_directory(*itr)) {
         const string scenario_id = itr->path().filename().string();
-        ButtonView*  btn_element = new ButtonView(Rect({0, 0}, btn_size), scenario_id);
+        ButtonView* btn_element = new ButtonView(Rect({0, 0}, btn_size), scenario_id);
         btn_element->SetMouseButtonHandler([=](const MouseButtonEvent& e) {
           if (e.IsLeftButtonDown()) {
             app->StartNewScenario(scenario_id);

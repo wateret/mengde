@@ -39,17 +39,17 @@ class MagicListView : public CompositeView {
   void Cleanup();
 
  private:
-  core::Game*          game_;
+  core::Game* game_;
   core::UserInterface* gi_;
-  GameView*            gv_;
+  GameView* gv_;
 
  private:
   int item_height_;
 
  private:
-  TextView*         tv_title_;
+  TextView* tv_title_;
   VerticalListView* lv_magics_;
-  View*             lv_magics_wrap_;
+  View* lv_magics_wrap_;
 };
 
 }  // namespace app

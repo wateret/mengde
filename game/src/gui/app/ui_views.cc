@@ -26,7 +26,7 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
 
   {  // Initialize deploy_view_
     core::Assets* assets = scenario->GetAssets();
-    Rect          frame  = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
+    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
 
     deploy_view_ = new DeployView(frame, assets, game, game_view);
     deploy_view_->visible(true);
@@ -50,14 +50,14 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
 
   {  // Initialize dialog_view_
     Rect dialog_frame = *GetFrame();
-    dialog_view_      = new ModalDialogView(&dialog_frame, "Put your message here!");
+    dialog_view_ = new ModalDialogView(&dialog_frame, "Put your message here!");
     dialog_view_->visible(false);
     AddChild(dialog_view_);
   }
 
   {  // Initialize magic_list_view_;
     Rect magic_list_frame = {8, 8, 170, 200};
-    magic_list_view_      = new MagicListView(magic_list_frame, game, game->user_interface(), game_view);
+    magic_list_view_ = new MagicListView(magic_list_frame, game, game->user_interface(), game_view);
     magic_list_view_->visible(false);
     AddChild(magic_list_view_);
   }
@@ -93,14 +93,14 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
   }
 
   {  // Initialize unit_list_view_
-    Rect frame      = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
+    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     unit_list_view_ = new UnitListView(frame, game->GetCurrentTurnUnits());
     unit_list_view_->visible(false);
     AddChild(unit_list_view_);
   }
 
   {  // Initialize unit_action_view_
-    Rect frame        = LayoutHelper::CalcPosition(GetFrameSize(), {150, 150}, LayoutHelper::kAlignLftTop);
+    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {150, 150}, LayoutHelper::kAlignLftTop);
     unit_action_view_ = new UnitActionView(frame, game, game->user_interface(), game_view);
     unit_action_view_->visible(false);
     AddChild(unit_action_view_);

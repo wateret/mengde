@@ -17,10 +17,10 @@ class StageUnitManager {
  public:
   StageUnitManager();
   uint32_t Deploy(Unit*);
-  void     Kill(Unit*);
-  Unit*    Get(uint32_t);
-  void     ForEach(function<void(Unit*)>);
-  void     ForEachIdxConst(function<void(uint32_t, const Unit*)> fn) const;
+  void Kill(Unit*);
+  Unit* Get(uint32_t);
+  void ForEach(function<void(Unit*)>);
+  void ForEachIdxConst(function<void(uint32_t, const Unit*)> fn) const;
 
  private:
   vector<Unit*> units_;

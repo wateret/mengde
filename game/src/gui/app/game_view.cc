@@ -28,9 +28,9 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
       frame_count_(-1),
       ui_views_(nullptr) {
   // Calculate max_camera_coords_
-  const Vec2D kMapSize    = gi_->GetMapSize() * config::kBlockSize;
+  const Vec2D kMapSize = gi_->GetMapSize() * config::kBlockSize;
   const Vec2D kWindowSize = GetFrameSize();
-  max_camera_coords_      = kMapSize - kWindowSize;
+  max_camera_coords_ = kMapSize - kWindowSize;
 
   ui_state_machine_.InitState();
   ui_state_machine_.PushState(new StateUIView({game_, gi_, this}));
@@ -48,13 +48,13 @@ void GameView::Render(Drawer* drawer) {
   drawer->SetOffset(camera_coords_);
 
   // Render Background
-  string          path       = gi_->GetMapId();
-  TextureManager* tm         = drawer->GetTextureManager();
-  Texture*        background = tm->FetchTexture(path);
+  string path = gi_->GetMapId();
+  TextureManager* tm = drawer->GetTextureManager();
+  Texture* background = tm->FetchTexture(path);
 
   const Vec2D kScreenSize = drawer->GetWindowSize();
-  Rect        src_rect({0, 0}, kScreenSize);
-  Rect        dst_rect({0, 0}, kScreenSize);
+  Rect src_rect({0, 0}, kScreenSize);
+  Rect dst_rect({0, 0}, kScreenSize);
 
   drawer->CopyTextureBackground(background, &src_rect, &dst_rect);
 
@@ -65,12 +65,12 @@ void GameView::Render(Drawer* drawer) {
   gi_->ForEachUnit([this, drawer](uint32_t id, const core::Unit* unit) {
     if (this->SkipRender(id) || unit->IsDead()) return;
 
-    SpriteType   stype         = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
-    int          sprite_no     = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);
+    SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
+    int sprite_no = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);
     SpriteEffect sprite_effect = {kEffectNone, 0};
     if (unit->IsDoneAction()) {
-      stype         = kSpriteStand;
-      sprite_no     = 0;
+      stype = kSpriteStand;
+      sprite_no = 0;
       sprite_effect = {kEffectShade, 128};
     }
     drawer->CopySprite(unit->GetModelId(), stype, unit->GetDirection(), sprite_no, sprite_effect, unit->GetPosition());
@@ -136,7 +136,7 @@ void GameView::MoveCameraY(int d) {
 }
 
 void GameView::CenterCamera(Vec2D center) {
-  Vec2D coords   = center - (GetFrameSize() / 2);
+  Vec2D coords = center - (GetFrameSize() / 2);
   camera_coords_ = coords.Bound({0, 0}, max_camera_coords_);
 }
 
@@ -166,7 +166,7 @@ int GameView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
 }
 
 void GameView::SetSkipRender(uint32_t id, bool b) {
-  auto o     = skip_render_.find(id);
+  auto o = skip_render_.find(id);
   bool found = (o != skip_render_.end());
   ASSERT(found != b);
   if (found) {

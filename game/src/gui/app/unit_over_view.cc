@@ -14,18 +14,18 @@ UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL
   bg_color(COLOR("darkgray"));
 
   Rect portrait_frame = {0, 0, 64, 80};
-  iv_portrait_        = new ImageView(&portrait_frame);
-  Rect top_frame      = {64 + LayoutHelper::kDefaultSpace, 0, 200, 16};
-  tv_name_            = new TextView(&top_frame, "name");
+  iv_portrait_ = new ImageView(&portrait_frame);
+  Rect top_frame = {64 + LayoutHelper::kDefaultSpace, 0, 200, 16};
+  tv_name_ = new TextView(&top_frame, "name");
   top_frame.Move({0, 16});
   tv_lv_ = new TextView(&top_frame, "lv");
   AddChild(iv_portrait_);
   AddChild(tv_name_);
   AddChild(tv_lv_);
 
-  const Vec2D frame_space  = {0, 24};
-  const int   kLabelWidth  = 45;
-  const int   kLabelHeight = 16;
+  const Vec2D frame_space = {0, 24};
+  const int kLabelWidth = 45;
+  const int kLabelHeight = 16;
 
   Rect tv_frame = {0, 92, kLabelWidth, kLabelHeight};
 
@@ -67,14 +67,14 @@ void UnitOverView::OnUnitUpdate() {
   ASSERT(unit_ != NULL);
 
   std::string str_name = unit_->GetId();
-  std::string str_lv   = "Lv " + std::to_string(unit_->GetLevel());
+  std::string str_lv = "Lv " + std::to_string(unit_->GetLevel());
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
 
   const core::Attribute& ori_attr = unit_->GetOriginalAttr();
   const core::Attribute& cur_attr = unit_->GetCurrentAttr();
-  const core::HpMp&      ori_hpmp = unit_->GetOriginalHpMp();
-  const core::HpMp&      cur_hpmp = unit_->GetCurrentHpMp();
+  const core::HpMp& ori_hpmp = unit_->GetOriginalHpMp();
+  const core::HpMp& cur_hpmp = unit_->GetCurrentHpMp();
 
   gv_stats_[0]->SetCurVal(unit_->GetExp());
   gv_stats_[0]->SetMaxVal(core::Level::kExpLimit);

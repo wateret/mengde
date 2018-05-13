@@ -10,11 +10,11 @@ class Hero;
 
 class IDeployHelper {
  public:
-  virtual ~IDeployHelper()                     = default;
-  virtual bool     SubmitDeploy()              = 0;
-  virtual uint32_t AssignDeploy(const Hero*)   = 0;
+  virtual ~IDeployHelper() = default;
+  virtual bool SubmitDeploy() = 0;
+  virtual uint32_t AssignDeploy(const Hero*) = 0;
   virtual uint32_t UnassignDeploy(const Hero*) = 0;
-  virtual uint32_t FindDeploy(const Hero*)     = 0;
+  virtual uint32_t FindDeploy(const Hero*) = 0;
 };
 
 }  // namespace core

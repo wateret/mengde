@@ -11,7 +11,7 @@ RowMajorListView::RowMajorListView(const Rect& frame, int row_height)
 }
 
 void RowMajorListView::AddElement(View* e) {
-  Vec2D frame_size   = GetActualFrameSize();
+  Vec2D frame_size = GetActualFrameSize();
   Vec2D element_size = e->GetFrameSize();
 
   ASSERT_EQ(row_height_, element_size.y);

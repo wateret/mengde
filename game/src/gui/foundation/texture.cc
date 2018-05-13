@@ -74,8 +74,8 @@ void Texture::SetAlpha(uint8_t alpha) { SDL_SetTextureAlphaMod(texture_, alpha);
 void Texture::SetShade(uint8_t b) { SDL_SetTextureColorMod(texture_, b, b, b); }
 
 void Texture::CreateFromSurface(Renderer* renderer, SDL_Surface* surface) {
-  width_   = surface->w;
-  height_  = surface->h;
+  width_ = surface->w;
+  height_ = surface->h;
   texture_ = SDL_CreateTextureFromSurface(renderer->GetRawRenderer(), surface);
 }
 
@@ -93,29 +93,29 @@ SDL_Texture* Texture::AsRawTexture() { return texture_; }
 
 Texture* Texture::NewWhitenedTexture(Renderer* renderer) {
   const uint32_t pixel_format = renderer->GetPixelFormat();
-  SDL_Texture*   raw_texture =
+  SDL_Texture* raw_texture =
       SDL_CreateTexture(renderer->GetRawRenderer(), pixel_format, SDL_TEXTUREACCESS_STREAMING, width_, height_);
   SDL_SetTextureBlendMode(raw_texture, SDL_BLENDMODE_BLEND);
   ASSERT(raw_texture != nullptr);
   ASSERT(surface_ != nullptr);
   void* pixels;
-  int   pitch;
+  int pitch;
   if (SDL_LockTexture(raw_texture, NULL, &pixels, &pitch) != 0) {
     string msg = Misc::GetErrorMessage();
     LOG_FATAL("SDL_LockTexture Failed : %s", msg.c_str());
   }
 
-  SDL_Surface*     fsurface       = SDL_ConvertSurfaceFormat(surface_, pixel_format, 0);
+  SDL_Surface* fsurface = SDL_ConvertSurfaceFormat(surface_, pixel_format, 0);
   SDL_PixelFormat* mapping_format = renderer->GetRawPixelFormatObj();
-  uint32_t         transparent    = SDL_MapRGBA(mapping_format, 0x00, 0x00, 0x00, 0x00);
-  uint32_t         white          = SDL_MapRGBA(mapping_format, 0xFF, 0xFF, 0xFF, 0xFF);
+  uint32_t transparent = SDL_MapRGBA(mapping_format, 0x00, 0x00, 0x00, 0x00);
+  uint32_t white = SDL_MapRGBA(mapping_format, 0xFF, 0xFF, 0xFF, 0xFF);
   for (int i = 0; i < height_; i++) {
     for (int j = 0; j < width_; j++) {
       const uint32_t orig_offset = i * (fsurface->pitch / 4) + j;
-      uint32_t*      orig_pixel  = ((uint32_t*)fsurface->pixels) + orig_offset;
-      const uint32_t offset      = i * (pitch / 4) + j;
-      uint32_t*      pixel       = ((uint32_t*)pixels) + offset;
-      uint8_t        r, g, b, a;
+      uint32_t* orig_pixel = ((uint32_t*)fsurface->pixels) + orig_offset;
+      const uint32_t offset = i * (pitch / 4) + j;
+      uint32_t* pixel = ((uint32_t*)pixels) + offset;
+      uint8_t r, g, b, a;
       SDL_GetRGBA(*orig_pixel, mapping_format, &r, &g, &b, &a);
       if (a == 0) {
         *pixel = transparent;

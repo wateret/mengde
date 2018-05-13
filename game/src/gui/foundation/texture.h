@@ -26,13 +26,13 @@ class Texture {
 
  public:
   SDL_Texture* AsRawTexture();
-  int          GetW();
-  int          GetH();
-  Vec2D        GetSize();
-  void         SetAlpha(uint8_t);
-  void         SetShade(uint8_t);
-  bool         Loaded() { return texture_ != nullptr; }
-  Texture*     NewWhitenedTexture(Renderer*);
+  int GetW();
+  int GetH();
+  Vec2D GetSize();
+  void SetAlpha(uint8_t);
+  void SetShade(uint8_t);
+  bool Loaded() { return texture_ != nullptr; }
+  Texture* NewWhitenedTexture(Renderer*);
 
  private:
   void InitBitmap(Renderer*, const std::string&, bool, Color);
@@ -42,8 +42,8 @@ class Texture {
  private:
   SDL_Surface* surface_;  // We hold surface for manipulating sprites
   SDL_Texture* texture_;
-  int          width_;
-  int          height_;
+  int width_;
+  int height_;
 };
 
 }  // namespace foundation

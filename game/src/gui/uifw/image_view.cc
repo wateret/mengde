@@ -17,7 +17,7 @@ ImageView::ImageView(const Rect& frame, const string& path) : View(frame), path_
 ImageView::~ImageView() {}
 
 void ImageView::SetPath(const string& path) {
-  path_    = path;
+  path_ = path;
   texture_ = nullptr;
 }
 
@@ -26,7 +26,7 @@ void ImageView::SetSourceRect(const Rect& rect) { src_rect_ = rect; }
 void ImageView::Render(Drawer* drawer) {
   if (texture_ == nullptr) {  // TODO better design?
     TextureManager* tm = drawer->GetTextureManager();
-    texture_           = tm->FetchTexture(path_);
+    texture_ = tm->FetchTexture(path_);
   }
   ASSERT(texture_ != nullptr);
   Rect frame = *GetFrame();

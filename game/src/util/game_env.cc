@@ -3,7 +3,7 @@
 
 GameEnv::GameEnv() {
   char* basepath = SDL_GetBasePath();
-  game_path_     = Path(string(basepath));
+  game_path_ = Path(string(basepath));
   SDL_free(basepath);
 
   resource_path_ = game_path_ / "res";

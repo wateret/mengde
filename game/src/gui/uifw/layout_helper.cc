@@ -5,9 +5,9 @@ namespace gui {
 namespace uifw {
 
 Rect LayoutHelper::CalcPosition(Vec2D cont_size, Vec2D elem_size, Align alignment, int margin) {
-  static const int mask  = 0x03;
+  static const int mask = 0x03;
   static const int shift = 2;
-  Vec2D            pos(0, 0);
+  Vec2D pos(0, 0);
 
   switch (alignment & mask) {
     case kAlignNone:

@@ -11,13 +11,13 @@ class EquipmentSlot {
  public:
   EquipmentSlot(Equipment::Type);
   const Equipment* PutEquipmentOn(const Equipment*);
-  Attribute        CalcAddends() const;
-  Attribute        CalcMultipliers() const;
-  bool             IsEquipmentOn() const { return equipment_ != NULL; }
+  Attribute CalcAddends() const;
+  Attribute CalcMultipliers() const;
+  bool IsEquipmentOn() const { return equipment_ != NULL; }
   const Equipment* GetEquipment() const { return equipment_; }
 
  private:
-  Equipment::Type  type_;
+  Equipment::Type type_;
   const Equipment* equipment_;
 };
 

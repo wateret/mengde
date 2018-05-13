@@ -20,24 +20,24 @@ class Equipment : public IEvent {
 
  public:
   virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const override;
-  virtual void            RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
+  virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
 
  public:
   Equipment(const std::string&, Type);
-  string    GetId() const { return id_; }
-  Type      GetType() const { return type_; }
-  void      AddModifier(StatModifier*);
-  void      AddEffect(EventEffect*);
-  void      AddGeneralEffect(GeneralEventEffect*);
-  void      AddOnCmdEffect(OnCmdEventEffect*);
+  string GetId() const { return id_; }
+  Type GetType() const { return type_; }
+  void AddModifier(StatModifier*);
+  void AddEffect(EventEffect*);
+  void AddGeneralEffect(GeneralEventEffect*);
+  void AddOnCmdEffect(OnCmdEventEffect*);
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
 
  private:
-  string           id_;
-  Type             type_;
+  string id_;
+  Type type_;
   StatModifierList modifier_list_;
-  EventEffectList  effect_list_;
+  EventEffectList effect_list_;
 };
 
 }  // namespace core

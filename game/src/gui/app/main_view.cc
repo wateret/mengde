@@ -11,12 +11,12 @@ namespace app {
 MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
   bg_color(COLOR("white"));
   const Vec2D kButtonSize = {200, 100};
-  Rect        start_frame = LayoutHelper::CalcPosition(frame, kButtonSize, LayoutHelper::kAlignHMid);
+  Rect start_frame = LayoutHelper::CalcPosition(frame, kButtonSize, LayoutHelper::kAlignHMid);
   start_frame.Move(0, 100);
   Rect quit_frame = start_frame;
   quit_frame.Move(0, 150);
   ButtonView* start_button = new ButtonView(&start_frame, "New Game");
-  ButtonView* quit_button  = new ButtonView(&quit_frame, "Quit");
+  ButtonView* quit_button = new ButtonView(&quit_frame, "Quit");
   start_button->SetMouseButtonHandler([this](const foundation::MouseButtonEvent& e) -> bool {
     if (e.IsLeftButtonUp()) {
       LOG_DEBUG("Start");

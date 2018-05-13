@@ -23,8 +23,8 @@ Deployer::Deployer(const vector<DeployInfoUnselectable>& unselectable_info_list,
       num_required_(num_required) {
   for (uint32_t idx = 0; idx < unselectable_info_list_.size(); idx++) {
     const DeployInfoUnselectable& deploy_info = unselectable_info_list_[idx];
-    const uint32_t                deploy_no   = idx + 1;
-    uint32_t                      assigned_no = unselectable_assignment_.size() + 1;
+    const uint32_t deploy_no = idx + 1;
+    uint32_t assigned_no = unselectable_assignment_.size() + 1;
     ASSERT_EQ(assigned_no, deploy_no);
     unselectable_assignment_.insert({deploy_info.hero, deploy_no});
   }
@@ -41,8 +41,8 @@ uint32_t Deployer::Assign(const Hero* hero) {
 }
 
 uint32_t Deployer::Unassign(const Hero* hero) {
-  auto                 found          = FindImpl(hero);
-  const Type           type           = found.first;
+  auto found = FindImpl(hero);
+  const Type type = found.first;
   const DeployElement& deploy_element = found.second;
   if (type == Type::kUnselectable) {
     // Do not unassign unselectables
@@ -56,8 +56,8 @@ uint32_t Deployer::Unassign(const Hero* hero) {
 }
 
 uint32_t Deployer::Find(const Hero* hero) {
-  auto                 found          = FindImpl(hero);
-  const Type           type           = found.first;
+  auto found = FindImpl(hero);
+  const Type type = found.first;
   const DeployElement& deploy_element = found.second;
   if (type == Type::kNone) {
     return 0;
@@ -85,14 +85,14 @@ vector<DeployElement> Deployer::AsOrderedVector(AssignmentContainer& container) 
 
 void Deployer::ForEach(ForEachFn fn) {
   auto unselectables_ordered = AsOrderedVector(unselectable_assignment_);
-  auto selectables_ordered   = AsOrderedVector(selectable_assignment_);
+  auto selectables_ordered = AsOrderedVector(selectable_assignment_);
   std::for_each(unselectables_ordered.begin(), unselectables_ordered.end(), fn);
   std::for_each(selectables_ordered.begin(), selectables_ordered.end(), fn);
 }
 
 Vec2D Deployer::GetPosition(const Hero* hero) {
-  auto                 found          = FindImpl(hero);
-  const Type           type           = found.first;
+  auto found = FindImpl(hero);
+  const Type type = found.first;
   const DeployElement& deploy_element = found.second;
   if (type == Type::kUnselectable) {
     return unselectable_info_list_[deploy_element.no - 1].position;

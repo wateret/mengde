@@ -11,10 +11,10 @@ namespace foundation {
 
 class Misc {
  public:
-  static void        Init();
-  static void        Quit();
-  static void        Delay(int);
-  static void        SetShowCursor(bool);
+  static void Init();
+  static void Quit();
+  static void Delay(int);
+  static void SetShowCursor(bool);
   static std::string GetErrorMessage();
 };
 

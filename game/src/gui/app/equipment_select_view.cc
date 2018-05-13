@@ -23,11 +23,11 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
   bg_color(COLOR("transparent"));
   padding(8);
 
-  Rect       iv_icon_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {32, 32}, LayoutHelper::kAlignCenter);
-  ImageView* iv_icon       = new ImageView(iv_icon_frame, rcpath::EquipmentModelPath(equipment_id).ToString());
+  Rect iv_icon_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {32, 32}, LayoutHelper::kAlignCenter);
+  ImageView* iv_icon = new ImageView(iv_icon_frame, rcpath::EquipmentModelPath(equipment_id).ToString());
   AddChild(iv_icon);
 
-  Rect      tv_amount_frame = GetActualFrame();
+  Rect tv_amount_frame = GetActualFrame();
   TextView* tv_amount =
       new TextView(&tv_amount_frame, std::to_string(amount), COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
   AddChild(tv_amount);
@@ -58,7 +58,7 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   RowMajorListView* new_list_view = new RowMajorListView(GetActualFrame(), kItemSize);
   ASSERT(hero_ != nullptr);
   if (hero_ == nullptr) return;
-  auto hero               = assets->GetHero(hero_->GetId());  // For non-const core::Hero and capture
+  auto hero = assets->GetHero(hero_->GetId());  // For non-const core::Hero and capture
   auto equipment_set_view = equipment_set_view_;
   for (auto equipment : equipments) {
     ItemIconView* item_icon_view =

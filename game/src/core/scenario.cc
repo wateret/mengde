@@ -12,12 +12,12 @@ Scenario::Scenario(const string& scenario_id)
   const Path base_path(scenario_id_);
 
   ConfigLoader loader(base_path / "config.lua");
-  rc_        = loader.GetResources();
+  rc_ = loader.GetResources();
   stage_ids_ = loader.GetStages();
 
   // For the case of NEW GAME
   assets_ = new Assets();
-  game_   = NewGame(stage_ids_[stage_no_]);
+  game_ = NewGame(stage_ids_[stage_no_]);
 }
 
 Game* Scenario::NewGame(const string& stage_id) {

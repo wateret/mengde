@@ -26,16 +26,16 @@ class EventEffectLoader {
   ~EventEffectLoader() = default;
 
   GeneralEventEffect* CreateGeneralEventEffect(const lua::Table*) const;
-  OnCmdEventEffect*   CreateOnCmdEventEffect(const lua::Table*) const;
-  bool                IsGeneralEventEffect(const std::string& key) const;
-  bool                IsOnCmdEventEffect(const std::string& key) const;
+  OnCmdEventEffect* CreateOnCmdEventEffect(const lua::Table*) const;
+  bool IsGeneralEventEffect(const std::string& key) const;
+  bool IsOnCmdEventEffect(const std::string& key) const;
 
  private:
   EventEffectLoader();
 
  private:
   std::unordered_map<std::string, event::GeneralEvent> gee_map_;
-  std::unordered_map<std::string, event::OnCmdEvent>   ocee_map_;
+  std::unordered_map<std::string, event::OnCmdEvent> ocee_map_;
 };
 
 class ConfigLoader {
@@ -43,20 +43,20 @@ class ConfigLoader {
   ConfigLoader(const Path&);
   ~ConfigLoader();
   const ResourceManagers& GetResources() const { return rc_; }
-  const vector<string>&   GetStages() const { return stages_; }
+  const vector<string>& GetStages() const { return stages_; }
 
  private:
-  void     ParseUnitClassesAndTerrains();
-  void     ParseMagics();
-  void     ParseEquipments();
-  void     ParseHeroTemplates();
-  void     ParseStages();
+  void ParseUnitClassesAndTerrains();
+  void ParseMagics();
+  void ParseEquipments();
+  void ParseHeroTemplates();
+  void ParseStages();
   uint16_t StatStrToIdx(const string&);
 
  private:
-  ::lua::Lua*      lua_config_;
+  ::lua::Lua* lua_config_;
   ResourceManagers rc_;
-  vector<string>   stages_;
+  vector<string> stages_;
 };
 
 }  // namespace core

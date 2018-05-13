@@ -14,15 +14,15 @@ class MouseMotionEvent {
   MouseMotionEvent(const MouseMotionEvent&, Vec2D);
   MouseMotionEvent(Type, const Vec2D, const Vec2D);
   MouseMotionEvent(Type);
-  bool  IsMotionOver() const { return motion_ == Type::kOver; }
-  bool  IsMotionOut() const { return motion_ == Type::kOut; }
-  Type  GetMotion() const { return motion_; }
+  bool IsMotionOver() const { return motion_ == Type::kOver; }
+  bool IsMotionOut() const { return motion_ == Type::kOut; }
+  Type GetMotion() const { return motion_; }
   Vec2D GetCoords() const { return coords_; }
   Vec2D GetCoordsRel() const { return coords_rel_; }
   Vec2D GetLastCoords() const { return coords_ - coords_rel_; }
 
  private:
-  Type  motion_;
+  Type motion_;
   Vec2D coords_;
   Vec2D coords_rel_;
 };

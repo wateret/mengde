@@ -72,8 +72,8 @@ void StateUIDoCmd::Enter() {
 // Returns nullptr when no UI needed
 StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
   ASSERT(game_->HasNext());
-  const core::Cmd* cmd         = game_->GetNextCmdConst();
-  StateUI*         no_state_ui = nullptr;
+  const core::Cmd* cmd = game_->GetNextCmdConst();
+  StateUI* no_state_ui = nullptr;
 
 #define DYNAMIC_CAST_CHECK(type)  \
   dynamic_cast<const type*>(cmd); \
@@ -105,8 +105,8 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
       }
     }
     case core::Cmd::Op::kCmdMove: {
-      const core::CmdMove* c    = DYNAMIC_CAST_CHECK(core::CmdMove);
-      StateUIMoving::Flag  flag = StateUIMoving::Flag::kNone;
+      const core::CmdMove* c = DYNAMIC_CAST_CHECK(core::CmdMove);
+      StateUIMoving::Flag flag = StateUIMoving::Flag::kNone;
       if (c->GetUnit()->GetPosition() == c->GetDest()) {
         return no_state_ui;
       } else {
@@ -129,8 +129,8 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
       return new StateUIEnd(WrapBase(), c->is_victory());
     }
     case core::Cmd::Op::kCmdRestoreHp: {
-      const core::CmdRestoreHp* c      = DYNAMIC_CAST_CHECK(core::CmdRestoreHp);
-      int                       amount = c->CalcAmount();
+      const core::CmdRestoreHp* c = DYNAMIC_CAST_CHECK(core::CmdRestoreHp);
+      int amount = c->CalcAmount();
       if (amount == 0) return no_state_ui;
       return new StateUIUnitTooltipAnim(WrapBase(), c->GetUnit(), c->CalcAmount(), 0);
     }
@@ -187,13 +187,13 @@ void StateUIOperable::Render(Drawer* drawer) {
 bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   if (e.IsMotionOver()) {
     // mouse scroll
-    const int window_width  = gv_->GetFrameSize().x;
+    const int window_width = gv_->GetFrameSize().x;
     const int window_height = gv_->GetFrameSize().y;
-    const int kScrollRange  = config::kBlockSize;
-    const int kLeftScroll   = kScrollRange;
-    const int kRightScroll  = window_width - kScrollRange;
-    const int kUpScroll     = kScrollRange;
-    const int kDownScroll   = window_height - kScrollRange;
+    const int kScrollRange = config::kBlockSize;
+    const int kLeftScroll = kScrollRange;
+    const int kRightScroll = window_width - kScrollRange;
+    const int kUpScroll = kScrollRange;
+    const int kDownScroll = window_height - kScrollRange;
 
     ClearScrolls();
     Vec2D mouse_coords = gv_->GetMouseCoords();
@@ -255,8 +255,8 @@ void StateUIView::Update() {
 
 bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
-    Vec2D pos         = GetCursorCell();
-    auto  unit_id_opt = units_.FindByPos(pos);
+    Vec2D pos = GetCursorCell();
+    auto unit_id_opt = units_.FindByPos(pos);
     if (unit_id_opt) {
       uint32_t unit_id = unit_id_opt.get();
       // FIXME pathtree is a raw pointer which could be fragile.
@@ -275,7 +275,7 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
       }
     }
   } else if (e.IsRightButtonUp()) {
-    Vec2D      pos = GetCursorCell();
+    Vec2D pos = GetCursorCell();
     core::Map* map = game_->GetMap();
     if (map->UnitInCell(pos)) {
       core::Unit* unit = map->GetUnit(pos);
@@ -296,7 +296,7 @@ StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, uint32_t unit_id)
     : StateUIOperable(base), unit_id_(unit_id), moves_(gi_->QueryMoves(unit_id)) {
   // TODO Change the way we handle temporary position (DO NOT move/restore the unit in stage_)
   const core::Unit* unit = gi_->GetUnit(unit_id_);
-  origin_coords_         = unit->GetPosition();
+  origin_coords_ = unit->GetPosition();
 }
 
 void StateUIUnitSelected::Enter() {
@@ -335,9 +335,9 @@ void StateUIUnitSelected::Update() {
 bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
     const vector<Vec2D>& cells = moves_.moves();
-    Vec2D                pos   = GetCursorCell();
-    core::Map*           map   = game_->GetMap();
-    const core::Unit*    unit  = gi_->GetUnit(unit_id_);  // TODO unit_id_ instead
+    Vec2D pos = GetCursorCell();
+    core::Map* map = game_->GetMap();
+    const core::Unit* unit = gi_->GetUnit(unit_id_);  // TODO unit_id_ instead
 
     if (map->UnitInCell(pos) && map->GetUnit(pos) != unit) {
       // XXX Other unit clicked
@@ -409,12 +409,12 @@ void StateUIMoving::Render(Drawer* drawer) {
   int path_idx = CalcPathIdx();
   ASSERT_GT(path_idx, 0);
 
-  int       frames_current = frames_ % kFramesPerCell;
-  int       sprite_no      = frames_current / (kFramesPerCell / 2);
-  float     percentage     = frames_current / (float)kFramesPerCell;
-  Direction dir            = Vec2DRelativePosition(path_[path_idx], path_[path_idx - 1]);
-  Vec2D     diff           = path_[path_idx - 1] - path_[path_idx];
-  Vec2D     diff_pos       = diff * (percentage * (float)config::kBlockSize);
+  int frames_current = frames_ % kFramesPerCell;
+  int sprite_no = frames_current / (kFramesPerCell / 2);
+  float percentage = frames_current / (float)kFramesPerCell;
+  Direction dir = Vec2DRelativePosition(path_[path_idx], path_[path_idx - 1]);
+  Vec2D diff = path_[path_idx - 1] - path_[path_idx];
+  Vec2D diff_pos = diff * (percentage * (float)config::kBlockSize);
   drawer->CopySprite(gi_->GetUnit(unit_id_)->GetModelId(), kSpriteMove, dir, sprite_no, {kEffectNone, 0},
                      path_[path_idx], diff_pos);
   gv_->CenterCamera(path_[path_idx] * config::kBlockSize + diff_pos + (config::kBlockSize / 2));
@@ -443,15 +443,15 @@ void StateUIMagic::Exit() {
 
 void StateUIMagic::Render(Drawer* drawer) {
   if (animator_ == NULL) {
-    TextureManager* tm      = drawer->GetTextureManager();
-    Texture*        texture = tm->FetchTexture(rcpath::MagicPath(magic_->GetId()).ToString());
+    TextureManager* tm = drawer->GetTextureManager();
+    Texture* texture = tm->FetchTexture(rcpath::MagicPath(magic_->GetId()).ToString());
     texture->SetAlpha(160);  // FIXME non-fixed alpha value
     animator_ = new TextureAnimator(texture, kFramesPerCut);
   }
 
-  Vec2D     unit_pos = atk_->GetPosition();
-  Vec2D     def_pos  = def_->GetPosition();
-  Direction dir      = Vec2DRelativePosition(unit_pos, def_pos);
+  Vec2D unit_pos = atk_->GetPosition();
+  Vec2D def_pos = def_->GetPosition();
+  Direction dir = Vec2DRelativePosition(unit_pos, def_pos);
 
   drawer->CopySprite(atk_->GetModelId(), kSpriteAttack, dir, 0, {kEffectNone, 0}, unit_pos);
 
@@ -493,9 +493,9 @@ void StateUIKilled::Exit() {
 }
 
 void StateUIKilled::Render(Drawer* drawer) {
-  const int wait     = 20;
-  const int hold     = 20;
-  int       progress = 0;
+  const int wait = 20;
+  const int hold = 20;
+  int progress = 0;
   if (frames_ >= wait) {
     int f = frames_ - wait;
     if (f > hold) progress = (f - hold) * 255 / (kStateDuration - hold);
@@ -515,7 +515,7 @@ void StateUIKilled::Update() {
 StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords) : StateUI(base), coords_(coords) {}
 
 void StateUIEmptySelected::Enter() {
-  core::Map*  map  = game_->GetMap();
+  core::Map* map = game_->GetMap();
   std::string name = map->GetTerrain(coords_)->GetName();
   gv_->terrain_info_view()->SetText(name);
   gv_->terrain_info_view()->visible(true);
@@ -571,8 +571,8 @@ void StateUIAttack::Render(Drawer* drawer) {
 
   struct CutInfo {
     SpriteType sprite;
-    int        no;
-    int        offset;
+    int no;
+    int offset;
   };
 
   static const CutInfo kCutInfoAtk[kNumCuts] = {{kSpriteStand, 0, 0},  {kSpriteStand, 0, 0},  {kSpriteAttack, 0, 0},
@@ -592,19 +592,19 @@ void StateUIAttack::Render(Drawer* drawer) {
 
   int cut_no = frames_ / kFramesPerCut;
   ASSERT(cut_no < kNumCuts);
-  const CutInfo* cut_atk    = &kCutInfoAtk[cut_no];
-  const CutInfo* cut_def    = hit_ ? &kCutInfoDefDamaged[cut_no] : &kCutInfoDefBlocked[cut_no];
-  Vec2D          atk_pos    = atk_->GetPosition();
-  Vec2D          def_pos    = def_->GetPosition();
-  Vec2D          atk_offset = GenerateVec2DOffset(atk_->GetDirection(), cut_atk->offset);
-  Vec2D          def_offset = GenerateVec2DOffset(def_->GetDirection(), cut_def->offset);
-  Direction      dir        = Vec2DRelativePosition(atk_pos, def_pos);
+  const CutInfo* cut_atk = &kCutInfoAtk[cut_no];
+  const CutInfo* cut_def = hit_ ? &kCutInfoDefDamaged[cut_no] : &kCutInfoDefBlocked[cut_no];
+  Vec2D atk_pos = atk_->GetPosition();
+  Vec2D def_pos = def_->GetPosition();
+  Vec2D atk_offset = GenerateVec2DOffset(atk_->GetDirection(), cut_atk->offset);
+  Vec2D def_offset = GenerateVec2DOffset(def_->GetDirection(), cut_def->offset);
+  Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
 
   SpriteEffect sprite_effect = {kEffectNone, 0};
   if (critical_) {
-    const int maxp        = 224;
+    const int maxp = 224;
     const int unit_frames = kStateDuration / 5;
-    int       progress    = 0;
+    int progress = 0;
     if (frames_ < unit_frames) {
       progress = frames_ * maxp / unit_frames;
     } else if (frames_ < unit_frames * 2) {
@@ -627,9 +627,9 @@ void StateUIAttack::Render(Drawer* drawer) {
 
   // Render Damage Text
   if (frames_ >= 5 * kFramesPerCut) {
-    const int text_size       = 13;
-    Vec2D     damage_text_pos = def_pos * config::kBlockSize;
-    string    damage_text;
+    const int text_size = 13;
+    Vec2D damage_text_pos = def_pos * config::kBlockSize;
+    string damage_text;
     if (!hit_) {
       damage_text = "miss";
     } else {
@@ -664,10 +664,10 @@ StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, core::Unit* u
     : StateUI(base), frames_(-1), unit_(unit), hp_(hp), mp_(mp) {
   const core::HpMp& cur_hpmp = unit->GetCurrentHpMp();
   const core::HpMp& max_hpmp = unit->GetOriginalHpMp();
-  int               cur_hp   = cur_hpmp.hp;
-  int               cur_mp   = cur_hpmp.mp;
-  int               max_hp   = max_hpmp.hp;
-  int               max_mp   = max_hpmp.mp;
+  int cur_hp = cur_hpmp.hp;
+  int cur_mp = cur_hpmp.mp;
+  int max_hp = max_hpmp.hp;
+  int max_mp = max_hpmp.mp;
 
   // Cap min/max value of changes
   if (hp_ > 0) {
@@ -806,11 +806,11 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
 bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
-  auto              unit_tooltip_view = gv_->unit_tooltip_view();
-  core::Map*        map               = game_->GetMap();
-  Vec2D             cursor_cell       = GetCursorCell();
-  const core::Unit* unit_target       = gi_->GetUnit(cursor_cell);
-  const core::Unit* unit              = gi_->GetUnit(unit_id_);
+  auto unit_tooltip_view = gv_->unit_tooltip_view();
+  core::Map* map = game_->GetMap();
+  Vec2D cursor_cell = GetCursorCell();
+  const core::Unit* unit_target = gi_->GetUnit(cursor_cell);
+  const core::Unit* unit = gi_->GetUnit(unit_id_);
 
   if (unit_target) {
     bool hostile = unit->IsHostile(unit_target);
@@ -867,15 +867,15 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
 StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
     : StateUI(base), unit_id_(unit_id), move_id_(move_id) {
   const core::Unit* unit = gi_->GetUnit(unit_id_);
-  pos_                   = unit->GetPosition();
+  pos_ = unit->GetPosition();
 }
 
 void StateUIMagicSelection::Enter() {
   const core::Unit* unit = gi_->GetUnit(unit_id_);
 
   // TODO magic_list should not be acquired here (Move it to UserInterface)
-  auto           magic_list = std::make_shared<core::MagicList>(game_->GetMagicManager(), unit);
-  MagicListView* mlv        = gv_->magic_list_view();
+  auto magic_list = std::make_shared<core::MagicList>(game_->GetMagicManager(), unit);
+  MagicListView* mlv = gv_->magic_list_view();
   mlv->SetData(unit_id_, move_id_, magic_list);
   mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(), pos_));
   mlv->visible(true);
@@ -917,7 +917,7 @@ void StateUINextTurn::Enter() {
 void StateUINextTurn::Exit() {
   gv_->dialog_view()->visible(false);
 
-  GameView*   gv   = gv_;
+  GameView* gv = gv_;
   core::Game* game = game_;
   gv_->NextFrame([=]() {
     ControlView* control_view = gv->control_view();
@@ -932,7 +932,7 @@ StateUISpeak::StateUISpeak(StateUI::Base base, core::Unit* unit, const string& w
     : StateUI(base), unit_(unit), words_(words) {}
 
 void StateUISpeak::Enter() {
-  auto unit_dialog_view         = gv_->unit_dialog_view();
+  auto unit_dialog_view = gv_->unit_dialog_view();
   auto unit_dialog_view_wrapper = gv_->unit_dialog_view_wrapper();
   unit_dialog_view->SetUnit(unit_);
   unit_dialog_view->SetText(words_);

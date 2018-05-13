@@ -18,22 +18,22 @@ class UnitClass {
  public:
   UnitClass(const string&, const int, const int, const Attribute&, const Range::Type, const int, const BaseAndIncr,
             const BaseAndIncr);
-  int                GetIndex() const { return index_; }
-  string             GetId() const { return id_; }
-  int                GetNumPromotions() const { return num_promotions_; }
+  int GetIndex() const { return index_; }
+  string GetId() const { return id_; }
+  int GetNumPromotions() const { return num_promotions_; }
   const AttackRange& GetAttackRange() const { return AttackRangeManager::GetInstance().Get(attack_range_); }
-  int                GetMove() const { return move_; }
-  BaseAndIncr        GetBniHp() const { return bni_hp_; }
-  BaseAndIncr        GetBniMp() const { return bni_mp_; }
-  const Attribute&   GetStatGrade() const { return stat_grade_; }
+  int GetMove() const { return move_; }
+  BaseAndIncr GetBniHp() const { return bni_hp_; }
+  BaseAndIncr GetBniMp() const { return bni_mp_; }
+  const Attribute& GetStatGrade() const { return stat_grade_; }
 
  private:
-  string      id_;
-  int         index_;
-  int         num_promotions_;
-  Attribute   stat_grade_;
+  string id_;
+  int index_;
+  int num_promotions_;
+  Attribute stat_grade_;
   Range::Type attack_range_;
-  int         move_;
+  int move_;
   BaseAndIncr bni_hp_;
   BaseAndIncr bni_mp_;
 };

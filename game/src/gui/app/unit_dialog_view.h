@@ -26,11 +26,11 @@ class UnitDialogView : public CompositeView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:
-  string      message_;
+  string message_;
   core::Unit* unit_;  // FIXME Do we really need this?
-  ImageView*  iv_portrait_;
-  TextView*   tv_name_;
-  TextView*   tv_message_;
+  ImageView* iv_portrait_;
+  TextView* tv_name_;
+  TextView* tv_message_;
 };
 
 }  // namespace app

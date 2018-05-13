@@ -11,7 +11,7 @@ class StateMachine {
   StateMachine();
   StateMachine(T);
   ~StateMachine();
-  T    GetCurrentState();
+  T GetCurrentState();
   void PushState(T);
   void ChangeState(T);
   void PopState();

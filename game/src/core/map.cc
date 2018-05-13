@@ -14,7 +14,7 @@ namespace core {
 Map::Map(const vector<string>& input, const string& bitmap_path, TerrainManager* tm) : bitmap_path_(bitmap_path) {
   int rows = input.size();
   int cols = input[0].size();
-  size_    = {cols, rows};
+  size_ = {cols, rows};
 
   grid_.resize(rows);
   for (int i = 0; i < rows; i++) {
@@ -72,18 +72,18 @@ Terrain* Map::GetTerrain(Vec2D c) {
 // Using Dijkstra Shortest Path Algorithm
 // ( O(N^2) where N is number of vertices )
 PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
-  static const int kDNum   = 4;
+  static const int kDNum = 4;
   static const int kDRow[] = {0, 0, -1, 1};
   static const int kDCol[] = {-1, 1, 0, 0};
-  const int        N       = size_.x * size_.y;
-  const int        kInf    = 1 << 30;
+  const int N = size_.x * size_.y;
+  const int kInf = 1 << 30;
 
-  vector<int>       dist(N, kInf);
-  vector<bool>      used(N, false);
+  vector<int> dist(N, kInf);
+  vector<bool> used(N, false);
   vector<PathNode*> from(N, NULL);
-  Vec2D             coords    = unit->GetPosition();
-  int               sc        = SerializeVec2D(coords);
-  int               stat_move = kInf;
+  Vec2D coords = unit->GetPosition();
+  int sc = SerializeVec2D(coords);
+  int stat_move = kInf;
   if (dest == Vec2D(-1, -1)) {
     stat_move = unit->GetMove();
   }
@@ -107,10 +107,10 @@ PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
     if (current == -1) break;
 
     Vec2D vec_current = DeserializeVec2D(current);
-    used[current]     = true;
+    used[current] = true;
     if (dist[current] <= stat_move && !IsHostilePlaced(unit, vec_current)) {
       if (pathtree == nullptr) {
-        pathtree      = new PathTree(vec_current);
+        pathtree = new PathTree(vec_current);
         from[current] = pathtree->GetRoot();
       } else {
         from[current] = pathtree->Adopt(vec_current, from[current]);
@@ -123,11 +123,11 @@ PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
     }
 
     for (int i = 0; i < kDNum; i++) {
-      int   nr = vec_current.y + kDRow[i];
-      int   nc = vec_current.x + kDCol[i];
+      int nr = vec_current.y + kDRow[i];
+      int nc = vec_current.x + kDCol[i];
       Vec2D nvec(nc, nr);
       if (!IsValidCoords(nvec)) continue;
-      int next     = SerializeVec2D(nvec);
+      int next = SerializeVec2D(nvec);
       int new_dist = dist[current] + grid_[nr][nc]->GetMoveCost(unit->GetClassIndex());
 
       // handle ZOC
@@ -149,7 +149,7 @@ PathTree* Map::FindMovablePath(const Unit* unit) { return FindPath(unit, {-1, -1
 
 vector<Vec2D> Map::FindPathTo(const Unit* unit, Vec2D dest) {
   unique_ptr<PathTree> pathtree(FindPath(unit, dest));
-  vector<Vec2D>        path = pathtree->GetPathToRoot(dest);
+  vector<Vec2D> path = pathtree->GetPathToRoot(dest);
   return path;
 }
 
@@ -169,7 +169,7 @@ void Map::MoveUnit(Vec2D src, Vec2D dst) {
 void Map::EmptyCell(Vec2D c) { grid_[c.y][c.x]->Empty(); }
 
 bool Map::IsHostileAdjacent(const Unit* unit, Vec2D coords) const {
-  static const int kDNum   = 5;
+  static const int kDNum = 5;
   static const int kDRow[] = {0, 0, 0, -1, 1};
   static const int kDCol[] = {0, -1, 1, 0, 0};
   for (int i = 0; i < kDNum; i++) {

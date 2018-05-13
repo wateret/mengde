@@ -36,7 +36,7 @@ void FpsTimer::Start() { timer_.Start(); }
 void FpsTimer::Update() {
   int time_elapsed = timer_.Split();
   if (time_elapsed >= 1000) {
-    fps_            = frames_cur_sec_ / (time_elapsed / 1000.f);
+    fps_ = frames_cur_sec_ / (time_elapsed / 1000.f);
     frames_cur_sec_ = 0;
     timer_.Start();
   }
@@ -64,8 +64,8 @@ App::App(int width, int height, uint32_t max_frames_sec)
 
   Rect main_rect({0, 0}, window_size_);
   main_view_ = new MainView(&main_rect, this);
-  window_    = new Window("Game", window_size_.x, window_size_.y);
-  drawer_    = new Drawer(window_, GameEnv::GetInstance()->GetScenarioPath().ToString(),
+  window_ = new Window("Game", window_size_.x, window_size_.y);
+  drawer_ = new Drawer(window_, GameEnv::GetInstance()->GetScenarioPath().ToString(),
                        GameEnv::GetInstance()->GetResourcePath().ToString());
 
   target_view_ = main_view_;
@@ -176,7 +176,7 @@ void App::StartNewScenario(const string& scenario_id) {
 void App::EndStage() {
   delete root_view_;
   scenario_->NextStage();
-  root_view_   = new RootView(Rect({0, 0}, window_size_), scenario_, this);
+  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
   target_view_ = root_view_;
   LOG_DEBUG("root_view_ changed.");
 

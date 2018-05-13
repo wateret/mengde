@@ -24,7 +24,7 @@ UnitDialogView::UnitDialogView(const Rect* frame, const string& message, core::U
   iv_portrait_ = new ImageView(&portrait_frame);
 
   Vec2D message_pos = portrait_frame.GetPos();
-  Rect  message_frame(message_pos + Vec2D(64 + 8, 0), GetFrameSize());
+  Rect message_frame(message_pos + Vec2D(64 + 8, 0), GetFrameSize());
   tv_message_ = new TextView(&message_frame, message_);
   tv_message_->SetAlign(LayoutHelper::kAlignLftTop);
 

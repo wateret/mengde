@@ -12,9 +12,9 @@ namespace app {
 
 void DeployDirector::Init(HeroModelListView* hero_model_list_view, UnitOverView* unit_over_view,
                           EquipmentSetView* equipment_set_view, EquipmentSelectView* equipment_select_view) {
-  hero_model_list_view_  = hero_model_list_view;
-  unit_over_view_        = unit_over_view;
-  equipment_set_view_    = equipment_set_view;
+  hero_model_list_view_ = hero_model_list_view;
+  unit_over_view_ = unit_over_view;
+  equipment_set_view_ = equipment_set_view;
   equipment_select_view_ = equipment_select_view;
 }
 

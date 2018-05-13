@@ -27,8 +27,8 @@ class ImageView : public View {
 
  private:
   std::string path_;
-  Texture*    texture_;
-  Rect        src_rect_;
+  Texture* texture_;
+  Rect src_rect_;
 };
 
 }  // namespace uifw

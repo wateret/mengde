@@ -15,7 +15,7 @@ namespace gui {
 namespace uifw {
 
 struct Viewport {
-  Rect  rect;
+  Rect rect;
   Vec2D neg_coords;
   Viewport(const Rect& r, Vec2D neg) : rect(r), neg_coords(neg) { /* ASSERT(neg.x < 0 && neg.y < 0); */
   }
@@ -25,10 +25,10 @@ class Drawer {
  public:
   Drawer(Window* window, const string& scenario_path, const string& resource_path);
   ~Drawer();
-  Vec2D           GetWindowSize() { return window_size_; }
+  Vec2D GetWindowSize() { return window_size_; }
   TextureManager* GetTextureManager() { return texture_manager_; }
-  Renderer*       GetRenderer() { return renderer_; }
-  void            SetBitmapBasePath(const string& path);
+  Renderer* GetRenderer() { return renderer_; }
+  void SetBitmapBasePath(const string& path);
 
   void Start();
   void End();
@@ -50,10 +50,10 @@ class Drawer {
   void FillCell(Vec2D);
 
  private:
-  TextureManager*      texture_manager_;
-  Renderer*            renderer_;
-  Vec2D                window_size_;
-  Vec2D                offset_;
+  TextureManager* texture_manager_;
+  Renderer* renderer_;
+  Vec2D window_size_;
+  Vec2D offset_;
   std::stack<Viewport> viewports_;
 };
 

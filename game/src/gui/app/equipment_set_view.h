@@ -27,8 +27,8 @@ class EquipmentView : public CallbackView {
 
  private:
   ImageView* iv_image_;
-  TextView*  tv_name_;
-  TextView*  tv_desc_;
+  TextView* tv_name_;
+  TextView* tv_desc_;
 };
 
 class EquipmentSetView : public CompositeView {
@@ -44,12 +44,12 @@ class EquipmentSetView : public CompositeView {
 
  private:
   const core::EquipmentSet* equipment_set_;
-  TextView*                 tv_weapon_label_;
-  TextView*                 tv_armor_label_;
-  TextView*                 tv_aid_label_;
-  EquipmentView*            eqv_weapon_;
-  EquipmentView*            eqv_armor_;
-  EquipmentView*            eqv_aid_;
+  TextView* tv_weapon_label_;
+  TextView* tv_armor_label_;
+  TextView* tv_aid_label_;
+  EquipmentView* eqv_weapon_;
+  EquipmentView* eqv_armor_;
+  EquipmentView* eqv_aid_;
 };
 
 }  // namespace app

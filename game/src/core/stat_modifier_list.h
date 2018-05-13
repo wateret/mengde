@@ -14,8 +14,8 @@ class StatModifierList {
  public:
   StatModifierList();
   ~StatModifierList();
-  void      AddModifier(StatModifier*);
-  void      NextTurn();
+  void AddModifier(StatModifier*);
+  void NextTurn();
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
 

@@ -9,8 +9,8 @@ int GenRandom(int begin, int end) { return begin + GenRandom(end - begin); }
 
 vector<string> SplitString(const string& str, char sep) {
   std::stringstream ss(str);
-  string            elem;
-  vector<string>    ret;
+  string elem;
+  vector<string> ret;
   while (std::getline(ss, elem, sep)) {
     ret.push_back(std::move(elem));
   }

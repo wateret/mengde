@@ -14,13 +14,13 @@ Logger::Logger()
       color_magenta_(""),
       color_cyan_("") {
 #ifdef TERM_USE_ANSI_COLOR
-  color_reset_   = "\033[0m";
-  color_red_     = "\033[1;31m";
-  color_green_   = "\033[1;32m";
-  color_yellow_  = "\033[1;33m";
-  color_blue_    = "\033[1;34m";
+  color_reset_ = "\033[0m";
+  color_red_ = "\033[1;31m";
+  color_green_ = "\033[1;32m";
+  color_yellow_ = "\033[1;33m";
+  color_blue_ = "\033[1;34m";
   color_magenta_ = "\033[1;35m";
-  color_cyan_    = "\033[1;36m";
+  color_cyan_ = "\033[1;36m";
 #endif
 }
 
@@ -33,8 +33,8 @@ void Logger::Log(LogLevel level, const char* module, const char* file, int line,
                  ...) {
   if (level > level_) return;
 
-  static const char sep          = '/';
-  unsigned          last_sep_pos = 0;
+  static const char sep = '/';
+  unsigned last_sep_pos = 0;
   for (unsigned idx = 0; file[idx] != '\0'; idx++) {
     if (file[idx] == sep) last_sep_pos = idx;
   }

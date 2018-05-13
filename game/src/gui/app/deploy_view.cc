@@ -33,7 +33,7 @@ HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::ID
   iv_hero->SetSourceRect(img_src_rect);
   AddChild(iv_hero);
 
-  Rect      tv_hero_frame = GetActualFrame();
+  Rect tv_hero_frame = GetActualFrame();
   TextView* tv_hero = new TextView(&tv_hero_frame, hero_->GetId(), COLOR("white"), 14, LayoutHelper::kAlignMidBot);
   AddChild(tv_hero);
 
@@ -42,7 +42,7 @@ HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::ID
   tv_no_ = new TextView(&tv_no_frame, "", COLOR("orange"), 20, LayoutHelper::kAlignRgtTop);
   AddChild(tv_no_);
 
-  deploy_no_             = deploy_helper->FindDeploy(hero);
+  deploy_no_ = deploy_helper->FindDeploy(hero);
   required_unselectable_ = (deploy_no_ != 0);  // Assume unselectable if already deployed at this point(construction)
   UpdateViews();
 }
@@ -66,7 +66,7 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
     : CompositeView(frame) {
   bg_color(COLOR("navy"));
   static const Vec2D kHeroModelSize = {96, 80};
-  Rect               hero_model_frame({0, 0}, kHeroModelSize);
+  Rect hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
     HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
     model_view->SetMouseButtonHandler(
@@ -99,8 +99,8 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
 
   director_ = new DeployDirector();
 
-  Rect      unit_view_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {204, 320}, LayoutHelper::kAlignRgtTop);
-  UnitView* unit_view       = new UnitView(unit_view_frame);
+  Rect unit_view_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {204, 320}, LayoutHelper::kAlignRgtTop);
+  UnitView* unit_view = new UnitView(unit_view_frame);
   unit_view->padding(0);
   AddChild(unit_view);
 
@@ -145,8 +145,8 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
     AddChild(hero_model_list_view);
   }
 
-  Rect        btn_ok_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {100, 50}, LayoutHelper::kAlignRgtBot);
-  ButtonView* btn_ok       = new ButtonView(&btn_ok_frame, "To Battle");
+  Rect btn_ok_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), {100, 50}, LayoutHelper::kAlignRgtBot);
+  ButtonView* btn_ok = new ButtonView(&btn_ok_frame, "To Battle");
   btn_ok->SetMouseButtonHandler([&, deploy_helper](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
       if (deploy_helper->SubmitDeploy()) {

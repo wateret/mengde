@@ -27,9 +27,9 @@ class DeployDirector {
   void OnHeroChosen(const core::Hero* hero);
 
  private:
-  HeroModelListView*   hero_model_list_view_;
-  UnitOverView*        unit_over_view_;
-  EquipmentSetView*    equipment_set_view_;
+  HeroModelListView* hero_model_list_view_;
+  UnitOverView* unit_over_view_;
+  EquipmentSetView* equipment_set_view_;
   EquipmentSelectView* equipment_select_view_;
 };
 

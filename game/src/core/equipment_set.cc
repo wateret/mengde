@@ -23,8 +23,8 @@ void EquipmentSet::CopyEquipmentSet(const EquipmentSet& eqset) {
 EquipmentSet* EquipmentSet::Clone(IEquipper* equipper) const {
   EquipmentSet* cloned = new EquipmentSet(equipper);
   cloned->slot_weapon_ = this->slot_weapon_;
-  cloned->slot_armor_  = this->slot_armor_;
-  cloned->slot_aid_    = this->slot_aid_;
+  cloned->slot_armor_ = this->slot_armor_;
+  cloned->slot_aid_ = this->slot_aid_;
   /*
   cloned->PutEquipmentOn(this->GetWeapon());
   cloned->PutEquipmentOn(this->GetArmor());
@@ -94,10 +94,10 @@ Attribute EquipmentSet::CalcMultipliers() const {
 }
 
 unique_ptr<Cmd> EquipmentSet::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
-  CmdQueue*        cmdq   = new CmdQueue();
+  CmdQueue* cmdq = new CmdQueue();
   const Equipment* weapon = GetWeapon();
-  const Equipment* armor  = GetArmor();
-  const Equipment* aid    = GetAid();
+  const Equipment* armor = GetArmor();
+  const Equipment* aid = GetAid();
   if (weapon != nullptr) cmdq->Append(weapon->RaiseEvent(type, unit));
   if (armor != nullptr) cmdq->Append(armor->RaiseEvent(type, unit));
   if (aid != nullptr) cmdq->Append(aid->RaiseEvent(type, unit));
@@ -106,8 +106,8 @@ unique_ptr<Cmd> EquipmentSet::RaiseEvent(event::GeneralEvent type, Unit* unit) c
 
 void EquipmentSet::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) const {
   const Equipment* weapon = GetWeapon();
-  const Equipment* armor  = GetArmor();
-  const Equipment* aid    = GetAid();
+  const Equipment* armor = GetArmor();
+  const Equipment* aid = GetAid();
   if (weapon != nullptr) weapon->RaiseEvent(type, unit, act);
   if (armor != nullptr) armor->RaiseEvent(type, unit, act);
   if (aid != nullptr) aid->RaiseEvent(type, unit, act);

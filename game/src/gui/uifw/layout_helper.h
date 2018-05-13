@@ -14,12 +14,12 @@ class LayoutHelper {
  public:
   enum Align {
     kAlignNone = 0,
-    kAlignLft  = 0x01,
+    kAlignLft = 0x01,
     kAlignHMid = 0x02,
-    kAlignRgt  = 0x03,
-    kAlignTop  = 0x01 << 2,
+    kAlignRgt = 0x03,
+    kAlignTop = 0x01 << 2,
     kAlignVMid = 0x02 << 2,
-    kAlignBot  = 0x03 << 2,
+    kAlignBot = 0x03 << 2,
 
     // composite types
     kAlignLftTop = kAlignLft | kAlignTop,
@@ -34,8 +34,8 @@ class LayoutHelper {
   };
 
  public:
-  static Rect  CalcPosition(Vec2D, Vec2D, Align, int = 0);
-  static Rect  CalcPosition(const Rect*, Vec2D, Align, int = 0);
+  static Rect CalcPosition(Vec2D, Vec2D, Align, int = 0);
+  static Rect CalcPosition(const Rect*, Vec2D, Align, int = 0);
   static Vec2D CalcFittedSize(Vec2D, Vec2D);
 
  public:

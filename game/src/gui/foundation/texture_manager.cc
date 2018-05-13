@@ -29,7 +29,7 @@ TextureManager::~TextureManager() {
 
 Texture* TextureManager::FetchTexture(const string& key) {
   static const Color color_key(247, 0, 255);  // XXX colorkey hardcoded
-  auto               iter = container_.find(key);
+  auto iter = container_.find(key);
   if (iter == container_.end()) {
     Texture* texture = new Texture(renderer_, bitmap_base_path_ + "/" + key, color_key);
     if (texture->Loaded()) {
@@ -47,13 +47,13 @@ Texture* TextureManager::FetchTexture(const string& key) {
 
 Texture* TextureManager::FetchWhitenedTexture(const string& key) {
   const string whitened_key = key + "?white";
-  auto         iter         = container_.find(whitened_key);
+  auto iter = container_.find(whitened_key);
   if (iter == container_.end()) {
     Texture* orig_texture = FetchTexture(key);
     if (!orig_texture->Loaded()) {
       return dummy_texture_;
     }
-    Texture* new_texture     = orig_texture->NewWhitenedTexture(renderer_);
+    Texture* new_texture = orig_texture->NewWhitenedTexture(renderer_);
     container_[whitened_key] = new_texture;
     return new_texture;
   } else {
@@ -62,11 +62,11 @@ Texture* TextureManager::FetchWhitenedTexture(const string& key) {
 }
 
 Texture* TextureManager::FetchTextTexture(const string& text, int size, Color color, uint32_t wrap) {
-  string key  = std::to_string(size) + string(":") + text + string(":") + color.ToHexString();
-  auto   iter = container_.find(key);
+  string key = std::to_string(size) + string(":") + text + string(":") + color.ToHexString();
+  auto iter = container_.find(key);
   if (iter == container_.end()) {
     Texture* texture = new Texture(renderer_, text, font_manager_->FetchDefaultFont(size), color, wrap);
-    container_[key]  = texture;
+    container_[key] = texture;
     return texture;
   } else {
     return iter->second;

@@ -13,18 +13,18 @@ class Texture;
 class TextureAnimator {
  public:
   TextureAnimator(Texture*, int);
-  Rect     GetCurrentCutRect();
-  void     NextFrame();
-  bool     DoneAnimate();
+  Rect GetCurrentCutRect();
+  void NextFrame();
+  bool DoneAnimate();
   Texture* GetTexture() { return texture_; }
-  int      GetCutSize() { return cut_size_; }
+  int GetCutSize() { return cut_size_; }
 
  private:
   Texture* texture_;
-  int      cut_size_;
-  int      num_cuts_;
-  int      frames_per_cut_;
-  int      frame_no_;
+  int cut_size_;
+  int num_cuts_;
+  int frames_per_cut_;
+  int frame_no_;
 };
 
 }  // namespace foundation

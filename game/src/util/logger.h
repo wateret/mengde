@@ -7,19 +7,19 @@ class Logger {
 
  public:
   static Logger* GetInstance();
-  const char*    LogLevelToString(LogLevel);
+  const char* LogLevelToString(LogLevel);
 
  public:
-  void        SetLevel(LogLevel l) { level_ = l; }
+  void SetLevel(LogLevel l) { level_ = l; }
   const char* LogLevelToColor(LogLevel level);
-  void        Log(LogLevel, const char*, const char*, int, const char*, const char*, ...);
-  void        Log(LogLevel, const char*, const char*, ...);
+  void Log(LogLevel, const char*, const char*, int, const char*, const char*, ...);
+  void Log(LogLevel, const char*, const char*, ...);
 
  private:
   Logger();
 
  private:
-  LogLevel    level_;
+  LogLevel level_;
   const char* color_reset_;
   const char* color_red_;
   const char* color_green_;

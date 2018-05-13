@@ -38,7 +38,7 @@ boost::optional<uint32_t> AvailableUnits::FindByPos(Vec2D pos) {
 
 AvailableMoves::AvailableMoves(Game* stage, uint32_t unit_id) {
   Unit* unit = stage->GetUnit(unit_id);
-  moves_     = stage->FindMovablePos(unit);
+  moves_ = stage->FindMovablePos(unit);
 }
 
 Vec2D AvailableMoves::Get(uint32_t idx) {
@@ -49,7 +49,7 @@ Vec2D AvailableMoves::Get(uint32_t idx) {
 // AvailableActs
 
 AvailableActs::AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, ActionType type) : type_(type) {
-  Unit* unit     = stage->GetUnit(unit_id);
+  Unit* unit = stage->GetUnit(unit_id);
   Vec2D move_pos = AvailableMoves(stage, unit_id).Get(move_id);
 
   switch (type) {
@@ -72,7 +72,7 @@ AvailableActs::AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, Ac
     }
 
     case ActionType::kMagic: {
-      Unit*     atk = unit;
+      Unit* atk = unit;
       MagicList magic_list(stage->GetMagicManager(), unit);
 
       for (int i = 0; i < magic_list.NumMagics(); i++) {
@@ -125,7 +125,7 @@ uint32_t AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
     CmdMagic* cm = dynamic_cast<CmdMagic*>(act.get());
     ASSERT(cm != nullptr);
     const Magic* magic = cm->magic();
-    Unit*        def   = cm->GetUnitDef();
+    Unit* def = cm->GetUnitDef();
     if (magic->GetId() == magic_id && def->GetPosition() == pos) {
       return idx;
     }
@@ -171,9 +171,9 @@ AvailableActs UserInterface::QueryActs(uint32_t unit_id, uint32_t move_id, Actio
 }
 
 void UserInterface::PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
-  Unit*              unit = GetUnit(unit_id);
-  Vec2D              pos  = GetMovedPosition(unit_id, move_id);
-  unique_ptr<CmdAct> act  = GetActCmd(unit_id, move_id, type, act_id);
+  Unit* unit = GetUnit(unit_id);
+  Vec2D pos = GetMovedPosition(unit_id, move_id);
+  unique_ptr<CmdAct> act = GetActCmd(unit_id, move_id, type, act_id);
 
   CmdAction* cmd = new CmdAction(stage_->IsUserTurn() ? CmdAction::Flag::kUserInput : CmdAction::Flag::kDecompose);
   cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(unit, pos)));

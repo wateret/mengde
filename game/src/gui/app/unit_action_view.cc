@@ -28,8 +28,8 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserIn
 
 void UnitActionView::SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id) {
   auto game = game_;
-  auto gi   = gi_;
-  auto gv   = gv_;
+  auto gi = gi_;
+  auto gv = gv_;
 
   btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {

@@ -19,15 +19,15 @@ enum SpriteEffectType { kEffectNone, kEffectFade, kEffectShade, kEffectBright, k
 
 struct SpriteEffect {
   SpriteEffectType effect;
-  int              progress;
+  int progress;
 };
 
 extern const char* kSpriteToString[];
 extern const char* kSpriteBitmapName[];
-extern const bool  kSpriteHasDir[];
-extern const int   kSpriteOffset[];
-extern const int   kSpriteNumSprites[];
-extern const int   kSpriteBitmapSize[];
+extern const bool kSpriteHasDir[];
+extern const int kSpriteOffset[];
+extern const int kSpriteNumSprites[];
+extern const int kSpriteBitmapSize[];
 
 }  // namespace uifw
 }  // namespace gui

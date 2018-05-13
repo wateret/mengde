@@ -22,40 +22,40 @@ class Hero : public IUnitBase, IEquipper {
 
  public:
   // IUnitBase interfaces
-  virtual string              GetId() const override;
-  virtual string              GetModelId() const override;
-  virtual const UnitClass*    GetClass() const override;
-  virtual int                 GetMove() const override;
-  virtual const AttackRange&  GetAttackRange() const override;
-  virtual uint16_t            GetLevel() const override { return level_.level; }
-  virtual uint16_t            GetExp() const override { return level_.exp; }
-  virtual const HpMp&         GetOriginalHpMp() const override { return hpmp_; }
-  virtual const Attribute&    GetOriginalAttr() const override { return unit_pure_attr_; }
-  virtual const HpMp&         GetCurrentHpMp() const override { return GetOriginalHpMp(); }
-  virtual const Attribute&    GetCurrentAttr() const override { return unit_attr_; }
+  virtual string GetId() const override;
+  virtual string GetModelId() const override;
+  virtual const UnitClass* GetClass() const override;
+  virtual int GetMove() const override;
+  virtual const AttackRange& GetAttackRange() const override;
+  virtual uint16_t GetLevel() const override { return level_.level; }
+  virtual uint16_t GetExp() const override { return level_.exp; }
+  virtual const HpMp& GetOriginalHpMp() const override { return hpmp_; }
+  virtual const Attribute& GetOriginalAttr() const override { return unit_pure_attr_; }
+  virtual const HpMp& GetCurrentHpMp() const override { return GetOriginalHpMp(); }
+  virtual const Attribute& GetCurrentAttr() const override { return unit_attr_; }
   virtual const EquipmentSet* GetEquipmentSet() const override { return equipment_set_; }
-  virtual void                UpdateStat() override;
+  virtual void UpdateStat() override;
 
   const Attribute& GetHeroStatBase() const;
   const Attribute& GetHeroStat() const { return hero_attr_; }
-  void             GainExp(uint16_t exp) { level_.exp += exp; }
+  void GainExp(uint16_t exp) { level_.exp += exp; }
   const Attribute& GetUnitPureStat() const { return unit_pure_attr_; }
-  void             LevelUp();
-  void             PutOn(const Equipment*);
-  int              GetClassIndex() const;
+  void LevelUp();
+  void PutOn(const Equipment*);
+  int GetClassIndex() const;
 
  private:
-  HpMp      CalcHpMp() const;
+  HpMp CalcHpMp() const;
   Attribute CalcUnitPureAttr() const;
 
  private:
   const HeroTemplate* hero_tpl_;
-  EquipmentSet*       equipment_set_;
-  Level               level_;
-  Attribute           hero_attr_;
-  Attribute           unit_attr_;
-  Attribute           unit_pure_attr_;  // Cached data
-  HpMp                hpmp_;
+  EquipmentSet* equipment_set_;
+  Level level_;
+  Attribute hero_attr_;
+  Attribute unit_attr_;
+  Attribute unit_pure_attr_;  // Cached data
+  HpMp hpmp_;
 };
 
 }  // namespace core

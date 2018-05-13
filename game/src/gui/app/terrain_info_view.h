@@ -17,7 +17,7 @@ class TerrainInfoView : public CompositeView {
   void SetText(const string&);
 
  private:
-  Vec2D     coords_;
+  Vec2D coords_;
   TextView* tv_name_;
 };
 

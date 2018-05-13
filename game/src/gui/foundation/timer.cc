@@ -8,13 +8,13 @@ namespace foundation {
 Timer::Timer() : is_on_(false), start_ticks_(0) {}
 
 void Timer::Start() {
-  is_on_       = true;
+  is_on_ = true;
   start_ticks_ = SDL_GetTicks();
 }
 
 int Timer::Stop() {
   int ret = Split();
-  is_on_  = false;
+  is_on_ = false;
   return ret;
 }
 

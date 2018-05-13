@@ -20,19 +20,19 @@ class IUnitBase {
  public:
   virtual ~IUnitBase() = default;
 
-  virtual string              GetId() const           = 0;
-  virtual string              GetModelId() const      = 0;
-  virtual const UnitClass*    GetClass() const        = 0;
-  virtual int                 GetMove() const         = 0;
-  virtual const AttackRange&  GetAttackRange() const  = 0;
-  virtual uint16_t            GetLevel() const        = 0;
-  virtual uint16_t            GetExp() const          = 0;
-  virtual const HpMp&         GetOriginalHpMp() const = 0;
-  virtual const Attribute&    GetOriginalAttr() const = 0;
-  virtual const HpMp&         GetCurrentHpMp() const  = 0;
-  virtual const Attribute&    GetCurrentAttr() const  = 0;
+  virtual string GetId() const = 0;
+  virtual string GetModelId() const = 0;
+  virtual const UnitClass* GetClass() const = 0;
+  virtual int GetMove() const = 0;
+  virtual const AttackRange& GetAttackRange() const = 0;
+  virtual uint16_t GetLevel() const = 0;
+  virtual uint16_t GetExp() const = 0;
+  virtual const HpMp& GetOriginalHpMp() const = 0;
+  virtual const Attribute& GetOriginalAttr() const = 0;
+  virtual const HpMp& GetCurrentHpMp() const = 0;
+  virtual const Attribute& GetCurrentAttr() const = 0;
   virtual const EquipmentSet* GetEquipmentSet() const = 0;
-  virtual void                UpdateStat()            = 0;
+  virtual void UpdateStat() = 0;
 };
 
 }  // namespace core

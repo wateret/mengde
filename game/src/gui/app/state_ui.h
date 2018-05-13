@@ -32,9 +32,9 @@ class UnitTooltipView;
 class StateUI : public State, public IView {
  public:
   struct Base {
-    core::Game*          game;  // TODO We should eventually remove this, use core::UserInterface instead.
+    core::Game* game;  // TODO We should eventually remove this, use core::UserInterface instead.
     core::UserInterface* gi;
-    GameView*            gv;
+    GameView* gv;
   };
 
  public:
@@ -47,16 +47,16 @@ class StateUI : public State, public IView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override { return false; }
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override { return true; }
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override { return false; }
-  Base         WrapBase() { return {game_, gi_, gv_}; }
+  Base WrapBase() { return {game_, gi_, gv_}; }
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUI"; }
 #endif
 
  protected:
-  core::Game*          game_;
+  core::Game* game_;
   core::UserInterface* gi_;
-  GameView*            gv_;
+  GameView* gv_;
 };
 
 // StateUIMain
@@ -107,17 +107,17 @@ class StateUIOperable : public StateUI {
   virtual void Render(Drawer*) override;
   virtual void Update() override;
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
-  Vec2D        GetCursorCell() { return cursor_cell_; }
-  void         ClearScrolls();
-  void         SetScrollLeft();
-  void         SetScrollRight();
-  void         SetScrollUp();
-  void         SetScrollDown();
-  bool         IsScrollLeft();
-  bool         IsScrollRight();
-  bool         IsScrollUp();
-  bool         IsScrollDown();
-  void         SetCursorCell(Vec2D c) { cursor_cell_ = c; }
+  Vec2D GetCursorCell() { return cursor_cell_; }
+  void ClearScrolls();
+  void SetScrollLeft();
+  void SetScrollRight();
+  void SetScrollUp();
+  void SetScrollDown();
+  bool IsScrollLeft();
+  bool IsScrollRight();
+  bool IsScrollUp();
+  bool IsScrollDown();
+  void SetCursorCell(Vec2D c) { cursor_cell_ = c; }
 
  protected:
   Vec2D cursor_cell_;
@@ -159,9 +159,9 @@ class StateUIUnitSelected : public StateUIOperable {
 #endif
 
  private:
-  uint32_t             unit_id_;
+  uint32_t unit_id_;
   core::AvailableMoves moves_;
-  Vec2D                origin_coords_;
+  Vec2D origin_coords_;
 };
 
 // StateUIMoving
@@ -184,17 +184,17 @@ class StateUIMoving : public StateUI {
 #endif
 
  private:
-  int  CalcPathIdx();
-  int  NumPaths();
+  int CalcPathIdx();
+  int NumPaths();
   bool LastFrame();
 
  private:
-  uint32_t      unit_id_;
-  Vec2D         dest_;
-  int           frames_;
-  Flag          flag_;
+  uint32_t unit_id_;
+  Vec2D dest_;
+  int frames_;
+  Flag flag_;
   vector<Vec2D> path_;
-  uint32_t      move_id_;
+  uint32_t move_id_;
 };
 
 // StateUIMagic
@@ -216,11 +216,11 @@ class StateUIMagic : public StateUI {
   static const int kFramesPerCut = 5;
 
  private:
-  core::Unit*      atk_;
-  core::Unit*      def_;
-  core::Magic*     magic_;
-  bool             hit_;
-  int              damage_;
+  core::Unit* atk_;
+  core::Unit* def_;
+  core::Magic* magic_;
+  bool hit_;
+  int damage_;
   TextureAnimator* animator_;
 };
 
@@ -242,7 +242,7 @@ class StateUIKilled : public StateUI {
 
  private:
   core::Unit* unit_;
-  int         frames_;
+  int frames_;
 };
 
 // StateUIEmptySelected
@@ -276,8 +276,8 @@ class StateUIAttack : public StateUI {
 #endif
 
  public:
-  static const int kFramesPerCut  = 8;
-  static const int kNumCuts       = 10;
+  static const int kFramesPerCut = 8;
+  static const int kNumCuts = 10;
   static const int kStateDuration = kFramesPerCut * kNumCuts;
 
  private:
@@ -286,10 +286,10 @@ class StateUIAttack : public StateUI {
  private:
   core::Unit* atk_;
   core::Unit* def_;
-  bool        hit_;
-  bool        critical_;
-  int         damage_;
-  int         frames_;
+  bool hit_;
+  bool critical_;
+  int damage_;
+  int frames_;
 };
 
 class StateUIUnitTooltipAnim : public StateUI {
@@ -309,10 +309,10 @@ class StateUIUnitTooltipAnim : public StateUI {
   bool LastFrame() { return frames_ == kFrames - 1; }
 
  private:
-  int         frames_;
+  int frames_;
   core::Unit* unit_;
-  int         hp_;  // Amount of hp changed
-  int         mp_;  // Amount of mp changed
+  int hp_;  // Amount of hp changed
+  int mp_;  // Amount of mp changed
 };
 
 // StateUIAction
@@ -331,7 +331,7 @@ class StateUIAction : public StateUI {
  private:
   uint32_t unit_id_;
   uint32_t move_id_;
-  Vec2D    pos_;
+  Vec2D pos_;
 };
 
 // StateUIMagicSelection
@@ -350,7 +350,7 @@ class StateUIMagicSelection : public StateUI {
  private:
   uint32_t unit_id_;
   uint32_t move_id_;
-  Vec2D    pos_;
+  Vec2D pos_;
 };
 
 // StateUITargeting
@@ -372,12 +372,12 @@ class StateUITargeting : public StateUIOperable {
   const core::AttackRange& GetRange();
 
  private:
-  uint32_t                 unit_id_;
-  uint32_t                 move_id_;
-  string                   magic_id_;
-  bool                     is_basic_attack_;
+  uint32_t unit_id_;
+  uint32_t move_id_;
+  string magic_id_;
+  bool is_basic_attack_;
   const core::AttackRange& range_;
-  core::AvailableActs      acts_;
+  core::AvailableActs acts_;
 };
 
 class StateUINextTurn : public StateUI {
@@ -410,7 +410,7 @@ class StateUISpeak : public StateUI {
 
  private:
   core::Unit* unit_;
-  string      words_;
+  string words_;
 };
 
 class StateUIEnd : public StateUI {

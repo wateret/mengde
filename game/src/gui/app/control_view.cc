@@ -17,12 +17,12 @@ ControlView::ControlView(const Rect* rect, core::Game* game, GameView* gv) : Com
   padding(8);
 
   Rect frame_tv_turn = {0, 0, 100, 22};
-  tv_turn_           = new TextView(&frame_tv_turn);
+  tv_turn_ = new TextView(&frame_tv_turn);
   SetTurnText(game_->GetTurnCurrent(), game_->GetTurnLimit());
   AddChild(tv_turn_);
 
   Rect button_coords = {0, 30, 100, 20};
-  btn_end_turn_      = new ButtonView(&button_coords, "EndTurn");
+  btn_end_turn_ = new ButtonView(&button_coords, "EndTurn");
   btn_end_turn_->SetMouseButtonHandler([this, gv](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
       // TODO Handle clicked twice in a frame
@@ -39,7 +39,7 @@ ControlView::ControlView(const Rect* rect, core::Game* game, GameView* gv) : Com
 
   const Vec2D minimap_max_size(184, 120);
   const Vec2D minimap_size = LayoutHelper::CalcFittedSize(map_size, minimap_max_size);
-  Rect minimap_frame       = LayoutHelper::CalcPosition(GetActualFrameSize(), minimap_size, LayoutHelper::kAlignRgtMid);
+  Rect minimap_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), minimap_size, LayoutHelper::kAlignRgtMid);
   MinimapView* minimap_view =
       new MinimapView(&minimap_frame, game, gv->GetCameraCoordsPtr(), gv->GetFrameSize(), map_size);
   AddChild(minimap_view);

@@ -26,9 +26,9 @@ class ModalDialogView : public CompositeView {
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
 
  private:
-  string         message_;
+  string message_;
   CompositeView* frame_view_;
-  TextView*      message_view_;
+  TextView* message_view_;
 };
 
 }  // namespace uifw

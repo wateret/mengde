@@ -13,9 +13,9 @@ class Game;
 class Commander {
  public:
   Commander();
-  bool       HasNext() const;
+  bool HasNext() const;
   const Cmd* GetNextCmdConst() const;
-  void       DoNext(Game*);
+  void DoNext(Game*);
   //  void UnDo(Game*);
   void Push(unique_ptr<Cmd>);
   void DebugPrint() const;

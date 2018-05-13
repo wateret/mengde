@@ -48,7 +48,7 @@ class RootView : public View {
   App* app_;
 
   GameView* game_view_;
-  UIViews*  ui_views_;
+  UIViews* ui_views_;
 };
 
 }  // namespace app

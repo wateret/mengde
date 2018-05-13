@@ -14,7 +14,7 @@ namespace uifw {
 
 Drawer::Drawer(Window* window, const string& scenario_path, const string& font_path)
     : window_size_(window->GetSize()), offset_(0, 0), viewports_() {
-  renderer_        = new Renderer(window);
+  renderer_ = new Renderer(window);
   texture_manager_ = new TextureManager(renderer_, scenario_path, font_path);
   viewports_.push(Viewport(Rect(0, 0, window_size_.x, window_size_.y), {0, 0}));
 }
@@ -42,10 +42,10 @@ void Drawer::CopyTexture(Texture* texture, Rect* rect_src, Rect* rect_dst, bool 
 }
 
 void Drawer::CopyTextureToCell(Texture* texture, Rect* rect_src, Vec2D pos) {
-  Vec2D dst    = pos * app::config::kBlockSize;
-  Vec2D size   = rect_src->GetSize();
+  Vec2D dst = pos * app::config::kBlockSize;
+  Vec2D size = rect_src->GetSize();
   Vec2D adjust = (size - app::config::kBlockSize) / 2;
-  Rect  rect_dst(dst - adjust, size);
+  Rect rect_dst(dst - adjust, size);
   CopyTexture(texture, rect_src, &rect_dst);
 }
 
@@ -58,12 +58,12 @@ void Drawer::CopyTextureBackground(Texture* texture, Rect* rect_src, Rect* rect_
 
 void Drawer::CopySprite(const std::string& id, SpriteType type, Direction dir, int sprite_no, SpriteEffect effect,
                         Vec2D dst_coords, Vec2D offset) {
-  Path      fullpath    = app::rcpath::UnitModelPath(id, type);
-  Texture*  bitmap      = texture_manager_->FetchTexture(fullpath.ToString());
+  Path fullpath = app::rcpath::UnitModelPath(id, type);
+  Texture* bitmap = texture_manager_->FetchTexture(fullpath.ToString());
   const int bitmap_size = kSpriteBitmapSize[type];
 
-  int  sprite_offset = 0;
-  bool flip_hor      = false;
+  int sprite_offset = 0;
+  bool flip_hor = false;
   if (kSpriteHasDir[type]) {
     switch (dir) {
       case kDirDown:
@@ -77,7 +77,7 @@ void Drawer::CopySprite(const std::string& id, SpriteType type, Direction dir, i
         break;
       case kDirRight:
         sprite_offset = 2;
-        flip_hor      = true;
+        flip_hor = true;
         break;
       default:
         ASSERT(dir == kDirNone);
@@ -89,9 +89,9 @@ void Drawer::CopySprite(const std::string& id, SpriteType type, Direction dir, i
   int sprite_index = kSpriteOffset[type] + sprite_offset + sprite_no;
 
   // FIXME Can we use CopyTextureToCell()? instead of calculating coords here
-  Vec2D dst      = dst_coords * app::config::kBlockSize + offset;
-  int   adjust   = (bitmap_size - app::config::kBlockSize) / 2;
-  Rect  src_rect = {0, sprite_index, 1, 1};
+  Vec2D dst = dst_coords * app::config::kBlockSize + offset;
+  int adjust = (bitmap_size - app::config::kBlockSize) / 2;
+  Rect src_rect = {0, sprite_index, 1, 1};
   src_rect.Magnify(bitmap_size);
   Rect dst_rect = {dst.x - adjust, dst.y - adjust, bitmap_size, bitmap_size};
 
@@ -148,14 +148,14 @@ void Drawer::FillRect(const Rect* r) {
 void Drawer::DrawText(const std::string& text, int size, Color color, Vec2D pos) {
   if (text == "") return;
   Texture* texture = texture_manager_->FetchTextTexture(text, size, color);
-  Rect     rect(pos, texture->GetSize());
+  Rect rect(pos, texture->GetSize());
   CopyTexture(texture, NULL, &rect);
 }
 
 void Drawer::DrawText(const std::string& text, int size, Color color, const Rect* frame, LayoutHelper::Align align) {
   if (text == "") return;
   Texture* texture = texture_manager_->FetchTextTexture(text, size, color, frame->GetW());
-  Rect     rect    = LayoutHelper::CalcPosition(frame, texture->GetSize(), align);
+  Rect rect = LayoutHelper::CalcPosition(frame, texture->GetSize(), align);
   CopyTexture(texture, NULL, &rect);
 }
 
@@ -175,7 +175,7 @@ void Drawer::SetViewport(const Rect* r) {
   Viewport top_vp = viewports_.top();
 
   Rect& rect = top_vp.rect;
-  Rect  rr(rect.GetPos() + r->GetPos() + top_vp.neg_coords, r->GetSize());
+  Rect rr(rect.GetPos() + r->GetPos() + top_vp.neg_coords, r->GetSize());
   ASSERT(rr.GetW() >= 0 && rr.GetH() >= 0);
 
   Vec2D neg_coords;

@@ -61,7 +61,7 @@ void Unit::UpdateStat() {
   // TODO update HpMp
   current_attr_ = hero_->GetUnitPureStat();
   {
-    Attribute addends     = modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
+    Attribute addends = modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
     Attribute multipliers = modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
     current_attr_.ApplyModifier(addends, multipliers);
@@ -86,8 +86,8 @@ int Unit::GetClassIndex() const { return hero_->GetClassIndex(); }
 const AttackRange& Unit::GetAttackRange() const { return hero_->GetAttackRange(); }
 
 bool Unit::IsInRange(Vec2D c, const AttackRange& range) const {
-  Vec2D dv  = c - position_;
-  bool  res = false;
+  Vec2D dv = c - position_;
+  bool res = false;
   range.ForEach([&](Vec2D d) {
     // TODO Minor Optimization : Break when found
     res |= (dv == d);
@@ -98,8 +98,8 @@ bool Unit::IsInRange(Vec2D c, const AttackRange& range) const {
 bool Unit::IsInRange(Vec2D c) const { return IsInRange(c, GetAttackRange()); }
 
 void Unit::GainExp(Unit* object) {
-  int      level_diff = object->GetLevel() - this->GetLevel();
-  uint16_t exp        = 0;
+  int level_diff = object->GetLevel() - this->GetLevel();
+  uint16_t exp = 0;
   if (level_diff < 0) {
     exp = std::max(1, 8 + level_diff);
   } else {

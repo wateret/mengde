@@ -17,8 +17,8 @@ class Scenario {
   Scenario(const string&);
   ~Scenario();
   const ResourceManagers& GetResourceManagers() { return rc_; }
-  Assets*                 GetAssets() { return assets_; }
-  Game*                   GetGame() { return game_; }
+  Assets* GetAssets() { return assets_; }
+  Game* GetGame() { return game_; }
 
  public:
   void NextStage();
@@ -28,12 +28,12 @@ class Scenario {
   Game* LoadGame(const string& save_file_path);
 
  private:
-  string           scenario_id_;
-  vector<string>   stage_ids_;
-  uint32_t         stage_no_;
+  string scenario_id_;
+  vector<string> stage_ids_;
+  uint32_t stage_no_;
   ResourceManagers rc_;
-  Assets*          assets_;
-  Game*            game_;
+  Assets* assets_;
+  Game* game_;
 };
 
 }  // namespace core

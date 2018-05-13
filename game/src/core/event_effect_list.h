@@ -12,7 +12,7 @@ namespace core {
 class EventEffectList : public IEvent {
  public:
   virtual unique_ptr<Cmd> RaiseEvent(event::GeneralEvent, Unit*) const override;
-  virtual void            RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
+  virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
 
  public:
   EventEffectList();
@@ -23,7 +23,7 @@ class EventEffectList : public IEvent {
 
  private:
   std::vector<GeneralEventEffect*> general_elements_;
-  std::vector<OnCmdEventEffect*>   oncmd_elements_;
+  std::vector<OnCmdEventEffect*> oncmd_elements_;
 };
 
 }  // namespace core

@@ -14,7 +14,7 @@ class Hero;
 
 struct DeployElement {
   const Hero* hero;
-  uint32_t    no;
+  uint32_t no;
 
   DeployElement() : hero(nullptr), no(0) {}
   DeployElement(const Hero* hero, uint32_t no) : hero(hero), no(no) {}
@@ -37,7 +37,7 @@ namespace mengde {
 namespace core {
 
 struct DeployInfoUnselectable {
-  Vec2D       position;
+  Vec2D position;
   const Hero* hero;
 
   DeployInfoUnselectable(Vec2D position, const Hero* hero) : position(position), hero(hero) {}
@@ -55,7 +55,7 @@ class Deployer {
 
  public:
   typedef std::unordered_set<DeployElement, DeployElementHash, DeployerComparer> AssignmentContainer;
-  typedef function<void(const DeployElement&)>                                   ForEachFn;
+  typedef function<void(const DeployElement&)> ForEachFn;
 
  public:
   Deployer(const vector<DeployInfoUnselectable>&, const vector<DeployInfoSelectable>&, uint32_t);
@@ -63,22 +63,22 @@ class Deployer {
   uint32_t Unassign(const Hero* hero);
   uint32_t Find(const Hero* hero);
   uint32_t GetNextSelectableNo();
-  void     ForEach(ForEachFn);
-  Vec2D    GetPosition(const Hero* hero);
-  bool     IsReady();
+  void ForEach(ForEachFn);
+  Vec2D GetPosition(const Hero* hero);
+  bool IsReady();
   uint32_t GetNumAssigned();
 
  private:
   std::pair<Type, DeployElement> FindImpl(const Hero* hero);
-  static vector<DeployElement>   AsOrderedVector(AssignmentContainer&);
+  static vector<DeployElement> AsOrderedVector(AssignmentContainer&);
 
  private:
   vector<DeployInfoUnselectable> unselectable_info_list_;
-  vector<DeployInfoSelectable>   selectable_info_list_;
-  uint32_t                       num_required_;
-  AssignmentContainer            unselectable_assignment_;
-  AssignmentContainer            selectable_assignment_;
-  std::set<uint32_t>             available_no_;
+  vector<DeployInfoSelectable> selectable_info_list_;
+  uint32_t num_required_;
+  AssignmentContainer unselectable_assignment_;
+  AssignmentContainer selectable_assignment_;
+  std::set<uint32_t> available_no_;
 };
 
 }  // namespace core

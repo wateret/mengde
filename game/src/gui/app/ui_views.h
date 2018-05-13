@@ -34,28 +34,28 @@ class UIViews : public CompositeView {
  public:
   // UI view getters
   TerrainInfoView* terrain_info_view() { return terrain_info_view_; }
-  UnitListView*    unit_list_view() { return unit_list_view_; }
-  UnitDialogView*  unit_dialog_view() { return unit_dialog_view_; }
-  ModalView*       unit_dialog_view_wrapper() { return unit_dialog_view_wrapper_; }
-  UnitView*        unit_view() { return unit_view_; }
+  UnitListView* unit_list_view() { return unit_list_view_; }
+  UnitDialogView* unit_dialog_view() { return unit_dialog_view_; }
+  ModalView* unit_dialog_view_wrapper() { return unit_dialog_view_wrapper_; }
+  UnitView* unit_view() { return unit_view_; }
   UnitTooltipView* unit_tooltip_view() { return unit_tooltip_view_; }
-  ControlView*     control_view() { return control_view_; }
+  ControlView* control_view() { return control_view_; }
   ModalDialogView* dialog_view() { return dialog_view_; }
-  MagicListView*   magic_list_view() { return magic_list_view_; }
-  UnitActionView*  unit_action_view() { return unit_action_view_; }
+  MagicListView* magic_list_view() { return magic_list_view_; }
+  UnitActionView* unit_action_view() { return unit_action_view_; }
 
  private:
-  DeployView*      deploy_view_;
+  DeployView* deploy_view_;
   UnitTooltipView* unit_tooltip_view_;
-  UnitView*        unit_view_;
-  ControlView*     control_view_;
+  UnitView* unit_view_;
+  ControlView* control_view_;
   ModalDialogView* dialog_view_;
-  UnitDialogView*  unit_dialog_view_;
-  ModalView*       unit_dialog_view_wrapper_;
-  MagicListView*   magic_list_view_;
+  UnitDialogView* unit_dialog_view_;
+  ModalView* unit_dialog_view_wrapper_;
+  MagicListView* magic_list_view_;
   TerrainInfoView* terrain_info_view_;
-  UnitListView*    unit_list_view_;
-  UnitActionView*  unit_action_view_;
+  UnitListView* unit_list_view_;
+  UnitActionView* unit_action_view_;
 };
 
 }  // namespace app

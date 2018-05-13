@@ -28,9 +28,9 @@ class TextView : public View {
   void UpdateCoords();
 
  private:
-  std::string         text_;
-  Color               color_;
-  int                 size_;
+  std::string text_;
+  Color color_;
+  int size_;
   LayoutHelper::Align align_;
 };
 

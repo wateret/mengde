@@ -17,7 +17,7 @@ Renderer::Renderer(Window* window) {
   SDL_SetRenderDrawColor(handle_, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_SetRenderDrawBlendMode(handle_, SDL_BLENDMODE_BLEND);
 
-  pixel_format_     = SDL_GetWindowPixelFormat(window->AsRawWindow());
+  pixel_format_ = SDL_GetWindowPixelFormat(window->AsRawWindow());
   pixel_format_obj_ = SDL_AllocFormat(pixel_format_);
 }
 

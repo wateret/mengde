@@ -10,19 +10,19 @@ namespace core {
 Formulae::Formulae() {}
 
 int Formulae::ComputeBasicAttackDamage(Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
-  const Attribute& a   = unit_atk->GetCurrentAttr();
-  const Attribute& d   = unit_def->GetCurrentAttr();
-  int              atk = m->ApplyTerrainEffect(unit_atk, a.atk);
-  int              def = m->ApplyTerrainEffect(unit_def, d.def);
+  const Attribute& a = unit_atk->GetCurrentAttr();
+  const Attribute& d = unit_def->GetCurrentAttr();
+  int atk = m->ApplyTerrainEffect(unit_atk, a.atk);
+  int def = m->ApplyTerrainEffect(unit_def, d.def);
   return ComputeDamageBase(atk, def, unit_atk->GetLevel(), force);
 }
 
 int Formulae::ComputeMagicDamage(Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
   UNUSED(m);
-  const Attribute& a   = unit_atk->GetCurrentAttr();
-  const Attribute& d   = unit_def->GetCurrentAttr();
-  int              atk = a.itl;
-  int              def = d.itl;
+  const Attribute& a = unit_atk->GetCurrentAttr();
+  const Attribute& d = unit_def->GetCurrentAttr();
+  int atk = a.itl;
+  int def = d.itl;
   return ComputeDamageBase(atk, def, unit_atk->GetLevel(), force);
 }
 
@@ -52,7 +52,7 @@ int Formulae::ComputeBasicAttackCritical(const Unit* unit_atk, const Unit* unit_
 
 int Formulae::ComputeDamageBase(int atk, int def, int atk_lv, int force) {
   int damage = (atk - def) / 3 + atk_lv + 25;
-  damage     = ApplyRatio(damage, force);
+  damage = ApplyRatio(damage, force);
   return std::max(1, damage);
 }
 
@@ -76,10 +76,10 @@ int Formulae::ComputeAccuracyBase(int atk, int def, int cap) {
     val = std::min(100, (atk - def) * 10 / def + 90);
   } else if (atk >= def / 2) {
     int tdef = def / 2;
-    val      = (atk - tdef) * 30 / tdef + 60;
+    val = (atk - tdef) * 30 / tdef + 60;
   } else {
     int tdef = def / 3;
-    val      = std::max(atk - tdef, 0) * 30 / tdef + 30;
+    val = std::max(atk - tdef, 0) * 30 / tdef + 30;
   }
   val = ApplyRatio(val, cap);
   return val;

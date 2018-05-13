@@ -26,7 +26,7 @@ UnitTooltipView::UnitTooltipView(const Rect* frame, const core::Unit* unit)
   padding(8);
 
   Rect gv_frame = {0, 22, 184, 16};
-  gv_hp_        = new GaugeView(&gv_frame, 0, 1, 0, COLOR("gauge_hp", kAlpha), COLOR("gauge_bg", kAlpha),
+  gv_hp_ = new GaugeView(&gv_frame, 0, 1, 0, COLOR("gauge_hp", kAlpha), COLOR("gauge_bg", kAlpha),
                          COLOR("gauge_hp_damage", kAlpha));
   gv_frame.Move(0, 22);
   gv_mp_ = new GaugeView(&gv_frame, 0, 1, COLOR("gauge_mp", kAlpha), COLOR("gauge_bg", kAlpha));
@@ -34,10 +34,10 @@ UnitTooltipView::UnitTooltipView(const Rect* frame, const core::Unit* unit)
   gv_mp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
 
   Rect tv_rect = GetActualFrame();
-  tv_name_     = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftTop);
-  tv_lv_       = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
-  tv_lftbot_   = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftBot);
-  tv_rgtbot_   = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtBot);
+  tv_name_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftTop);
+  tv_lv_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
+  tv_lftbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftBot);
+  tv_rgtbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtBot);
 
   AddChild(gv_hp_);
   AddChild(gv_mp_);
@@ -56,8 +56,8 @@ void UnitTooltipView::SetUnitTerrainInfo(core::Cell* cell) {
   if (unit_ == unit) return;
   SetUnit(unit);
 
-  string name           = cell->GetTerrainName();
-  int    effect         = cell->GetTerrainEffectThisCell();
+  string name = cell->GetTerrainName();
+  int effect = cell->GetTerrainEffectThisCell();
   string terrain_effect = name + " " + std::to_string(effect) + "%";
   tv_rgtbot_->SetText(terrain_effect);
 }
@@ -69,7 +69,7 @@ void UnitTooltipView::SetUnitAttackInfo(const core::Unit* unit, int accuracy, in
 }
 
 void UnitTooltipView::SetUnit(const core::Unit* unit) {
-  unit_                      = unit;
+  unit_ = unit;
   const core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
   const core::HpMp& ori_xtat = unit_->GetOriginalHpMp();
   gv_hp_->SetCurVal(cur_xtat.hp);

@@ -45,7 +45,7 @@ Color ColorGen::Generate(const std::string& name) {
 
 Color ColorGen::Generate(const std::string& name, uint8_t alpha) {
   Color color = Generate(name);
-  color.a     = alpha;
+  color.a = alpha;
   return color;
 }
 

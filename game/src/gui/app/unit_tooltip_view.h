@@ -36,10 +36,10 @@ class UnitTooltipView : public CompositeView {
 
   GaugeView* gv_hp_;
   GaugeView* gv_mp_;
-  TextView*  tv_name_;
-  TextView*  tv_lv_;
-  TextView*  tv_lftbot_;
-  TextView*  tv_rgtbot_;
+  TextView* tv_name_;
+  TextView* tv_lv_;
+  TextView* tv_lftbot_;
+  TextView* tv_rgtbot_;
 };
 
 }  // namespace app

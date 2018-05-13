@@ -12,8 +12,8 @@ void Table::Dump() {
 #ifdef DEBUG
   printf("Table {\n");
   for (auto e : values_) {
-    auto& key   = e.first;
-    auto  value = e.second;
+    auto& key = e.first;
+    auto value = e.second;
     printf("  %s: ", key.c_str());
     switch (value->type()) {
       case Value::Type::kInt32:
