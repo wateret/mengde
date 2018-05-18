@@ -57,6 +57,21 @@ bool EventFetcher::Poll() {
       event_.mouse_wheel = MouseWheelEvent(hor, ver, Vec2D(x, y));
       break;
     }
+    case SDL_KEYUP:
+    case SDL_KEYDOWN: {
+      event_type_ = EventType::kKey;
+      KeyEvent::State state =
+          (e.type == SDL_KEYUP) ? KeyEvent::State::kUp : KeyEvent::State::kDown;
+      KeyEvent::Mod mod =
+          ((e.key.keysym.mod & KMOD_CTRL) ? KeyEvent::Mod::kCtrl : KeyEvent::Mod::kNone) |
+          ((e.key.keysym.mod & KMOD_SHIFT) ? KeyEvent::Mod::kShift : KeyEvent::Mod::kNone) |
+          ((e.key.keysym.mod & KMOD_ALT) ? KeyEvent::Mod::kAlt : KeyEvent::Mod::kNone);
+      event_.key = KeyEvent(e.key.keysym.sym, mod, state, e.key.repeat, e.key.timestamp);
+      LOG_DEBUG("KeyEvent: 0x%02x 0x%02x 0x%02x %u %u", e.key.keysym.sym,
+          static_cast<uint16_t>(mod), static_cast<uint16_t>(state),
+          e.key.repeat, e.key.timestamp);
+      break;
+    }
     default:
       event_type_ = EventType::kUnsupported;
       break;

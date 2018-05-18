@@ -4,6 +4,7 @@
 #include "mouse_button_event.h"
 #include "mouse_motion_event.h"
 #include "mouse_wheel_event.h"
+#include "key_event.h"
 
 namespace mengde {
 namespace gui {
