@@ -55,6 +55,7 @@ bool EventFetcher::Poll() {
       if (e.wheel.y < 0) ver = MouseWheelEvent::Vertical::kDown;  // TODO check the direction
       if (e.wheel.y > 0) ver = MouseWheelEvent::Vertical::kUp;
       event_.mouse_wheel = MouseWheelEvent(hor, ver, Vec2D(x, y));
+      break;
     }
     default:
       event_type_ = EventType::kUnsupported;
