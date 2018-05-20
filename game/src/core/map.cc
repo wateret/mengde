@@ -49,11 +49,6 @@ Cell* Map::GetCell(Vec2D v) {
 
 bool Map::UnitInCell(Vec2D c) const { return IsValidCoords(c) && grid_[c.y][c.x]->IsUnitPlaced(); }
 
-Unit* Map::GetUnit(Vec2D c) {
-  ASSERT(UnitInCell(c));
-  return grid_[c.y][c.x]->GetUnit();
-}
-
 const Unit* Map::GetUnit(Vec2D c) const {
   ASSERT(UnitInCell(c));
   return grid_[c.y][c.x]->GetUnit();
@@ -153,15 +148,14 @@ vector<Vec2D> Map::FindPathTo(const Unit* unit, Vec2D dest) {
   return path;
 }
 
-void Map::PlaceUnit(Unit* unit, Vec2D c) {
+void Map::PlaceUnit(const Unit* unit, Vec2D c) {
   ASSERT(IsValidCoords(c));
   ASSERT(!grid_[c.y][c.x]->IsUnitPlaced());
   grid_[c.y][c.x]->SetUnit(unit);
-  unit->SetPosition(c);
 }
 
 void Map::MoveUnit(Vec2D src, Vec2D dst) {
-  Unit* unit = GetUnit(src);
+  const Unit* unit = GetUnit(src);
   EmptyCell(src);
   PlaceUnit(unit, dst);
 }

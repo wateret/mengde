@@ -9,9 +9,9 @@ Terrain* Cell::GetTerrain() { return terrain_; }
 
 int Cell::GetMoveCost(int class_idx) { return terrain_->GetMoveCost(class_idx); }
 
-int Cell::GetTerrainEffect(int class_idx) { return terrain_->GetEffect(class_idx); }
+int Cell::GetTerrainEffect(int class_idx) const { return terrain_->GetEffect(class_idx); }
 
-int Cell::GetTerrainEffectThisCell() {
+int Cell::GetTerrainEffectThisCell() const {
   ASSERT(IsUnitPlaced());
   return terrain_->GetEffect(unit_->GetClassIndex());
 }
@@ -22,9 +22,9 @@ std::string Cell::GetTerrainName() const { return terrain_->GetName(); }
 
 bool Cell::IsUnitPlaced() const { return unit_ != nullptr; }
 
-Unit* Cell::GetUnit() { return unit_; }
+const Unit* Cell::GetUnit() const { return unit_; }
 
-void Cell::SetUnit(Unit* unit) { unit_ = unit; }
+void Cell::SetUnit(const Unit* unit) { unit_ = unit; }
 
 }  // namespace core
 }  // namespace mengde

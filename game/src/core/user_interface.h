@@ -12,6 +12,7 @@
 namespace mengde {
 namespace core {
 
+class Cell;
 class Game;
 class PathTree;
 class Scenario;
@@ -67,6 +68,7 @@ class UserInterface {
   Unit* GetUnit(uint32_t unit_id);  // TODO Remove this and use only const version
   const Unit* GetUnit(uint32_t unit_id) const;
   const Unit* GetUnit(Vec2D pos) const;
+  const Cell* GetCell(Vec2D pos) const;
   vector<Vec2D> GetPath(uint32_t unit_id, Vec2D pos) const;
 
   Vec2D GetMapSize() const;

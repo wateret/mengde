@@ -226,8 +226,10 @@ bool Game::UnitInCell(Vec2D c) const { return map_->UnitInCell(c); }
 
 Unit* Game::GetUnitInCell(Vec2D c) const {
   if (!map_->UnitInCell(c)) return nullptr;
-  return map_->GetUnit(c);
+  return const_cast<Unit*>(map_->GetUnit(c));  // TODO remove const_cast
 }
+
+const Cell* Game::GetCell(Vec2D c) const { return map_->GetCell(c); }
 
 void Game::DoNext() {
   ASSERT(HasNext());
@@ -283,6 +285,7 @@ uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
 uint32_t Game::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Force::kOwn);
   map_->PlaceUnit(unit, pos);
+  unit->SetPosition(pos);
   return stage_unit_manager_->Deploy(unit);
 }
 
@@ -291,6 +294,7 @@ uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D
   Hero* hero = new Hero(hero_tpl, level);
   Unit* unit = new Unit(hero, force);
   map_->PlaceUnit(unit, pos);
+  unit->SetPosition(pos);
   return stage_unit_manager_->Deploy(unit);
 }
 

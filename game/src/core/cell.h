@@ -11,19 +11,19 @@ class Cell {
  public:
   Cell(Terrain*);
   Terrain* GetTerrain();
-  Unit* GetUnit();
+  const Unit* GetUnit() const;
   int GetMoveCost(int);
-  int GetTerrainEffect(int);
-  int GetTerrainEffectThisCell();
+  int GetTerrainEffect(int) const;
+  int GetTerrainEffectThisCell() const;
   int ApplyTerrainEffect(int, int);
   std::string GetTerrainName() const;
   bool IsUnitPlaced() const;
-  void SetUnit(Unit*);
+  void SetUnit(const Unit*);
   void Empty() { unit_ = nullptr; }
 
  private:
   Terrain* terrain_;
-  Unit* unit_;
+  const Unit* unit_;
 };
 
 }  // namespace core

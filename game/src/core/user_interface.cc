@@ -1,5 +1,6 @@
 #include "user_interface.h"
 
+#include "cell.h"
 #include "cmd.h"
 #include "game.h"
 #include "magic_list.h"
@@ -158,6 +159,8 @@ const Unit* UserInterface::GetUnit(Vec2D pos) const {
 }
 
 const Unit* UserInterface::GetUnit(uint32_t unit_id) const { return stage_->GetUnit(unit_id); }
+
+const Cell* UserInterface::GetCell(Vec2D pos) const { return stage_->GetCell(pos); }
 
 vector<Vec2D> UserInterface::GetPath(uint32_t unit_id, Vec2D pos) const {
   Map* map = stage_->GetMap();

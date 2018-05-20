@@ -23,7 +23,6 @@ class Map {
   Cell* GetCell(int, int);
   Cell* GetCell(Vec2D);
   bool UnitInCell(Vec2D) const;
-  Unit* GetUnit(Vec2D);  // TODO remove this. Use const version instead
   const Unit* GetUnit(Vec2D) const;
   Terrain* GetTerrain(Vec2D);
   int ApplyTerrainEffect(const Unit*, int);
@@ -34,7 +33,7 @@ class Map {
   vector<Vec2D> FindPathTo(const Unit*, Vec2D);
   int SerializeVec2D(Vec2D v) { return v.y * size_.x + v.x; }
   Vec2D DeserializeVec2D(int v) { return Vec2D(v % size_.x, v / size_.x); }
-  void PlaceUnit(Unit*, Vec2D);
+  void PlaceUnit(const Unit*, Vec2D);
   bool IsHostileAdjacent(const Unit*, Vec2D) const;
   bool IsHostilePlaced(const Unit*, Vec2D) const;
   bool IsValidCoords(Vec2D) const;

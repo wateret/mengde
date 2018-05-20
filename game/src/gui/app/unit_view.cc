@@ -20,7 +20,7 @@ UnitView::UnitView(const Rect& frame) : TabView(&frame), unit_(NULL) {
   //  SetViewIndex(1);
 }
 
-void UnitView::SetUnit(core::IUnitBase* unit) {
+void UnitView::SetUnit(const core::IUnitBase* unit) {
   if (unit_ != unit) {
     unit_ = unit;
     unit_over_view_->SetUnit(unit);

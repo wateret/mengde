@@ -49,7 +49,7 @@ UnitTooltipView::UnitTooltipView(const Rect* frame, const core::Unit* unit)
 
 UnitTooltipView::~UnitTooltipView() {}
 
-void UnitTooltipView::SetUnitTerrainInfo(core::Cell* cell) {
+void UnitTooltipView::SetUnitTerrainInfo(const core::Cell* cell) {
   ASSERT(cell->IsUnitPlaced());
 
   const core::Unit* unit = cell->GetUnit();

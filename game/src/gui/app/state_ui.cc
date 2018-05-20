@@ -233,18 +233,19 @@ StateUIView::StateUIView(Base base) : StateUIOperable(base), units_(game_) {}
 void StateUIView::Update() {
   StateUIOperable::Update();
 
-  core::Map* map = game_->GetMap();
-  if (map->UnitInCell(cursor_cell_)) {
-    core::Cell* cell = map->GetCell(cursor_cell_);
-    core::Unit* unit = map->GetUnit(cursor_cell_);
-    gv_->unit_tooltip_view()->SetUnitTerrainInfo(cell);
-    gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
-    gv_->unit_view()->SetUnit(unit);
+  auto unit_tooltip_view = gv_->unit_tooltip_view();
+  auto unit_view = gv_->unit_view();
+  const core::Unit* unit = gi_->GetUnit(cursor_cell_);
+  if (unit) {
+    const core::Cell* cell = gi_->GetCell(cursor_cell_);
+    unit_tooltip_view->SetUnitTerrainInfo(cell);
+    unit_tooltip_view->SetCoordsByUnitCoords(unit->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
+    unit_view->SetUnit(unit);
 
-    gv_->unit_tooltip_view()->visible(true);
+    unit_tooltip_view->visible(true);
   } else {
-    gv_->unit_tooltip_view()->visible(false);
-    gv_->unit_view()->visible(false);
+    unit_tooltip_view->visible(false);
+    unit_view->visible(false);
   }
 
   if (game_->IsAITurn()) {
@@ -336,20 +337,14 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
   if (e.IsLeftButtonUp()) {
     const vector<Vec2D>& cells = moves_.moves();
     Vec2D pos = GetCursorCell();
-    core::Map* map = game_->GetMap();
-    const core::Unit* unit = gi_->GetUnit(unit_id_);  // TODO unit_id_ instead
 
-    if (map->UnitInCell(pos) && map->GetUnit(pos) != unit) {
-      // XXX Other unit clicked
+    auto found = std::find(cells.begin(), cells.end(), pos);
+    if (found != cells.end()) {
+      uint32_t move_id = found - cells.begin();
+      LOG_DEBUG("Move to pos (%d, %d) / move_id : %u", pos.x, pos.y, move_id);
+      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_id_, pos, StateUIMoving::Flag::kInputActNext, move_id));
     } else {
-      auto found = std::find(cells.begin(), cells.end(), pos);
-      if (found != cells.end()) {
-        uint32_t move_id = found - cells.begin();
-        LOG_DEBUG("Move to pos (%d, %d) / move_id : %u", pos.x, pos.y, move_id);
-        gv_->PushUIState(new StateUIMoving(WrapBase(), unit_id_, pos, StateUIMoving::Flag::kInputActNext, move_id));
-      } else {
-        //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
-      }
+      //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
     }
   } else if (e.IsRightButtonUp()) {
     gv_->PopUIState();

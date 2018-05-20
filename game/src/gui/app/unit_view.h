@@ -22,12 +22,12 @@ class EquipmentSetView;
 class UnitView : public TabView {
  public:
   UnitView(const Rect&);
-  void SetUnit(core::IUnitBase* unit);
+  void SetUnit(const core::IUnitBase* unit);
   UnitOverView* unit_over_view() { return unit_over_view_; }
   EquipmentSetView* equipment_set_view() { return equipment_set_view_; }
 
  private:
-  core::IUnitBase* unit_;
+  const core::IUnitBase* unit_;
   UnitOverView* unit_over_view_;          // tab 0
   EquipmentSetView* equipment_set_view_;  // tab 1
 };
