@@ -93,20 +93,19 @@ def main():
     check_run_cmd("mkdir", ["-p", build_dir])
     os.chdir(build_dir)
 
+    cmake_config = ["../" * (build_dir.count("/") + 1),
+                    "-DCMAKE_BUILD_TYPE=" + options.buildtype,
+                    "-DCMAKE_INSTALL_PREFIX=./",
+                    "-DINSTALL_FOLDER=" + install_folder,
+                    "-DCMAKE_EXPORT_COMPILE_COMMANDS=1"]
+
     if options.cross == "armv7l":
         if os.environ.get("ROOTFS_ARM") is None:
             os.environ["ROOTFS_ARM"] = os.path.join(home_folder, "cross/rootfs/armv7l")
         toolchain = os.path.join(home_folder, "cmake/toolchain-armv7l.cmake")
-        check_run_cmd("cmake", ["-DCMAKE_BUILD_TYPE=" + options.buildtype,
-                                ("../" * (build_dir.count("/") + 1)),
-                                "-DCMAKE_INSTALL_PREFIX=./",
-                                "-DINSTALL_FOLDER=" + install_folder,
-                                "-DCMAKE_TOOLCHAIN_FILE=" + toolchain])
-    else:
-        check_run_cmd("cmake", ["-DCMAKE_BUILD_TYPE=" + options.buildtype,
-                                ("../" * (build_dir.count("/") + 1)),
-                                "-DCMAKE_INSTALL_PREFIX=./",
-                                "-DINSTALL_FOLDER=" + install_folder])
+        cmake_config += ["-DCMAKE_TOOLCHAIN_FILE=" + toolchain]
+
+    check_run_cmd("cmake", cmake_config)
 
     # From here, support `Makefile` project only
     make_args = []
