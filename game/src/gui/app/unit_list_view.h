@@ -20,19 +20,19 @@ class UnitListView : public CompositeView {
   class UnitDetailView : public CompositeView {
    public:
     UnitDetailView(const Rect&);
-    void SetUnit(core::Unit*);
+    void SetUnit(const core::Unit*);
 
    private:
-    core::Unit* unit_;
+    const core::Unit* unit_;
     TextView* tv_name_;
   };
 
  public:
-  UnitListView(const Rect&, const vector<core::Unit*>&);
-  void SetUnit(core::Unit* unit) { unit_detail_view_->SetUnit(unit); }
+  UnitListView(const Rect&, const vector<const core::Unit*>&);
+  void SetUnit(const core::Unit* unit) { unit_detail_view_->SetUnit(unit); }
 
  private:
-  vector<core::Unit*> unit_list_;
+  vector<const core::Unit*> unit_list_;
   UnitDetailView* unit_detail_view_;
 };
 

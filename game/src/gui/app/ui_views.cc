@@ -92,12 +92,15 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
     AddChild(terrain_info_view_);
   }
 
+  // TODO Enable UnitListView
+#if 0
   {  // Initialize unit_list_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
     unit_list_view_ = new UnitListView(frame, game->GetCurrentTurnUnits());
     unit_list_view_->visible(false);
     AddChild(unit_list_view_);
   }
+#endif
 
   {  // Initialize unit_action_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {150, 150}, LayoutHelper::kAlignLftTop);

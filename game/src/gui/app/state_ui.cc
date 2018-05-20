@@ -277,13 +277,16 @@ bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
       }
     }
   } else if (e.IsRightButtonUp()) {
+    // TODO Enable UnitListView
+#if 0
     Vec2D pos = GetCursorCell();
-    core::Map* map = game_->GetMap();
-    if (map->UnitInCell(pos)) {
-      core::Unit* unit = map->GetUnit(pos);
-      gv_->unit_list_view()->SetUnit(unit);
+    auto unit_id_opt = units_.FindByPos(pos);
+    if (unit_id_opt) {
+      uint32_t unit_id = unit_id_opt.get();
+      gv_->unit_list_view()->SetUnit(gi_->GetUnit(unit_id));
       gv_->unit_list_view()->visible(true);
     }
+#endif
   }
   return true;
 }

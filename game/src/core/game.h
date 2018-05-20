@@ -92,10 +92,8 @@ class Game : public IDeployHelper {
   //  bool UnitPutWeaponOn(uint32_t, const string&);
 
   // APIs for AI //
-  vector<Unit*> GetCurrentTurnUnits();
   vector<Vec2D> FindMovablePos(Unit*);
   PathTree* FindMovablePath(Unit*);
-  Unit* GetOneHostileInRange(Unit*, Vec2D);
 
  public:
   const lua::LuaClass& lua_this() { return lua_this_; }

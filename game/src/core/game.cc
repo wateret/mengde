@@ -208,37 +208,12 @@ uint16_t Game::GetTurnCurrent() const { return turn_.GetCurrent(); }
 
 uint16_t Game::GetTurnLimit() const { return turn_.GetLimit(); }
 
-vector<Unit*> Game::GetCurrentTurnUnits() {
-  vector<Unit*> units;
-  ForEachUnit([this, &units](Unit* u) {
-    if (this->IsCurrentTurn(u)) {
-      units.push_back(u);
-    }
-  });
-  return units;
-}
-
 vector<Vec2D> Game::FindMovablePos(Unit* unit) {
   PathTree* path_tree = FindMovablePath(unit);
   return path_tree->GetNodeList();
 }
 
 PathTree* Game::FindMovablePath(Unit* unit) { return map_->FindMovablePath(unit); }
-
-Unit* Game::GetOneHostileInRange(Unit* unit, Vec2D virtual_pos) {
-  Vec2D original_pos = unit->GetPosition();
-  MoveUnit(unit, virtual_pos);
-  Unit* target = nullptr;
-  stage_unit_manager_->ForEach([unit, &target](Unit* candidate) {
-    if (unit->IsHostile(candidate)) {
-      if (unit->IsInRange(candidate->GetPosition())) {
-        target = candidate;
-      }
-    }
-  });
-  MoveUnit(unit, original_pos);
-  return target;
-}
 
 bool Game::HasNext() const { return commander_->HasNext(); }
 

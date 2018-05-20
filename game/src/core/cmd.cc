@@ -7,6 +7,7 @@
 #include "game.h"
 #include "lua/lua.h"
 #include "magic.h"
+#include "user_interface.h"
 
 namespace mengde {
 namespace core {
@@ -436,54 +437,38 @@ unique_ptr<Cmd> CmdEndTurn::Do(Game* game) {
 CmdPlayAI::CmdPlayAI() : Cmd() {}
 
 unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
-  //  const Force force = turn_.GetForce();
-  vector<Unit*> units = game->GetCurrentTurnUnits();
-  LOG_DEBUG("units: %d", units.size());
-  Unit* unit = nullptr;
-  // Find first availible unit
-  for (auto u : units) {
-    if (!u->IsDead() && !u->IsDoneAction()) {
-      unit = u;
-      break;
-    }
-  }
-
-  // No more unit waiting for command
-  if (unit == nullptr) {
-    return unique_ptr<Cmd>(new CmdEndTurn());
-  }
+  UserInterface* ui = game->user_interface();
+  AvailableUnits units = ui->QueryUnits();
 
   // XXX create an AI handler module and delegate to it.
   // Currently a simple rushing AI is implemented here.
-  CmdAction* cmd = new CmdAction(CmdAction::Flag::kDecompose);
 
-  //  cmd->SetCmdAct(new CmdStay(unit));
+  // No more unit waiting for command
+  if (units.Count() == 0) {
+    return unique_ptr<Cmd>(new CmdEndTurn());
+  }
 
-  unique_ptr<PathTree> movable_path(game->FindMovablePath(unit));
-  vector<Vec2D> movable_pos_list = movable_path->GetNodeList();
-  Vec2D move_pos = {-1, -1};
-  Unit* target = nullptr;
-  for (auto pos : movable_pos_list) {
-    if (!game->UnitInCell(pos) || unit->GetPosition() == pos) {
-      Unit* u = game->GetOneHostileInRange(unit, pos);
-      if (u != nullptr) {
-        move_pos = pos;
-        target = u;
-      }
+  auto unit_id = units.Get(0);
+
+  AvailableMoves moves = ui->QueryMoves(unit_id);
+
+  bool found_target = false;
+  uint32_t move_id = 0;
+  moves.ForEach([&](uint32_t id, Vec2D) {
+    AvailableActs acts = ui->QueryActs(unit_id, id, ActionType::kBasicAttack);
+    if (acts.Count() > 0 && !found_target) {
+      found_target = true;
+      move_id = id;
     }
-  }
-  if (move_pos == Vec2D(-1, -1)) {
-    int size = movable_pos_list.size();
-    move_pos = movable_pos_list[GenRandom(size)];
-  }
-  cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(unit, move_pos)));
-  if (target == nullptr) {
-    cmd->SetCmdAct(unique_ptr<CmdStay>(new CmdStay(unit)));
+  });
+
+  if (found_target) {
+    ui->PushAction(unit_id, move_id, ActionType::kBasicAttack, 0 /* Simply choose first one */);
   } else {
-    cmd->SetCmdAct(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(unit, target, CmdBasicAttack::Type::kActive)));
+    ui->PushAction(unit_id, GenRandom(moves.Count()), ActionType::kStay, 0);
   }
 
-  return unique_ptr<CmdAction>(cmd);
+  return nullptr;
 }
 
 // CmdGameVictory

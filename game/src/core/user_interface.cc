@@ -46,6 +46,12 @@ Vec2D AvailableMoves::Get(uint32_t idx) {
   return moves_[idx];
 }
 
+void AvailableMoves::ForEach(const std::function<void(uint32_t, Vec2D)>& fn) {
+  for (uint32_t i = 0, size = moves_.size(); i < size; i++) {
+    fn(i, moves_[i]);
+  }
+}
+
 // AvailableActs
 
 AvailableActs::AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, ActionType type) : type_(type) {

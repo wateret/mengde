@@ -17,14 +17,14 @@ UnitListView::UnitDetailView::UnitDetailView(const Rect& frame)
   AddChild(tv_name_);
 }
 
-void UnitListView::UnitDetailView::SetUnit(core::Unit* unit) {
+void UnitListView::UnitDetailView::SetUnit(const core::Unit* unit) {
   unit_ = unit;
 
   string name = unit->GetId();
   tv_name_->SetText(name);
 }
 
-UnitListView::UnitListView(const Rect& frame, const vector<core::Unit*>& unit_list)
+UnitListView::UnitListView(const Rect& frame, const vector<const core::Unit*>& unit_list)
     : CompositeView(frame), unit_list_(unit_list), unit_detail_view_(nullptr) {
   padding(8);
   bg_color(COLOR("darkgray"));
