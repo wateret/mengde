@@ -49,16 +49,22 @@ def main():
     os.chdir(test_path)
     test_exec_list = find_executables(".")
 
-    boost_test_options = ["--log_level=" + "all",
-                          "--report_level=" + "detailed",
-                          "--output_format=" + str.upper(options.output)]
-
+    # Print found tests
     print_header("%d tests found" % (len(test_exec_list)))
     for test_exec in test_exec_list:
         print("  - " + test_exec)
+    print("")
+
+    # Options for test binary
+    boost_test_options = ["--log_level=" + "all",
+                          "--report_level=" + "detailed"]
+
+    if options.output != "none":
+        boost_test_options += ["--output_format=" + str.upper(options.output)]
 
     # TODO Support multiple jobs
 
+    # Run tests
     print_header("Beginning test run")
 
     num_failed = 0
@@ -69,14 +75,16 @@ def main():
         else:
             print_fail(test_exec)
             num_failed += 1
-        result_ext = { "xml": "xml", "hrf": "txt" }[options.output]
-        test_path = os.path.dirname(test_exec)
-        test_name, _ = os.path.splitext(os.path.basename(test_exec))
 
-        filename_log = os.path.join(test_path, test_name + "_log." + result_ext)
-        filename_sum = os.path.join(test_path, test_name + "_sum." + result_ext)
-        write_to_file(filename_log, out)
-        write_to_file(filename_sum, err)
+        if options.output != "none":
+            result_ext = { "xml": "xml", "hrf": "txt" }[options.output]
+            test_path = os.path.dirname(test_exec)
+            test_name, _ = os.path.splitext(os.path.basename(test_exec))
+
+            filename_log = os.path.join(test_path, test_name + "_log." + result_ext)
+            filename_sum = os.path.join(test_path, test_name + "_sum." + result_ext)
+            write_to_file(filename_log, out)
+            write_to_file(filename_sum, err)
 
     print("")
     print("======== SUMMARY ========")
