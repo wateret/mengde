@@ -37,6 +37,11 @@ def check_run_cmd(cmd, args = []):
     if retcode != 0:
         fail("[Failed %d] %s" % (retcode, cmd_to_string(cmd, args)))
 
+def run_cmd_capture(cmd, args = []):
+    print_cmd(cmd, args)
+    pipes = subprocess.Popen([cmd] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = pipes.communicate()
+    return pipes.returncode, stdout, stderr
 
 def download_file(url, filename):
     try:
