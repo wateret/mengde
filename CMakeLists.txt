@@ -4,6 +4,9 @@ project(MENGDE)
 # Use our modified FindSDL2* modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${MENGDE_SOURCE_DIR}/cmake")
 
+include(CTest)
+include(BoostTestHelpers)
+
 # Set an output directory for our binaries
 set(BIN_DIR ${MENGDE_SOURCE_DIR}/bin)
 
@@ -29,6 +32,8 @@ endif()
 
 # Look up required packages and add the include directory to our include path
 if(BUILD_NATIVE)
+    enable_testing()
+
     find_package(Boost 1.55.0 COMPONENTS filesystem system REQUIRED)
     find_package(SDL2 REQUIRED)
     find_package(SDL2_ttf REQUIRED)

@@ -24,3 +24,7 @@ add_executable(game ${SOURCES})
 target_link_libraries(game lua util core gui)
 
 install(TARGETS game DESTINATION ${INSTALL_FOLDER})
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
