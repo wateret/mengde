@@ -3,6 +3,9 @@
 
 #include <stack>
 
+#include "common.h"
+#include "logger.h"
+
 // T can be only be a subclass of `State` and must be pointer type
 
 template <typename T>
