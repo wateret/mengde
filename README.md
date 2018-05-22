@@ -39,7 +39,7 @@ For now we only have instructions for build.
 
 ```
 $ brew install cmake sdl2 sdl2_ttf lua boost
-$ ./build.py
+$ tools/build.py
 $ build/Darwin.x86_64.Debug/game/game
 ```
 
@@ -47,7 +47,7 @@ $ build/Darwin.x86_64.Debug/game/game
 
 ```
 $ apt-get install cmake libsdl2-dev libsdl2-ttf-dev liblua5.2-dev libboost-system-dev libboost-filesystem-dev
-$ ./build.py
+$ tools/build.py
 $ build/Linux.x86_64.Debug/game/game
 ```
 
@@ -64,7 +64,7 @@ $ docker build -t {image_tag_name} docker
 
 4. Launch a Docker container that contains one of created binary images for building.
 ```
-$ docker run --rm -v `pwd`:{mount_path_on_container} -w={mount_path_on_container} {image_tag_name} ./build.py
+$ docker run --rm -v `pwd`:{mount_path_on_container} -w={mount_path_on_container} {image_tag_name} tools/build.py
 ```
 
 ##### Cross build for ARM(Raspberry Pi 2/3)
@@ -84,7 +84,7 @@ Root file system will be prepared in `./cross/rootfs/armv7l`
 
 After it's prepared, you can build with `--cross` option.
 ```
-$ ./build.py --cross armv7l
+$ tools/build.py --cross armv7l
 ```
 
 #### Windows
