@@ -15,6 +15,7 @@ matrix:
           script: 
               - ./ci/clang-format.sh
               - tools/build.py
+              - tools/unit_test.py
 
         - os: linux
           sudo: required
@@ -27,3 +28,4 @@ matrix:
               # clang format is disabled for ubuntu due to version issue
 #              - ./ci/clang-format.sh
               - docker run --rm -it -v $(pwd):/root/mengde -w /root/mengde mengde tools/build.py
+              - docker run --rm -it -v $(pwd):/root/mengde -w /root/mengde mengde tools/unit_test.py
