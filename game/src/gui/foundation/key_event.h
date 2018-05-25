@@ -13,8 +13,7 @@ class KeyEvent {
   enum class Mod : uint16_t { kNone = 0, kCtrl = 1, kShift = 2, kAlt = 4 };
 
  public:
-  KeyEvent(const uint32_t code, const Mod mod, const State state,
-           uint8_t repeat, uint32_t timestamp);
+  KeyEvent(const uint32_t code, const Mod mod, const State state, uint8_t repeat, uint32_t timestamp);
 
  public:
   uint32_t GetCode() const { return code_; }
@@ -32,8 +31,7 @@ class KeyEvent {
 };
 
 inline KeyEvent::Mod operator|(KeyEvent::Mod a, KeyEvent::Mod b) {
-  return static_cast<KeyEvent::Mod>
-            (static_cast<uint16_t>(a) | static_cast<uint16_t>(b));
+  return static_cast<KeyEvent::Mod>(static_cast<uint16_t>(a) | static_cast<uint16_t>(b));
 }
 
 }  // namespace foundation
