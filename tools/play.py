@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 import os
-import sys
 import time
-import subprocess
 import platform
 import argparse
+from cmd_helpers import *
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -28,17 +27,17 @@ def main():
     os.chdir(install_folder)
 
     if (options.rpi):
-        subprocess.call(['tvservice', '-e', 'DMT 16']) # change to 1024x768
+        check_run_cmd('tvservice', ['-e', 'DMT 16']) # change to 1024x768
         time.sleep(1) # need a little bit of time for graphics to be stable
 
     game_path = os.path.join(".", "game")
-    subprocess.call([game_path])
+    check_run_cmd(game_path)
     
     if (options.rpi):
-        subprocess.call(["tvservice", "-p"]) # change to prefered(default) mode
+        check_run_cmd("tvservice", ["-p"]) # change to prefered(default) mode
         time.sleep(1)
-        subprocess.call(["fbset", "-depth", "24"]) # hack to make screen visible
-        subprocess.call(["fbset", "-depth", "32"])
+        check_run_cmd("fbset", ["-depth", "24"]) # hack to make screen visible
+        check_run_cmd("fbset", ["-depth", "32"])
 
 if __name__ == "__main__":
     main()
