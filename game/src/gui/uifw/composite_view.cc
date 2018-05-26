@@ -108,6 +108,14 @@ bool CompositeView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   return true;
 }
 
+bool CompositeView::OnKeyEvent(const foundation::KeyEvent& e) {
+  for (auto itr = children_.rbegin(); itr != children_.rend(); itr++) {
+    View* view = *itr;
+    if (view->DelegateKeyEvent(e)) return true;
+  }
+  return false;
+}
+
 }  // namespace uifw
 }  // namespace gui
 }  // namespace mengde

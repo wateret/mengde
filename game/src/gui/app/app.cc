@@ -141,6 +141,10 @@ void App::HandleEvents() {
         break;
       case EventType::kMouseWheel:
         target_view_->OnMouseWheelEvent(e.mouse_wheel);
+        break;
+      case EventType::kKey:
+        target_view_->OnKeyEvent(e.key);
+        break;
       default:
         break;
     }

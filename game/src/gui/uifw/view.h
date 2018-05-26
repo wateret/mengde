@@ -41,6 +41,7 @@ class View : public IView {
   bool DelegateMouseButtonEvent(const foundation::MouseButtonEvent&);
   bool DelegateMouseMotionEvent(const foundation::MouseMotionEvent&);
   bool DelegateMouseWheelEvent(const foundation::MouseWheelEvent&);
+  bool DelegateKeyEvent(const foundation::KeyEvent&);
 
  public:
   virtual void Render(Drawer*) override {}
@@ -48,6 +49,7 @@ class View : public IView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override { return false; }
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override { return false; }
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override { return false; }
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override { return false; }
 
  public:
   bool RenderBegin(Drawer*);

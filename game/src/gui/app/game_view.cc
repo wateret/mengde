@@ -83,6 +83,8 @@ bool GameView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   return GetCurrentState()->OnMouseWheelEvent(e);
 }
 
+bool GameView::OnKeyEvent(const foundation::KeyEvent& e) { return GetCurrentState()->OnKeyEvent(e); }
+
 void GameView::RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos) {
   SpriteType stype = unit->IsHPLow() ? kSpriteLowHP : kSpriteMove;
   int sprite_no = this->GetCurrentSpriteNo(2, app_->GetMaxFps() / 2);

@@ -109,6 +109,13 @@ bool View::DelegateMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   return false;
 }
 
+bool View::DelegateKeyEvent(const foundation::KeyEvent& e) {
+  if (visible_) {
+    if (OnKeyEvent(e)) return true;
+  }
+  return false;
+}
+
 }  // namespace uifw
 }  // namespace gui
 }  // namespace mengde
