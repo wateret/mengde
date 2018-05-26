@@ -40,16 +40,20 @@ For now we only have instructions for build.
 ```
 $ brew install cmake sdl2 sdl2_ttf lua boost
 $ tools/build.py
-$ build/Darwin.x86_64.Debug/game/game
+$ tools/play.py
 ```
 
 #### Ubuntu
 
 ```
-$ apt-get install cmake libsdl2-dev libsdl2-ttf-dev liblua5.2-dev
-$ apt-get install libboost-system-dev libboost-filesystem-dev libboost-test-dev
+$ ci/install_deps_ubuntu.sh
 $ tools/build.py
-$ build/Linux.x86_64.Debug/game/game
+$ tools/play.py
+```
+
+For Raspberry Pi, run with `-r` option to change graphics resolution.
+```
+$ tools/play.py -r
 ```
 
 ##### Building with Docker
