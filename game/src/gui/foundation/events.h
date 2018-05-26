@@ -1,6 +1,7 @@
 #ifndef MENGDE_GUI_FOUNDATION_EVENTS_H_
 #define MENGDE_GUI_FOUNDATION_EVENTS_H_
 
+#include "key_event.h"
 #include "mouse_button_event.h"
 #include "mouse_motion_event.h"
 #include "mouse_wheel_event.h"
