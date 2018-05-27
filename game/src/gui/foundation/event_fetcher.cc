@@ -9,6 +9,8 @@ namespace foundation {
 bool EventFetcher::Poll() {
   SDL_Event e;
   bool has_pending_event = SDL_PollEvent(&e);
+  if (!has_pending_event) return false;
+
   switch (e.type) {
     case SDL_QUIT: {
       event_type_ = EventType::kQuit;
