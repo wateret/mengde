@@ -3,3 +3,4 @@ build/
 /sce/
 /cross/rootfs
 /.vscode
+/tools/*.pyc
