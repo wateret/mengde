@@ -11,8 +11,8 @@ class KeyEvent {
  public:
   enum class State : uint16_t { kIdle, kDown, kUp };
   enum class Mod : uint16_t { kNone = 0, kCtrl = 1, kShift = 2, kAlt = 4 };
-  enum {
-    ESC = 27,
+  enum Code {
+    kEsc = 27,
     // TODO: add more special keycodes
   };
 

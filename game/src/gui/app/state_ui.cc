@@ -353,9 +353,10 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
 }
 
 bool StateUIUnitSelected::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
     switch (e.GetCode()) {
-      case foundation::KeyEvent::ESC:
+      case foundation::KeyEvent::Code::kEsc:
         gv_->PopUIState();
         break;
       default:
@@ -841,9 +842,10 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
 }
 
 bool StateUITargeting::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
     switch (e.GetCode()) {
-      case foundation::KeyEvent::ESC:
+      case foundation::KeyEvent::Code::kEsc:
         gv_->PopUIState();
         break;
       default:
@@ -916,9 +918,10 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
 }
 
 bool StateUIAction::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
     switch (e.GetCode()) {
-      case foundation::KeyEvent::ESC:
+      case foundation::KeyEvent::Code::kEsc:
         gv_->PopUIState();
         break;
       default:
@@ -966,9 +969,10 @@ bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEven
 }
 
 bool StateUIMagicSelection::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
     switch (e.GetCode()) {
-      case foundation::KeyEvent::ESC:
+      case foundation::KeyEvent::Code::kEsc:
         gv_->PopUIState();
         break;
       default:
