@@ -33,7 +33,7 @@ For now we only have instructions for build.
 * SDL2
 * SDL2 TTF
 * Lua 5.2
-* boost >= 1.52
+* boost >= 1.55
 
 #### macOS
 
