@@ -38,6 +38,7 @@ class RootView : public View {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override;
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 
   // UI view getters
   UIViews* ui_views() { return ui_views_; }

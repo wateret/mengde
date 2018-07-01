@@ -11,6 +11,10 @@ class KeyEvent {
  public:
   enum class State : uint16_t { kIdle, kDown, kUp };
   enum class Mod : uint16_t { kNone = 0, kCtrl = 1, kShift = 2, kAlt = 4 };
+  enum Code {
+    kEsc = 27,
+    // TODO: add more special keycodes
+  };
 
  public:
   KeyEvent(const uint32_t code, const Mod mod, const State state, uint8_t repeat, uint32_t timestamp);
@@ -21,6 +25,8 @@ class KeyEvent {
   State GetState() const { return state_; }
   uint8_t GetRepeat() const { return repeat_; }
   uint32_t GetTimestamp() const { return timestamp_; }
+  bool IsKeyDown() const { return state_ == State::kDown; }
+  bool IsKeyUp() const { return state_ == State::kUp; }
 
  private:
   uint32_t code_;

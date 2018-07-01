@@ -1,6 +1,7 @@
 #ifndef MENGDE_GUI_UIFW_I_VIEW_H_
 #define MENGDE_GUI_UIFW_I_VIEW_H_
 
+#include "gui/foundation/key_event.h"
 #include "gui/foundation/mouse_button_event.h"
 #include "gui/foundation/mouse_motion_event.h"
 #include "gui/foundation/mouse_wheel_event.h"
@@ -21,6 +22,7 @@ class IView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) = 0;
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) = 0;
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) = 0;
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) = 0;
 
  private:
 };

@@ -47,6 +47,7 @@ class StateUI : public State, public IView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override { return false; }
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override { return true; }
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override { return false; }
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override { return false; }
   Base WrapBase() { return {game_, gi_, gv_}; }
 
 #ifdef DEBUG
@@ -153,6 +154,7 @@ class StateUIUnitSelected : public StateUIOperable {
   virtual void Render(Drawer*) override;
   virtual void Update() override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIUnitSelected"; }
@@ -328,6 +330,7 @@ class StateUIAction : public StateUI {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIAction"; }
 #endif
@@ -347,6 +350,7 @@ class StateUIMagicSelection : public StateUI {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIMagicSelection"; }
 #endif
@@ -368,6 +372,7 @@ class StateUITargeting : public StateUIOperable {
   virtual void Update() override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUITargeting"; }
 #endif

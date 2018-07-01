@@ -60,6 +60,13 @@ bool RootView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   return true;
 }
 
+bool RootView::OnKeyEvent(const foundation::KeyEvent& e) {
+  if (ui_views_->DelegateKeyEvent(e)) return true;
+  if (game_view_->OnKeyEvent(e)) return true;
+
+  return true;
+}
+
 void RootView::RaiseMouseOverEvent() {
   Vec2D mouse_pos;
   SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);  // FIXME Not to use SDL interface directly

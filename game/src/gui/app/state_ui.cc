@@ -352,6 +352,20 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
   return true;
 }
 
+bool StateUIUnitSelected::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
+  if (e.IsKeyUp()) {
+    switch (e.GetCode()) {
+      case foundation::KeyEvent::Code::kEsc:
+        gv_->PopUIState();
+        break;
+      default:
+        break;
+    }
+  }
+  return true;
+}
+
 // StateUIMoving
 
 StateUIMoving::StateUIMoving(StateUI::Base base, uint32_t unit_id, Vec2D dest, Flag flag, uint32_t move_id)
@@ -827,6 +841,20 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
   return true;
 }
 
+bool StateUITargeting::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
+  if (e.IsKeyUp()) {
+    switch (e.GetCode()) {
+      case foundation::KeyEvent::Code::kEsc:
+        gv_->PopUIState();
+        break;
+      default:
+        break;
+    }
+  }
+  return true;
+}
+
 bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
@@ -889,6 +917,20 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   return true;
 }
 
+bool StateUIAction::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
+  if (e.IsKeyUp()) {
+    switch (e.GetCode()) {
+      case foundation::KeyEvent::Code::kEsc:
+        gv_->PopUIState();
+        break;
+      default:
+        break;
+    }
+  }
+  return true;
+}
+
 // StateUIMagicSelection
 
 StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
@@ -922,6 +964,20 @@ void StateUIMagicSelection::Render(Drawer* drawer) {
 bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsRightButtonUp()) {
     gv_->PopUIState();
+  }
+  return true;
+}
+
+bool StateUIMagicSelection::OnKeyEvent(const foundation::KeyEvent& e) {
+  // TODO Design a way to remap the key
+  if (e.IsKeyUp()) {
+    switch (e.GetCode()) {
+      case foundation::KeyEvent::Code::kEsc:
+        gv_->PopUIState();
+        break;
+      default:
+        break;
+    }
   }
   return true;
 }
