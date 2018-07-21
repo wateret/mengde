@@ -130,10 +130,10 @@ const Cmd* CmdQueue::GetNextCmdConst() const {
 }
 
 #ifdef DEBUG
-void CmdQueue::DebugPrint() const {
+void CmdQueue::DebugPrint(Game* stage) const {
   printf("CmdQueue {\n");
   for (auto&& e : q_) {
-    e->DebugPrint();
+    e->DebugPrint(stage);
   }
   printf("}\n");
 }
@@ -141,18 +141,18 @@ void CmdQueue::DebugPrint() const {
 
 // CmdUnit
 
-CmdUnit::CmdUnit(Unit* unit) : unit_(unit) { ASSERT(unit_ != nullptr); }
+CmdUnit::CmdUnit(const boost::optional<uint32_t>& unit) : unit_(unit) { ASSERT(unit_ != boost::none); }
 
 // CmdTwoUnits
 
-CmdTwoUnits::CmdTwoUnits(Unit* atk, Unit* def) : atk_(atk), def_(def) {
-  ASSERT(atk_ != nullptr);  // def_(second unit) could be nullptr
+CmdTwoUnits::CmdTwoUnits(boost::optional<uint32_t> atk, boost::optional<uint32_t> def) : atk_(atk), def_(def) {
+  ASSERT(atk_ != boost::none);  // def_(second unit) could be none
 }
 
 #ifdef DEBUG
-void CmdTwoUnits::DebugPrint() const {
-  string atk = (atk_ == nullptr) ? "N/A" : atk_->GetId();
-  string def = (def_ == nullptr) ? "N/A" : def_->GetId();
+void CmdTwoUnits::DebugPrint(Game* stage) const {
+  string atk = (atk_ == boost::none) ? "N/A" : stage->GetUnit(atk_)->GetId();
+  string def = (def_ == boost::none) ? "N/A" : stage->GetUnit(def_)->GetId();
   printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(GetOp())], atk.c_str(), def.c_str());
 }
 #endif
@@ -161,11 +161,11 @@ void CmdTwoUnits::SwapAtkDef() { std::swap(atk_, def_); }
 
 // CmdAct
 
-CmdAct::CmdAct(Unit* atk, Unit* def) : CmdTwoUnits(atk, def) {}
+CmdAct::CmdAct(boost::optional<uint32_t> atk, boost::optional<uint32_t> def) : CmdTwoUnits(atk, def) {}
 
 // CmdStay
 
-CmdStay::CmdStay(Unit* unit) : CmdAct(unit, nullptr) {}
+CmdStay::CmdStay(boost::optional<uint32_t> unit) : CmdAct(unit, boost::none) {}
 
 unique_ptr<Cmd> CmdStay::Do(Game*) {
   // Do nothing
@@ -173,17 +173,18 @@ unique_ptr<Cmd> CmdStay::Do(Game*) {
 }
 
 // CmdEndAction
-CmdEndAction::CmdEndAction(Unit* unit) : CmdUnit(unit) {}
+CmdEndAction::CmdEndAction(boost::optional<uint32_t> unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdEndAction::Do(Game* game) {
-  unit_->EndAction();
-  game->Push(unit_->RaiseEvent(event::GeneralEvent::kActionDone));
+  auto unit = game->GetUnit(unit_);
+  unit->EndAction();
+  game->Push(unit->RaiseEvent(event::GeneralEvent::kActionDone));
   return nullptr;
 }
 
 // CmdBasicAttack
 
-CmdBasicAttack::CmdBasicAttack(Unit* atk, Unit* def, Type type)
+CmdBasicAttack::CmdBasicAttack(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type)
     : CmdAct(atk, def), type_(type), multiplier_(0), addend_(0) {
   // Either one of kActive or kCounter must be set
   ASSERT(type & Type::kActiveOrCounter);
@@ -192,32 +193,35 @@ CmdBasicAttack::CmdBasicAttack(Unit* atk, Unit* def, Type type)
 }
 
 unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
-  if (atk_->IsDead() || def_->IsDead()) return nullptr;
+  auto atk = game->GetUnit(atk_);
+  auto def = game->GetUnit(def_);
 
-  Vec2D atk_pos = atk_->GetPosition();
-  Vec2D def_pos = def_->GetPosition();
+  if (atk->IsDead() || def->IsDead()) return nullptr;
+
+  Vec2D atk_pos = atk->GetPosition();
+  Vec2D def_pos = def->GetPosition();
   Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
-  atk_->SetDirection(dir);
-  def_->SetDirection(OppositeDirection(dir));
+  atk->SetDirection(dir);
+  def->SetDirection(OppositeDirection(dir));
 
   LOG_INFO("%s(%s) '%s' -> '%s'", IsCounter() ? "CounterAttack" : "Attack", IsSecond() ? "2nd" : "1st",
-           atk_->GetId().c_str(), def_->GetId().c_str());
+           atk->GetId().c_str(), def->GetId().c_str());
 
   CmdQueue* ret = new CmdQueue();
 
   if (!IsCounter()) {
-    atk_->RaiseEvent(event::OnCmdEvent::kNormalAttack, this);
-    def_->RaiseEvent(event::OnCmdEvent::kNormalAttacked, this);
+    atk->RaiseEvent(event::OnCmdEvent::kNormalAttack, this);
+    def->RaiseEvent(event::OnCmdEvent::kNormalAttacked, this);
   } else {
-    atk_->RaiseEvent(event::OnCmdEvent::kCounterAttack, this);
-    def_->RaiseEvent(event::OnCmdEvent::kCounterAttacked, this);
+    atk->RaiseEvent(event::OnCmdEvent::kCounterAttack, this);
+    def->RaiseEvent(event::OnCmdEvent::kCounterAttacked, this);
   }
 
   // Perform and get result
-  bool success = TryBasicAttack();
+  bool success = TryBasicAttack(game);
   if (success) {
-    CmdHit::HitType hit_type = TryBasicAttackCritical() ? CmdHit::HitType::kCritical : CmdHit::HitType::kNormal;
-    int damage = ComputeDamage(game->GetMap());
+    CmdHit::HitType hit_type = TryBasicAttackCritical(game) ? CmdHit::HitType::kCritical : CmdHit::HitType::kNormal;
+    int damage = ComputeDamage(game, game->GetMap());
     if (hit_type == CmdHit::HitType::kCritical) {
       damage = damage * 3 / 2;  // 1.5x
     }
@@ -231,7 +235,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   }
 
   // Double attack
-  bool reserve_second_attack = TryBasicAttackDouble();
+  bool reserve_second_attack = TryBasicAttackDouble(game);
   if (!IsSecond() && reserve_second_attack) {
     ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk_, def_, (Type)(type_ | Type::kSecond))));
   }
@@ -240,33 +244,45 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
 
   // Counter attack
   bool is_last_attack = (reserve_second_attack == IsSecond());
-  if (is_last_attack && !IsCounter() && def_->IsInRange(atk_->GetPosition())) {
-    LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def_->GetId().c_str(), atk_->GetId().c_str());
+  if (is_last_attack && !IsCounter() && def->IsInRange(atk->GetPosition())) {
+    LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def->GetId().c_str(), atk->GetId().c_str());
     ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(def_, atk_, CmdBasicAttack::Type::kCounter)));
   }
   return unique_ptr<Cmd>(ret);
 }
 
-bool CmdBasicAttack::TryBasicAttack() {
-  int chance = Formulae::ComputeBasicAttackAccuracy(atk_, def_);
+bool CmdBasicAttack::TryBasicAttack(Game* stage) {
+  auto atk = stage->GetUnit(atk_);
+  auto def = stage->GetUnit(def_);
+
+  int chance = Formulae::ComputeBasicAttackAccuracy(atk, def);
   LOG_INFO("Chance of Hit : %d%", chance);
   return GenRandom(100) < chance;
 }
 
-bool CmdBasicAttack::TryBasicAttackCritical() {
-  int chance = Formulae::ComputeBasicAttackCritical(atk_, def_);
+bool CmdBasicAttack::TryBasicAttackCritical(Game* stage) {
+  auto atk = stage->GetUnit(atk_);
+  auto def = stage->GetUnit(def_);
+
+  int chance = Formulae::ComputeBasicAttackCritical(atk, def);
   LOG_INFO("Chance of Critical : %d%", chance);
   return GenRandom(100) < chance;
 }
 
-bool CmdBasicAttack::TryBasicAttackDouble() {
-  int chance = Formulae::ComputeBasicAttackDouble(atk_, def_);
+bool CmdBasicAttack::TryBasicAttackDouble(Game* stage) {
+  auto atk = stage->GetUnit(atk_);
+  auto def = stage->GetUnit(def_);
+
+  int chance = Formulae::ComputeBasicAttackDouble(atk, def);
   LOG_INFO("Chance of Double Attack : %d%", chance);
   return GenRandom(100) < chance;
 }
 
-int CmdBasicAttack::ComputeDamage(Map* map) {
-  int damage = Formulae::ComputeBasicAttackDamage(map, atk_, def_);
+int CmdBasicAttack::ComputeDamage(Game* stage, Map* map) {
+  auto atk = stage->GetUnit(atk_);
+  auto def = stage->GetUnit(def_);
+
+  int damage = Formulae::ComputeBasicAttackDamage(map, atk, def);
   damage += addend_;
   damage = damage * (100 + multiplier_) / 100;
   damage = std::max(damage, 0);
@@ -275,89 +291,103 @@ int CmdBasicAttack::ComputeDamage(Map* map) {
 
 // CmdMagic
 
-CmdMagic::CmdMagic(Unit* atk, Unit* def, Magic* magic) : CmdAct(atk, def), magic_(magic) {}
+CmdMagic::CmdMagic(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Magic* magic)
+    : CmdAct(atk, def), magic_(magic) {}
 
-unique_ptr<Cmd> CmdMagic::Do(Game* game) {
-  LOG_INFO("'%s' tries magic '%s' to '%s'", atk_->GetId().c_str(), magic_->GetId().c_str(), def_->GetId().c_str());
-  bool hit = magic_->TryPerform(atk_, def_);
+unique_ptr<Cmd> CmdMagic::Do(Game* stage) {
+  auto atk = stage->GetUnit(atk_);
+  auto def = stage->GetUnit(def_);
+
+  LOG_INFO("'%s' tries magic '%s' to '%s'", atk->GetId().c_str(), magic_->GetId().c_str(), def->GetId().c_str());
+  bool hit = magic_->TryPerform(atk, def);
   Cmd* ret = nullptr;
   if (hit) {
-    int damage = ComputeDamage(game->GetMap());
+    int damage = ComputeDamage(stage->GetMap(), atk, def);
     ret = new CmdHit(atk_, def_, CmdActResult::Type::kMagic, CmdHit::HitType::kNormal, magic_, damage);
   } else {
     ret = new CmdMiss(atk_, def_, CmdActResult::Type::kMagic, magic_);
   }
 
-  atk_->GainExp(def_);
+  atk->GainExp(def);
   return unique_ptr<Cmd>(ret);
 }
 
-int CmdMagic::ComputeDamage(Map* map) {
-  int damage = Formulae::ComputeMagicDamage(map, atk_, def_);
+int CmdMagic::ComputeDamage(Map* map, const Unit* atk, const Unit* def) {
+  int damage = Formulae::ComputeMagicDamage(map, atk, def);
   return damage;
 }
 
 // CmdActResult
 
-CmdActResult::CmdActResult(Unit* atk, Unit* def, Type type, Magic* magic)
+CmdActResult::CmdActResult(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, Magic* magic)
     : CmdTwoUnits(atk, def), type_(type), magic_(magic) {}
 
-CmdActResult::CmdActResult(Unit* atk, Unit* def, Type type) : CmdActResult(atk, def, type, nullptr) {
+CmdActResult::CmdActResult(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type)
+    : CmdActResult(atk, def, type, nullptr) {
   ASSERT(type == Type::kBasicAttack);
 }
 
 // CmdHit
 
-CmdHit::CmdHit(Unit* atk, Unit* def, Type type, HitType hit_type, Magic* magic, int damage)
+CmdHit::CmdHit(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, HitType hit_type, Magic* magic,
+               int damage)
     : CmdActResult(atk, def, type, magic), hit_type_(hit_type), damage_(damage) {}
 
-CmdHit::CmdHit(Unit* atk, Unit* def, Type type, HitType hit_type, int damage)
+CmdHit::CmdHit(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, HitType hit_type, int damage)
     : CmdActResult(atk, def, type), hit_type_(hit_type), damage_(damage) {}
 
-unique_ptr<Cmd> CmdHit::Do(Game*) {
+unique_ptr<Cmd> CmdHit::Do(Game* stage) {
+  auto atk = stage->GetUnit(atk_);
+  auto def = stage->GetUnit(def_);
+
   unique_ptr<Cmd> ret = nullptr;
   if (type_ == Type::kBasicAttack) {
-    const string hit_type = hit_type_ == HitType::kCritical ? "Critical" : "Normal";
-    LOG_INFO("%s does damage to %s by %d (%s)", atk_->GetId().c_str(), def_->GetId().c_str(), damage_,
-             hit_type.c_str());
-    if (!def_->DoDamage(damage_)) {  // unit is dead
+    const string hit_type = (hit_type_ == HitType::kCritical) ? "Critical" : "Normal";
+    LOG_INFO("%s does damage to %s by %d (%s)", atk->GetId().c_str(), def->GetId().c_str(), damage_, hit_type.c_str());
+
+    if (!def->DoDamage(damage_)) {  // unit is dead
       ret = unique_ptr<CmdKilled>(new CmdKilled(def_));
     }
   } else {
     ASSERT(type_ == Type::kMagic);
-    magic_->Perform(atk_, def_);
+    magic_->Perform(atk, def);
   }
   return ret;
 }
 
 // CmdMiss
 
-CmdMiss::CmdMiss(Unit* atk, Unit* def, Type type, Magic* magic) : CmdActResult(atk, def, type, magic) {}
+CmdMiss::CmdMiss(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, Magic* magic)
+    : CmdActResult(atk, def, type, magic) {}
 
-CmdMiss::CmdMiss(Unit* atk, Unit* def, Type type) : CmdActResult(atk, def, type) {}
+CmdMiss::CmdMiss(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type)
+    : CmdActResult(atk, def, type) {}
 
-unique_ptr<Cmd> CmdMiss::Do(Game*) {
-  LOG_INFO("%s misses!", atk_->GetId().c_str());
+unique_ptr<Cmd> CmdMiss::Do(Game* stage) {
+  UNUSED(stage);
+
+  LOG_INFO("%s misses!", stage->GetUnit(atk_)->GetId().c_str());
   return nullptr;
 }
 
 // CmdKilled
 
-CmdKilled::CmdKilled(Unit* unit) : CmdUnit(unit) {}
+CmdKilled::CmdKilled(boost::optional<uint32_t> unit) : CmdUnit(unit) {}
 
-unique_ptr<Cmd> CmdKilled::Do(Game* game) {
-  game->KillUnit(unit_);
+unique_ptr<Cmd> CmdKilled::Do(Game* stage) {
+  stage->KillUnit(stage->GetUnit(unit_));
   return nullptr;
 }
 
 // CmdMove
 
-CmdMove::CmdMove(Unit* unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {}
+CmdMove::CmdMove(boost::optional<uint32_t> unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {}
 
 unique_ptr<Cmd> CmdMove::Do(Game* game) {
-  LOG_INFO("Unit '%s' moved from (%d, %d) to (%d, %d)", unit_->GetId().c_str(), unit_->GetPosition().x,
-           unit_->GetPosition().y, dest_.x, dest_.y);
-  game->MoveUnit(unit_, dest_);
+  auto unit = game->GetUnit(unit_);
+  LOG_INFO("Unit '%s' moved from (%d, %d) to (%d, %d)", unit->GetId().c_str(), unit->GetPosition().x,
+           unit->GetPosition().y, dest_.x, dest_.y);
+  game->MoveUnit(unit, dest_);
   return nullptr;
 }
 
@@ -371,7 +401,8 @@ void CmdAction::SetCmdMove(unique_ptr<CmdMove> cmd) { cmd_move_ = std::move(cmd)
 
 void CmdAction::SetCmdAct(unique_ptr<CmdAct> cmd) { cmd_act_ = std::move(cmd); }
 unique_ptr<Cmd> CmdAction::Do(Game* game) {
-  Unit* doer = cmd_act_ ? cmd_act_->GetUnitAtk() : cmd_move_->GetUnit();
+  auto doer_id = cmd_act_ ? cmd_act_->GetUnitAtk() : cmd_move_->GetUnit();
+  auto doer = game->GetUnit(doer_id);
   ASSERT(doer != nullptr);
 
   unique_ptr<CmdQueue> ret(new CmdQueue());
@@ -412,7 +443,7 @@ unique_ptr<Cmd> CmdAction::Do(Game* game) {
     }
   }
 
-  ret->Append(unique_ptr<Cmd>(new CmdEndAction(doer)));
+  ret->Append(unique_ptr<Cmd>(new CmdEndAction(doer_id)));
 
   // TODO raise move event
   //      Even if it didn't move, we can just send message that we are at some position...
@@ -496,7 +527,7 @@ unique_ptr<Cmd> CmdGameEnd::Do(Game*) {
 
 // CmdSpeak
 
-CmdSpeak::CmdSpeak(Unit* unit, const string& words) : CmdUnit(unit), words_(words) {}
+CmdSpeak::CmdSpeak(boost::optional<uint32_t> unit, const string& words) : CmdUnit(unit), words_(words) {}
 
 unique_ptr<Cmd> CmdSpeak::Do(Game*) {
   // Do nothing, UI will do appropriate stuff.
@@ -505,19 +536,23 @@ unique_ptr<Cmd> CmdSpeak::Do(Game*) {
 
 // CmdRestoreHp
 
-CmdRestoreHp::CmdRestoreHp(Unit* unit, int ratio, int adder) : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
+CmdRestoreHp::CmdRestoreHp(const boost::optional<uint32_t>& unit, int ratio, int adder)
+    : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
 
-unique_ptr<Cmd> CmdRestoreHp::Do(Game*) {
-  int amount = CalcAmount();
-  unit_->RestoreHP(amount);
-  LOG_INFO("%s restores HP by %d", unit_->GetId().c_str(), amount);
+unique_ptr<Cmd> CmdRestoreHp::Do(Game* stage) {
+  auto unit = stage->GetUnit(unit_);
+  int amount = CalcAmount(stage);
+  unit->RestoreHP(amount);
+  LOG_INFO("%s restores HP by %d", unit->GetId().c_str(), amount);
   return nullptr;
 }
 
-int CmdRestoreHp::CalcAmount() const {
-  int amount = unit_->GetOriginalHpMp().hp * ratio_ / 100;
+int CmdRestoreHp::CalcAmount(Game* stage) const {
+  auto unit = stage->GetUnit(unit_);
+
+  int amount = unit->GetOriginalHpMp().hp * ratio_ / 100;
   amount += adder_;
-  return std::min(amount, unit_->GetOriginalHpMp().hp - unit_->GetCurrentHpMp().hp);
+  return std::min(amount, unit->GetOriginalHpMp().hp - unit->GetCurrentHpMp().hp);
 }
 
 }  // namespace core

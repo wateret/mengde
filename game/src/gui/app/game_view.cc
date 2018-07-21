@@ -170,18 +170,20 @@ int GameView::GetCurrentSpriteNo(int num_sprites, int frames_per_sprite) const {
   return (frame_count_ / frames_per_sprite) % num_sprites;
 }
 
-void GameView::SetSkipRender(uint32_t id, bool b) {
-  auto o = skip_render_.find(id);
+void GameView::SetSkipRender(const boost::optional<uint32_t>& id, bool b) {
+  auto o = skip_render_.find(id.get());
   bool found = (o != skip_render_.end());
   ASSERT(found != b);
   if (found) {
     skip_render_.erase(o);
   } else {
-    skip_render_.insert(id);
+    skip_render_.insert(id.get());
   }
 }
 
-bool GameView::SkipRender(uint32_t id) const { return skip_render_.find(id) != skip_render_.end(); }
+bool GameView::SkipRender(const boost::optional<uint32_t>& id) const {
+  return skip_render_.find(id.get()) != skip_render_.end();
+}
 
 }  // namespace app
 }  // namespace gui

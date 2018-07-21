@@ -28,7 +28,7 @@ GEERestoreHp::GEERestoreHp(event::GeneralEvent type, int multiplier, int addend,
     : GeneralEventEffect(type, turns_left), multiplier_(multiplier), addend_(addend) {}
 
 unique_ptr<Cmd> GEERestoreHp::OnEvent(Unit* unit) {
-  return unique_ptr<Cmd>(new CmdRestoreHp(unit, multiplier_, addend_));
+  return unique_ptr<Cmd>(new CmdRestoreHp(unit->GetUnitId(), multiplier_, addend_));
 }
 
 // OnCmdEventEffect Derivatives
@@ -43,7 +43,7 @@ void OCEEPreemptiveAttack::OnEvent(Unit* unit, CmdAct* act) {
 
   // Must check if the unit is defender to prevent from effect duplication.
   //  Applying this effect twice will swap back the attacker and defender.
-  if (act->GetUnitDef() == unit) {
+  if (act->GetUnitDef() == unit->GetUnitId()) {
     act->SwapAtkDef();
   }
 }

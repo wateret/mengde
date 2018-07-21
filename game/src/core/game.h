@@ -53,7 +53,8 @@ class Game : public IDeployHelper {
   void KillUnit(Unit*);
   bool IsValidCoords(Vec2D);
   Magic* GetMagic(const std::string&);
-  Unit* GetUnit(uint32_t);
+  Unit* GetUnit(const boost::optional<uint32_t>&);
+  const Unit* GetUnit(const boost::optional<uint32_t>&) const;
   uint32_t GetUnitId(const Unit* unit);
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
@@ -70,7 +71,7 @@ class Game : public IDeployHelper {
   void Push(unique_ptr<Cmd>);
   const Cmd* GetNextCmdConst() const;
   bool UnitInCell(Vec2D) const;
-  Unit* GetUnitInCell(Vec2D) const;
+  const Unit* GetUnitInCell(Vec2D) const;
   const Cell* GetCell(Vec2D) const;
   uint32_t GetNumEnemiesAlive();
   uint32_t GetNumOwnsAlive();

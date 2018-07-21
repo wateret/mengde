@@ -24,9 +24,9 @@ void Commander::Push(unique_ptr<Cmd> cmd) {
   cmdq_current_->Append(std::move(cmd));
 }
 
-void Commander::DebugPrint() const {
+void Commander::DebugPrint(Game* stage) const {
 #ifdef DEBUG
-  cmdq_current_->DebugPrint();
+  cmdq_current_->DebugPrint(stage);
 #endif  // DEBUG
 }
 

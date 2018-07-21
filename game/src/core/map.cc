@@ -11,7 +11,8 @@
 namespace mengde {
 namespace core {
 
-Map::Map(const vector<string>& input, const string& bitmap_path, TerrainManager* tm) : bitmap_path_(bitmap_path) {
+Map::Map(const UserInterface* ui, const vector<string>& input, const string& bitmap_path, TerrainManager* tm)
+    : ui_(ui), bitmap_path_(bitmap_path) {
   int rows = input.size();
   int cols = input[0].size();
   size_ = {cols, rows};
@@ -49,7 +50,7 @@ Cell* Map::GetCell(Vec2D v) {
 
 bool Map::UnitInCell(Vec2D c) const { return IsValidCoords(c) && grid_[c.y][c.x]->IsUnitPlaced(); }
 
-const Unit* Map::GetUnit(Vec2D c) const {
+boost::optional<uint32_t> Map::GetUnitId(Vec2D c) const {
   ASSERT(UnitInCell(c));
   return grid_[c.y][c.x]->GetUnit();
 }
@@ -66,12 +67,14 @@ Terrain* Map::GetTerrain(Vec2D c) {
 
 // Using Dijkstra Shortest Path Algorithm
 // ( O(N^2) where N is number of vertices )
-PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
+PathTree* Map::FindPath(boost::optional<uint32_t> uid, Vec2D dest) {
   static const int kDNum = 4;
   static const int kDRow[] = {0, 0, -1, 1};
   static const int kDCol[] = {-1, 1, 0, 0};
   const int N = size_.x * size_.y;
   const int kInf = 1 << 30;
+
+  const Unit* unit = ui_->GetUnit(uid);
 
   vector<int> dist(N, kInf);
   vector<bool> used(N, false);
@@ -103,7 +106,7 @@ PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
 
     Vec2D vec_current = DeserializeVec2D(current);
     used[current] = true;
-    if (dist[current] <= stat_move && !IsHostilePlaced(unit, vec_current)) {
+    if (dist[current] <= stat_move && !IsHostilePlaced(uid, vec_current)) {
       if (pathtree == nullptr) {
         pathtree = new PathTree(vec_current);
         from[current] = pathtree->GetRoot();
@@ -126,7 +129,7 @@ PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
       int new_dist = dist[current] + grid_[nr][nc]->GetMoveCost(unit->GetClassIndex());
 
       // handle ZOC
-      if (new_dist < stat_move && IsHostileAdjacent(unit, nvec) && nvec != dest) {
+      if (new_dist < stat_move && IsHostileAdjacent(uid, nvec) && nvec != dest) {
         new_dist = stat_move;
       }
 
@@ -140,48 +143,52 @@ PathTree* Map::FindPath(const Unit* unit, Vec2D dest) {
   return pathtree;
 }
 
-PathTree* Map::FindMovablePath(const Unit* unit) { return FindPath(unit, {-1, -1}); }
+PathTree* Map::FindMovablePath(boost::optional<uint32_t> uid) { return FindPath(uid, {-1, -1}); }
 
-vector<Vec2D> Map::FindPathTo(const Unit* unit, Vec2D dest) {
-  unique_ptr<PathTree> pathtree(FindPath(unit, dest));
+vector<Vec2D> Map::FindPathTo(boost::optional<uint32_t> uid, Vec2D dest) {
+  unique_ptr<PathTree> pathtree(FindPath(uid, dest));
   vector<Vec2D> path = pathtree->GetPathToRoot(dest);
   return path;
 }
 
-void Map::PlaceUnit(const Unit* unit, Vec2D c) {
+void Map::PlaceUnit(boost::optional<uint32_t> unit, Vec2D c) {
   ASSERT(IsValidCoords(c));
   ASSERT(!grid_[c.y][c.x]->IsUnitPlaced());
   grid_[c.y][c.x]->SetUnit(unit);
 }
 
 void Map::MoveUnit(Vec2D src, Vec2D dst) {
-  const Unit* unit = GetUnit(src);
+  const Unit* unit = ui_->GetUnit(src);
   EmptyCell(src);
-  PlaceUnit(unit, dst);
+  PlaceUnit(unit->GetUnitId(), dst);
 }
 
 void Map::EmptyCell(Vec2D c) { grid_[c.y][c.x]->Empty(); }
 
-bool Map::IsHostileAdjacent(const Unit* unit, Vec2D coords) const {
+bool Map::IsHostileAdjacent(boost::optional<uint32_t> uid, Vec2D coords) const {
   static const int kDNum = 5;
   static const int kDRow[] = {0, 0, 0, -1, 1};
   static const int kDCol[] = {0, -1, 1, 0, 0};
+
+  const Unit* unit = ui_->GetUnit(uid);
   for (int i = 0; i < kDNum; i++) {
     int nr = coords.y + kDRow[i];
     int nc = coords.x + kDCol[i];
     if (!IsValidCoords({nc, nr})) continue;
     Vec2D ncoords(nc, nr);
     if (UnitInCell(ncoords)) {
-      if (unit->IsHostile(GetUnit(ncoords))) return true;
+      if (unit->IsHostile(ui_->GetUnit(ncoords))) return true;
     }
   }
   return false;
 }
 
-bool Map::IsHostilePlaced(const Unit* unit, Vec2D coords) const {
+bool Map::IsHostilePlaced(boost::optional<uint32_t> uid, Vec2D coords) const {
   Cell* cell = grid_[coords.y][coords.x];
   ASSERT(cell != nullptr);
-  if (cell->IsUnitPlaced() && unit->IsHostile(cell->GetUnit())) {
+  auto unit = ui_->GetUnit(uid);
+  auto unit_in_cell = cell->GetUnit();
+  if (unit_in_cell && unit->IsHostile(ui_->GetUnit(unit_in_cell))) {
     return true;
   }
   return false;

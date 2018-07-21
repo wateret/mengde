@@ -87,8 +87,7 @@ LUA_IMPL(PushCmdMove) {
   int unit_id = lua.Pop<int>();
   Game* game = lua.Pop<Game*>();
 
-  Unit* unit = game->GetUnit(unit_id);
-  game->Push(unique_ptr<CmdMove>(new CmdMove(unit, pos)));
+  game->Push(unique_ptr<CmdMove>(new CmdMove(unit_id, pos)));
 
   return 0;
 }
@@ -99,8 +98,7 @@ LUA_IMPL(PushCmdSpeak) {
   int unit_id = lua.Pop<int>();
   Game* game = lua.Pop<Game*>();
 
-  Unit* unit = game->GetUnit(unit_id);
-  game->Push(unique_ptr<CmdSpeak>(new CmdSpeak(unit, words)));
+  game->Push(unique_ptr<CmdSpeak>(new CmdSpeak(unit_id, words)));
 
   return 0;
 }

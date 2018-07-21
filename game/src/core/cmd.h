@@ -1,6 +1,8 @@
 #ifndef MENGDE_CORE_COMMAND_H_
 #define MENGDE_CORE_COMMAND_H_
 
+#include <boost/optional.hpp>
+
 #include "unit.h"
 #include "util/common.h"
 
@@ -27,11 +29,13 @@ class Cmd {
 
 #ifdef DEBUG
   //  static string OpToString(Op op) { return kCmdOpToString[static_cast<int>(op)]; }
-  virtual void DebugPrint() const { printf("%s\n", kCmdOpToString[static_cast<int>(GetOp())]); }
+  virtual void DebugPrint(Game*) const { printf("%s\n", kCmdOpToString[static_cast<int>(GetOp())]); }
 #endif
 };
 
+//
 // CmdQueue : command queue
+//
 class CmdQueue : public Cmd {
  public:
   CmdQueue();
@@ -40,7 +44,7 @@ class CmdQueue : public Cmd {
   virtual Cmd::Op GetOp() const override { return Op::kCmdQueue; }
 
 #ifdef DEBUG
-  virtual void DebugPrint() const override;
+  virtual void DebugPrint(Game* stage) const override;
 #endif
 
  public:
@@ -58,55 +62,53 @@ class CmdQueue : public Cmd {
   deque<unique_ptr<Cmd>> q_;
 };
 
-// CmdQueue operators
-
 class CmdUnit : public Cmd {
  public:
-  CmdUnit(Unit*);
+  CmdUnit(const boost::optional<uint32_t>& uid);
   virtual unique_ptr<Cmd> Do(Game*) override = 0;
 
  public:
-  Unit* GetUnit() const { return unit_; }
+  boost::optional<uint32_t> GetUnit() const { return unit_; }
 
  protected:
-  Unit* unit_;
+  boost::optional<uint32_t> unit_;
 };
 
 class CmdTwoUnits : public Cmd {
  public:
-  CmdTwoUnits(Unit*, Unit*);
+  CmdTwoUnits(boost::optional<uint32_t>, boost::optional<uint32_t>);
   virtual unique_ptr<Cmd> Do(Game*) override = 0;
 
 #ifdef DEBUG
-  virtual void DebugPrint() const override;
+  virtual void DebugPrint(Game* stage) const override;
 #endif
 
  public:
-  Unit* GetUnitAtk() const { return atk_; }
-  Unit* GetUnitDef() const { return def_; }
+  boost::optional<uint32_t> GetUnitAtk() const { return atk_; }
+  boost::optional<uint32_t> GetUnitDef() const { return def_; }
   void SwapAtkDef();
 
  protected:
-  Unit* atk_;
-  Unit* def_;
+  boost::optional<uint32_t> atk_;
+  boost::optional<uint32_t> def_;
 };
 
 class CmdAct : public CmdTwoUnits {
  public:
-  CmdAct(Unit*, Unit*);
+  CmdAct(boost::optional<uint32_t>, boost::optional<uint32_t>);
   virtual unique_ptr<Cmd> Do(Game*) override = 0;
 };
 
 class CmdEndAction : public CmdUnit {
  public:
-  CmdEndAction(Unit*);
+  CmdEndAction(boost::optional<uint32_t>);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdEndAction; }
 };
 
 class CmdStay : public CmdAct {
  public:
-  CmdStay(Unit*);
+  CmdStay(boost::optional<uint32_t>);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdStay; }
 };
@@ -117,7 +119,7 @@ class CmdBasicAttack : public CmdAct {
   enum Type { kNone = 0x0, kActive = 0x1, kCounter = 0x2, kSecond = 0x4, kActiveOrCounter = kActive | kCounter };
 
  public:
-  CmdBasicAttack(Unit*, Unit*, Type);
+  CmdBasicAttack(boost::optional<uint32_t>, boost::optional<uint32_t>, Type);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdBasicAttack; }
 
@@ -128,10 +130,10 @@ class CmdBasicAttack : public CmdAct {
   void AddToAddend(int m) { addend_ += m; }
 
  private:
-  bool TryBasicAttack();
-  bool TryBasicAttackCritical();
-  bool TryBasicAttackDouble();
-  int ComputeDamage(Map*);
+  bool TryBasicAttack(Game* stage);
+  bool TryBasicAttackCritical(Game* stage);
+  bool TryBasicAttackDouble(Game* stage);
+  int ComputeDamage(Game* stage, Map*);
 
  private:
   Type type_;
@@ -143,13 +145,13 @@ class Magic;
 
 class CmdMagic : public CmdAct {
  public:
-  CmdMagic(Unit*, Unit*, Magic*);
+  CmdMagic(boost::optional<uint32_t>, boost::optional<uint32_t>, Magic*);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdMagic; }
   const Magic* magic() { return magic_; }
 
  private:
-  int ComputeDamage(Map*);
+  int ComputeDamage(Map*, const Unit*, const Unit*);
 
  private:
   Magic* magic_;
@@ -160,8 +162,8 @@ class CmdActResult : public CmdTwoUnits {
   enum class Type { kNone, kBasicAttack, kMagic };
 
  public:
-  CmdActResult(Unit*, Unit*, Type, Magic*);
-  CmdActResult(Unit*, Unit*, Type);
+  CmdActResult(boost::optional<uint32_t>, boost::optional<uint32_t>, Type, Magic*);
+  CmdActResult(boost::optional<uint32_t>, boost::optional<uint32_t>, Type);
   virtual unique_ptr<Cmd> Do(Game*) override = 0;
 
  public:
@@ -185,8 +187,8 @@ class CmdHit : public CmdActResult {
   };
 
  public:
-  CmdHit(Unit*, Unit*, Type, HitType, Magic*, int);
-  CmdHit(Unit*, Unit*, Type, HitType, int);
+  CmdHit(boost::optional<uint32_t>, boost::optional<uint32_t>, Type, HitType, Magic*, int);
+  CmdHit(boost::optional<uint32_t>, boost::optional<uint32_t>, Type, HitType, int);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdHit; }
 
@@ -201,22 +203,22 @@ class CmdHit : public CmdActResult {
 
 class CmdMiss : public CmdActResult {
  public:
-  CmdMiss(Unit*, Unit*, Type, Magic*);
-  CmdMiss(Unit*, Unit*, Type);
+  CmdMiss(boost::optional<uint32_t>, boost::optional<uint32_t>, Type, Magic*);
+  CmdMiss(boost::optional<uint32_t>, boost::optional<uint32_t>, Type);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdMiss; }
 };
 
 class CmdKilled : public CmdUnit {
  public:
-  CmdKilled(Unit*);
+  CmdKilled(boost::optional<uint32_t>);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdKilled; }
 };
 
 class CmdMove : public CmdUnit {
  public:
-  CmdMove(Unit*, Vec2D);
+  CmdMove(boost::optional<uint32_t>, Vec2D);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdMove; }
   Vec2D GetDest() const { return dest_; }
@@ -288,7 +290,7 @@ class CmdGameEnd : public Cmd {
 
 class CmdSpeak : public CmdUnit {
  public:
-  CmdSpeak(Unit*, const string&);
+  CmdSpeak(boost::optional<uint32_t>, const string&);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdSpeak; }
   string GetWords() const { return words_; }
@@ -299,10 +301,10 @@ class CmdSpeak : public CmdUnit {
 
 class CmdRestoreHp : public CmdUnit {
  public:
-  CmdRestoreHp(Unit*, int ratio, int adder);
+  CmdRestoreHp(const boost::optional<uint32_t>&, int ratio, int adder);
   virtual unique_ptr<Cmd> Do(Game*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdRestoreHp; }
-  int CalcAmount() const;
+  int CalcAmount(Game* stage) const;
 
  private:
   int ratio_;

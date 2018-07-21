@@ -88,44 +88,41 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     case core::Cmd::Op::kCmdHit: {
       const core::CmdHit* c = DYNAMIC_CAST_CHECK(core::CmdHit);
       if (c->IsBasicAttack()) {
-        return new StateUIAttack(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()), true,
+        return new StateUIAttack(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), true,
                                  c->GetHitType() == core::CmdHit::HitType::kCritical, c->GetDamage());
       } else {
         ASSERT(c->IsMagic());
-        return new StateUIMagic(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()),
-                                c->GetMagic(), true, c->GetDamage());
+        return new StateUIMagic(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), c->GetMagic(), true, c->GetDamage());
       }
     }
     case core::Cmd::Op::kCmdMiss: {
       const core::CmdMiss* c = DYNAMIC_CAST_CHECK(core::CmdMiss);
       if (c->IsBasicAttack()) {
-        return new StateUIAttack(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()),
-                                 false, false, 0);
+        return new StateUIAttack(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), false, false, 0);
       } else {
         ASSERT(c->IsMagic());
-        return new StateUIMagic(WrapBase(), game_->GetUnitId(c->GetUnitAtk()), game_->GetUnitId(c->GetUnitDef()),
-                                c->GetMagic(), false, 0);
+        return new StateUIMagic(WrapBase(), c->GetUnitAtk(), c->GetUnitDef(), c->GetMagic(), false, 0);
       }
     }
     case core::Cmd::Op::kCmdMove: {
       const core::CmdMove* c = DYNAMIC_CAST_CHECK(core::CmdMove);
       StateUIMoving::Flag flag = StateUIMoving::Flag::kNone;
-      if (c->GetUnit()->GetPosition() == c->GetDest()) {
+      if (gi_->GetUnit(c->GetUnit())->GetPosition() == c->GetDest()) {
         return no_state_ui;
       } else {
-        return new StateUIMoving(WrapBase(), game_->GetUnitId(c->GetUnit()) /* FIXME */, c->GetDest(), flag);
+        return new StateUIMoving(WrapBase(), c->GetUnit() /* FIXME */, c->GetDest(), flag);
       }
     }
     case core::Cmd::Op::kCmdKilled: {
       const core::CmdKilled* c = DYNAMIC_CAST_CHECK(core::CmdKilled);
-      return new StateUIKilled(WrapBase(), game_->GetUnitId(c->GetUnit()));
+      return new StateUIKilled(WrapBase(), c->GetUnit());
     }
     case core::Cmd::Op::kCmdEndTurn:
       return new StateUINextTurn(WrapBase());
 
     case core::Cmd::Op::kCmdSpeak: {
       const core::CmdSpeak* c = DYNAMIC_CAST_CHECK(core::CmdSpeak);
-      return new StateUISpeak(WrapBase(), game_->GetUnitId(c->GetUnit()) /* FIXME */, c->GetWords());
+      return new StateUISpeak(WrapBase(), c->GetUnit() /* FIXME */, c->GetWords());
     }
     case core::Cmd::Op::kCmdGameEnd: {
       const core::CmdGameEnd* c = DYNAMIC_CAST_CHECK(core::CmdGameEnd);
@@ -133,9 +130,9 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     }
     case core::Cmd::Op::kCmdRestoreHp: {
       const core::CmdRestoreHp* c = DYNAMIC_CAST_CHECK(core::CmdRestoreHp);
-      int amount = c->CalcAmount();
+      int amount = c->CalcAmount(game_);
       if (amount == 0) return no_state_ui;
-      return new StateUIUnitTooltipAnim(WrapBase(), c->GetUnit(), c->CalcAmount(), 0);
+      return new StateUIUnitTooltipAnim(WrapBase(), c->GetUnit(), amount, 0);
     }
 
     default:
@@ -238,7 +235,7 @@ void StateUIView::Update() {
   const core::Unit* unit = gi_->GetUnit(cursor_cell_);
   if (unit) {
     const core::Cell* cell = gi_->GetCell(cursor_cell_);
-    unit_tooltip_view->SetUnitTerrainInfo(cell);
+    unit_tooltip_view->SetUnitTerrainInfo(cell, unit);
     unit_tooltip_view->SetCoordsByUnitCoords(unit->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
     unit_view->SetUnit(unit);
 
@@ -298,8 +295,8 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 // StateUIUnitSelected
 
-StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, uint32_t unit_id)
-    : StateUIOperable(base), unit_id_(unit_id), moves_(gi_->QueryMoves(unit_id)) {
+StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, const boost::optional<uint32_t>& unit_id)
+    : StateUIOperable(base), unit_id_(unit_id), moves_(gi_->QueryMoves(unit_id.get())) {
   // TODO Change the way we handle temporary position (DO NOT move/restore the unit in stage_)
   const core::Unit* unit = gi_->GetUnit(unit_id_);
   origin_coords_ = unit->GetPosition();
@@ -368,11 +365,12 @@ bool StateUIUnitSelected::OnKeyEvent(const foundation::KeyEvent& e) {
 
 // StateUIMoving
 
-StateUIMoving::StateUIMoving(StateUI::Base base, uint32_t unit_id, Vec2D dest, Flag flag, uint32_t move_id)
+StateUIMoving::StateUIMoving(StateUI::Base base, const boost::optional<uint32_t>& unit_id, Vec2D dest, Flag flag,
+                             uint32_t move_id)
     : StateUI(base), unit_id_(unit_id), dest_(dest), frames_(-1), flag_(flag), move_id_(move_id) {
   //  ASSERT(flag_ != Flag::kInputActNext || !move_id); // TODO Enable this when move_id can be none
 
-  path_ = gi_->GetPath(unit_id, dest_);
+  path_ = gi_->GetPath(unit_id.get(), dest_);
   ASSERT(dest_ == path_[0]);
 }
 
@@ -430,8 +428,8 @@ void StateUIMoving::Render(Drawer* drawer) {
 
 // StateUIMagic
 
-StateUIMagic::StateUIMagic(StateUI::Base base, uint32_t atk_id, uint32_t def_id, core::Magic* magic, bool hit,
-                           int damage)
+StateUIMagic::StateUIMagic(StateUI::Base base, const boost::optional<uint32_t>& atk_id,
+                           const boost::optional<uint32_t>& def_id, core::Magic* magic, bool hit, int damage)
     : StateUI(base),
       unit_id_atk_(atk_id),
       unit_id_def_(def_id),
@@ -486,7 +484,7 @@ void StateUIMagic::Update() {
     animator_->NextFrame();
     if (animator_->DoneAnimate()) {
       if (hit_) {
-        gv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
+        gv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), unit_id_def_, -damage_, 0));
       } else {
         gv_->PopUIState();
       }
@@ -496,7 +494,8 @@ void StateUIMagic::Update() {
 
 // StateUIKilled
 
-StateUIKilled::StateUIKilled(StateUI::Base base, uint32_t unit_id) : StateUI(base), unit_id_(unit_id), frames_(0) {}
+StateUIKilled::StateUIKilled(StateUI::Base base, const boost::optional<uint32_t>& unit_id)
+    : StateUI(base), unit_id_(unit_id), frames_(0) {}
 
 void StateUIKilled::Enter() {
   gv_->SetSkipRender(unit_id_, true);
@@ -554,7 +553,8 @@ bool StateUIEmptySelected::OnMouseButtonEvent(const foundation::MouseButtonEvent
 
 // StateUIAttack
 
-StateUIAttack::StateUIAttack(StateUI::Base base, uint32_t atk_id, uint32_t def_id, bool hit, bool critical, int damage)
+StateUIAttack::StateUIAttack(StateUI::Base base, const boost::optional<uint32_t>& atk_id,
+                             const boost::optional<uint32_t>& def_id, bool hit, bool critical, int damage)
     : StateUI(base),
       unit_id_atk_(atk_id),
       unit_id_def_(def_id),
@@ -676,7 +676,7 @@ void StateUIAttack::Update() {
   frames_++;
   if (LastFrame()) {
     if (hit_) {
-      gv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), def_, -damage_, 0));
+      gv_->ChangeUIState(new StateUIUnitTooltipAnim(WrapBase(), unit_id_def_, -damage_, 0));
     } else {
       gv_->PopUIState();
     }
@@ -685,8 +685,10 @@ void StateUIAttack::Update() {
 
 // StateUIUnitTooltipAnim
 
-StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, const core::Unit* unit, int hp, int mp)
-    : StateUI(base), frames_(-1), unit_(unit), hp_(hp), mp_(mp) {
+StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, const boost::optional<uint32_t>& unit_id, int hp,
+                                               int mp)
+    : StateUI(base), frames_(-1), unit_id_(unit_id), hp_(hp), mp_(mp) {
+  auto unit = gi_->GetUnit(unit_id_);
   const core::HpMp& cur_hpmp = unit->GetCurrentHpMp();
   const core::HpMp& max_hpmp = unit->GetOriginalHpMp();
   int cur_hp = cur_hpmp.hp;
@@ -718,6 +720,8 @@ void StateUIUnitTooltipAnim::Exit() {
 }
 
 void StateUIUnitTooltipAnim::Update() {
+  auto unit = gi_->GetUnit(unit_id_);
+
   frames_++;
   if (LastFrame()) {
     gv_->PopUIState();
@@ -726,7 +730,7 @@ void StateUIUnitTooltipAnim::Update() {
   const int max_anim_frames = (kFrames - 1) * 1 / 2;
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
-  core::HpMp hpmp_mod = unit_->GetCurrentHpMp();
+  core::HpMp hpmp_mod = unit->GetCurrentHpMp();
   core::HpMp hpmp_rem = {0, 0};
   if (hp_ < 0) {
     hpmp_rem.hp = -hp_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
@@ -743,24 +747,24 @@ void StateUIUnitTooltipAnim::Update() {
     hpmp_mod.mp += mp_ * cur_anim_frames / max_anim_frames;
   }
 
-  gv_->unit_tooltip_view()->SetContents(unit_->GetId(), unit_->GetLevel(), hpmp_mod, unit_->GetOriginalHpMp(),
-                                        hpmp_rem);
-  gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit_->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
+  gv_->unit_tooltip_view()->SetContents(unit->GetId(), unit->GetLevel(), hpmp_mod, unit->GetOriginalHpMp(), hpmp_rem);
+  gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
 }
 
 void StateUIUnitTooltipAnim::Render(Drawer*) {}
 
 // StateUITargeting
 
-StateUITargeting::StateUITargeting(StateUI::Base base, uint32_t unit_id, uint32_t move_id, const string& magic_id)
+StateUITargeting::StateUITargeting(StateUI::Base base, const boost::optional<uint32_t>& unit_id, uint32_t move_id,
+                                   const string& magic_id)
     : StateUIOperable(base),
       unit_id_(unit_id),
       move_id_(move_id),
-      pos_(gi_->QueryMoves(unit_id_).Get(move_id_)),
+      pos_(gi_->QueryMoves(unit_id_.get()).Get(move_id_)),
       magic_id_(magic_id),
       is_basic_attack_(!magic_id.compare("basic_attack")),
       range_(GetRange()),
-      acts_(gi_->QueryActs(unit_id_, move_id_,
+      acts_(gi_->QueryActs(unit_id_.get(), move_id_,
                            is_basic_attack_ ? core::ActionType::kBasicAttack : core::ActionType::kMagic)) {
   Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
@@ -819,8 +823,8 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
         gv_->InitUIStateMachine();
         // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
         gv_->NextFrame([=]() {
-          gi_->PushAction(unit_id, move_id, core::ActionType::kBasicAttack, act_id);
-          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_id, move_id, act_id);
+          gi_->PushAction(unit_id.get(), move_id, core::ActionType::kBasicAttack, act_id);
+          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_id.get(), move_id, act_id);
         });
       }
     } else {
@@ -830,8 +834,8 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
         gv_->InitUIStateMachine();
         // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
         gv_->NextFrame([=]() {
-          gi_->PushAction(unit_id, move_id, core::ActionType::kMagic, act_id);
-          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, Magic ActId:%u}", unit_id, move_id, act_id);
+          gi_->PushAction(unit_id.get(), move_id, core::ActionType::kMagic, act_id);
+          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, Magic ActId:%u}", unit_id.get(), move_id, act_id);
         });
       }
     }
@@ -874,7 +878,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
       unit_tooltip_view->SetUnitAttackInfo(unit_target, accuracy, damage);
     } else {
-      unit_tooltip_view->SetUnitTerrainInfo(map->GetCell(cursor_cell));
+      unit_tooltip_view->SetUnitTerrainInfo(map->GetCell(cursor_cell), unit_target);
     }
     unit_tooltip_view->SetCoordsByUnitCoords(unit_target->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
   }
@@ -884,9 +888,9 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
 // StateUIAction
 
-StateUIAction::StateUIAction(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
+StateUIAction::StateUIAction(StateUI::Base base, const boost::optional<uint32_t>& unit_id, uint32_t move_id)
     : StateUI(base), unit_id_(unit_id), move_id_(move_id) {
-  pos_ = gi_->QueryMoves(unit_id_).Get(move_id_);
+  pos_ = gi_->QueryMoves(unit_id_.get()).Get(move_id_);
 }
 
 void StateUIAction::Enter() {
@@ -933,9 +937,10 @@ bool StateUIAction::OnKeyEvent(const foundation::KeyEvent& e) {
 
 // StateUIMagicSelection
 
-StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, uint32_t unit_id, uint32_t move_id)
+StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, const boost::optional<uint32_t>& unit_id,
+                                             uint32_t move_id)
     : StateUI(base), unit_id_(unit_id), move_id_(move_id) {
-  pos_ = gi_->QueryMoves(unit_id_).Get(move_id_);
+  pos_ = gi_->QueryMoves(unit_id_.get()).Get(move_id_);
 }
 
 void StateUIMagicSelection::Enter() {
@@ -1015,7 +1020,7 @@ void StateUINextTurn::Exit() {
 
 // StateUISpeak
 
-StateUISpeak::StateUISpeak(StateUI::Base base, uint32_t unit_id, const string& words)
+StateUISpeak::StateUISpeak(StateUI::Base base, const boost::optional<uint32_t>& unit_id, const string& words)
     : StateUI(base), unit_id_(unit_id), words_(words) {}
 
 void StateUISpeak::Enter() {

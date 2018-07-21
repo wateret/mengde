@@ -49,16 +49,20 @@ UnitTooltipView::UnitTooltipView(const Rect* frame, const core::Unit* unit)
 
 UnitTooltipView::~UnitTooltipView() {}
 
-void UnitTooltipView::SetUnitTerrainInfo(const core::Cell* cell) {
+void UnitTooltipView::SetUnitTerrainInfo(const core::Cell* cell, const core::Unit* unit) {
   ASSERT(cell->IsUnitPlaced());
 
-  const core::Unit* unit = cell->GetUnit();
   if (unit_ == unit) return;
   SetUnit(unit);
 
   string name = cell->GetTerrainName();
-  int effect = cell->GetTerrainEffectThisCell();
+
+  // TODO cell->GetTerrainEffectThisCell() is unavailable. Need another interface for this.
+  // int effect = cell->GetTerrainEffectThisCell();
+  int effect = 0;  // FIXME delete this
+
   string terrain_effect = name + " " + std::to_string(effect) + "%";
+
   tv_rgtbot_->SetText(terrain_effect);
 }
 

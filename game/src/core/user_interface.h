@@ -51,6 +51,7 @@ class AvailableActs {
   boost::optional<uint32_t> FindMagic(const string& magic_id, Vec2D pos);
 
  private:
+  Game* stage_;  // TODO Remove this
   ActionType type_;
   vector<unique_ptr<CmdAct>> acts_;
 };
@@ -67,6 +68,7 @@ class UserInterface {
 
   Unit* GetUnit(uint32_t unit_id);  // TODO Remove this and use only const version
   const Unit* GetUnit(uint32_t unit_id) const;
+  const Unit* GetUnit(boost::optional<uint32_t> unit_id) const;
   const Unit* GetUnit(Vec2D pos) const;
   const Cell* GetCell(Vec2D pos) const;
   vector<Vec2D> GetPath(uint32_t unit_id, Vec2D pos) const;

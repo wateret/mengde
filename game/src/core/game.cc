@@ -101,7 +101,7 @@ Map* Game::CreateMap() {
   for (auto e : terrain) {
     ASSERT(cols == e.size());
   }
-  return new Map(terrain, file, rc_.terrain_manager);
+  return new Map(user_interface_, terrain, file, rc_.terrain_manager);
 }
 
 Deployer* Game::CreateDeployer() {
@@ -157,7 +157,9 @@ bool Game::IsValidCoords(Vec2D c) { return map_->IsValidCoords(c); }
 
 Magic* Game::GetMagic(const std::string& id) { return rc_.magic_manager->Get(id); }
 
-Unit* Game::GetUnit(uint32_t id) { return stage_unit_manager_->Get(id); }
+Unit* Game::GetUnit(const boost::optional<uint32_t>& id) { return stage_unit_manager_->Get(id.get()); }
+
+const Unit* Game::GetUnit(const boost::optional<uint32_t>& id) const { return stage_unit_manager_->Get(id.get()); }
 
 uint32_t Game::GetUnitId(const Unit* unit) {
   // TODO The implementation is temoporary. Remove this method or write a safer implementation
@@ -213,7 +215,7 @@ vector<Vec2D> Game::FindMovablePos(Unit* unit) {
   return path_tree->GetNodeList();
 }
 
-PathTree* Game::FindMovablePath(Unit* unit) { return map_->FindMovablePath(unit); }
+PathTree* Game::FindMovablePath(Unit* unit) { return map_->FindMovablePath(unit->GetUnitId()); }
 
 bool Game::HasNext() const { return commander_->HasNext(); }
 
@@ -224,9 +226,9 @@ const Cmd* Game::GetNextCmdConst() const {
 
 bool Game::UnitInCell(Vec2D c) const { return map_->UnitInCell(c); }
 
-Unit* Game::GetUnitInCell(Vec2D c) const {
+const Unit* Game::GetUnitInCell(Vec2D c) const {
   if (!map_->UnitInCell(c)) return nullptr;
-  return const_cast<Unit*>(map_->GetUnit(c));  // TODO remove const_cast
+  return GetUnit(map_->GetUnitId(c));
 }
 
 const Cell* Game::GetCell(Vec2D c) const { return map_->GetCell(c); }
@@ -234,7 +236,7 @@ const Cell* Game::GetCell(Vec2D c) const { return map_->GetCell(c); }
 void Game::DoNext() {
   ASSERT(HasNext());
 #ifdef DEBUG
-  commander_->DebugPrint();
+  commander_->DebugPrint(this);
 #endif
   commander_->DoNext(this);
 }
@@ -284,18 +286,22 @@ uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
 
 uint32_t Game::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Force::kOwn);
-  map_->PlaceUnit(unit, pos);
+  uint32_t uid = stage_unit_manager_->Deploy(unit);
+  unit->SetUnitId(uid);
   unit->SetPosition(pos);
-  return stage_unit_manager_->Deploy(unit);
+  map_->PlaceUnit(uid, pos);
+  return uid;
 }
 
 uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
   Hero* hero = new Hero(hero_tpl, level);
   Unit* unit = new Unit(hero, force);
-  map_->PlaceUnit(unit, pos);
+  uint32_t uid = stage_unit_manager_->Deploy(unit);
+  unit->SetUnitId(uid);
   unit->SetPosition(pos);
-  return stage_unit_manager_->Deploy(unit);
+  map_->PlaceUnit(uid, pos);
+  return uid;
 }
 
 void Game::ObtainEquipment(const string& id, uint32_t amount) {

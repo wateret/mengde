@@ -34,7 +34,8 @@ MagicListView::MagicListView(const Rect& frame, core::Game* game, core::UserInte
 
 MagicListView::~MagicListView() {}
 
-void MagicListView::SetData(uint32_t unit_id, uint32_t move_id, shared_ptr<core::MagicList> magic_list) {
+void MagicListView::SetData(const boost::optional<uint32_t>& unit_id, uint32_t move_id,
+                            shared_ptr<core::MagicList> magic_list) {
   // TODO For decorators, who should remove the wrapped object? Manually managing it is too complicated
   if (lv_magics_wrap_ != nullptr) {
     this->RemoveChild(lv_magics_wrap_);

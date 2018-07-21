@@ -10,6 +10,7 @@ StageUnitManager::StageUnitManager() : units_() {}
 uint32_t StageUnitManager::Deploy(Unit* unit) {
   uint32_t unit_id = units_.size();
   units_.push_back(unit);
+  unit->SetUnitId(unit_id);
   return unit_id;
 }
 

@@ -1,6 +1,8 @@
 #ifndef MENGDE_GUI_APP_UNIT_ACTION_VIEW_H_
 #define MENGDE_GUI_APP_UNIT_ACTION_VIEW_H_
 
+#include <boost/optional.hpp>
+
 #include "gui/uifw/vertical_list_view.h"
 
 #include "common.h"
@@ -22,7 +24,7 @@ class GameView;
 class UnitActionView : public VerticalListView {
  public:
   UnitActionView(const Rect& frame, core::Game* game, core::UserInterface*, GameView* gv);
-  void SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id);
+  void SetUnitAndMoveId(const boost::optional<uint32_t>& unit_id, uint32_t move_id);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:

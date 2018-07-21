@@ -22,7 +22,7 @@ class UnitTooltipView : public CompositeView {
  public:
   UnitTooltipView(const Rect*, const core::Unit* = NULL);
   virtual ~UnitTooltipView();
-  void SetUnitTerrainInfo(const core::Cell* cell);
+  void SetUnitTerrainInfo(const core::Cell* cell, const core::Unit* unit);
   void SetUnitAttackInfo(const core::Unit*, int, int);
   void SetUnit(const core::Unit*);
   void SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max,

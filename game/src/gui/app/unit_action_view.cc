@@ -26,7 +26,7 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserIn
   AddElement(btn_stay_);
 }
 
-void UnitActionView::SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id) {
+void UnitActionView::SetUnitAndMoveId(const boost::optional<uint32_t>& unit_id, uint32_t move_id) {
   auto game = game_;
   auto gi = gi_;
   auto gv = gv_;
@@ -45,7 +45,7 @@ void UnitActionView::SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id) {
   });
   btn_stay_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gi_->PushAction(unit_id, move_id, core::ActionType::kStay, 0);
+      gi_->PushAction(unit_id.get(), move_id, core::ActionType::kStay, 0);
       gv_->InitUIStateMachine();
     }
     return true;
