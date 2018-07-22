@@ -2,6 +2,7 @@
 #define MENGDE_CORE_ID_H_
 
 #include <boost/optional.hpp>
+#include <utility>
 
 namespace mengde {
 namespace core {
@@ -10,17 +11,23 @@ template <typename T>
 class Id {
  public:
   Id() : val_{boost::none} {}
-  Id(T&& o) : val_{std::forward<T>(o)} {}
-  Id(Id<T>&& o) : val_{std::move<Id<T>>(o.val_)} {}
+  Id(T&& o) : val_{std::move(o)} {}
+  Id(const T& o) : val_{o} {}
+  Id(Id<T>&& o) : val_{std::move(o.val_)} {}
   Id(const Id<T>& o) : val_{o.val_} {}
 
   Id<T>& operator=(T&& o) {
-    val_ = std::forward<T>(o);
+    val_ = std::move(o);
+    return *this;
+  }
+
+  Id<T>& operator=(const T& o) {
+    val_ = o;
     return *this;
   }
 
   Id<T>& operator=(Id<T>&& o) {
-    val_ = std::move<Id<T>>(o.val_);
+    val_ = std::move(o.val_);
     return *this;
   }
 
@@ -44,6 +51,8 @@ class Id {
  private:
   boost::optional<T> val_;
 };
+
+using UId = Id<uint32_t>;  // Unit ID
 
 }  // namespace core
 }  // namespace mengde
