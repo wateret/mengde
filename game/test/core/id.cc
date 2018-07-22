@@ -27,6 +27,9 @@ BOOST_AUTO_TEST_CASE(UInt32) {
 
   id1 = id0;
   BOOST_CHECK(id1.IsNone());
+
+  Id<uint32_t> id2{id1};
+  BOOST_CHECK(id1 == id2);
 }
 
 BOOST_AUTO_TEST_CASE(String1) {
