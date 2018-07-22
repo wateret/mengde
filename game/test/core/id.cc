@@ -11,19 +11,21 @@ using namespace ::mengde::core;
 BOOST_AUTO_TEST_CASE(UInt32) {
   Id<uint32_t> id0;
   BOOST_CHECK(id0.IsNone());
+  BOOST_CHECK(!id0);
 
-  Id<uint32_t> id1{1};
-  BOOST_CHECK(id1 == 1);
-  BOOST_CHECK(id1 == Id<uint32_t>{1});
-  BOOST_CHECK(id1 != 2);
-  BOOST_CHECK(id1 != Id<uint32_t>{2});
+  Id<uint32_t> id1{1u};
+  BOOST_CHECK(id1 == 1u);
+  BOOST_CHECK(id1 == Id<uint32_t>{1u});
+  BOOST_CHECK(id1 != 2u);
+  BOOST_CHECK(id1 != Id<uint32_t>{2u});
+  BOOST_CHECK(id1);
 
   id1.SetNone();
   BOOST_CHECK(id1.IsNone());
 
-  id1 = 1;
-  BOOST_CHECK(id1 == 1);
-  BOOST_CHECK(id1.Value() == 1);
+  id1 = 1u;
+  BOOST_CHECK(id1 == 1u);
+  BOOST_CHECK(id1.Value() == 1u);
 
   id1 = id0;
   BOOST_CHECK(id1.IsNone());
