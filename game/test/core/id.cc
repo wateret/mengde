@@ -8,32 +8,34 @@
 
 using namespace ::mengde::core;
 
+using UInt32Id = Id<uint32_t, struct Tag_UInt32>;
+
 BOOST_AUTO_TEST_CASE(uint32_t_Constructors) {
-  Id<uint32_t> id0;
+  UInt32Id id0;
   BOOST_CHECK(id0.IsNone());
   BOOST_CHECK(!id0);
 
-  Id<uint32_t> id1{1u};
+  UInt32Id id1{1u};
   BOOST_CHECK(id1 == 1u);
-  BOOST_CHECK(id1 == Id<uint32_t>{1u});
+  BOOST_CHECK(id1 == UInt32Id{1u});
   BOOST_CHECK(id1 != 100u);
-  BOOST_CHECK(id1 != Id<uint32_t>{100u});
+  BOOST_CHECK(id1 != UInt32Id{100u});
   BOOST_CHECK(id1);
 
   uint32_t id2_val = 2u;
-  Id<uint32_t> id2{id2_val};
+  UInt32Id id2{id2_val};
   BOOST_CHECK(id2 == id2_val);
   BOOST_CHECK(id2 != id1);
 
-  Id<uint32_t> id3{Id<uint32_t>{3u}};
+  UInt32Id id3{UInt32Id{3u}};
   BOOST_CHECK(id3 == 3u);
 
-  Id<uint32_t> id4{id3};
+  UInt32Id id4{id3};
   BOOST_CHECK(id4 == id3);
 }
 
 BOOST_AUTO_TEST_CASE(uint32_t_Assignments) {
-  Id<uint32_t> id0;
+  UInt32Id id0;
 
   id0 = 0u;
   BOOST_CHECK(id0 == 0u);
@@ -42,19 +44,21 @@ BOOST_AUTO_TEST_CASE(uint32_t_Assignments) {
   id0 = val1;
   BOOST_CHECK(id0 == 1u);
 
-  id0 = Id<uint32_t>{2u};
-  BOOST_CHECK(id0 == Id<uint32_t>{2u});
+  id0 = UInt32Id{2u};
+  BOOST_CHECK(id0 == UInt32Id{2u});
   BOOST_CHECK(id0 == 2u);
 
-  Id<uint32_t> idt;
+  UInt32Id idt;
   id0 = idt;
   BOOST_CHECK(id0 == idt);
 }
 
+using StringId = Id<std::string, struct Tag_String>;
+
 BOOST_AUTO_TEST_CASE(std_string_General) {
-  Id<std::string> id0;
+  StringId id0;
   BOOST_CHECK(id0.IsNone());
 
-  Id<std::string> id1{std::string("id1")};
+  StringId id1{std::string("id1")};
   BOOST_CHECK(id1 == std::string("id1"));
 }
