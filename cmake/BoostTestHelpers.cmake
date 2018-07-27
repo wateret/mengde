@@ -22,6 +22,8 @@ function(add_executable_boost_test NAME)
         return()
     endif()
 
+    set(NAME "Test.${NAME}")
+
     # Function content begins
 
     add_executable(${NAME} ${SRCS})
