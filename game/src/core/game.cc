@@ -138,7 +138,7 @@ void Game::MoveUnit(Unit* unit, Vec2D dst) {
   unit->SetPosition(dst);
 }
 
-void Game::MoveUnit(uint32_t unit_id, Vec2D dst) { MoveUnit(GetUnit(unit_id), dst); }
+void Game::MoveUnit(const UId& uid, Vec2D dst) { MoveUnit(GetUnit(uid), dst); }
 
 void Game::KillUnit(Unit* unit) {
   map_->RemoveUnit(unit->GetPosition());
@@ -157,10 +157,14 @@ bool Game::IsValidCoords(Vec2D c) { return map_->IsValidCoords(c); }
 
 Magic* Game::GetMagic(const std::string& id) { return rc_.magic_manager->Get(id); }
 
-Unit* Game::GetUnit(const boost::optional<uint32_t>& id) { return stage_unit_manager_->Get(id.get()); }
+Unit* Game::GetUnit(const UId& id) { return stage_unit_manager_->Get(id); }
 
-const Unit* Game::GetUnit(const boost::optional<uint32_t>& id) const { return stage_unit_manager_->Get(id.get()); }
+const Unit* Game::GetUnit(const UId& id) const {
+//  LOG_DEBUG("GetUnit UID : %u", id.Value());
+  return stage_unit_manager_->Get(id);
+}
 
+/*
 uint32_t Game::GetUnitId(const Unit* unit) {
   // TODO The implementation is temoporary. Remove this method or write a safer implementation
   uint32_t id = 0;
@@ -173,6 +177,7 @@ uint32_t Game::GetUnitId(const Unit* unit) {
   });
   return id;
 }
+*/
 
 Equipment* Game::GetEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
 
@@ -286,22 +291,22 @@ uint32_t Game::GenerateOwnUnit(const string& id, Vec2D pos) {
 
 uint32_t Game::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Force::kOwn);
-  uint32_t uid = stage_unit_manager_->Deploy(unit);
-  unit->SetUnitId(uid);
+  auto uid = stage_unit_manager_->Deploy(unit);
   unit->SetPosition(pos);
   map_->PlaceUnit(uid, pos);
-  return uid;
+  ASSERT(unit->GetUnitId() == uid);
+  return uid.Value();
 }
 
 uint32_t Game::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
   Hero* hero = new Hero(hero_tpl, level);
   Unit* unit = new Unit(hero, force);
-  uint32_t uid = stage_unit_manager_->Deploy(unit);
-  unit->SetUnitId(uid);
+  auto uid = stage_unit_manager_->Deploy(unit);
   unit->SetPosition(pos);
   map_->PlaceUnit(uid, pos);
-  return uid;
+  ASSERT(unit->GetUnitId() == uid);
+  return uid.Value();
 }
 
 void Game::ObtainEquipment(const string& id, uint32_t amount) {

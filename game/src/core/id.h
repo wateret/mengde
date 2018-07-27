@@ -41,8 +41,8 @@ class Id {
   bool operator!=(const T& o) const { return !(*this == o); }
   bool operator!=(const Id<T>& o) const { return !(*this == o); }
 
-  bool operator!() { return IsNone(); }
-  operator bool() const { return !IsNone(); }
+  bool operator!() const { return IsNone(); }
+  explicit operator bool() const { return !IsNone(); }
 
   void SetNone() { val_ = boost::none; }
   bool IsNone() const { return val_ == boost::none; }

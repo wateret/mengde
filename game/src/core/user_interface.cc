@@ -10,35 +10,42 @@
 namespace mengde {
 namespace core {
 
+//
 // AvailableUnits
+//
 
 AvailableUnits::AvailableUnits(Game* stage) {
   stage->ForEachUnitIdxConst([&](uint32_t idx, const Unit* unit) {
     if (unit->GetForce() == stage->GetCurrentForce() && !unit->IsDoneAction()) {
-      LOG_DEBUG("AVAILABLEUNITS %d %d", unit->GetPosition().x, unit->GetPosition().y);
       units_.push_back(std::make_pair(idx, unit->GetPosition()));
     }
   });
 }
 
-uint32_t AvailableUnits::Get(uint32_t idx) {
+UId AvailableUnits::Get(uint32_t idx) {
   ASSERT(idx < units_.size());
   return units_[idx].first;
 }
 
+// NOTE return value is unit_key
 boost::optional<uint32_t> AvailableUnits::FindByPos(Vec2D pos) {
+  uint32_t idx = 0;
   for (auto& e : units_) {
     if (pos == e.second) {
-      return e.first;
+      return idx;
     }
+    idx++;
   }
   return boost::none;
 }
 
+//
 // AvailableMoves
+//
 
-AvailableMoves::AvailableMoves(Game* stage, uint32_t unit_id) {
-  Unit* unit = stage->GetUnit(unit_id);
+AvailableMoves::AvailableMoves(Game* stage, uint32_t unit_key) {
+  auto uid = AvailableUnits(stage).Get(unit_key);
+  Unit* unit = stage->GetUnit(uid);
   moves_ = stage->FindMovablePos(unit);
 }
 
@@ -53,20 +60,23 @@ void AvailableMoves::ForEach(const std::function<void(uint32_t, Vec2D)>& fn) {
   }
 }
 
+//
 // AvailableActs
+//
 
-AvailableActs::AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, ActionType type)
+AvailableActs::AvailableActs(Game* stage, uint32_t unit_key, uint32_t move_id, ActionType type)
     : stage_(stage), type_(type) {
-  Vec2D move_pos = AvailableMoves(stage, unit_id).Get(move_id);
+  UId uid = AvailableUnits(stage).Get(unit_key);
+  Vec2D move_pos = AvailableMoves(stage, unit_key).Get(move_id);
 
   switch (type) {
     case ActionType::kStay:
-      acts_.push_back(unique_ptr<CmdStay>(new CmdStay(unit_id)));
+      acts_.push_back(unique_ptr<CmdStay>(new CmdStay(uid)));
       break;
 
     case ActionType::kBasicAttack: {
-      auto atk_id = unit_id;
-      Unit* atk = stage->GetUnit(unit_id);
+      auto atk_id = uid;
+      Unit* atk = stage->GetUnit(uid);
       atk->GetAttackRange().ForEach(
           [&](Vec2D pos) {
             if (!stage->IsValidCoords(pos)) return;
@@ -81,8 +91,8 @@ AvailableActs::AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, Ac
     }
 
     case ActionType::kMagic: {
-      auto atk_id = unit_id;
-      Unit* atk = stage->GetUnit(unit_id);
+      auto atk_id = uid;
+      Unit* atk = stage->GetUnit(uid);
       MagicList magic_list(stage->GetMagicManager(), atk);
 
       for (int i = 0; i < magic_list.NumMagics(); i++) {
@@ -150,19 +160,17 @@ boost::optional<uint32_t> AvailableActs::FindMagic(const string& magic_id, Vec2D
 
 UserInterface::UserInterface(Game* stage) : stage_(stage) {}
 
-AvailableUnits UserInterface::QueryUnits() { return AvailableUnits(stage_); }
-
-Unit* UserInterface::GetUnit(uint32_t unit_id) { return stage_->GetUnit(unit_id); }
+AvailableUnits UserInterface::QueryUnits() const { return AvailableUnits(stage_); }
 
 const Unit* UserInterface::GetUnit(Vec2D pos) const { return stage_->GetUnitInCell(pos); }
 
-const Unit* UserInterface::GetUnit(uint32_t unit_id) const { return stage_->GetUnit(unit_id); }
+const Unit* UserInterface::GetUnit(const UId& unit_id) const { return stage_->GetUnit(unit_id); }
 
-const Unit* UserInterface::GetUnit(boost::optional<uint32_t> unit_id) const { return GetUnit(unit_id.get()); }
+const Unit* UserInterface::GetUnit(uint32_t unit_key) const  { return GetUnit(QueryUnits().Get(unit_key)); }
 
 const Cell* UserInterface::GetCell(Vec2D pos) const { return stage_->GetCell(pos); }
 
-vector<Vec2D> UserInterface::GetPath(uint32_t unit_id, Vec2D pos) const {
+vector<Vec2D> UserInterface::GetPath(const UId& unit_id, Vec2D pos) const {
   Map* map = stage_->GetMap();
   return map->FindPathTo(unit_id, pos);
 }
@@ -173,30 +181,31 @@ string UserInterface::GetMapId() const { return stage_->GetMapBitmapPath(); }
 
 bool UserInterface::HasNextCmd() const { return stage_->HasNext(); }
 
-AvailableMoves UserInterface::QueryMoves(uint32_t unit_id) { return AvailableMoves(stage_, unit_id); }
+AvailableMoves UserInterface::QueryMoves(uint32_t unit_key) { return AvailableMoves(stage_, unit_key); }
 
-AvailableActs UserInterface::QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type) {
-  return AvailableActs(stage_, unit_id, move_id, type);
+AvailableActs UserInterface::QueryActs(uint32_t unit_key, uint32_t move_id, ActionType type) {
+  return AvailableActs(stage_, unit_key, move_id, type);
 }
 
-void UserInterface::PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
-  Vec2D pos = GetMovedPosition(unit_id, move_id);
-  unique_ptr<CmdAct> act = GetActCmd(unit_id, move_id, type, act_id);
+void UserInterface::PushAction(uint32_t unit_key, uint32_t move_id, ActionType type, uint32_t act_id) {
+  UId uid = QueryUnits().Get(unit_key);
+  Vec2D pos = GetMovedPosition(unit_key, move_id);
+  unique_ptr<CmdAct> act = GetActCmd(unit_key, move_id, type, act_id);
 
   CmdAction* cmd = new CmdAction(stage_->IsUserTurn() ? CmdAction::Flag::kUserInput : CmdAction::Flag::kDecompose);
-  cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(unit_id, pos)));
+  cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(uid, pos)));
   cmd->SetCmdAct(std::move(act));
 
   stage_->Push(unique_ptr<CmdAction>(cmd));
 }
 
-Vec2D UserInterface::GetMovedPosition(uint32_t unit_id, uint32_t move_id) {
-  auto moves = QueryMoves(unit_id);
+Vec2D UserInterface::GetMovedPosition(uint32_t unit_key, uint32_t move_id) {
+  auto moves = QueryMoves(unit_key);
   return moves.Get(move_id);
 }
 
-unique_ptr<CmdAct> UserInterface::GetActCmd(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id) {
-  auto acts = QueryActs(unit_id, move_id, type);
+unique_ptr<CmdAct> UserInterface::GetActCmd(uint32_t unit_key, uint32_t move_id, ActionType type, uint32_t act_id) {
+  auto acts = QueryActs(unit_key, move_id, type);
   return acts.Get(act_id);
 }
 

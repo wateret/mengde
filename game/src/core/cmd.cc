@@ -141,18 +141,18 @@ void CmdQueue::DebugPrint(Game* stage) const {
 
 // CmdUnit
 
-CmdUnit::CmdUnit(const boost::optional<uint32_t>& unit) : unit_(unit) { ASSERT(unit_ != boost::none); }
+CmdUnit::CmdUnit(const UId& unit) : unit_(unit) { ASSERT(unit_); }
 
 // CmdTwoUnits
 
-CmdTwoUnits::CmdTwoUnits(boost::optional<uint32_t> atk, boost::optional<uint32_t> def) : atk_(atk), def_(def) {
-  ASSERT(atk_ != boost::none);  // def_(second unit) could be none
+CmdTwoUnits::CmdTwoUnits(const UId& atk, const UId& def) : atk_(atk), def_(def) {
+  ASSERT(atk_);  // def_(second unit) could be none
 }
 
 #ifdef DEBUG
 void CmdTwoUnits::DebugPrint(Game* stage) const {
-  string atk = (atk_ == boost::none) ? "N/A" : stage->GetUnit(atk_)->GetId();
-  string def = (def_ == boost::none) ? "N/A" : stage->GetUnit(def_)->GetId();
+  string atk = (!atk_) ? "N/A" : stage->GetUnit(atk_)->GetId();
+  string def = (!def_) ? "N/A" : stage->GetUnit(def_)->GetId();
   printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(GetOp())], atk.c_str(), def.c_str());
 }
 #endif
@@ -161,11 +161,11 @@ void CmdTwoUnits::SwapAtkDef() { std::swap(atk_, def_); }
 
 // CmdAct
 
-CmdAct::CmdAct(boost::optional<uint32_t> atk, boost::optional<uint32_t> def) : CmdTwoUnits(atk, def) {}
+CmdAct::CmdAct(const UId& atk, const UId& def) : CmdTwoUnits(atk, def) {}
 
 // CmdStay
 
-CmdStay::CmdStay(boost::optional<uint32_t> unit) : CmdAct(unit, boost::none) {}
+CmdStay::CmdStay(const UId& unit) : CmdAct(unit, UId{}) {}
 
 unique_ptr<Cmd> CmdStay::Do(Game*) {
   // Do nothing
@@ -173,7 +173,7 @@ unique_ptr<Cmd> CmdStay::Do(Game*) {
 }
 
 // CmdEndAction
-CmdEndAction::CmdEndAction(boost::optional<uint32_t> unit) : CmdUnit(unit) {}
+CmdEndAction::CmdEndAction(const UId& unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdEndAction::Do(Game* game) {
   auto unit = game->GetUnit(unit_);
@@ -184,7 +184,7 @@ unique_ptr<Cmd> CmdEndAction::Do(Game* game) {
 
 // CmdBasicAttack
 
-CmdBasicAttack::CmdBasicAttack(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type)
+CmdBasicAttack::CmdBasicAttack(const UId& atk, const UId& def, Type type)
     : CmdAct(atk, def), type_(type), multiplier_(0), addend_(0) {
   // Either one of kActive or kCounter must be set
   ASSERT(type & Type::kActiveOrCounter);
@@ -291,7 +291,7 @@ int CmdBasicAttack::ComputeDamage(Game* stage, Map* map) {
 
 // CmdMagic
 
-CmdMagic::CmdMagic(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Magic* magic)
+CmdMagic::CmdMagic(const UId& atk, const UId& def, Magic* magic)
     : CmdAct(atk, def), magic_(magic) {}
 
 unique_ptr<Cmd> CmdMagic::Do(Game* stage) {
@@ -319,21 +319,21 @@ int CmdMagic::ComputeDamage(Map* map, const Unit* atk, const Unit* def) {
 
 // CmdActResult
 
-CmdActResult::CmdActResult(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, Magic* magic)
+CmdActResult::CmdActResult(const UId& atk, const UId& def, Type type, Magic* magic)
     : CmdTwoUnits(atk, def), type_(type), magic_(magic) {}
 
-CmdActResult::CmdActResult(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type)
+CmdActResult::CmdActResult(const UId& atk, const UId& def, Type type)
     : CmdActResult(atk, def, type, nullptr) {
   ASSERT(type == Type::kBasicAttack);
 }
 
 // CmdHit
 
-CmdHit::CmdHit(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, HitType hit_type, Magic* magic,
+CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, Magic* magic,
                int damage)
     : CmdActResult(atk, def, type, magic), hit_type_(hit_type), damage_(damage) {}
 
-CmdHit::CmdHit(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, HitType hit_type, int damage)
+CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, int damage)
     : CmdActResult(atk, def, type), hit_type_(hit_type), damage_(damage) {}
 
 unique_ptr<Cmd> CmdHit::Do(Game* stage) {
@@ -357,10 +357,10 @@ unique_ptr<Cmd> CmdHit::Do(Game* stage) {
 
 // CmdMiss
 
-CmdMiss::CmdMiss(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type, Magic* magic)
+CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type, Magic* magic)
     : CmdActResult(atk, def, type, magic) {}
 
-CmdMiss::CmdMiss(boost::optional<uint32_t> atk, boost::optional<uint32_t> def, Type type)
+CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type)
     : CmdActResult(atk, def, type) {}
 
 unique_ptr<Cmd> CmdMiss::Do(Game* stage) {
@@ -372,7 +372,7 @@ unique_ptr<Cmd> CmdMiss::Do(Game* stage) {
 
 // CmdKilled
 
-CmdKilled::CmdKilled(boost::optional<uint32_t> unit) : CmdUnit(unit) {}
+CmdKilled::CmdKilled(const UId& unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdKilled::Do(Game* stage) {
   stage->KillUnit(stage->GetUnit(unit_));
@@ -381,7 +381,7 @@ unique_ptr<Cmd> CmdKilled::Do(Game* stage) {
 
 // CmdMove
 
-CmdMove::CmdMove(boost::optional<uint32_t> unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {}
+CmdMove::CmdMove(const UId& unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {}
 
 unique_ptr<Cmd> CmdMove::Do(Game* game) {
   auto unit = game->GetUnit(unit_);
@@ -479,14 +479,15 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
     return unique_ptr<Cmd>(new CmdEndTurn());
   }
 
-  auto unit_id = units.Get(0);
+  const auto unit_no = 0;
+  auto unit_id = units.Get(unit_no);
 
-  AvailableMoves moves = ui->QueryMoves(unit_id);
+  AvailableMoves moves = ui->QueryMoves(unit_no);
 
   bool found_target = false;
   uint32_t move_id = 0;
   moves.ForEach([&](uint32_t id, Vec2D) {
-    AvailableActs acts = ui->QueryActs(unit_id, id, ActionType::kBasicAttack);
+    AvailableActs acts = ui->QueryActs(unit_no, id, ActionType::kBasicAttack);
     if (acts.Count() > 0 && !found_target) {
       found_target = true;
       move_id = id;
@@ -494,9 +495,9 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
   });
 
   if (found_target) {
-    ui->PushAction(unit_id, move_id, ActionType::kBasicAttack, 0 /* Simply choose first one */);
+    ui->PushAction(unit_no, move_id, ActionType::kBasicAttack, 0 /* Simply choose first one */);
   } else {
-    ui->PushAction(unit_id, GenRandom(moves.Count()), ActionType::kStay, 0);
+    ui->PushAction(unit_no, GenRandom(moves.Count()), ActionType::kStay, 0);
   }
 
   return nullptr;
@@ -527,7 +528,7 @@ unique_ptr<Cmd> CmdGameEnd::Do(Game*) {
 
 // CmdSpeak
 
-CmdSpeak::CmdSpeak(boost::optional<uint32_t> unit, const string& words) : CmdUnit(unit), words_(words) {}
+CmdSpeak::CmdSpeak(const UId& unit, const string& words) : CmdUnit(unit), words_(words) {}
 
 unique_ptr<Cmd> CmdSpeak::Do(Game*) {
   // Do nothing, UI will do appropriate stuff.
@@ -536,7 +537,7 @@ unique_ptr<Cmd> CmdSpeak::Do(Game*) {
 
 // CmdRestoreHp
 
-CmdRestoreHp::CmdRestoreHp(const boost::optional<uint32_t>& unit, int ratio, int adder)
+CmdRestoreHp::CmdRestoreHp(const UId& unit, int ratio, int adder)
     : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
 
 unique_ptr<Cmd> CmdRestoreHp::Do(Game* stage) {

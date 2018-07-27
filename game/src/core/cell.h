@@ -5,6 +5,7 @@
 
 #include "terrain.h"
 #include "unit.h"
+#include "id.h"
 
 namespace mengde {
 namespace core {
@@ -13,18 +14,18 @@ class Cell {
  public:
   Cell(Terrain*);
   Terrain* GetTerrain();
-  boost::optional<uint32_t> GetUnit() const;
   int GetMoveCost(int);
   int GetTerrainEffect(int) const;
   int ApplyTerrainEffect(int, int);
   std::string GetTerrainName() const;
-  bool IsUnitPlaced() const;
-  void SetUnit(const boost::optional<uint32_t>&);
-  void Empty() { unit_ = boost::none; }
+  bool IsUnitPlaced() const { return !uid_.IsNone(); } // FIXME Why `return uid_` not work?
+  UId GetUnit() const { return uid_; }
+  void SetUnit(const UId& uid) { uid_ = uid; }
+  void Empty() { uid_.SetNone(); }
 
  private:
   Terrain* terrain_;
-  boost::optional<uint32_t> unit_;
+  UId uid_;
 };
 
 }  // namespace core

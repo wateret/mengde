@@ -4,6 +4,7 @@
 #include <unordered_set>
 
 #include "common.h"
+#include "core/id.h"
 #include "gui/uifw/view.h"
 #include "state_ui.h"
 #include "ui_views.h"  // FIXME Temporary include
@@ -91,13 +92,13 @@ class GameView : public View {
   void NextFrame(NextFrameCallback);
   void SetUIViews(UIViews* ui_views) { ui_views_ = ui_views; }
   void RaiseMouseOverEvent();
-  void SetSkipRender(const boost::optional<uint32_t>& id, bool b);
+  void SetSkipRender(const core::UId& id, bool b);
   void RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos);
 
  private:
   void RunCallbacks();
   int GetCurrentSpriteNo(int, int) const;
-  bool SkipRender(const boost::optional<uint32_t>& id) const;
+  bool SkipRender(const core::UId& id) const;
 
  private:
   core::Game* game_;  // TODO We should eventually remove this, use core::UserInterface instead.

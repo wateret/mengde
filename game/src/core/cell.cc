@@ -15,11 +15,5 @@ int Cell::ApplyTerrainEffect(int class_idx, int value) { return value * terrain_
 
 std::string Cell::GetTerrainName() const { return terrain_->GetName(); }
 
-bool Cell::IsUnitPlaced() const { return unit_ != boost::none; }
-
-boost::optional<uint32_t> Cell::GetUnit() const { return unit_; }
-
-void Cell::SetUnit(const boost::optional<uint32_t>& unit) { unit_ = unit; }
-
 }  // namespace core
 }  // namespace mengde

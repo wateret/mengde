@@ -49,13 +49,12 @@ class Game : public IDeployHelper {
   void ForEachUnitIdxConst(std::function<void(uint32_t, const Unit*)> fn) const;
   void ForEachUnit(std::function<void(Unit*)>);
   void MoveUnit(Unit*, Vec2D);
-  void MoveUnit(uint32_t unit_id, Vec2D dst);
+  void MoveUnit(const UId& uid, Vec2D dst);
   void KillUnit(Unit*);
   bool IsValidCoords(Vec2D);
   Magic* GetMagic(const std::string&);
-  Unit* GetUnit(const boost::optional<uint32_t>&);
-  const Unit* GetUnit(const boost::optional<uint32_t>&) const;
-  uint32_t GetUnitId(const Unit* unit);
+  Unit* GetUnit(const UId&);
+  const Unit* GetUnit(const UId&) const;
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
   lua::Lua* GetLuaScript() { return lua_; }

@@ -148,7 +148,7 @@ class StateUIView : public StateUIOperable {
 
 class StateUIUnitSelected : public StateUIOperable {
  public:
-  StateUIUnitSelected(StateUI::Base, const boost::optional<uint32_t>& unit_id);
+  StateUIUnitSelected(StateUI::Base, uint32_t);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -161,7 +161,7 @@ class StateUIUnitSelected : public StateUIOperable {
 #endif
 
  private:
-  boost::optional<uint32_t> unit_id_;
+  uint32_t unit_key_;
   core::AvailableMoves moves_;
   Vec2D origin_coords_;
 };
@@ -176,8 +176,8 @@ class StateUIMoving : public StateUI {
   static const int kFramesPerCell = 12;
 
  public:
-  StateUIMoving(StateUI::Base, const boost::optional<uint32_t>& unit_id, Vec2D, Flag = Flag::kInputActNext,
-                uint32_t move_id = 0);
+  StateUIMoving(StateUI::Base, uint32_t unit_key, Vec2D, uint32_t move_id = 0);
+  StateUIMoving(StateUI::Base, const core::UId& unit_id, Vec2D);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -192,7 +192,8 @@ class StateUIMoving : public StateUI {
   bool LastFrame();
 
  private:
-  boost::optional<uint32_t> unit_id_;
+  uint32_t unit_key_;
+  core::UId unit_id_;
   Vec2D dest_;
   int frames_;
   Flag flag_;
@@ -204,7 +205,7 @@ class StateUIMoving : public StateUI {
 
 class StateUIMagic : public StateUI {
  public:
-  StateUIMagic(StateUI::Base, const boost::optional<uint32_t>&, const boost::optional<uint32_t>&, core::Magic*, bool,
+  StateUIMagic(StateUI::Base, const core::UId&, const core::UId&, core::Magic*, bool,
                int);
   virtual ~StateUIMagic();
   virtual void Enter() override;
@@ -220,8 +221,8 @@ class StateUIMagic : public StateUI {
   static const int kFramesPerCut = 5;
 
  private:
-  boost::optional<uint32_t> unit_id_atk_;
-  boost::optional<uint32_t> unit_id_def_;
+  core::UId unit_id_atk_;
+  core::UId unit_id_def_;
   const core::Unit* atk_;
   const core::Unit* def_;
   core::Magic* magic_;
@@ -234,7 +235,7 @@ class StateUIMagic : public StateUI {
 
 class StateUIKilled : public StateUI {
  public:
-  StateUIKilled(StateUI::Base base, const boost::optional<uint32_t>& unit_id);
+  StateUIKilled(StateUI::Base base, const core::UId& unit_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -247,7 +248,7 @@ class StateUIKilled : public StateUI {
   static const int kStateDuration = 80;
 
  private:
-  boost::optional<uint32_t> unit_id_;
+  core::UId unit_id_;
   int frames_;
 };
 
@@ -272,7 +273,7 @@ class StateUIEmptySelected : public StateUI {
 
 class StateUIAttack : public StateUI {
  public:
-  StateUIAttack(StateUI::Base, const boost::optional<uint32_t>&, const boost::optional<uint32_t>&, bool, bool, int);
+  StateUIAttack(StateUI::Base, const core::UId&, const core::UId&, bool, bool, int);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -290,8 +291,8 @@ class StateUIAttack : public StateUI {
   bool LastFrame() { return frames_ == kNumCuts * kFramesPerCut - 1; }
 
  private:
-  boost::optional<uint32_t> unit_id_atk_;
-  boost::optional<uint32_t> unit_id_def_;
+  core::UId unit_id_atk_;
+  core::UId unit_id_def_;
   const core::Unit* atk_;
   const core::Unit* def_;
   bool hit_;
@@ -305,7 +306,7 @@ class StateUIUnitTooltipAnim : public StateUI {
   static const int kFrames = 90;
 
  public:
-  StateUIUnitTooltipAnim(StateUI::Base, const boost::optional<uint32_t>& unit, int hp, int mp);
+  StateUIUnitTooltipAnim(StateUI::Base, const core::UId& unit, int hp, int mp);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
@@ -318,7 +319,7 @@ class StateUIUnitTooltipAnim : public StateUI {
 
  private:
   int frames_;
-  boost::optional<uint32_t> unit_id_;
+  core::UId unit_id_;
   int hp_;  // Amount of hp changed
   int mp_;  // Amount of mp changed
 };
@@ -327,7 +328,7 @@ class StateUIUnitTooltipAnim : public StateUI {
 
 class StateUIAction : public StateUI {
  public:
-  StateUIAction(StateUI::Base, const boost::optional<uint32_t>& unit_id, uint32_t move_id);
+  StateUIAction(StateUI::Base, uint32_t unit_key, uint32_t move_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -338,7 +339,8 @@ class StateUIAction : public StateUI {
 #endif
 
  private:
-  boost::optional<uint32_t> unit_id_;
+  uint32_t unit_key_;
+  core::UId unit_id_;
   uint32_t move_id_;
   Vec2D pos_;
 };
@@ -347,7 +349,7 @@ class StateUIAction : public StateUI {
 
 class StateUIMagicSelection : public StateUI {
  public:
-  StateUIMagicSelection(StateUI::Base, const boost::optional<uint32_t>& unit_id, uint32_t move_id);
+  StateUIMagicSelection(StateUI::Base, uint32_t unit_key, uint32_t move_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -358,7 +360,8 @@ class StateUIMagicSelection : public StateUI {
 #endif
 
  private:
-  boost::optional<uint32_t> unit_id_;
+  uint32_t unit_key_;
+  core::UId unit_id_;
   uint32_t move_id_;
   Vec2D pos_;
 };
@@ -367,7 +370,7 @@ class StateUIMagicSelection : public StateUI {
 
 class StateUITargeting : public StateUIOperable {
  public:
-  StateUITargeting(StateUI::Base, const boost::optional<uint32_t>& unit_id, uint32_t move_id,
+  StateUITargeting(StateUI::Base, uint32_t unit_key, uint32_t move_id,
                    const string& = "basic_attack");
   virtual void Enter() override;
   virtual void Exit() override;
@@ -384,7 +387,8 @@ class StateUITargeting : public StateUIOperable {
   const core::AttackRange& GetRange();
 
  private:
-  boost::optional<uint32_t> unit_id_;
+  uint32_t unit_key_;
+  core::UId unit_id_;
   uint32_t move_id_;
   Vec2D pos_;
   string magic_id_;
@@ -412,7 +416,7 @@ class StateUINextTurn : public StateUI {
 
 class StateUISpeak : public StateUI {
  public:
-  StateUISpeak(StateUI::Base base, const boost::optional<uint32_t>& unit_id, const string& words);
+  StateUISpeak(StateUI::Base base, const core::UId& unit_id, const string& words);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Update() override;
@@ -422,7 +426,7 @@ class StateUISpeak : public StateUI {
 #endif
 
  private:
-  boost::optional<uint32_t> unit_id_;
+  core::UId unit_id_;
   string words_;
 };
 

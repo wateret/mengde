@@ -2,6 +2,7 @@
 #define MENGDE_CORE_STAGE_UNIT_MANAGER_H_
 
 #include "util/common.h"
+#include "id.h"
 
 namespace mengde {
 namespace core {
@@ -16,9 +17,9 @@ class Unit;
 class StageUnitManager {
  public:
   StageUnitManager();
-  uint32_t Deploy(Unit*);
+  UId Deploy(Unit*);
   void Kill(Unit*);
-  Unit* Get(uint32_t);
+  Unit* Get(const UId& id);
   void ForEach(function<void(Unit*)>);
   void ForEachIdxConst(function<void(uint32_t, const Unit*)> fn) const;
 

@@ -25,23 +25,23 @@ class Map {
   Cell* GetCell(int, int);
   Cell* GetCell(Vec2D);
   bool UnitInCell(Vec2D) const;
-  boost::optional<uint32_t> GetUnitId(Vec2D) const;
+  UId GetUnitId(Vec2D) const;
   Terrain* GetTerrain(Vec2D);
   int ApplyTerrainEffect(const Unit*, int);
   void EmptyCell(Vec2D);
   void MoveUnit(Vec2D, Vec2D);
   void RemoveUnit(Vec2D);
-  PathTree* FindMovablePath(const boost::optional<uint32_t>);
-  vector<Vec2D> FindPathTo(const boost::optional<uint32_t>, Vec2D);
+  PathTree* FindMovablePath(const UId&);
+  vector<Vec2D> FindPathTo(const UId&, Vec2D);
   int SerializeVec2D(Vec2D v) { return v.y * size_.x + v.x; }
   Vec2D DeserializeVec2D(int v) { return Vec2D(v % size_.x, v / size_.x); }
-  void PlaceUnit(const boost::optional<uint32_t>, Vec2D);
-  bool IsHostileAdjacent(const boost::optional<uint32_t>, Vec2D) const;
-  bool IsHostilePlaced(const boost::optional<uint32_t>, Vec2D) const;
+  void PlaceUnit(const UId&, Vec2D);
+  bool IsHostileAdjacent(const UId&, Vec2D) const;
+  bool IsHostilePlaced(const UId&, Vec2D) const;
   bool IsValidCoords(Vec2D) const;
 
  private:
-  PathTree* FindPath(const boost::optional<uint32_t>, Vec2D);
+  PathTree* FindPath(const UId&, Vec2D);
 
  private:
   const UserInterface* ui_;

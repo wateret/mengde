@@ -7,6 +7,7 @@
 #include "event_effect_list.h"
 #include "force.h"
 #include "hero.h"
+#include "id.h"
 #include "i_equipper.h"
 #include "i_event.h"
 #include "i_unit_base.h"
@@ -47,8 +48,8 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   virtual const EquipmentSet* GetEquipmentSet() const override { return equipment_set_; }
   virtual void UpdateStat() override;
 
-  void SetUnitId(const boost::optional<uint32_t>& uid) { uid_ = uid; }
-  boost::optional<uint32_t> GetUnitId() const { return uid_; }
+  void SetUnitId(const UId& uid) { uid_ = uid; }
+  UId GetUnitId() const { return uid_; }
   void AddStatModifier(StatModifier*);
   void AddEventEffect(EventEffect*);
   uint16_t GetMaxExp() { return Level::kExpLimit; }
@@ -75,7 +76,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   void ResetAction();
 
  private:
-  boost::optional<uint32_t> uid_;
+  UId uid_;
   Hero* hero_;
   EquipmentSet* equipment_set_;
   Attribute current_attr_;

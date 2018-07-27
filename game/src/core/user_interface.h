@@ -21,7 +21,7 @@ class Unit;
 class AvailableUnits {
  public:
   AvailableUnits(Game* stage);
-  uint32_t Get(uint32_t idx);
+  UId Get(uint32_t idx);
   uint32_t Count() const { return units_.size(); }
   boost::optional<uint32_t> FindByPos(Vec2D pos);
 
@@ -61,17 +61,16 @@ class UserInterface {
   UserInterface(Game* stage);
 
  public:
-  AvailableUnits QueryUnits();
-  AvailableMoves QueryMoves(uint32_t unit_id);
-  AvailableActs QueryActs(uint32_t unit_id, uint32_t move_id, ActionType type);
-  void PushAction(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
+  AvailableUnits QueryUnits() const;
+  AvailableMoves QueryMoves(uint32_t unit_key);
+  AvailableActs QueryActs(uint32_t unit_key, uint32_t move_id, ActionType type);
+  void PushAction(uint32_t unit_key, uint32_t move_id, ActionType type, uint32_t act_id);
 
-  Unit* GetUnit(uint32_t unit_id);  // TODO Remove this and use only const version
-  const Unit* GetUnit(uint32_t unit_id) const;
-  const Unit* GetUnit(boost::optional<uint32_t> unit_id) const;
+  const Unit* GetUnit(const UId& uid) const;
+  const Unit* GetUnit(uint32_t unit_key) const;
   const Unit* GetUnit(Vec2D pos) const;
   const Cell* GetCell(Vec2D pos) const;
-  vector<Vec2D> GetPath(uint32_t unit_id, Vec2D pos) const;
+  vector<Vec2D> GetPath(const UId& unit_id, Vec2D pos) const;
 
   Vec2D GetMapSize() const;
   string GetMapId() const;

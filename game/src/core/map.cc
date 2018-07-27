@@ -50,7 +50,7 @@ Cell* Map::GetCell(Vec2D v) {
 
 bool Map::UnitInCell(Vec2D c) const { return IsValidCoords(c) && grid_[c.y][c.x]->IsUnitPlaced(); }
 
-boost::optional<uint32_t> Map::GetUnitId(Vec2D c) const {
+UId Map::GetUnitId(Vec2D c) const {
   ASSERT(UnitInCell(c));
   return grid_[c.y][c.x]->GetUnit();
 }
@@ -67,7 +67,7 @@ Terrain* Map::GetTerrain(Vec2D c) {
 
 // Using Dijkstra Shortest Path Algorithm
 // ( O(N^2) where N is number of vertices )
-PathTree* Map::FindPath(boost::optional<uint32_t> uid, Vec2D dest) {
+PathTree* Map::FindPath(const UId& uid, Vec2D dest) {
   static const int kDNum = 4;
   static const int kDRow[] = {0, 0, -1, 1};
   static const int kDCol[] = {-1, 1, 0, 0};
@@ -143,29 +143,29 @@ PathTree* Map::FindPath(boost::optional<uint32_t> uid, Vec2D dest) {
   return pathtree;
 }
 
-PathTree* Map::FindMovablePath(boost::optional<uint32_t> uid) { return FindPath(uid, {-1, -1}); }
+PathTree* Map::FindMovablePath(const UId& uid) { return FindPath(uid, {-1, -1}); }
 
-vector<Vec2D> Map::FindPathTo(boost::optional<uint32_t> uid, Vec2D dest) {
+vector<Vec2D> Map::FindPathTo(const UId& uid, Vec2D dest) {
   unique_ptr<PathTree> pathtree(FindPath(uid, dest));
   vector<Vec2D> path = pathtree->GetPathToRoot(dest);
   return path;
 }
 
-void Map::PlaceUnit(boost::optional<uint32_t> unit, Vec2D c) {
+void Map::PlaceUnit(const UId& uid, Vec2D c) {
   ASSERT(IsValidCoords(c));
   ASSERT(!grid_[c.y][c.x]->IsUnitPlaced());
-  grid_[c.y][c.x]->SetUnit(unit);
+  grid_[c.y][c.x]->SetUnit(uid);
 }
 
 void Map::MoveUnit(Vec2D src, Vec2D dst) {
-  const Unit* unit = ui_->GetUnit(src);
+  auto uid = GetUnitId(src);
   EmptyCell(src);
-  PlaceUnit(unit->GetUnitId(), dst);
+  PlaceUnit(uid, dst);
 }
 
 void Map::EmptyCell(Vec2D c) { grid_[c.y][c.x]->Empty(); }
 
-bool Map::IsHostileAdjacent(boost::optional<uint32_t> uid, Vec2D coords) const {
+bool Map::IsHostileAdjacent(const UId& uid, Vec2D coords) const {
   static const int kDNum = 5;
   static const int kDRow[] = {0, 0, 0, -1, 1};
   static const int kDCol[] = {0, -1, 1, 0, 0};
@@ -183,7 +183,7 @@ bool Map::IsHostileAdjacent(boost::optional<uint32_t> uid, Vec2D coords) const {
   return false;
 }
 
-bool Map::IsHostilePlaced(boost::optional<uint32_t> uid, Vec2D coords) const {
+bool Map::IsHostilePlaced(const UId& uid, Vec2D coords) const {
   Cell* cell = grid_[coords.y][coords.x];
   ASSERT(cell != nullptr);
   auto unit = ui_->GetUnit(uid);

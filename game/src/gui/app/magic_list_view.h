@@ -2,6 +2,7 @@
 #define MENGDE_GUI_APP_MAGIC_LIST_VIEW_H_
 
 #include <boost/optional.hpp>
+#include "core/id.h"
 #include "gui/uifw/composite_view.h"
 #include "util/common.h"
 
@@ -32,7 +33,7 @@ class MagicListView : public CompositeView {
   MagicListView(const Rect&, core::Game*, core::UserInterface*, GameView*);
   ~MagicListView();
 
-  void SetData(const boost::optional<uint32_t>& unit_id, uint32_t move_id, shared_ptr<core::MagicList>);
+  void SetData(uint32_t unit_key, uint32_t move_id, shared_ptr<core::MagicList>);
 
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 

@@ -7,18 +7,19 @@ namespace core {
 
 StageUnitManager::StageUnitManager() : units_() {}
 
-uint32_t StageUnitManager::Deploy(Unit* unit) {
-  uint32_t unit_id = units_.size();
+UId StageUnitManager::Deploy(Unit* unit) {
+  UId uid{units_.size()};
   units_.push_back(unit);
-  unit->SetUnitId(unit_id);
-  return unit_id;
+  unit->SetUnitId(uid);
+  return uid;
 }
 
 void StageUnitManager::Kill(Unit* unit) { unit->Kill(); }
 
-Unit* StageUnitManager::Get(uint32_t id) {
-  ASSERT(id < units_.size());
-  return units_[id];
+Unit* StageUnitManager::Get(const UId& id) {
+  ASSERT(id);
+  ASSERT_LT(id.Value(), units_.size());
+  return units_[id.Value()];
 }
 
 void StageUnitManager::ForEach(function<void(Unit*)> fn) { std::for_each(units_.begin(), units_.end(), fn); }
