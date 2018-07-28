@@ -12,7 +12,7 @@
 namespace mengde {
 namespace core {
 
-class Game;
+class Stage;
 class Scenario;
 
 }  // namespace core

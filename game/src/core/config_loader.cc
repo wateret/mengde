@@ -107,7 +107,7 @@ ConfigLoader::ConfigLoader(const Path& filename) : lua_config_(nullptr), rc_() {
 
 ConfigLoader::~ConfigLoader() {
   // We do not delete data created by this class,
-  // we assume that corresponding Game object will do that.
+  // we assume that corresponding Stage object will do that.
 
   delete lua_config_;
 }

@@ -1,6 +1,6 @@
 #include "minimap_view.h"
 
-#include "core/game.h"
+#include "core/stage.h"
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/layout_helper.h"
@@ -11,7 +11,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-MinimapView::MinimapView(const Rect& frame, core::Game* game, Vec2D* camera_coords_ptr, Vec2D camera_size,
+MinimapView::MinimapView(const Rect& frame, core::Stage* game, Vec2D* camera_coords_ptr, Vec2D camera_size,
                          Vec2D map_size)
     : CompositeView(frame), camera_coords_ptr_(camera_coords_ptr), camera_size_(camera_size), map_size_(map_size) {
   padding(0);
@@ -35,13 +35,13 @@ void MinimapView::Update() { camera_rect_view_->SetCoords(MagnifyForMinimap(*cam
 
 Vec2D MinimapView::MagnifyForMinimap(Vec2D v) { return v * GetFrameSize() / map_size_; }
 
-MinimapUnitsView::MinimapUnitsView(const Rect& frame, core::Game* game, Vec2D map_size) : View(frame), game_(game) {
+MinimapUnitsView::MinimapUnitsView(const Rect& frame, core::Stage* game, Vec2D map_size) : View(frame), stage_(game) {
   unit_size_ = {48, 48};
   unit_size_ = unit_size_ * GetFrameSize() / map_size;
 }
 
 void MinimapUnitsView::Render(Drawer* drawer) {
-  game_->ForEachUnit([=](core::Unit* u) {
+  stage_->ForEachUnit([=](core::Unit* u) {
     switch (u->GetForce()) {
       case core::Force::kOwn:
         drawer->SetDrawColor({192, 0, 0, 255});

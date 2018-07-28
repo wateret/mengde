@@ -2,8 +2,8 @@
 
 #include "app.h"
 #include "control_view.h"
-#include "core/game.h"
 #include "core/scenario.h"
+#include "core/stage.h"
 #include "deploy_view.h"
 #include "game_view.h"
 #include "gui/uifw/drawer.h"

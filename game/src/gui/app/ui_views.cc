@@ -1,8 +1,8 @@
 #include "ui_views.h"
 
 #include "control_view.h"
-#include "core/game.h"
 #include "core/scenario.h"
+#include "core/stage.h"
 #include "deploy_view.h"
 #include "game_view.h"
 #include "gui/uifw/layout_helper.h"
@@ -22,7 +22,7 @@ namespace gui {
 namespace app {
 
 UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view) : CompositeView(rect) {
-  core::Game* game = scenario->GetGame();
+  core::Stage* game = scenario->GetGame();
 
   {  // Initialize deploy_view_
     core::Assets* assets = scenario->GetAssets();

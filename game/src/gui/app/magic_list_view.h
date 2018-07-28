@@ -11,7 +11,7 @@
 namespace mengde {
 namespace core {
 
-class Game;
+class Stage;
 class Unit;
 class UserInterface;
 class MagicList;
@@ -30,7 +30,7 @@ class MagicListView : public CompositeView {
   static const int kTitleHeight = 24;
 
  public:
-  MagicListView(const Rect&, core::Game*, core::UserInterface*, GameView*);
+  MagicListView(const Rect&, core::Stage*, core::UserInterface*, GameView*);
   ~MagicListView();
 
   void SetData(const core::UnitKey& ukey, const core::MoveKey& mkey, shared_ptr<core::MagicList>);
@@ -41,7 +41,7 @@ class MagicListView : public CompositeView {
   void Cleanup();
 
  private:
-  core::Game* game_;
+  core::Stage* stage_;
   core::UserInterface* gi_;
   GameView* gv_;
 

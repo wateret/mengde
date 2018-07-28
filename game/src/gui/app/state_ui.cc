@@ -5,11 +5,11 @@
 #include "core/attack_range.h"
 #include "core/cmd.h"
 #include "core/formulae.h"
-#include "core/game.h"
 #include "core/magic.h"
 #include "core/magic_list.h"
 #include "core/map.h"
 #include "core/path_tree.h"
+#include "core/stage.h"
 #include "core/unit.h"
 #include "core/user_interface.h"
 #include "game_view.h"
@@ -35,7 +35,7 @@ namespace app {
 
 // StateUI
 
-StateUI::StateUI(Base base) : game_(base.game), gi_(base.gi), gv_(base.gv) {}
+StateUI::StateUI(Base base) : stage_(base.game), gi_(base.gi), gv_(base.gv) {}
 
 // StateUIMain
 
@@ -50,11 +50,11 @@ void StateUIDoCmd::Enter() {
   //       Can we do the command before StateUIView?
   if (cmd_to_do_) {
     // Run reserved command run
-    ASSERT(game_->HasNext());
-    game_->DoNext();
+    ASSERT(stage_->HasNext());
+    stage_->DoNext();
     cmd_to_do_ = false;
   }
-  while (game_->HasNext()) {
+  while (stage_->HasNext()) {
     StateUI* state = GenerateNextCmdUIState();
     if (state != nullptr) {
       gv_->PushUIState(state);
@@ -63,7 +63,7 @@ void StateUIDoCmd::Enter() {
       break;
     } else {
       // If we do not have UIState for the command do it immediately
-      game_->DoNext();
+      stage_->DoNext();
     }
   }
 }
@@ -71,8 +71,8 @@ void StateUIDoCmd::Enter() {
 // Generate corresponding StateUI for next Cmd
 // Returns nullptr when no UI needed
 StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
-  ASSERT(game_->HasNext());
-  const core::Cmd* cmd = game_->GetNextCmdConst();
+  ASSERT(stage_->HasNext());
+  const core::Cmd* cmd = stage_->GetNextCmdConst();
   StateUI* no_state_ui = nullptr;
 
 #define DYNAMIC_CAST_CHECK(type)  \
@@ -129,7 +129,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     }
     case core::Cmd::Op::kCmdRestoreHp: {
       const core::CmdRestoreHp* c = DYNAMIC_CAST_CHECK(core::CmdRestoreHp);
-      int amount = c->CalcAmount(game_);
+      int amount = c->CalcAmount(stage_);
       if (amount == 0) return no_state_ui;
       return new StateUIUnitTooltipAnim(WrapBase(), c->GetUnit(), amount, 0);
     }
@@ -148,7 +148,7 @@ void StateUIDoCmd::Exit() {}
 void StateUIDoCmd::Render(Drawer*) {}
 
 void StateUIDoCmd::Update() {
-  if (!game_->HasNext()) {
+  if (!stage_->HasNext()) {
     gv_->PopUIState();
   }
 }
@@ -224,7 +224,7 @@ bool StateUIOperable::IsScrollDown() { return scroll_down_; }
 
 // StateUIView
 
-StateUIView::StateUIView(Base base) : StateUIOperable(base), units_(game_) {}
+StateUIView::StateUIView(Base base) : StateUIOperable(base), units_(stage_) {}
 
 void StateUIView::Update() {
   StateUIOperable::Update();
@@ -244,11 +244,11 @@ void StateUIView::Update() {
     unit_view->visible(false);
   }
 
-  if (game_->IsAITurn()) {
-    game_->Push(unique_ptr<core::CmdPlayAI>(new core::CmdPlayAI()));
+  if (stage_->IsAITurn()) {
+    stage_->Push(unique_ptr<core::CmdPlayAI>(new core::CmdPlayAI()));
   }
 
-  if (game_->HasNext()) {
+  if (stage_->HasNext()) {
     gv_->PushUIState(new StateUIDoCmd(WrapBase()));
   }
 }
@@ -347,7 +347,7 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
       LOG_DEBUG("Move to pos (%d, %d) / move_id : %u", pos.x, pos.y, move_id);
       gv_->PushUIState(new StateUIMoving(WrapBase(), unit_key_, pos, core::MoveKey{move_id}));
     } else {
-      //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
+      //      gv_->ChangeStateUI(new StateUIView(stage_, gv_));
     }
   } else if (e.IsRightButtonUp()) {
     gv_->PopUIState();
@@ -548,7 +548,7 @@ void StateUIKilled::Update() {
 StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords) : StateUI(base), coords_(coords) {}
 
 void StateUIEmptySelected::Enter() {
-  core::Map* map = game_->GetMap();
+  core::Map* map = stage_->GetMap();
   std::string name = map->GetTerrain(coords_)->GetName();
   gv_->terrain_info_view()->SetText(name);
   gv_->terrain_info_view()->visible(true);
@@ -792,7 +792,7 @@ const core::AttackRange& StateUITargeting::GetRange() {
   if (is_basic_attack_) {
     return gi_->GetUnit(unit_id_)->GetAttackRange();
   } else {
-    core::Magic* magic = game_->GetMagic(magic_id_);
+    core::Magic* magic = stage_->GetMagic(magic_id_);
     return magic->GetRange();
   }
 }
@@ -814,7 +814,7 @@ void StateUITargeting::Render(Drawer* drawer) {
   // Show Attack Range
   range_.ForEach(
       [&](Vec2D d) {
-        if (!game_->IsValidCoords(d)) return;
+        if (!stage_->IsValidCoords(d)) return;
         drawer->SetDrawColor(Color(255, 64, 64, 128));
         drawer->FillCell(d);
       },
@@ -880,7 +880,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
   StateUIOperable::OnMouseMotionEvent(e);
 
   auto unit_tooltip_view = gv_->unit_tooltip_view();
-  core::Map* map = game_->GetMap();
+  core::Map* map = stage_->GetMap();
   Vec2D cursor_cell = GetCursorCell();
   const core::Unit* unit_target = gi_->GetUnit(cursor_cell);
   const core::Unit* unit = gi_->GetUnit(unit_key_);
@@ -964,7 +964,7 @@ void StateUIMagicSelection::Enter() {
   const core::Unit* unit = gi_->GetUnit(unit_key_);
 
   // TODO magic_list should not be acquired here (Move it to UserInterface)
-  auto magic_list = std::make_shared<core::MagicList>(game_->GetMagicManager(), unit);
+  auto magic_list = std::make_shared<core::MagicList>(stage_->GetMagicManager(), unit);
   MagicListView* mlv = gv_->magic_list_view();
   mlv->SetData(unit_key_, move_id_, magic_list);
   mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(), pos_));
@@ -1027,7 +1027,7 @@ void StateUINextTurn::Exit() {
   gv_->dialog_view()->visible(false);
 
   GameView* gv = gv_;
-  core::Game* game = game_;
+  core::Stage* game = stage_;
   gv_->NextFrame([=]() {
     ControlView* control_view = gv->control_view();
     control_view->SetTurnText(game->GetTurnCurrent(), game->GetTurnLimit());

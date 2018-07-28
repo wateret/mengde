@@ -8,7 +8,7 @@
 
 namespace mengde {
 namespace core {
-class Game;
+class Stage;
 }
 }  // namespace mengde
 
@@ -20,7 +20,7 @@ class MinimapUnitsView;
 
 class MinimapView : public CompositeView {
  public:
-  MinimapView(const Rect&, core::Game*, Vec2D*, Vec2D, Vec2D);
+  MinimapView(const Rect&, core::Stage*, Vec2D*, Vec2D, Vec2D);
   virtual void Update() override;
 
  private:
@@ -37,11 +37,11 @@ class MinimapView : public CompositeView {
 
 class MinimapUnitsView : public View {
  public:
-  MinimapUnitsView(const Rect&, core::Game*, Vec2D);
+  MinimapUnitsView(const Rect&, core::Stage*, Vec2D);
   virtual void Render(Drawer*) override;
 
  private:
-  core::Game* game_;
+  core::Stage* stage_;
   Vec2D unit_size_;
 };
 

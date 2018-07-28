@@ -1,8 +1,8 @@
 #include "lua_api.h"
 
 #include "cmd.h"
-#include "game.h"
 #include "lua/lua.h"
+#include "stage.h"
 
 using namespace mengde::core;
 
@@ -17,7 +17,7 @@ LUA_IMPL(AppointHero) {
   lua::Lua lua(L);
   uint16_t level = lua.Pop<uint16_t>();
   string id = lua.Pop<string>();
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   game->AppointHero(id, level);
 
@@ -28,7 +28,7 @@ LUA_IMPL(GenerateOwnUnit) {
   lua::Lua lua(L);
   Vec2D pos = GetVec2DFromLua(&lua);
   string id = lua.Pop<string>();
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   int unit_no = game->GenerateOwnUnit(id, pos);
 
@@ -42,7 +42,7 @@ LUA_IMPL(GenerateUnit) {
   Force force = (Force)lua.Pop<int>();
   uint16_t level = lua.Pop<uint16_t>();
   string id = lua.Pop<string>();
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   int unit_no = game->GenerateUnit(id, level, force, pos);
 
@@ -54,7 +54,7 @@ LUA_IMPL(ObtainEquipment) {
   lua::Lua lua(L);
   uint16_t amount = lua.Pop<uint16_t>();
   string id = lua.Pop<string>();
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   game->ObtainEquipment(id, amount);
 
@@ -63,7 +63,7 @@ LUA_IMPL(ObtainEquipment) {
 
 LUA_IMPL(GetNumEnemiesAlive) {
   lua::Lua lua(L);
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   uint32_t ret = game->GetNumEnemiesAlive();
 
@@ -73,7 +73,7 @@ LUA_IMPL(GetNumEnemiesAlive) {
 
 LUA_IMPL(GetNumOwnsAlive) {
   lua::Lua lua(L);
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   uint32_t ret = game->GetNumOwnsAlive();
 
@@ -85,7 +85,7 @@ LUA_IMPL(PushCmdMove) {
   lua::Lua lua(L);
   Vec2D pos = GetVec2DFromLua(&lua);
   int unit_id = lua.Pop<int>();
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   game->Push(unique_ptr<CmdMove>(new CmdMove(unit_id, pos)));
 
@@ -96,7 +96,7 @@ LUA_IMPL(PushCmdSpeak) {
   lua::Lua lua(L);
   string words = lua.Pop<string>();
   int unit_id = lua.Pop<int>();
-  Game* game = lua.Pop<Game*>();
+  Stage* game = lua.Pop<Stage*>();
 
   game->Push(unique_ptr<CmdSpeak>(new CmdSpeak(unit_id, words)));
 

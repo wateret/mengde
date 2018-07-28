@@ -13,14 +13,14 @@ namespace mengde {
 namespace core {
 
 class Cell;
-class Game;
+class Stage;
 class PathTree;
 class Scenario;
 class Unit;
 
 class AvailableUnits {
  public:
-  AvailableUnits(Game* stage);
+  AvailableUnits(Stage* stage);
   UId Get(const UnitKey& ukey);
   uint32_t Count() const { return units_.size(); }
   UnitKey FindByPos(Vec2D pos);
@@ -31,7 +31,7 @@ class AvailableUnits {
 
 class AvailableMoves {
  public:
-  AvailableMoves(Game* stage, const UnitKey& ukey);
+  AvailableMoves(Stage* stage, const UnitKey& ukey);
   Vec2D Get(const MoveKey& mkey);
   uint32_t Count() const { return moves_.size(); }
   void ForEach(const std::function<void(const MoveKey&, Vec2D)>& fn);
@@ -43,7 +43,7 @@ class AvailableMoves {
 
 class AvailableActs {
  public:
-  AvailableActs(Game* stage, const UnitKey& unit_id, const MoveKey& move_id, ActionType type);
+  AvailableActs(Stage* stage, const UnitKey& unit_id, const MoveKey& move_id, ActionType type);
   ActionType type() { return type_; }
   unique_ptr<CmdAct> Get(const ActKey& akey);
   uint32_t Count() const { return acts_.size(); }
@@ -51,14 +51,14 @@ class AvailableActs {
   ActKey FindMagic(const string& magic_id, Vec2D pos);
 
  private:
-  Game* stage_;  // TODO Remove this
+  Stage* stage_;  // TODO Remove this
   ActionType type_;
   vector<unique_ptr<CmdAct>> acts_;
 };
 
 class UserInterface {
  public:
-  UserInterface(Game* stage);
+  UserInterface(Stage* stage);
 
  public:
   AvailableUnits QueryUnits() const;
@@ -84,7 +84,7 @@ class UserInterface {
   unique_ptr<CmdAct> GetActCmd(const UnitKey& unit_id, const MoveKey& move_id, ActionType type, const ActKey& act_id);
 
  private:
-  Game* stage_;
+  Stage* stage_;
 };
 
 }  // namespace core

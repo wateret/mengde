@@ -14,9 +14,9 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-MagicListView::MagicListView(const Rect& frame, core::Game* game, core::UserInterface* gi, GameView* gv)
+MagicListView::MagicListView(const Rect& frame, core::Stage* game, core::UserInterface* gi, GameView* gv)
     : CompositeView(frame),
-      game_(game),
+      stage_(game),
       gi_(gi),
       gv_(gv),
       item_height_(24),
@@ -61,7 +61,7 @@ void MagicListView::SetData(const core::UnitKey& ukey, const core::MoveKey& mkey
     string name = magic->GetId();
 
     // Variables to be captured for callback
-    StateUI::Base base = {game_, gi_, gv_};
+    StateUI::Base base = {stage_, gi_, gv_};
 
     Rect button_frame({0, 0}, {frame_size.x, item_height_});
     ButtonView* button = new ButtonView(&button_frame, name);

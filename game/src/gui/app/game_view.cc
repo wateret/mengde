@@ -3,7 +3,7 @@
 #include "app.h"
 #include "config.h"
 #include "core/assets.h"
-#include "core/game.h"
+#include "core/stage.h"
 #include "core/unit.h"
 #include "core/user_interface.h"
 #include "gui/foundation/texture_manager.h"
@@ -15,9 +15,9 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-GameView::GameView(const Rect& frame, core::Game* game, App* app)
+GameView::GameView(const Rect& frame, core::Stage* game, App* app)
     : View(frame),
-      game_(game),
+      stage_(game),
       gi_(game->user_interface()),
       app_(app),
       ui_state_machine_(),
@@ -33,7 +33,7 @@ GameView::GameView(const Rect& frame, core::Game* game, App* app)
   max_camera_coords_ = kMapSize - kWindowSize;
 
   ui_state_machine_.InitState();
-  ui_state_machine_.PushState(new StateUIView({game_, gi_, this}));
+  ui_state_machine_.PushState(new StateUIView({stage_, gi_, this}));
 }
 
 GameView::~GameView() { delete gi_; }
@@ -121,9 +121,9 @@ void GameView::PopUIState() {
 void GameView::InitUIStateMachine() {
   NextFrame([this]() {
     ui_state_machine_.InitState();
-    ui_state_machine_.PushState(new StateUIView({game_, gi_, this}));
+    ui_state_machine_.PushState(new StateUIView({stage_, gi_, this}));
     if (gi_->HasNextCmd()) {
-      ui_state_machine_.PushState(new StateUIDoCmd({game_, gi_, this}));
+      ui_state_machine_.PushState(new StateUIDoCmd({stage_, gi_, this}));
     }
   });
 }

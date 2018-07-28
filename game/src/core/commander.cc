@@ -13,7 +13,7 @@ const Cmd* Commander::GetNextCmdConst() const {
   return cmdq_current_->GetNextCmdConst();
 }
 
-void Commander::DoNext(Game* game) {
+void Commander::DoNext(Stage* game) {
   ASSERT(HasNext());
   auto cmd_done = cmdq_current_->Do(game);
   cmdq_history_->Append(std::move(cmd_done));
@@ -24,7 +24,7 @@ void Commander::Push(unique_ptr<Cmd> cmd) {
   cmdq_current_->Append(std::move(cmd));
 }
 
-void Commander::DebugPrint(Game* stage) const {
+void Commander::DebugPrint(Stage* stage) const {
 #ifdef DEBUG
   cmdq_current_->DebugPrint(stage);
 #endif  // DEBUG

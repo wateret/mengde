@@ -2,7 +2,7 @@
 
 #include "config.h"
 #include "core/cmd.h"
-#include "core/game.h"
+#include "core/stage.h"
 #include "game_view.h"
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/text_view.h"
@@ -12,13 +12,13 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-ControlView::ControlView(const Rect& rect, core::Game* game, GameView* gv) : CompositeView(rect), game_(game) {
+ControlView::ControlView(const Rect& rect, core::Stage* game, GameView* gv) : CompositeView(rect), stage_(game) {
   bg_color(COLOR("darkgray", 192));
   padding(8);
 
   Rect frame_tv_turn = {0, 0, 100, 22};
   tv_turn_ = new TextView(frame_tv_turn);
-  SetTurnText(game_->GetTurnCurrent(), game_->GetTurnLimit());
+  SetTurnText(stage_->GetTurnCurrent(), stage_->GetTurnLimit());
   AddChild(tv_turn_);
 
   Rect button_coords = {0, 30, 100, 20};
@@ -27,7 +27,7 @@ ControlView::ControlView(const Rect& rect, core::Game* game, GameView* gv) : Com
     if (e.IsLeftButtonUp()) {
       // TODO Handle clicked twice in a frame
       this->SetEndTurnVisible(false);
-      this->game_->Push(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
+      this->stage_->Push(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
       gv->InitUIStateMachine();
       return true;
     }
@@ -35,7 +35,7 @@ ControlView::ControlView(const Rect& rect, core::Game* game, GameView* gv) : Com
   });
   AddChild(btn_end_turn_);
 
-  const Vec2D map_size = game_->GetMapSize() * config::kBlockSize;
+  const Vec2D map_size = stage_->GetMapSize() * config::kBlockSize;
 
   const Vec2D minimap_max_size(184, 120);
   const Vec2D minimap_size = LayoutHelper::CalcFittedSize(map_size, minimap_max_size);

@@ -1,7 +1,7 @@
 #include "unit_action_view.h"
 
 #include "core/cmd.h"
-#include "core/game.h"
+#include "core/stage.h"
 #include "game_view.h"
 #include "gui/uifw/button_view.h"
 #include "state_ui.h"
@@ -10,8 +10,8 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserInterface* gi, GameView* gv)
-    : VerticalListView(frame), game_(game), gi_(gi), gv_(gv) {
+UnitActionView::UnitActionView(const Rect& frame, core::Stage* game, core::UserInterface* gi, GameView* gv)
+    : VerticalListView(frame), stage_(game), gi_(gi), gv_(gv) {
   bg_color(COLOR("darkgray", 212));
   padding(8);
   Rect btn_frame = GetActualFrame();
@@ -27,7 +27,7 @@ UnitActionView::UnitActionView(const Rect& frame, core::Game* game, core::UserIn
 }
 
 void UnitActionView::SetUnitAndMoveKey(const core::UnitKey& ukey, const core::MoveKey& mkey) {
-  auto game = game_;
+  auto game = stage_;
   auto gi = gi_;
   auto gv = gv_;
 

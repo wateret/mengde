@@ -9,7 +9,7 @@ namespace mengde {
 namespace core {
 
 class Assets;
-class Game;
+class Stage;
 class Unit;
 class Scenario;
 struct HpMp;

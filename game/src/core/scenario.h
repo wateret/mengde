@@ -8,7 +8,7 @@ namespace mengde {
 namespace core {
 
 class Assets;
-class Game;
+class Stage;
 
 // Scenario data globally used during the entire scenario
 
@@ -18,14 +18,14 @@ class Scenario {
   ~Scenario();
   const ResourceManagers& GetResourceManagers() { return rc_; }
   Assets* GetAssets() { return assets_; }
-  Game* GetGame() { return game_; }
+  Stage* GetGame() { return stage_; }
 
  public:
   void NextStage();
 
  private:
-  Game* NewGame(const string& stage_id);
-  Game* LoadGame(const string& save_file_path);
+  Stage* NewGame(const string& stage_id);
+  Stage* LoadGame(const string& save_file_path);
 
  private:
   string scenario_id_;
@@ -33,7 +33,7 @@ class Scenario {
   uint32_t stage_no_;
   ResourceManagers rc_;
   Assets* assets_;
-  Game* game_;
+  Stage* stage_;
 };
 
 }  // namespace core

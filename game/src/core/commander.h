@@ -8,17 +8,17 @@ namespace core {
 
 class Cmd;
 class CmdQueue;
-class Game;
+class Stage;
 
 class Commander {
  public:
   Commander();
   bool HasNext() const;
   const Cmd* GetNextCmdConst() const;
-  void DoNext(Game*);
-  //  void UnDo(Game*);
+  void DoNext(Stage*);
+  //  void UnDo(Stage*);
   void Push(unique_ptr<Cmd>);
-  void DebugPrint(Game* stage) const;
+  void DebugPrint(Stage* stage) const;
 
  private:
   unique_ptr<CmdQueue> cmdq_current_;

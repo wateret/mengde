@@ -31,13 +31,13 @@ class StageUnitManager;
 class UnitSupervisor;
 class UserInterface;
 
-class Game : public IDeployHelper {
+class Stage : public IDeployHelper {
  public:
   enum class Status { kNone, kDeploying, kUndecided, kVictory, kDefeat };
 
  public:
-  Game(const ResourceManagers&, Assets*, const Path&);
-  ~Game();
+  Stage(const ResourceManagers&, Assets*, const Path&);
+  ~Stage();
 
  public:
   // Map related //

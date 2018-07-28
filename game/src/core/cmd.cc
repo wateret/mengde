@@ -4,9 +4,9 @@
 
 #include "core/path_tree.h"
 #include "formulae.h"
-#include "game.h"
 #include "lua/lua.h"
 #include "magic.h"
+#include "stage.h"
 #include "user_interface.h"
 
 namespace mengde {
@@ -23,7 +23,7 @@ CmdQueue::CmdQueue() : Cmd() {}
 
 CmdQueue::~CmdQueue() {}
 
-unique_ptr<Cmd> CmdQueue::Do(Game* game) {
+unique_ptr<Cmd> CmdQueue::Do(Stage* game) {
   ASSERT(!IsEmpty());
 
   /*
@@ -51,13 +51,13 @@ unique_ptr<Cmd> CmdQueue::Do(Game* game) {
 
   if (game->CheckStatus()) {
     switch (game->GetStatus()) {
-      case Game::Status::kUndecided:
+      case Stage::Status::kUndecided:
         LOG_DEBUG("Undecided!");
         break;
-      case Game::Status::kDefeat:
+      case Stage::Status::kDefeat:
         LOG_DEBUG("Defeat!");
         break;
-      case Game::Status::kVictory:
+      case Stage::Status::kVictory:
         LOG_DEBUG("Victory!");
         game->Push(unique_ptr<CmdGameVictory>(new CmdGameVictory()));
         break;
@@ -130,7 +130,7 @@ const Cmd* CmdQueue::GetNextCmdConst() const {
 }
 
 #ifdef DEBUG
-void CmdQueue::DebugPrint(Game* stage) const {
+void CmdQueue::DebugPrint(Stage* stage) const {
   printf("CmdQueue {\n");
   for (auto&& e : q_) {
     e->DebugPrint(stage);
@@ -150,7 +150,7 @@ CmdTwoUnits::CmdTwoUnits(const UId& atk, const UId& def) : atk_(atk), def_(def) 
 }
 
 #ifdef DEBUG
-void CmdTwoUnits::DebugPrint(Game* stage) const {
+void CmdTwoUnits::DebugPrint(Stage* stage) const {
   string atk = (!atk_) ? "N/A" : stage->GetUnit(atk_)->GetId();
   string def = (!def_) ? "N/A" : stage->GetUnit(def_)->GetId();
   printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(GetOp())], atk.c_str(), def.c_str());
@@ -167,7 +167,7 @@ CmdAct::CmdAct(const UId& atk, const UId& def) : CmdTwoUnits(atk, def) {}
 
 CmdStay::CmdStay(const UId& unit) : CmdAct(unit, UId{}) {}
 
-unique_ptr<Cmd> CmdStay::Do(Game*) {
+unique_ptr<Cmd> CmdStay::Do(Stage*) {
   // Do nothing
   return nullptr;
 }
@@ -175,7 +175,7 @@ unique_ptr<Cmd> CmdStay::Do(Game*) {
 // CmdEndAction
 CmdEndAction::CmdEndAction(const UId& unit) : CmdUnit(unit) {}
 
-unique_ptr<Cmd> CmdEndAction::Do(Game* game) {
+unique_ptr<Cmd> CmdEndAction::Do(Stage* game) {
   auto unit = game->GetUnit(unit_);
   unit->EndAction();
   game->Push(unit->RaiseEvent(event::GeneralEvent::kActionDone));
@@ -192,7 +192,7 @@ CmdBasicAttack::CmdBasicAttack(const UId& atk, const UId& def, Type type)
   ASSERT((type & Type::kActiveOrCounter) != Type::kActiveOrCounter);
 }
 
-unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
+unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
   auto atk = game->GetUnit(atk_);
   auto def = game->GetUnit(def_);
 
@@ -251,7 +251,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Game* game) {
   return unique_ptr<Cmd>(ret);
 }
 
-bool CmdBasicAttack::TryBasicAttack(Game* stage) {
+bool CmdBasicAttack::TryBasicAttack(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
@@ -260,7 +260,7 @@ bool CmdBasicAttack::TryBasicAttack(Game* stage) {
   return GenRandom(100) < chance;
 }
 
-bool CmdBasicAttack::TryBasicAttackCritical(Game* stage) {
+bool CmdBasicAttack::TryBasicAttackCritical(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
@@ -269,7 +269,7 @@ bool CmdBasicAttack::TryBasicAttackCritical(Game* stage) {
   return GenRandom(100) < chance;
 }
 
-bool CmdBasicAttack::TryBasicAttackDouble(Game* stage) {
+bool CmdBasicAttack::TryBasicAttackDouble(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
@@ -278,7 +278,7 @@ bool CmdBasicAttack::TryBasicAttackDouble(Game* stage) {
   return GenRandom(100) < chance;
 }
 
-int CmdBasicAttack::ComputeDamage(Game* stage, Map* map) {
+int CmdBasicAttack::ComputeDamage(Stage* stage, Map* map) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
@@ -293,7 +293,7 @@ int CmdBasicAttack::ComputeDamage(Game* stage, Map* map) {
 
 CmdMagic::CmdMagic(const UId& atk, const UId& def, Magic* magic) : CmdAct(atk, def), magic_(magic) {}
 
-unique_ptr<Cmd> CmdMagic::Do(Game* stage) {
+unique_ptr<Cmd> CmdMagic::Do(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
@@ -333,7 +333,7 @@ CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, Magi
 CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, int damage)
     : CmdActResult(atk, def, type), hit_type_(hit_type), damage_(damage) {}
 
-unique_ptr<Cmd> CmdHit::Do(Game* stage) {
+unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
@@ -358,7 +358,7 @@ CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type, Magic* magic) : CmdA
 
 CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type) : CmdActResult(atk, def, type) {}
 
-unique_ptr<Cmd> CmdMiss::Do(Game* stage) {
+unique_ptr<Cmd> CmdMiss::Do(Stage* stage) {
   UNUSED(stage);
 
   LOG_INFO("%s misses!", stage->GetUnit(atk_)->GetId().c_str());
@@ -369,7 +369,7 @@ unique_ptr<Cmd> CmdMiss::Do(Game* stage) {
 
 CmdKilled::CmdKilled(const UId& unit) : CmdUnit(unit) {}
 
-unique_ptr<Cmd> CmdKilled::Do(Game* stage) {
+unique_ptr<Cmd> CmdKilled::Do(Stage* stage) {
   stage->KillUnit(stage->GetUnit(unit_));
   return nullptr;
 }
@@ -378,7 +378,7 @@ unique_ptr<Cmd> CmdKilled::Do(Game* stage) {
 
 CmdMove::CmdMove(const UId& unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {}
 
-unique_ptr<Cmd> CmdMove::Do(Game* game) {
+unique_ptr<Cmd> CmdMove::Do(Stage* game) {
   auto unit = game->GetUnit(unit_);
   LOG_INFO("Unit '%s' moved from (%d, %d) to (%d, %d)", unit->GetId().c_str(), unit->GetPosition().x,
            unit->GetPosition().y, dest_.x, dest_.y);
@@ -395,7 +395,7 @@ CmdAction::CmdAction(Flag flag) : cmd_move_(nullptr), cmd_act_(nullptr), flag_(f
 void CmdAction::SetCmdMove(unique_ptr<CmdMove> cmd) { cmd_move_ = std::move(cmd); }
 
 void CmdAction::SetCmdAct(unique_ptr<CmdAct> cmd) { cmd_act_ = std::move(cmd); }
-unique_ptr<Cmd> CmdAction::Do(Game* game) {
+unique_ptr<Cmd> CmdAction::Do(Stage* game) {
   auto doer_id = cmd_act_ ? cmd_act_->GetUnitAtk() : cmd_move_->GetUnit();
   auto doer = game->GetUnit(doer_id);
   ASSERT(doer != nullptr);
@@ -453,7 +453,7 @@ unique_ptr<Cmd> CmdAction::Do(Game* game) {
 
 CmdEndTurn::CmdEndTurn() : Cmd() {}
 
-unique_ptr<Cmd> CmdEndTurn::Do(Game* game) {
+unique_ptr<Cmd> CmdEndTurn::Do(Stage* game) {
   game->EndForceTurn();
   return nullptr;
 }
@@ -462,7 +462,7 @@ unique_ptr<Cmd> CmdEndTurn::Do(Game* game) {
 
 CmdPlayAI::CmdPlayAI() : Cmd() {}
 
-unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
+unique_ptr<Cmd> CmdPlayAI::Do(Stage* game) {
   UserInterface* ui = game->user_interface();
   AvailableUnits units = ui->QueryUnits();
 
@@ -501,7 +501,7 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
 
 CmdGameVictory::CmdGameVictory() : Cmd() {}
 
-unique_ptr<Cmd> CmdGameVictory::Do(Game* game) {
+unique_ptr<Cmd> CmdGameVictory::Do(Stage* game) {
   lua::Lua* lua = game->GetLuaScript();
   lua->Call<void>("on_victory", game->lua_this());
 
@@ -515,7 +515,7 @@ unique_ptr<Cmd> CmdGameVictory::Do(Game* game) {
 
 CmdGameEnd::CmdGameEnd(bool is_victory) : Cmd(), is_victory_(is_victory) {}
 
-unique_ptr<Cmd> CmdGameEnd::Do(Game*) {
+unique_ptr<Cmd> CmdGameEnd::Do(Stage*) {
   // TODO Update Own units info
   return nullptr;
 }
@@ -524,7 +524,7 @@ unique_ptr<Cmd> CmdGameEnd::Do(Game*) {
 
 CmdSpeak::CmdSpeak(const UId& unit, const string& words) : CmdUnit(unit), words_(words) {}
 
-unique_ptr<Cmd> CmdSpeak::Do(Game*) {
+unique_ptr<Cmd> CmdSpeak::Do(Stage*) {
   // Do nothing, UI will do appropriate stuff.
   return nullptr;
 }
@@ -533,7 +533,7 @@ unique_ptr<Cmd> CmdSpeak::Do(Game*) {
 
 CmdRestoreHp::CmdRestoreHp(const UId& unit, int ratio, int adder) : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
 
-unique_ptr<Cmd> CmdRestoreHp::Do(Game* stage) {
+unique_ptr<Cmd> CmdRestoreHp::Do(Stage* stage) {
   auto unit = stage->GetUnit(unit_);
   int amount = CalcAmount(stage);
   unit->RestoreHP(amount);
@@ -541,7 +541,7 @@ unique_ptr<Cmd> CmdRestoreHp::Do(Game* stage) {
   return nullptr;
 }
 
-int CmdRestoreHp::CalcAmount(Game* stage) const {
+int CmdRestoreHp::CalcAmount(Stage* stage) const {
   auto unit = stage->GetUnit(unit_);
 
   int amount = unit->GetOriginalHpMp().hp * ratio_ / 100;

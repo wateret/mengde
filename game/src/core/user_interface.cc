@@ -2,9 +2,9 @@
 
 #include "cell.h"
 #include "cmd.h"
-#include "game.h"
 #include "magic_list.h"
 #include "path_tree.h"
+#include "stage.h"
 #include "unit.h"
 
 namespace mengde {
@@ -14,7 +14,7 @@ namespace core {
 // AvailableUnits
 //
 
-AvailableUnits::AvailableUnits(Game* stage) {
+AvailableUnits::AvailableUnits(Stage* stage) {
   stage->ForEachUnitConst([&](const Unit* unit) {
     if (unit->GetForce() == stage->GetCurrentForce() && !unit->IsDoneAction()) {
       units_.push_back(std::make_pair(unit->GetUnitId(), unit->GetPosition()));
@@ -43,7 +43,7 @@ UnitKey AvailableUnits::FindByPos(Vec2D pos) {
 // AvailableMoves
 //
 
-AvailableMoves::AvailableMoves(Game* stage, const UnitKey& ukey) {
+AvailableMoves::AvailableMoves(Stage* stage, const UnitKey& ukey) {
   auto uid = AvailableUnits(stage).Get(ukey);
   Unit* unit = stage->GetUnit(uid);
   moves_ = stage->FindMovablePos(unit);
@@ -65,7 +65,7 @@ void AvailableMoves::ForEach(const std::function<void(const MoveKey&, Vec2D)>& f
 // AvailableActs
 //
 
-AvailableActs::AvailableActs(Game* stage, const UnitKey& ukey, const MoveKey& move_id, ActionType type)
+AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& move_id, ActionType type)
     : stage_(stage), type_(type) {
   UId uid = AvailableUnits(stage).Get(ukey);
   Vec2D move_pos = AvailableMoves(stage, ukey).Get(move_id);
@@ -160,7 +160,7 @@ ActKey AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
 
 // UserInterface
 
-UserInterface::UserInterface(Game* stage) : stage_(stage) {}
+UserInterface::UserInterface(Stage* stage) : stage_(stage) {}
 
 AvailableUnits UserInterface::QueryUnits() const { return AvailableUnits(stage_); }
 
