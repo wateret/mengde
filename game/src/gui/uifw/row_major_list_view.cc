@@ -7,7 +7,7 @@ namespace uifw {
 RowMajorListView::RowMajorListView(const Rect& frame, int row_height)
     : CompositeView(frame), row_height_(row_height), last_x_(0) {
   SetSize({GetFrameSize().x, 0});
-  last_x_ = GetFrame()->GetW();
+  last_x_ = GetFrame().GetW();
 }
 
 void RowMajorListView::AddElement(View* e) {

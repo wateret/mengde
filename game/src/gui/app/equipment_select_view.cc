@@ -29,7 +29,7 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
 
   Rect tv_amount_frame = GetActualFrame();
   TextView* tv_amount =
-      new TextView(&tv_amount_frame, std::to_string(amount), COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
+      new TextView(tv_amount_frame, std::to_string(amount), COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
   AddChild(tv_amount);
 
   SetMouseMotionHandler([this](const foundation::MouseMotionEvent& e) {

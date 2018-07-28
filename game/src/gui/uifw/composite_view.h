@@ -13,7 +13,6 @@ namespace uifw {
 class CompositeView : public View {
  public:
   CompositeView();
-  CompositeView(const Rect*);
   CompositeView(const Rect&);
   virtual ~CompositeView();
   int AddChild(View*);

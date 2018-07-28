@@ -16,7 +16,7 @@ ScenarioSelectView::ScenarioSelectView(const Rect& frame, App* app) : VerticalLi
 
   // Add header text
   const Rect header_frame({0, 0}, {GetActualFrameSize().x, 32});
-  TextView* header = new TextView(&header_frame, "Choose Scenario", COLOR("yellow"), 16, LayoutHelper::kAlignCenter);
+  TextView* header = new TextView(header_frame, "Choose Scenario", COLOR("yellow"), 16, LayoutHelper::kAlignCenter);
   AddElement(header);
 
   // Add scenario entries

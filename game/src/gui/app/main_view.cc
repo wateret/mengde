@@ -8,7 +8,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-MainView::MainView(const Rect* frame, App* app) : CompositeView(frame) {
+MainView::MainView(const Rect& frame, App* app) : CompositeView(frame) {
   bg_color(COLOR("white"));
   const Vec2D kButtonSize = {200, 100};
   Rect start_frame = LayoutHelper::CalcPosition(frame, kButtonSize, LayoutHelper::kAlignHMid);

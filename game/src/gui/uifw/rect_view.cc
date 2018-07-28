@@ -5,7 +5,7 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-RectView::RectView(const Rect* frame, Color color)
+RectView::RectView(const Rect& frame, Color color)
     : View(frame), color_(color), border_(0), border_color_(COLOR("transparent")) {
   bg_color(color_);
   padding(0);

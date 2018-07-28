@@ -20,7 +20,7 @@ namespace app {
 
 class UnitTooltipView : public CompositeView {
  public:
-  UnitTooltipView(const Rect*, const core::Unit* = NULL);
+  UnitTooltipView(const Rect&, const core::Unit* = NULL);
   virtual ~UnitTooltipView();
   void SetUnitTerrainInfo(const core::Cell* cell, const core::Unit* unit);
   void SetUnitAttackInfo(const core::Unit*, int, int);

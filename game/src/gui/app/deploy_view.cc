@@ -34,12 +34,12 @@ HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::ID
   AddChild(iv_hero);
 
   Rect tv_hero_frame = GetActualFrame();
-  TextView* tv_hero = new TextView(&tv_hero_frame, hero_->GetId(), COLOR("white"), 14, LayoutHelper::kAlignMidBot);
+  TextView* tv_hero = new TextView(tv_hero_frame, hero_->GetId(), COLOR("white"), 14, LayoutHelper::kAlignMidBot);
   AddChild(tv_hero);
 
   Rect tv_no_frame = GetActualFrame();
   tv_no_frame.SetW(tv_no_frame.GetW() - 8);
-  tv_no_ = new TextView(&tv_no_frame, "", COLOR("orange"), 20, LayoutHelper::kAlignRgtTop);
+  tv_no_ = new TextView(tv_no_frame, "", COLOR("orange"), 20, LayoutHelper::kAlignRgtTop);
   AddChild(tv_no_);
 
   deploy_no_ = deploy_helper->FindDeploy(hero);

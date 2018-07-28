@@ -14,7 +14,7 @@ class ScenarioSelectView;
 
 class MainView : public CompositeView {
  public:
-  MainView(const Rect*, App*);
+  MainView(const Rect&, App*);
   void SetScenarioSelectViewVisible(bool b);
 
  private:

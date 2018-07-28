@@ -44,13 +44,13 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
   {  // Initialize control_view_
     Rect control_frame =
         LayoutHelper::CalcPosition(GetFrameSize(), {300, 136}, LayoutHelper::kAlignRgtBot, LayoutHelper::kDefaultSpace);
-    control_view_ = new ControlView(&control_frame, game, game_view);
+    control_view_ = new ControlView(control_frame, game, game_view);
     AddChild(control_view_);
   }
 
   {  // Initialize dialog_view_
-    Rect dialog_frame = *GetFrame();
-    dialog_view_ = new ModalDialogView(&dialog_frame, "Put your message here!");
+    Rect dialog_frame = GetFrame();
+    dialog_view_ = new ModalDialogView(dialog_frame, "Put your message here!");
     dialog_view_->visible(false);
     AddChild(dialog_view_);
   }
@@ -65,14 +65,14 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
   {  // Initalize unit_tooltip_view_
     Rect unit_info_frame =
         LayoutHelper::CalcPosition(GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot, LayoutHelper::kDefaultSpace);
-    unit_tooltip_view_ = new UnitTooltipView(&unit_info_frame);
+    unit_tooltip_view_ = new UnitTooltipView(unit_info_frame);
     AddChild(unit_tooltip_view_);
   }
 
   {  // Initialize unit_dialog_view_
     Rect unit_dialog_frame =
         LayoutHelper::CalcPosition(GetFrameSize(), {360, 120}, LayoutHelper::kAlignCenter, LayoutHelper::kDefaultSpace);
-    unit_dialog_view_ = new UnitDialogView(&unit_dialog_frame);
+    unit_dialog_view_ = new UnitDialogView(unit_dialog_frame);
     unit_dialog_view_wrapper_ =
         new ModalView(GetActualFrame(), unit_dialog_view_, [=](const foundation::MouseButtonEvent e) {
           if (e.IsLeftButtonUp() || e.IsRightButtonUp()) {

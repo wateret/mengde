@@ -17,8 +17,8 @@ class GaugeView : public View {
   enum HelpTextType { kHelpTextNone, kHelpTextCurMax, kHelpTextCurOnly };
 
  public:
-  GaugeView(const Rect*, int, int, Color, Color);
-  GaugeView(const Rect*, int, int, int, Color, Color, Color);
+  GaugeView(const Rect&, int, int, Color, Color);
+  GaugeView(const Rect&, int, int, int, Color, Color, Color);
   virtual ~GaugeView();
   int GetCurVal() { return cur_val_; }
   int GetMaxVal() { return max_val_; }

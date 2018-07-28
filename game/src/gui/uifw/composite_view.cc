@@ -6,8 +6,6 @@ namespace uifw {
 
 CompositeView::CompositeView() : View(), transparent_(false) {}
 
-CompositeView::CompositeView(const Rect* rect) : View(rect), transparent_(false) {}
-
 CompositeView::CompositeView(const Rect& rect) : View(rect), transparent_(false) {}
 
 CompositeView::~CompositeView() {

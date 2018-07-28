@@ -5,10 +5,10 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-GaugeView::GaugeView(const Rect* frame, int cur_val, int max_val, Color cur_color, Color max_color)
+GaugeView::GaugeView(const Rect& frame, int cur_val, int max_val, Color cur_color, Color max_color)
     : GaugeView(frame, cur_val, max_val, 0, cur_color, max_color, {0, 0, 0, 0}) {}
 
-GaugeView::GaugeView(const Rect* frame, int cur_val, int max_val, int ext_val, Color cur_color, Color max_color,
+GaugeView::GaugeView(const Rect& frame, int cur_val, int max_val, int ext_val, Color cur_color, Color max_color,
                      Color ext_color)
     : View(frame),
       cur_val_(cur_val),
@@ -26,28 +26,28 @@ GaugeView::~GaugeView() {}
 
 int GaugeView::CalcWidth(int val) {
   ASSERT(max_val_ > 0);
-  int w = GetFrame()->GetW();
+  int w = GetFrame().GetW();
   return val * w / max_val_;
 }
 
 void GaugeView::Render(Drawer* drawer) {
-  Rect frame = *GetFrame();
+  Rect frame = GetFrame();
   drawer->SetDrawColor(max_color_);
-  drawer->FillRect(&frame);
+  drawer->FillRect(frame);
 
   int ext_x = CalcWidth(cur_val_ - ext_val_);
 
   Rect cur_rect = frame;
   cur_rect.SetW(ext_x);
   drawer->SetDrawColor(cur_color_);
-  drawer->FillRect(&cur_rect);
+  drawer->FillRect(cur_rect);
 
   if (ext_val_ > 0) {
     Rect ext_rect = frame;
     ext_rect.SetX(ext_rect.GetX() + ext_x);
     ext_rect.SetW(CalcWidth(cur_val_) - ext_x);
     drawer->SetDrawColor(ext_color_);
-    drawer->FillRect(&ext_rect);
+    drawer->FillRect(ext_rect);
   }
 
   if (help_text_type_ != kHelpTextNone) {

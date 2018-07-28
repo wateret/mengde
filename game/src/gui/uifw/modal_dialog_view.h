@@ -18,7 +18,7 @@ class ModalDialogView : public CompositeView {
  public:
   // Usually the value of frame that passed as first argument of the constructor is ({0, 0}, WindowSize)
   // so we can handle mouse click events anywhere in the screen.
-  ModalDialogView(const Rect*, const string&);
+  ModalDialogView(const Rect&, const string&);
   void SetText(const string&);
 
  private:

@@ -131,15 +131,15 @@ void Drawer::CopySprite(const std::string& id, SpriteType type, Direction dir, i
   }
 }
 
-void Drawer::DrawRect(const Rect* r, const int border) {
-  Rect rr = *r;
+void Drawer::DrawRect(const Rect& r, const int border) {
+  Rect rr = r;
   rr.Move(-offset_);
   rr.Move(viewports_.top().neg_coords);
   renderer_->DrawRect(&rr, border);
 }
 
-void Drawer::FillRect(const Rect* r) {
-  Rect rr = *r;
+void Drawer::FillRect(const Rect& r) {
+  Rect rr = r;
   rr.Move(-offset_);
   rr.Move(viewports_.top().neg_coords);
   renderer_->FillRect(&rr);
@@ -155,20 +155,21 @@ void Drawer::DrawText(const std::string& text, int size, Color color, Vec2D pos)
 void Drawer::DrawText(const std::string& text, int size, Color color, const Rect* frame, LayoutHelper::Align align) {
   if (text == "") return;
   Texture* texture = texture_manager_->FetchTextTexture(text, size, color, frame->GetW());
-  Rect rect = LayoutHelper::CalcPosition(frame, texture->GetSize(), align);
+  // TODO Calc position every time could cause performance issue
+  Rect rect = LayoutHelper::CalcPosition(*frame, texture->GetSize(), align);
   CopyTexture(texture, NULL, &rect);
 }
 
 void Drawer::BorderCell(Vec2D c, const int b) {
   Rect rect(c.x, c.y, 1, 1);
   rect.Magnify(app::config::kBlockSize);
-  DrawRect(&rect, b);
+  DrawRect(rect, b);
 }
 
 void Drawer::FillCell(Vec2D c) {
   Rect rect(c.x, c.y, 1, 1);
   rect.Magnify(app::config::kBlockSize);
-  FillRect(&rect);
+  FillRect(rect);
 }
 
 void Drawer::SetViewport(const Rect* r) {

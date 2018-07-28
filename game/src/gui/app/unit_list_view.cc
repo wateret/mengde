@@ -13,7 +13,7 @@ namespace app {
 UnitListView::UnitDetailView::UnitDetailView(const Rect& frame)
     : CompositeView(frame), unit_(nullptr), tv_name_(nullptr) {
   Rect tv_name_frame({0, 0}, {200, 100});
-  tv_name_ = new TextView(&tv_name_frame);
+  tv_name_ = new TextView(tv_name_frame);
   AddChild(tv_name_);
 }
 

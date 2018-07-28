@@ -14,11 +14,11 @@ UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL
   bg_color(COLOR("darkgray"));
 
   Rect portrait_frame = {0, 0, 64, 80};
-  iv_portrait_ = new ImageView(&portrait_frame);
+  iv_portrait_ = new ImageView(portrait_frame);
   Rect top_frame = {64 + LayoutHelper::kDefaultSpace, 0, 200, 16};
-  tv_name_ = new TextView(&top_frame, "name");
+  tv_name_ = new TextView(top_frame, "name");
   top_frame.Move({0, 16});
-  tv_lv_ = new TextView(&top_frame, "lv");
+  tv_lv_ = new TextView(top_frame, "lv");
   AddChild(iv_portrait_);
   AddChild(tv_name_);
   AddChild(tv_lv_);
@@ -31,7 +31,7 @@ UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL
 
   static const char* kStatNames[kNumGVs] = {"Exp", "HP", "MP", "Atk", "Def", "Dex", "Itl", "Mor"};
   for (int i = 0; i < kNumGVs; i++) {
-    TextView* tv = new TextView(&tv_frame, kStatNames[i]);
+    TextView* tv = new TextView(tv_frame, kStatNames[i]);
     tv_stats_[i] = tv;
     AddChild(tv);
     tv_frame.Move(frame_space);
@@ -44,7 +44,7 @@ UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL
                                         COLOR("gauge_stats"), COLOR("gauge_stats")};
 
   for (int i = 0; i < kNumGVs; i++) {
-    GaugeView* gv = new GaugeView(&gv_frame, 0, 1, 0, colors[i], COLOR(128, 128, 128), COLOR(255, 232, 142));
+    GaugeView* gv = new GaugeView(gv_frame, 0, 1, 0, colors[i], COLOR(128, 128, 128), COLOR(255, 232, 142));
     if (i < kNumExp + kNumHpMp) {
       gv->SetHelpTextType(GaugeView::kHelpTextCurMax);
       gv->SetHelpTextAlign(LayoutHelper::kAlignCenter);

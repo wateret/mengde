@@ -63,7 +63,7 @@ App::App(int width, int height, uint32_t max_frames_sec)
   }
 
   Rect main_rect({0, 0}, window_size_);
-  main_view_ = new MainView(&main_rect, this);
+  main_view_ = new MainView(main_rect, this);
   window_ = new Window("Game", window_size_.x, window_size_.y);
   drawer_ = new Drawer(window_, GameEnv::GetInstance()->GetScenarioPath().ToString(),
                        GameEnv::GetInstance()->GetResourcePath().ToString());

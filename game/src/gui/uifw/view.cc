@@ -6,8 +6,6 @@ namespace mengde {
 namespace gui {
 namespace uifw {
 
-View::View(const Rect* frame) : View(*frame) {}
-
 View::View(const Rect& frame) : frame_(frame), bg_color_(0, 0, 0, 0), padding_(0), visible_(true) {}
 
 View::View() : View(Rect()) {}
@@ -55,8 +53,8 @@ void View::Render(Drawer* drawer) {
 bool View::RenderBegin(Drawer* drawer) {
   if (!visible_) return false;
 
-  const Rect* frame = GetFrame();
-  Rect actual_frame = *frame;
+  const Rect& frame = GetFrame();
+  Rect actual_frame = frame;
   actual_frame.Contract(padding_);
 
   drawer->SetDrawColor(bg_color_);
@@ -69,7 +67,7 @@ bool View::RenderBegin(Drawer* drawer) {
 void View::RenderEnd(Drawer* drawer) { drawer->ResetViewport(); }
 
 bool View::DelegateMouseButtonEvent(const foundation::MouseButtonEvent& e) {
-  if (visible_ && GetFrame()->Contains(e.GetCoords())) {
+  if (visible_ && GetFrame().Contains(e.GetCoords())) {
     Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
     foundation::MouseButtonEvent ec(e.GetButton(), e.GetState(), conv_coords);
     if (OnMouseButtonEvent(ec)) return true;
@@ -80,13 +78,13 @@ bool View::DelegateMouseButtonEvent(const foundation::MouseButtonEvent& e) {
 bool View::DelegateMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   if (!visible_) return false;
   if (e.IsMotionOver()) {
-    if (GetFrame()->Contains(e.GetCoords())) {
+    if (GetFrame().Contains(e.GetCoords())) {
       Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
       foundation::MouseMotionEvent ec(MouseMotionEvent::Type::kOver, conv_coords, e.GetCoordsRel());
       return OnMouseMotionEvent(ec);
     } else {
       // Not over the view but was over in previous event then generate MouseOut event
-      if (GetFrame()->Contains(e.GetLastCoords())) {
+      if (GetFrame().Contains(e.GetLastCoords())) {
         foundation::MouseMotionEvent ec(MouseMotionEvent::Type::kOut);
         OnMouseMotionEvent(ec);
         return false;  // Always return false to keep delegating
@@ -101,7 +99,7 @@ bool View::DelegateMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 bool View::DelegateMouseWheelEvent(const foundation::MouseWheelEvent& e) {
   // FIXME This is same routine with DelegateMouseButtonEvent
-  if (visible_ && GetFrame()->Contains(e.GetCoords())) {
+  if (visible_ && GetFrame().Contains(e.GetCoords())) {
     Vec2D conv_coords = e.GetCoords() - GetActualFrameCoords();
     foundation::MouseWheelEvent ec(e, conv_coords);
     if (OnMouseWheelEvent(ec)) return true;

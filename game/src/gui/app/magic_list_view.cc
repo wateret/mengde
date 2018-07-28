@@ -27,7 +27,7 @@ MagicListView::MagicListView(const Rect& frame, core::Game* game, core::UserInte
 
   {
     Rect frame(0, 0, GetActualFrameSize().x, kTitleHeight);
-    tv_title_ = new TextView(&frame, "Choose Magic", COLOR("yellow"), 15, LayoutHelper::kAlignCenter);
+    tv_title_ = new TextView(frame, "Choose Magic", COLOR("yellow"), 15, LayoutHelper::kAlignCenter);
     this->AddChild(tv_title_);
   }
 }

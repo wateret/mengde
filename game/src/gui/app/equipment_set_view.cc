@@ -14,13 +14,13 @@ namespace app {
 // EquipmentView
 //
 
-EquipmentView::EquipmentView(const Rect* frame, const core::Equipment* equipment) : CallbackView(frame) {
+EquipmentView::EquipmentView(const Rect& frame, const core::Equipment* equipment) : CallbackView(frame) {
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(), {32, 32}, LayoutHelper::kAlignLftMid);
-  iv_image_ = new ImageView(&iv_frame, rcpath::EquipmentModelPath("60-1").ToString());  // FIXME hardcoded
+  iv_image_ = new ImageView(iv_frame, rcpath::EquipmentModelPath("60-1").ToString());  // FIXME hardcoded
   Rect tv_name_frame = {32 + 8, 0, 164, 16};
-  tv_name_ = new TextView(&tv_name_frame, "");
+  tv_name_ = new TextView(tv_name_frame, "");
   Rect tv_desc_frame = {32 + 8, 16, 164, 52};
-  tv_desc_ = new TextView(&tv_desc_frame, "");
+  tv_desc_ = new TextView(tv_desc_frame, "");
   AddChild(iv_image_);
   AddChild(tv_name_);
   AddChild(tv_desc_);
@@ -47,14 +47,14 @@ void EquipmentView::SetEquipment(const core::Equipment* equipment) {
 // EquipmentSetView
 //
 
-EquipmentSetView::EquipmentSetView(const Rect* frame) : CompositeView(frame), equipment_set_(nullptr) {
+EquipmentSetView::EquipmentSetView(const Rect& frame) : CompositeView(frame), equipment_set_(nullptr) {
   const int kMargin = 80 + 8;
   Rect tv_frame = {0, 0, 200, 16};
-  tv_weapon_label_ = new TextView(&tv_frame, "Weapon");
+  tv_weapon_label_ = new TextView(tv_frame, "Weapon");
   tv_frame.Move({0, kMargin});
-  tv_armor_label_ = new TextView(&tv_frame, "Armor");
+  tv_armor_label_ = new TextView(tv_frame, "Armor");
   tv_frame.Move({0, kMargin});
-  tv_aid_label_ = new TextView(&tv_frame, "Aid");
+  tv_aid_label_ = new TextView(tv_frame, "Aid");
   AddChild(tv_weapon_label_);
   AddChild(tv_armor_label_);
   AddChild(tv_aid_label_);
@@ -69,11 +69,11 @@ EquipmentSetView::EquipmentSetView(const Rect* frame) : CompositeView(frame), eq
   }
 
   Rect equipment_view_frame = {0, 24, 204, 60};
-  eqv_weapon_ = new EquipmentView(&equipment_view_frame, weapon);
+  eqv_weapon_ = new EquipmentView(equipment_view_frame, weapon);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
-  eqv_armor_ = new EquipmentView(&equipment_view_frame, armor);
+  eqv_armor_ = new EquipmentView(equipment_view_frame, armor);
   equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
-  eqv_aid_ = new EquipmentView(&equipment_view_frame, aid);
+  eqv_aid_ = new EquipmentView(equipment_view_frame, aid);
 
   EquipmentView* equipment_views[] = {eqv_weapon_, eqv_armor_, eqv_aid_};
 

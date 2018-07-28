@@ -18,7 +18,7 @@ namespace app {
 
 class UnitDialogView : public CompositeView {
  public:
-  UnitDialogView(const Rect*, const string& = "", const core::Unit* = nullptr);
+  UnitDialogView(const Rect&, const string& = "", const core::Unit* = nullptr);
   void SetText(const string&);
   void SetUnit(const core::Unit* u);
 

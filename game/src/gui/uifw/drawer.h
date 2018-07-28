@@ -42,8 +42,8 @@ class Drawer {
   void CopyTextureToCell(Texture*, Rect*, Vec2D);
   void CopyTextureBackground(Texture*, Rect* = NULL, Rect* = NULL);
   void CopySprite(const std::string&, SpriteType, Direction, int, SpriteEffect, Vec2D, Vec2D = {0, 0});
-  void DrawRect(const Rect*, const int = 1);
-  void FillRect(const Rect*);
+  void DrawRect(const Rect&, const int = 1);
+  void FillRect(const Rect&);
   void DrawText(const std::string&, int, Color, Vec2D);
   void DrawText(const std::string&, int, Color, const Rect*, LayoutHelper::Align);
   void BorderCell(Vec2D, const int = 1);

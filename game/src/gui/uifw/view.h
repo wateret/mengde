@@ -17,10 +17,9 @@ class Drawer;
 class View : public IView {
  public:
   View();
-  View(const Rect*);
   View(const Rect&);
   virtual ~View() {}
-  const Rect* GetFrame() { return &frame_; }
+  const Rect& GetFrame() { return frame_; }
   Rect GetActualFrame() const;
   Vec2D GetFrameSize() const;
   Vec2D GetActualFrameSize() const;

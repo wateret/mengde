@@ -19,7 +19,7 @@ class GameView;
 
 class ControlView : public CompositeView {
  public:
-  ControlView(const Rect*, core::Game*, GameView*);
+  ControlView(const Rect&, core::Game*, GameView*);
   void SetTurnText(int cur_turn, int max_turn);
   void SetEndTurnVisible(bool);
 

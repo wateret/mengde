@@ -12,7 +12,7 @@ namespace uifw {
 
 class RectView : public View {
  public:
-  RectView(const Rect*, Color);
+  RectView(const Rect&, Color);
   void SetBorder(int, Color);
 
  private:

@@ -12,7 +12,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitTooltipView::UnitTooltipView(const Rect* frame, const core::Unit* unit)
+UnitTooltipView::UnitTooltipView(const Rect& frame, const core::Unit* unit)
     : CompositeView(frame),
       unit_(unit),
       gv_hp_(nullptr),
@@ -26,18 +26,18 @@ UnitTooltipView::UnitTooltipView(const Rect* frame, const core::Unit* unit)
   padding(8);
 
   Rect gv_frame = {0, 22, 184, 16};
-  gv_hp_ = new GaugeView(&gv_frame, 0, 1, 0, COLOR("gauge_hp", kAlpha), COLOR("gauge_bg", kAlpha),
+  gv_hp_ = new GaugeView(gv_frame, 0, 1, 0, COLOR("gauge_hp", kAlpha), COLOR("gauge_bg", kAlpha),
                          COLOR("gauge_hp_damage", kAlpha));
   gv_frame.Move(0, 22);
-  gv_mp_ = new GaugeView(&gv_frame, 0, 1, COLOR("gauge_mp", kAlpha), COLOR("gauge_bg", kAlpha));
+  gv_mp_ = new GaugeView(gv_frame, 0, 1, COLOR("gauge_mp", kAlpha), COLOR("gauge_bg", kAlpha));
   gv_hp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
   gv_mp_->SetHelpTextType(GaugeView::kHelpTextCurMax);
 
   Rect tv_rect = GetActualFrame();
-  tv_name_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftTop);
-  tv_lv_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
-  tv_lftbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftBot);
-  tv_rgtbot_ = new TextView(&tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtBot);
+  tv_name_ = new TextView(tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftTop);
+  tv_lv_ = new TextView(tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtTop);
+  tv_lftbot_ = new TextView(tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignLftBot);
+  tv_rgtbot_ = new TextView(tv_rect, "", COLOR("white"), 14, LayoutHelper::kAlignRgtBot);
 
   AddChild(gv_hp_);
   AddChild(gv_mp_);

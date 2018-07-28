@@ -12,12 +12,12 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-ControlView::ControlView(const Rect* rect, core::Game* game, GameView* gv) : CompositeView(rect), game_(game) {
+ControlView::ControlView(const Rect& rect, core::Game* game, GameView* gv) : CompositeView(rect), game_(game) {
   bg_color(COLOR("darkgray", 192));
   padding(8);
 
   Rect frame_tv_turn = {0, 0, 100, 22};
-  tv_turn_ = new TextView(&frame_tv_turn);
+  tv_turn_ = new TextView(frame_tv_turn);
   SetTurnText(game_->GetTurnCurrent(), game_->GetTurnLimit());
   AddChild(tv_turn_);
 
@@ -41,7 +41,7 @@ ControlView::ControlView(const Rect* rect, core::Game* game, GameView* gv) : Com
   const Vec2D minimap_size = LayoutHelper::CalcFittedSize(map_size, minimap_max_size);
   Rect minimap_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), minimap_size, LayoutHelper::kAlignRgtMid);
   MinimapView* minimap_view =
-      new MinimapView(&minimap_frame, game, gv->GetCameraCoordsPtr(), gv->GetFrameSize(), map_size);
+      new MinimapView(minimap_frame, game, gv->GetCameraCoordsPtr(), gv->GetFrameSize(), map_size);
   AddChild(minimap_view);
 }
 

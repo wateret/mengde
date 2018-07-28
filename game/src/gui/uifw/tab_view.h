@@ -14,7 +14,7 @@ class ButtonView;
 
 class TabView : public CompositeView {
  public:
-  TabView(const Rect*);
+  TabView(const Rect&);
   void AddTab(const string&, View*);
   int GetNumTabs() { return (int)v_tab_buttons_.size(); }
   void SetViewIndex(int);

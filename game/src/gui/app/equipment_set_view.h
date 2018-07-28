@@ -22,7 +22,7 @@ namespace app {
 
 class EquipmentView : public CallbackView {
  public:
-  EquipmentView(const Rect*, const core::Equipment*);
+  EquipmentView(const Rect&, const core::Equipment*);
   void SetEquipment(const core::Equipment*);
 
  private:
@@ -33,7 +33,7 @@ class EquipmentView : public CallbackView {
 
 class EquipmentSetView : public CompositeView {
  public:
-  EquipmentSetView(const Rect*);
+  EquipmentSetView(const Rect&);
   void SetEquipmentSet(const core::EquipmentSet*);
   void SetWeaponMouseButtonHandler(const CallbackView::MouseButtonHandler&);
   void SetArmorMouseButtonHandler(const CallbackView::MouseButtonHandler&);

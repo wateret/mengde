@@ -8,12 +8,12 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitView::UnitView(const Rect& frame) : TabView(&frame), unit_(NULL) {
+UnitView::UnitView(const Rect& frame) : TabView(frame), unit_(NULL) {
   Vec2D size = frame.GetSize();
   size -= {0, -28};
   Rect subframe({0, 28}, size);
   unit_over_view_ = new UnitOverView(subframe);
-  equipment_set_view_ = new EquipmentSetView(&subframe);
+  equipment_set_view_ = new EquipmentSetView(subframe);
   // TODO Hardcoded tab button name
   AddTab("Stat", unit_over_view_);
   AddTab("Equip", equipment_set_view_);

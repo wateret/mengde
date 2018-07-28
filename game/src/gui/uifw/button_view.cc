@@ -18,7 +18,7 @@ ButtonView::ButtonView(const Rect& frame, const std::string& text)
   bg_color(GetNormalColor());
 
   Rect rect_label = GetActualFrame();
-  tv_label_ = new TextView(&rect_label, text, COLOR("white"), 14, LayoutHelper::kAlignCenter);
+  tv_label_ = new TextView(rect_label, text, COLOR("white"), 14, LayoutHelper::kAlignCenter);
   AddChild(tv_label_);
   SetMouseMotionHandler([=](const foundation::MouseMotionEvent& e) -> bool {
     if (e.IsMotionOver()) {

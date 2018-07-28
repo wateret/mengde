@@ -12,7 +12,7 @@ TerrainInfoView::TerrainInfoView(const Rect& frame, Vec2D coords) : CompositeVie
   padding(8);
 
   Rect name_frame(GetActualFrame());
-  tv_name_ = new TextView(&name_frame);
+  tv_name_ = new TextView(name_frame);
   AddChild(tv_name_);
 }
 
