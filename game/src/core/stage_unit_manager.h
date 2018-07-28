@@ -21,7 +21,7 @@ class StageUnitManager {
   void Kill(Unit*);
   Unit* Get(const UId& id);
   void ForEach(function<void(Unit*)>);
-  void ForEachIdxConst(function<void(uint32_t, const Unit*)> fn) const;
+  void ForEachConst(function<void(const Unit*)> fn) const;
 
  private:
   vector<Unit*> units_;

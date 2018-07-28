@@ -474,25 +474,24 @@ unique_ptr<Cmd> CmdPlayAI::Do(Game* game) {
     return unique_ptr<Cmd>(new CmdEndTurn());
   }
 
-  const auto unit_no = 0;
-  auto unit_id = units.Get(unit_no);
+  const UnitKey ukey{0u};
 
-  AvailableMoves moves = ui->QueryMoves(unit_no);
+  AvailableMoves moves = ui->QueryMoves(ukey);
 
   bool found_target = false;
-  uint32_t move_id = 0;
-  moves.ForEach([&](uint32_t id, Vec2D) {
-    AvailableActs acts = ui->QueryActs(unit_no, id, ActionType::kBasicAttack);
+  MoveKey mkey = 0;
+  moves.ForEach([&](const MoveKey& mk, Vec2D) {
+    AvailableActs acts = ui->QueryActs(ukey, mk, ActionType::kBasicAttack);
     if (acts.Count() > 0 && !found_target) {
       found_target = true;
-      move_id = id;
+      mkey = mk;
     }
   });
 
   if (found_target) {
-    ui->PushAction(unit_no, move_id, ActionType::kBasicAttack, 0 /* Simply choose first one */);
+    ui->PushAction(ukey, mkey, ActionType::kBasicAttack, 0 /* Simply choose first one */);
   } else {
-    ui->PushAction(unit_no, GenRandom(moves.Count()), ActionType::kStay, 0);
+    ui->PushAction(ukey, GenRandom(moves.Count()), ActionType::kStay, 0);
   }
 
   return nullptr;

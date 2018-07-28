@@ -8,7 +8,7 @@ namespace core {
 StageUnitManager::StageUnitManager() : units_() {}
 
 UId StageUnitManager::Deploy(Unit* unit) {
-  UId uid{units_.size()};
+  UId uid{static_cast<uint32_t>(units_.size())};
   units_.push_back(unit);
   unit->SetUnitId(uid);
   return uid;
@@ -24,9 +24,9 @@ Unit* StageUnitManager::Get(const UId& id) {
 
 void StageUnitManager::ForEach(function<void(Unit*)> fn) { std::for_each(units_.begin(), units_.end(), fn); }
 
-void StageUnitManager::ForEachIdxConst(function<void(uint32_t, const Unit*)> fn) const {
+void StageUnitManager::ForEachConst(function<void(const Unit*)> fn) const {
   for (uint32_t i = 0, size = units_.size(); i < size; i++) {
-    fn(i, units_[i]);
+    fn(units_[i]);
   }
 }
 

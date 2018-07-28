@@ -62,8 +62,8 @@ void GameView::Render(Drawer* drawer) {
   GetCurrentState()->Render(drawer);
 
   // Render units
-  gi_->ForEachUnit([this, drawer](uint32_t id, const core::Unit* unit) {
-    if (this->SkipRender(id) || unit->IsDead()) return;
+  gi_->ForEachUnit([this, drawer](const core::Unit* unit) {
+    if (this->SkipRender(unit->GetUnitId()) || unit->IsDead()) return;
     RenderUnit(drawer, unit, unit->GetPosition());
   });
 

@@ -34,7 +34,7 @@ class AvailableMoves {
   AvailableMoves(Game* stage, const UnitKey& ukey);
   Vec2D Get(const MoveKey& mkey);
   uint32_t Count() const { return moves_.size(); }
-  void ForEach(const std::function<void(uint32_t, Vec2D)>& fn);
+  void ForEach(const std::function<void(const MoveKey&, Vec2D)>& fn);
   const vector<Vec2D>& moves() { return moves_; }
 
  private:
@@ -77,7 +77,7 @@ class UserInterface {
 
   bool HasNextCmd() const;
 
-  void ForEachUnit(const std::function<void(uint32_t, const Unit*)>& fn) const;
+  void ForEachUnit(const std::function<void(const Unit*)>& fn) const;
 
  private:
   Vec2D GetMovedPosition(const UnitKey& unit_id, const MoveKey& move_id);

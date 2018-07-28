@@ -127,9 +127,7 @@ Deployer* Game::CreateDeployer() {
 
 void Game::ForEachUnit(std::function<void(Unit*)> fn) { stage_unit_manager_->ForEach(fn); }
 
-void Game::ForEachUnitIdxConst(std::function<void(uint32_t idx, const Unit*)> fn) const {
-  stage_unit_manager_->ForEachIdxConst(fn);
-}
+void Game::ForEachUnitConst(std::function<void(const Unit*)> fn) const { stage_unit_manager_->ForEachConst(fn); }
 
 void Game::MoveUnit(Unit* unit, Vec2D dst) {
   Vec2D src = unit->GetPosition();

@@ -46,7 +46,7 @@ class Game : public IDeployHelper {
   std::string GetMapBitmapPath() { return "map/" + map_->GetModelId(); }
 
   // General //
-  void ForEachUnitIdxConst(std::function<void(uint32_t, const Unit*)> fn) const;
+  void ForEachUnitConst(std::function<void(const Unit*)> fn) const;
   void ForEachUnit(std::function<void(Unit*)>);
   void MoveUnit(Unit*, Vec2D);
   void MoveUnit(const UId& uid, Vec2D dst);

@@ -15,9 +15,9 @@ namespace core {
 //
 
 AvailableUnits::AvailableUnits(Game* stage) {
-  stage->ForEachUnitIdxConst([&](uint32_t idx, const Unit* unit) {
+  stage->ForEachUnitConst([&](const Unit* unit) {
     if (unit->GetForce() == stage->GetCurrentForce() && !unit->IsDoneAction()) {
-      units_.push_back(std::make_pair(UId{idx}, unit->GetPosition()));
+      units_.push_back(std::make_pair(unit->GetUnitId(), unit->GetPosition()));
     }
   });
 }
@@ -55,9 +55,9 @@ Vec2D AvailableMoves::Get(const MoveKey& mkey) {
   return moves_[mkey.Value()];
 }
 
-void AvailableMoves::ForEach(const std::function<void(uint32_t, Vec2D)>& fn) {
+void AvailableMoves::ForEach(const std::function<void(const MoveKey&, Vec2D)>& fn) {
   for (uint32_t i = 0, size = moves_.size(); i < size; i++) {
-    fn(i, moves_[i]);
+    fn(MoveKey{i}, moves_[i]);
   }
 }
 
@@ -212,9 +212,7 @@ unique_ptr<CmdAct> UserInterface::GetActCmd(const UnitKey& unit_key, const MoveK
   return acts.Get(act_id);
 }
 
-void UserInterface::ForEachUnit(const std::function<void(uint32_t, const Unit*)>& fn) const {
-  stage_->ForEachUnitIdxConst(fn);
-}
+void UserInterface::ForEachUnit(const std::function<void(const Unit*)>& fn) const { stage_->ForEachUnit(fn); }
 
 }  // namespace core
 }  // namespace mengde
