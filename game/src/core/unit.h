@@ -7,10 +7,10 @@
 #include "event_effect_list.h"
 #include "force.h"
 #include "hero.h"
-#include "id.h"
 #include "i_equipper.h"
 #include "i_event.h"
 #include "i_unit_base.h"
+#include "id.h"
 #include "stat_modifier_list.h"
 #include "util/common.h"
 

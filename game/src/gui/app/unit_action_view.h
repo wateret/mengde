@@ -25,7 +25,7 @@ class GameView;
 class UnitActionView : public VerticalListView {
  public:
   UnitActionView(const Rect& frame, core::Game* game, core::UserInterface*, GameView* gv);
-  void SetUnitAndMoveId(uint32_t unit_id, uint32_t move_id);
+  void SetUnitAndMoveKey(const core::UnitKey& ukey, const core::MoveKey& mkey);
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
 
  private:

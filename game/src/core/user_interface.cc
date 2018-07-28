@@ -17,41 +17,42 @@ namespace core {
 AvailableUnits::AvailableUnits(Game* stage) {
   stage->ForEachUnitIdxConst([&](uint32_t idx, const Unit* unit) {
     if (unit->GetForce() == stage->GetCurrentForce() && !unit->IsDoneAction()) {
-      units_.push_back(std::make_pair(idx, unit->GetPosition()));
+      units_.push_back(std::make_pair(UId{idx}, unit->GetPosition()));
     }
   });
 }
 
-UId AvailableUnits::Get(uint32_t idx) {
-  ASSERT(idx < units_.size());
-  return units_[idx].first;
+UId AvailableUnits::Get(const UnitKey& ukey) {
+  ASSERT(ukey);
+  ASSERT_LE(ukey.Value(), units_.size());
+  return units_[ukey.Value()].first;
 }
 
-// NOTE return value is unit_key
-boost::optional<uint32_t> AvailableUnits::FindByPos(Vec2D pos) {
+UnitKey AvailableUnits::FindByPos(Vec2D pos) {
   uint32_t idx = 0;
   for (auto& e : units_) {
     if (pos == e.second) {
-      return idx;
+      return UnitKey{idx};
     }
     idx++;
   }
-  return boost::none;
+  return UnitKey{};
 }
 
 //
 // AvailableMoves
 //
 
-AvailableMoves::AvailableMoves(Game* stage, uint32_t unit_key) {
-  auto uid = AvailableUnits(stage).Get(unit_key);
+AvailableMoves::AvailableMoves(Game* stage, const UnitKey& ukey) {
+  auto uid = AvailableUnits(stage).Get(ukey);
   Unit* unit = stage->GetUnit(uid);
   moves_ = stage->FindMovablePos(unit);
 }
 
-Vec2D AvailableMoves::Get(uint32_t idx) {
-  ASSERT(idx < moves_.size());
-  return moves_[idx];
+Vec2D AvailableMoves::Get(const MoveKey& mkey) {
+  ASSERT(mkey);
+  ASSERT_LE(mkey.Value(), moves_.size());
+  return moves_[mkey.Value()];
 }
 
 void AvailableMoves::ForEach(const std::function<void(uint32_t, Vec2D)>& fn) {
@@ -64,10 +65,10 @@ void AvailableMoves::ForEach(const std::function<void(uint32_t, Vec2D)>& fn) {
 // AvailableActs
 //
 
-AvailableActs::AvailableActs(Game* stage, uint32_t unit_key, uint32_t move_id, ActionType type)
+AvailableActs::AvailableActs(Game* stage, const UnitKey& ukey, const MoveKey& move_id, ActionType type)
     : stage_(stage), type_(type) {
-  UId uid = AvailableUnits(stage).Get(unit_key);
-  Vec2D move_pos = AvailableMoves(stage, unit_key).Get(move_id);
+  UId uid = AvailableUnits(stage).Get(ukey);
+  Vec2D move_pos = AvailableMoves(stage, ukey).Get(move_id);
 
   switch (type) {
     case ActionType::kStay:
@@ -118,12 +119,13 @@ AvailableActs::AvailableActs(Game* stage, uint32_t unit_key, uint32_t move_id, A
   ASSERT(type != ActionType::kStay || acts_.size() == 1);
 }
 
-unique_ptr<CmdAct> AvailableActs::Get(uint32_t idx) {
-  ASSERT(idx < acts_.size());
-  return std::move(acts_[idx]);
+unique_ptr<CmdAct> AvailableActs::Get(const ActKey& akey) {
+  ASSERT(akey);
+  ASSERT_LE(akey.Value(), acts_.size());
+  return std::move(acts_[akey.Value()]);
 }
 
-boost::optional<uint32_t> AvailableActs::Find(Vec2D pos) {
+ActKey AvailableActs::Find(Vec2D pos) {
   ASSERT(type_ == ActionType::kBasicAttack);
 
   uint32_t idx = 0;
@@ -131,14 +133,14 @@ boost::optional<uint32_t> AvailableActs::Find(Vec2D pos) {
     // TODO Keep position info in the object rather than querying stage here
     Unit* def = stage_->GetUnit(act->GetUnitDef());
     if (def->GetPosition() == pos) {
-      return idx;
+      return ActKey{idx};
     }
     idx++;
   }
-  return boost::none;
+  return ActKey{};
 }
 
-boost::optional<uint32_t> AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
+ActKey AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
   ASSERT(type_ == ActionType::kMagic);
 
   uint32_t idx = 0;
@@ -149,11 +151,11 @@ boost::optional<uint32_t> AvailableActs::FindMagic(const string& magic_id, Vec2D
     // TODO Keep position info in the object rather than querying stage here
     Unit* def = stage_->GetUnit(cm->GetUnitDef());
     if (magic->GetId() == magic_id && def->GetPosition() == pos) {
-      return idx;
+      return ActKey{idx};
     }
     idx++;
   }
-  return boost::none;
+  return ActKey{};
 }
 
 // UserInterface
@@ -166,7 +168,7 @@ const Unit* UserInterface::GetUnit(Vec2D pos) const { return stage_->GetUnitInCe
 
 const Unit* UserInterface::GetUnit(const UId& unit_id) const { return stage_->GetUnit(unit_id); }
 
-const Unit* UserInterface::GetUnit(uint32_t unit_key) const  { return GetUnit(QueryUnits().Get(unit_key)); }
+const Unit* UserInterface::GetUnit(const UnitKey& unit_key) const { return GetUnit(QueryUnits().Get(unit_key)); }
 
 const Cell* UserInterface::GetCell(Vec2D pos) const { return stage_->GetCell(pos); }
 
@@ -181,13 +183,13 @@ string UserInterface::GetMapId() const { return stage_->GetMapBitmapPath(); }
 
 bool UserInterface::HasNextCmd() const { return stage_->HasNext(); }
 
-AvailableMoves UserInterface::QueryMoves(uint32_t unit_key) { return AvailableMoves(stage_, unit_key); }
+AvailableMoves UserInterface::QueryMoves(const UnitKey& unit_key) const { return AvailableMoves(stage_, unit_key); }
 
-AvailableActs UserInterface::QueryActs(uint32_t unit_key, uint32_t move_id, ActionType type) {
+AvailableActs UserInterface::QueryActs(const UnitKey& unit_key, const MoveKey& move_id, ActionType type) const {
   return AvailableActs(stage_, unit_key, move_id, type);
 }
 
-void UserInterface::PushAction(uint32_t unit_key, uint32_t move_id, ActionType type, uint32_t act_id) {
+void UserInterface::PushAction(const UnitKey& unit_key, const MoveKey& move_id, ActionType type, const ActKey& act_id) {
   UId uid = QueryUnits().Get(unit_key);
   Vec2D pos = GetMovedPosition(unit_key, move_id);
   unique_ptr<CmdAct> act = GetActCmd(unit_key, move_id, type, act_id);
@@ -199,12 +201,13 @@ void UserInterface::PushAction(uint32_t unit_key, uint32_t move_id, ActionType t
   stage_->Push(unique_ptr<CmdAction>(cmd));
 }
 
-Vec2D UserInterface::GetMovedPosition(uint32_t unit_key, uint32_t move_id) {
+Vec2D UserInterface::GetMovedPosition(const UnitKey& unit_key, const MoveKey& move_id) {
   auto moves = QueryMoves(unit_key);
   return moves.Get(move_id);
 }
 
-unique_ptr<CmdAct> UserInterface::GetActCmd(uint32_t unit_key, uint32_t move_id, ActionType type, uint32_t act_id) {
+unique_ptr<CmdAct> UserInterface::GetActCmd(const UnitKey& unit_key, const MoveKey& move_id, ActionType type,
+                                            const ActKey& act_id) {
   auto acts = QueryActs(unit_key, move_id, type);
   return acts.Get(act_id);
 }

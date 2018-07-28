@@ -3,9 +3,9 @@
 
 #include <boost/optional.hpp>
 
+#include "id.h"
 #include "terrain.h"
 #include "unit.h"
-#include "id.h"
 
 namespace mengde {
 namespace core {
@@ -18,7 +18,7 @@ class Cell {
   int GetTerrainEffect(int) const;
   int ApplyTerrainEffect(int, int);
   std::string GetTerrainName() const;
-  bool IsUnitPlaced() const { return !uid_.IsNone(); } // FIXME Why `return uid_` not work?
+  bool IsUnitPlaced() const { return !uid_.IsNone(); }  // FIXME Why `return uid_` not work?
   UId GetUnit() const { return uid_; }
   void SetUnit(const UId& uid) { uid_ = uid; }
   void Empty() { uid_.SetNone(); }

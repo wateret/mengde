@@ -160,7 +160,7 @@ Magic* Game::GetMagic(const std::string& id) { return rc_.magic_manager->Get(id)
 Unit* Game::GetUnit(const UId& id) { return stage_unit_manager_->Get(id); }
 
 const Unit* Game::GetUnit(const UId& id) const {
-//  LOG_DEBUG("GetUnit UID : %u", id.Value());
+  //  LOG_DEBUG("GetUnit UID : %u", id.Value());
   return stage_unit_manager_->Get(id);
 }
 

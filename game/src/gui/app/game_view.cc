@@ -181,9 +181,7 @@ void GameView::SetSkipRender(const core::UId& id, bool b) {
   }
 }
 
-bool GameView::SkipRender(const core::UId& id) const {
-  return skip_render_.find(id.Value()) != skip_render_.end();
-}
+bool GameView::SkipRender(const core::UId& id) const { return skip_render_.find(id.Value()) != skip_render_.end(); }
 
 }  // namespace app
 }  // namespace gui

@@ -3,10 +3,10 @@
 
 #include <stdint.h>
 
-#include <boost/optional.hpp>
 #include <utility>
 
 #include "cmd.h"
+#include "id.h"
 #include "util/common.h"
 
 namespace mengde {
@@ -21,18 +21,18 @@ class Unit;
 class AvailableUnits {
  public:
   AvailableUnits(Game* stage);
-  UId Get(uint32_t idx);
+  UId Get(const UnitKey& ukey);
   uint32_t Count() const { return units_.size(); }
-  boost::optional<uint32_t> FindByPos(Vec2D pos);
+  UnitKey FindByPos(Vec2D pos);
 
  private:
-  vector<std::pair<uint32_t, Vec2D>> units_;
+  vector<std::pair<UId, Vec2D>> units_;
 };
 
 class AvailableMoves {
  public:
-  AvailableMoves(Game* stage, uint32_t unit_id);
-  Vec2D Get(uint32_t idx);
+  AvailableMoves(Game* stage, const UnitKey& ukey);
+  Vec2D Get(const MoveKey& mkey);
   uint32_t Count() const { return moves_.size(); }
   void ForEach(const std::function<void(uint32_t, Vec2D)>& fn);
   const vector<Vec2D>& moves() { return moves_; }
@@ -43,12 +43,12 @@ class AvailableMoves {
 
 class AvailableActs {
  public:
-  AvailableActs(Game* stage, uint32_t unit_id, uint32_t move_id, ActionType type);
+  AvailableActs(Game* stage, const UnitKey& unit_id, const MoveKey& move_id, ActionType type);
   ActionType type() { return type_; }
-  unique_ptr<CmdAct> Get(uint32_t idx);
+  unique_ptr<CmdAct> Get(const ActKey& akey);
   uint32_t Count() const { return acts_.size(); }
-  boost::optional<uint32_t> Find(Vec2D pos);
-  boost::optional<uint32_t> FindMagic(const string& magic_id, Vec2D pos);
+  ActKey Find(Vec2D pos);
+  ActKey FindMagic(const string& magic_id, Vec2D pos);
 
  private:
   Game* stage_;  // TODO Remove this
@@ -62,12 +62,12 @@ class UserInterface {
 
  public:
   AvailableUnits QueryUnits() const;
-  AvailableMoves QueryMoves(uint32_t unit_key);
-  AvailableActs QueryActs(uint32_t unit_key, uint32_t move_id, ActionType type);
-  void PushAction(uint32_t unit_key, uint32_t move_id, ActionType type, uint32_t act_id);
+  AvailableMoves QueryMoves(const UnitKey& unit_key) const;
+  AvailableActs QueryActs(const UnitKey& unit_key, const MoveKey& move_id, ActionType type) const;
+  void PushAction(const UnitKey& unit_key, const MoveKey& move_id, ActionType type, const ActKey& act_id);
 
   const Unit* GetUnit(const UId& uid) const;
-  const Unit* GetUnit(uint32_t unit_key) const;
+  const Unit* GetUnit(const UnitKey& unit_key) const;
   const Unit* GetUnit(Vec2D pos) const;
   const Cell* GetCell(Vec2D pos) const;
   vector<Vec2D> GetPath(const UId& unit_id, Vec2D pos) const;
@@ -80,8 +80,8 @@ class UserInterface {
   void ForEachUnit(const std::function<void(uint32_t, const Unit*)>& fn) const;
 
  private:
-  Vec2D GetMovedPosition(uint32_t unit_id, uint32_t move_id);
-  unique_ptr<CmdAct> GetActCmd(uint32_t unit_id, uint32_t move_id, ActionType type, uint32_t act_id);
+  Vec2D GetMovedPosition(const UnitKey& unit_id, const MoveKey& move_id);
+  unique_ptr<CmdAct> GetActCmd(const UnitKey& unit_id, const MoveKey& move_id, ActionType type, const ActKey& act_id);
 
  private:
   Game* stage_;

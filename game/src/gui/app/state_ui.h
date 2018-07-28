@@ -133,6 +133,8 @@ class StateUIOperable : public StateUI {
 class StateUIView : public StateUIOperable {
  public:
   StateUIView(StateUI::Base);
+  virtual void Enter() override;
+  virtual void Exit() override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
   virtual void Update() override;
@@ -148,7 +150,7 @@ class StateUIView : public StateUIOperable {
 
 class StateUIUnitSelected : public StateUIOperable {
  public:
-  StateUIUnitSelected(StateUI::Base, uint32_t);
+  StateUIUnitSelected(StateUI::Base, const core::UnitKey&);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -161,7 +163,7 @@ class StateUIUnitSelected : public StateUIOperable {
 #endif
 
  private:
-  uint32_t unit_key_;
+  core::UnitKey unit_key_;
   core::AvailableMoves moves_;
   Vec2D origin_coords_;
 };
@@ -176,7 +178,7 @@ class StateUIMoving : public StateUI {
   static const int kFramesPerCell = 12;
 
  public:
-  StateUIMoving(StateUI::Base, uint32_t unit_key, Vec2D, uint32_t move_id = 0);
+  StateUIMoving(StateUI::Base, const core::UnitKey& unit_key, Vec2D, const core::MoveKey& move_id);
   StateUIMoving(StateUI::Base, const core::UId& unit_id, Vec2D);
   virtual void Enter() override;
   virtual void Exit() override;
@@ -192,21 +194,20 @@ class StateUIMoving : public StateUI {
   bool LastFrame();
 
  private:
-  uint32_t unit_key_;
+  core::UnitKey unit_key_;
   core::UId unit_id_;
   Vec2D dest_;
   int frames_;
   Flag flag_;
   vector<Vec2D> path_;
-  uint32_t move_id_;
+  core::MoveKey move_id_;
 };
 
 // StateUIMagic
 
 class StateUIMagic : public StateUI {
  public:
-  StateUIMagic(StateUI::Base, const core::UId&, const core::UId&, core::Magic*, bool,
-               int);
+  StateUIMagic(StateUI::Base, const core::UId&, const core::UId&, core::Magic*, bool, int);
   virtual ~StateUIMagic();
   virtual void Enter() override;
   virtual void Exit() override;
@@ -328,7 +329,7 @@ class StateUIUnitTooltipAnim : public StateUI {
 
 class StateUIAction : public StateUI {
  public:
-  StateUIAction(StateUI::Base, uint32_t unit_key, uint32_t move_id);
+  StateUIAction(StateUI::Base, const core::UnitKey& unit_key, const core::MoveKey& move_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -339,9 +340,9 @@ class StateUIAction : public StateUI {
 #endif
 
  private:
-  uint32_t unit_key_;
+  core::UnitKey unit_key_;
   core::UId unit_id_;
-  uint32_t move_id_;
+  core::MoveKey move_id_;
   Vec2D pos_;
 };
 
@@ -349,7 +350,7 @@ class StateUIAction : public StateUI {
 
 class StateUIMagicSelection : public StateUI {
  public:
-  StateUIMagicSelection(StateUI::Base, uint32_t unit_key, uint32_t move_id);
+  StateUIMagicSelection(StateUI::Base, const core::UnitKey& unit_key, const core::MoveKey& move_id);
   virtual void Enter() override;
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
@@ -360,9 +361,9 @@ class StateUIMagicSelection : public StateUI {
 #endif
 
  private:
-  uint32_t unit_key_;
+  core::UnitKey unit_key_;
   core::UId unit_id_;
-  uint32_t move_id_;
+  core::MoveKey move_id_;
   Vec2D pos_;
 };
 
@@ -370,7 +371,7 @@ class StateUIMagicSelection : public StateUI {
 
 class StateUITargeting : public StateUIOperable {
  public:
-  StateUITargeting(StateUI::Base, uint32_t unit_key, uint32_t move_id,
+  StateUITargeting(StateUI::Base, const core::UnitKey& unit_key, const core::MoveKey& move_id,
                    const string& = "basic_attack");
   virtual void Enter() override;
   virtual void Exit() override;
@@ -387,9 +388,9 @@ class StateUITargeting : public StateUIOperable {
   const core::AttackRange& GetRange();
 
  private:
-  uint32_t unit_key_;
+  core::UnitKey unit_key_;
   core::UId unit_id_;
-  uint32_t move_id_;
+  core::MoveKey move_id_;
   Vec2D pos_;
   string magic_id_;
   bool is_basic_attack_;

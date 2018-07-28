@@ -291,8 +291,7 @@ int CmdBasicAttack::ComputeDamage(Game* stage, Map* map) {
 
 // CmdMagic
 
-CmdMagic::CmdMagic(const UId& atk, const UId& def, Magic* magic)
-    : CmdAct(atk, def), magic_(magic) {}
+CmdMagic::CmdMagic(const UId& atk, const UId& def, Magic* magic) : CmdAct(atk, def), magic_(magic) {}
 
 unique_ptr<Cmd> CmdMagic::Do(Game* stage) {
   auto atk = stage->GetUnit(atk_);
@@ -322,15 +321,13 @@ int CmdMagic::ComputeDamage(Map* map, const Unit* atk, const Unit* def) {
 CmdActResult::CmdActResult(const UId& atk, const UId& def, Type type, Magic* magic)
     : CmdTwoUnits(atk, def), type_(type), magic_(magic) {}
 
-CmdActResult::CmdActResult(const UId& atk, const UId& def, Type type)
-    : CmdActResult(atk, def, type, nullptr) {
+CmdActResult::CmdActResult(const UId& atk, const UId& def, Type type) : CmdActResult(atk, def, type, nullptr) {
   ASSERT(type == Type::kBasicAttack);
 }
 
 // CmdHit
 
-CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, Magic* magic,
-               int damage)
+CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, Magic* magic, int damage)
     : CmdActResult(atk, def, type, magic), hit_type_(hit_type), damage_(damage) {}
 
 CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, int damage)
@@ -357,11 +354,9 @@ unique_ptr<Cmd> CmdHit::Do(Game* stage) {
 
 // CmdMiss
 
-CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type, Magic* magic)
-    : CmdActResult(atk, def, type, magic) {}
+CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type, Magic* magic) : CmdActResult(atk, def, type, magic) {}
 
-CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type)
-    : CmdActResult(atk, def, type) {}
+CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type) : CmdActResult(atk, def, type) {}
 
 unique_ptr<Cmd> CmdMiss::Do(Game* stage) {
   UNUSED(stage);
@@ -537,8 +532,7 @@ unique_ptr<Cmd> CmdSpeak::Do(Game*) {
 
 // CmdRestoreHp
 
-CmdRestoreHp::CmdRestoreHp(const UId& unit, int ratio, int adder)
-    : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
+CmdRestoreHp::CmdRestoreHp(const UId& unit, int ratio, int adder) : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
 
 unique_ptr<Cmd> CmdRestoreHp::Do(Game* stage) {
   auto unit = stage->GetUnit(unit_);

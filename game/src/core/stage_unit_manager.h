@@ -1,8 +1,8 @@
 #ifndef MENGDE_CORE_STAGE_UNIT_MANAGER_H_
 #define MENGDE_CORE_STAGE_UNIT_MANAGER_H_
 
-#include "util/common.h"
 #include "id.h"
+#include "util/common.h"
 
 namespace mengde {
 namespace core {

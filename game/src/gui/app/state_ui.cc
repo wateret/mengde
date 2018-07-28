@@ -253,12 +253,19 @@ void StateUIView::Update() {
   }
 }
 
+void StateUIView::Enter() {
+  StateUIOperable::Enter();
+  units_ = gi_->QueryUnits();
+}
+
+void StateUIView::Exit() { StateUIOperable::Exit(); }
+
 bool StateUIView::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
     Vec2D pos = GetCursorCell();
-    auto unit_id_opt = units_.FindByPos(pos);
-    if (unit_id_opt) {
-      gv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit_id_opt.get()));
+    auto unit_id = units_.FindByPos(pos);
+    if (unit_id) {
+      gv_->PushUIState(new StateUIUnitSelected(WrapBase(), unit_id));
     } else {
       LOG_DEBUG("Not valid unit");
 
@@ -293,7 +300,7 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 // StateUIUnitSelected
 
-StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, uint32_t unit_key)
+StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, const core::UnitKey& unit_key)
     : StateUIOperable(base), unit_key_(unit_key), moves_(gi_->QueryMoves(unit_key_)) {
   // TODO Change the way we handle temporary position (DO NOT move/restore the unit in stage_)
   const core::Unit* unit = gi_->GetUnit(unit_key_);
@@ -330,6 +337,7 @@ void StateUIUnitSelected::Update() {
 
 bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsLeftButtonUp()) {
+    // TODO Provide an API for search rather than getting raw container from `moves_`
     const vector<Vec2D>& cells = moves_.moves();
     Vec2D pos = GetCursorCell();
 
@@ -337,7 +345,7 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
     if (found != cells.end()) {
       uint32_t move_id = found - cells.begin();
       LOG_DEBUG("Move to pos (%d, %d) / move_id : %u", pos.x, pos.y, move_id);
-      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_key_, pos, move_id));
+      gv_->PushUIState(new StateUIMoving(WrapBase(), unit_key_, pos, core::MoveKey{move_id}));
     } else {
       //      gv_->ChangeStateUI(new StateUIView(game_, gv_));
     }
@@ -363,15 +371,22 @@ bool StateUIUnitSelected::OnKeyEvent(const foundation::KeyEvent& e) {
 
 // StateUIMoving
 
-StateUIMoving::StateUIMoving(StateUI::Base base, uint32_t unit_key, Vec2D dest, uint32_t move_id)
-    : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key_)), dest_(dest), frames_(-1), flag_(Flag::kInputActNext), move_id_(move_id) {
+StateUIMoving::StateUIMoving(StateUI::Base base, const core::UnitKey& unit_key, Vec2D dest,
+                             const core::MoveKey& move_id)
+    : StateUI(base),
+      unit_key_(unit_key),
+      unit_id_(gi_->QueryUnits().Get(unit_key_)),
+      dest_(dest),
+      frames_(-1),
+      flag_(Flag::kInputActNext),
+      move_id_(move_id) {
   path_ = gi_->GetPath(unit_id_, dest_);
   ASSERT(dest_ == path_[0]);
 }
 
 // TODO Remove code duplication with above one
 StateUIMoving::StateUIMoving(StateUI::Base base, const core::UId& unit_id, Vec2D dest)
-    : StateUI(base), unit_id_(unit_id), dest_(dest), frames_(-1), flag_(Flag::kNone), move_id_(0xffffffff) {
+    : StateUI(base), unit_id_(unit_id), dest_(dest), frames_(-1), flag_(Flag::kNone), move_id_{0xffffffff} {
   path_ = gi_->GetPath(unit_id_, dest_);
   ASSERT(dest_ == path_[0]);
 }
@@ -430,8 +445,8 @@ void StateUIMoving::Render(Drawer* drawer) {
 
 // StateUIMagic
 
-StateUIMagic::StateUIMagic(StateUI::Base base, const core::UId& atk_id,
-                           const core::UId& def_id, core::Magic* magic, bool hit, int damage)
+StateUIMagic::StateUIMagic(StateUI::Base base, const core::UId& atk_id, const core::UId& def_id, core::Magic* magic,
+                           bool hit, int damage)
     : StateUI(base),
       unit_id_atk_(atk_id),
       unit_id_def_(def_id),
@@ -555,8 +570,8 @@ bool StateUIEmptySelected::OnMouseButtonEvent(const foundation::MouseButtonEvent
 
 // StateUIAttack
 
-StateUIAttack::StateUIAttack(StateUI::Base base, const core::UId& atk_id,
-                             const core::UId& def_id, bool hit, bool critical, int damage)
+StateUIAttack::StateUIAttack(StateUI::Base base, const core::UId& atk_id, const core::UId& def_id, bool hit,
+                             bool critical, int damage)
     : StateUI(base),
       unit_id_atk_(atk_id),
       unit_id_def_(def_id),
@@ -687,8 +702,7 @@ void StateUIAttack::Update() {
 
 // StateUIUnitTooltipAnim
 
-StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, const core::UId& unit_id, int hp,
-                                               int mp)
+StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, const core::UId& unit_id, int hp, int mp)
     : StateUI(base), frames_(-1), unit_id_(unit_id), hp_(hp), mp_(mp) {
   auto unit = gi_->GetUnit(unit_id_);
   const core::HpMp& cur_hpmp = unit->GetCurrentHpMp();
@@ -757,7 +771,7 @@ void StateUIUnitTooltipAnim::Render(Drawer*) {}
 
 // StateUITargeting
 
-StateUITargeting::StateUITargeting(StateUI::Base base, uint32_t unit_key, uint32_t move_id,
+StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit_key, const core::MoveKey& move_id,
                                    const string& magic_id)
     : StateUIOperable(base),
       unit_key_(unit_key),
@@ -820,25 +834,25 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
     auto move_id = move_id_;
 
     if (is_basic_attack_) {
-      auto act_id_s = acts_.Find(map_pos);
-      if (act_id_s != boost::none) {
-        uint32_t act_id = act_id_s.get();
+      auto act_id = acts_.Find(map_pos);
+      if (act_id) {
         gv_->InitUIStateMachine();
         // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
         gv_->NextFrame([=]() {
           gi_->PushAction(unit_key, move_id, core::ActionType::kBasicAttack, act_id);
-          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_key, move_id, act_id);
+          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_key.Value(), move_id.Value(),
+                    act_id.Value());
         });
       }
     } else {
-      auto act_id_s = acts_.FindMagic(magic_id_, map_pos);
-      if (act_id_s != boost::none) {
-        uint32_t act_id = act_id_s.get();
+      auto act_id = acts_.FindMagic(magic_id_, map_pos);
+      if (act_id) {
         gv_->InitUIStateMachine();
         // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
         gv_->NextFrame([=]() {
           gi_->PushAction(unit_key, move_id, core::ActionType::kMagic, act_id);
-          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, Magic ActId:%u}", unit_key, move_id, act_id);
+          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_key.Value(), move_id.Value(),
+                    act_id.Value());
         });
       }
     }
@@ -891,7 +905,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
 // StateUIAction
 
-StateUIAction::StateUIAction(StateUI::Base base, uint32_t unit_key, uint32_t move_id)
+StateUIAction::StateUIAction(StateUI::Base base, const core::UnitKey& unit_key, const core::MoveKey& move_id)
     : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key)), move_id_(move_id) {
   pos_ = gi_->QueryMoves(unit_key_).Get(move_id_);
 }
@@ -899,7 +913,7 @@ StateUIAction::StateUIAction(StateUI::Base base, uint32_t unit_key, uint32_t mov
 void StateUIAction::Enter() {
   gv_->SetSkipRender(unit_id_, true);
   UnitActionView* unit_action_view = gv_->unit_action_view();
-  unit_action_view->SetUnitAndMoveId(unit_key_, move_id_);
+  unit_action_view->SetUnitAndMoveKey(unit_key_, move_id_);
   unit_action_view->SetCoords(layout::CalcPositionNearUnit(unit_action_view->GetFrameSize(), gv_->GetFrameSize(),
                                                            gv_->GetCameraCoords(), pos_));
   unit_action_view->visible(true);
@@ -940,8 +954,9 @@ bool StateUIAction::OnKeyEvent(const foundation::KeyEvent& e) {
 
 // StateUIMagicSelection
 
-StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, uint32_t unit_key, uint32_t move_id)
-    : StateUI(base), unit_key_(unit_key), move_id_(move_id) {
+StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, const core::UnitKey& unit_key,
+                                             const core::MoveKey& move_id)
+    : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key_)), move_id_(move_id) {
   pos_ = gi_->QueryMoves(unit_key).Get(move_id_);
 }
 
@@ -954,12 +969,12 @@ void StateUIMagicSelection::Enter() {
   mlv->SetData(unit_key_, move_id_, magic_list);
   mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(), pos_));
   mlv->visible(true);
-  gv_->SetSkipRender(unit_key_, true);
+  gv_->SetSkipRender(unit_id_, true);
 }
 
 void StateUIMagicSelection::Exit() {
   gv_->magic_list_view()->visible(false);
-  gv_->SetSkipRender(unit_key_, false);
+  gv_->SetSkipRender(unit_id_, false);
 }
 
 void StateUIMagicSelection::Render(Drawer* drawer) {
