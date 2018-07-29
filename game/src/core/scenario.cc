@@ -11,7 +11,7 @@ Scenario::Scenario(const string& scenario_id)
     : scenario_id_(scenario_id), stage_ids_(), stage_no_(0), rc_(), assets_(nullptr), stage_(nullptr) {
   const Path base_path(scenario_id_);
 
-  ConfigLoader loader(base_path / "config.lua");
+  ConfigLoader loader(base_path / "script" / "config.lua");
   rc_ = loader.GetResources();
   stage_ids_ = loader.GetStages();
 
@@ -21,7 +21,7 @@ Scenario::Scenario(const string& scenario_id)
 }
 
 Stage* Scenario::NewGame(const string& stage_id) {
-  const Path path = GameEnv::GetInstance()->GetScenarioPath() / scenario_id_ / "stage" / (stage_id + ".lua");
+  const Path path = GameEnv::GetInstance()->GetScenarioPath() / scenario_id_ / "script" / (stage_id + ".lua");
   return new Stage(rc_, assets_, path);
 }
 

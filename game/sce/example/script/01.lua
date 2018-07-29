@@ -37,7 +37,6 @@ gstage = {
         num_required_selectables = 0,
         selectables = {
             { position = {9, 4} },
---            { position = {5, 3} }
         }
     },
     rewards = { -- NYI
