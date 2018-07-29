@@ -23,7 +23,7 @@ Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_scrip
     : rc_(rc),
       assets_(assets),  // FIXME Change this to clone the object as we need to rollback assets for some cases
       lua_(nullptr),
-      lua_this_(this, "Stage"),
+      lua_this_(this, "Game"),
       user_interface_(new UserInterface(this)),
       commander_(nullptr),
       deployer_(nullptr),
@@ -65,7 +65,7 @@ lua::Lua* Stage::CreateLua(const Path& stage_script_path) {
   {
     lua->RegisterClass(lua_this_.name());
 
-#define MACRO_LUA_GAME(cname, luaname) lua->RegisterMethod(lua_this_.name(), string(#luaname));
+#define MACRO_LUA_GAME(cname, luaname) lua->RegisterMethod(lua_this_.name(), string{#luaname});
 #include "lua_api_game.h.inc"
 #undef MACRO_LUA_GAME
   }
