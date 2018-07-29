@@ -25,7 +25,7 @@ void EventEffectList::AddOnCmdEffect(OnCmdEventEffect* e) { oncmd_elements_.push
 unique_ptr<Cmd> EventEffectList::RaiseEvent(event::GeneralEvent type, Unit* unit) const {
   CmdQueue* cmdq = new CmdQueue();
   for (auto e : general_elements_) {
-    if (e->typeof(type)) {
+    if (e->type(type)) {
       *cmdq += e->OnEvent(unit);
     }
   }
@@ -34,7 +34,7 @@ unique_ptr<Cmd> EventEffectList::RaiseEvent(event::GeneralEvent type, Unit* unit
 
 void EventEffectList::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act) const {
   for (auto e : oncmd_elements_) {
-    if (e->typeof(type)) {
+    if (e->type(type)) {
       e->OnEvent(unit, act);
     }
   }

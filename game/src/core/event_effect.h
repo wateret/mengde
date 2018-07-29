@@ -37,7 +37,7 @@ class GeneralEventEffect : public EventEffectBase {
  public:
   GeneralEventEffect(event::GeneralEvent type, uint16_t turns_left);
   virtual unique_ptr<Cmd> OnEvent(Unit* unit) = 0;
-  bool typeof(event::GeneralEvent type) { return type_ == type; }
+  bool type(event::GeneralEvent type) { return type_ == type; }
 
  private:
   event::GeneralEvent type_;
@@ -50,7 +50,7 @@ class OnCmdEventEffect : public EventEffectBase {
  public:
   OnCmdEventEffect(event::OnCmdEvent type, uint16_t turns_left);
   virtual void OnEvent(Unit* unit, CmdAct* act) = 0;
-  bool typeof(event::OnCmdEvent type) { return type_ == type; }
+  bool type(event::OnCmdEvent type) { return type_ == type; }
 
  private:
   event::OnCmdEvent type_;
