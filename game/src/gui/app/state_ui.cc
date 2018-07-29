@@ -838,8 +838,9 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
       if (act_id) {
         gv_->InitUIStateMachine();
         // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
+        auto gi = gi_;
         gv_->NextFrame([=]() {
-          gi_->PushAction(unit_key, move_id, core::ActionType::kBasicAttack, act_id);
+          gi->PushAction(unit_key, move_id, core::ActionType::kBasicAttack, act_id);
           LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_key.Value(), move_id.Value(),
                     act_id.Value());
         });
@@ -849,8 +850,9 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
       if (act_id) {
         gv_->InitUIStateMachine();
         // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
+        auto gi = gi_;
         gv_->NextFrame([=]() {
-          gi_->PushAction(unit_key, move_id, core::ActionType::kMagic, act_id);
+          gi->PushAction(unit_key, move_id, core::ActionType::kMagic, act_id);
           LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_key.Value(), move_id.Value(),
                     act_id.Value());
         });

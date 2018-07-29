@@ -28,8 +28,8 @@ RootView::RootView(const Rect& frame, core::Scenario* scenario, App* app)
 RootView::~RootView() {
   // FIXME ui_view_ is deleted first then StateMachine destructs and it could do something with ui_views_ then
   //       we are doomed.
-  delete ui_views_;
   delete game_view_;
+  delete ui_views_;
 }
 
 void RootView::Update() {

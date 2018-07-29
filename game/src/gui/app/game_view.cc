@@ -37,7 +37,7 @@ GameView::GameView(const Rect& frame, core::Stage* game, App* app)
   ui_state_machine_.PushState(new StateUIView({stage_, gi_, this}));
 }
 
-GameView::~GameView() { delete gi_; }
+GameView::~GameView() {}
 
 void GameView::Update() {
   frame_count_++;

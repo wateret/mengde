@@ -38,7 +38,8 @@ StateMachine<T>::StateMachine(T state) {
 template <typename T>
 StateMachine<T>::~StateMachine() {
   ASSERT(!IsStackEmpty());
-  while (!stack_.empty()) {
+  while (!IsStackEmpty()) {
+    LOG_DEBUG("StateMachine Destructor SIZE : %u", stack_.size());
     PopState();
   }
 }

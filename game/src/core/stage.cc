@@ -47,6 +47,7 @@ Stage::~Stage() {
   delete deployer_;
   delete map_;
   delete stage_unit_manager_;
+  delete user_interface_;
 }
 
 lua::Lua* Stage::CreateLua(const Path& stage_script_path) {

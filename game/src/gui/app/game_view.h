@@ -106,10 +106,10 @@ class GameView : public View {
 
   App* app_;
 
+  std::unordered_set<uint32_t> skip_render_;
+
   StateMachine<StateUI*> ui_state_machine_;
   queue<NextFrameCallback> frame_callbacks_;
-
-  std::unordered_set<uint32_t> skip_render_;
 
   Vec2D mouse_coords_;
   Vec2D camera_coords_;
