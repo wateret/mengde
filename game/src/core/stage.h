@@ -43,7 +43,7 @@ class Stage : public IDeployHelper {
   // Map related //
   Map* GetMap() { return map_; }
   Vec2D GetMapSize() { return map_->GetSize(); }
-  std::string GetMapBitmapPath() { return "map/" + map_->GetModelId(); }
+  std::string GetMapId() { return map_->GetModelId(); }
 
   // General //
   void ForEachUnitConst(std::function<void(const Unit*)> fn) const;

@@ -6,6 +6,7 @@
 #include "gui/uifw/layout_helper.h"
 #include "gui/uifw/rect_view.h"
 #include "gui/uifw/view.h"
+#include "resource_path.h"
 
 namespace mengde {
 namespace gui {
@@ -17,7 +18,7 @@ MinimapView::MinimapView(const Rect& frame, core::Stage* game, Vec2D* camera_coo
   padding(0);
 
   Rect bg_frame = GetActualFrame();
-  bg_image_view_ = new ImageView(bg_frame, game->GetMapBitmapPath());
+  bg_image_view_ = new ImageView(bg_frame, rcpath::MapPath(game->GetMapId()).ToString());
   AddChild(bg_image_view_);
 
   mini_units_view_ = new MinimapUnitsView(bg_frame, game, map_size);

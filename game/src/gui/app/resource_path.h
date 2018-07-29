@@ -14,6 +14,7 @@ namespace app {
 
 namespace rcpath {
 
+Path MapPath(const std::string& id);
 Path UnitModelPath(const std::string& id, SpriteType type);
 Path EquipmentModelPath(const std::string& id);
 Path PortraitPath(const std::string& id);

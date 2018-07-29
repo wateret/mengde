@@ -9,6 +9,7 @@
 #include "gui/foundation/texture_manager.h"
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/sprite_type.h"
+#include "resource_path.h"
 #include "ui_views.h"
 
 namespace mengde {
@@ -48,9 +49,9 @@ void GameView::Render(Drawer* drawer) {
   drawer->SetOffset(camera_coords_);
 
   // Render Background
-  string path = gi_->GetMapId();
+  Path path = rcpath::MapPath(gi_->GetMapId());
   TextureManager* tm = drawer->GetTextureManager();
-  Texture* background = tm->FetchTexture(path);
+  Texture* background = tm->FetchTexture(path.ToString());
 
   const Vec2D kScreenSize = drawer->GetWindowSize();
   Rect src_rect({0, 0}, kScreenSize);

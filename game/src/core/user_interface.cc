@@ -179,7 +179,7 @@ vector<Vec2D> UserInterface::GetPath(const UId& unit_id, Vec2D pos) const {
 
 Vec2D UserInterface::GetMapSize() const { return stage_->GetMapSize(); }
 
-string UserInterface::GetMapId() const { return stage_->GetMapBitmapPath(); }
+string UserInterface::GetMapId() const { return stage_->GetMapId(); }
 
 bool UserInterface::HasNextCmd() const { return stage_->HasNext(); }
 

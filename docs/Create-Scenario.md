@@ -19,42 +19,35 @@ Let's take a look at the details for each.
 
 ```
 sce
-└── {example}
-    ├── config.lua
-    ├── stage
-    │   ├── {01}.lua
-    │   └── {02}.lua
-    ├── equipment
-    │   ├── {heaven_sword}.bmp
-    │   └── {short_sword}.bmp
-    ├── magic
-    │   ├── {buff_dex}.bmp
-    │   ├── {fire_0}.bmp
-    │   ├── {heal_0}.bmp
-    ├── map
-    │   ├── {01}.bmp
-    │   └── {02}.bmp
-    ├── model
-    │   ├── {CaoCao-1}
-    │   │   ├── atk.bmp
-    │   │   ├── mov.bmp
-    │   │   └── spc.bmp
-    │   ├── {CaoCao-2}
-    │   │   ├── atk.bmp
-    │   │   ├── mov.bmp
-    │   │   └── spc.bmp
-    │   ├── {CaoCao-3}
-    │   │   ├── atk.bmp
-    │   │   ├── mov.bmp
-    │   │   └── spc.bmp
-    │   └── {GuanYu}
-    │       ├── atk.bmp
-    │       ├── mov.bmp
-    │       └── spc.bmp
-    └── portrait
-        ├── {CaoCao}.bmp
-        ├── {CaoHong}.bmp
-        └── {ZhangLiao}.bmp
+└── {example}                          # Scenario ID
+    ├── gui                            # GUI resources
+    │   ├── equipment                  # Equipment images
+    │   │   ├── {heaven_sword}.bmp
+    │   │   └── {short_sword}.bmp
+    │   ├── magic                      # Magic sprites
+    │   │   ├── {fire_0}.bmp
+    │   │   ├── {fire_1}.bmp
+    │   │   └── {heal_0}.bmp
+    │   ├── map                        # Background map images
+    │   │   ├── {stage_01}.bmp
+    │   │   └── {stage_01}.bmp
+    │   ├── model                      # Unit sprites
+    │   │   ├── {CaoCao-1}
+    │   │   │   ├── atk.bmp
+    │   │   │   ├── mov.bmp
+    │   │   │   └── spc.bmp
+    │   │   └── {GuanYu}
+    │   │       ├── atk.bmp
+    │   │       ├── mov.bmp
+    │   │       └── spc.bmp
+    │   └── portrait                   # Hero portrait images
+    │       ├── {CaoCao}.bmp
+    │       ├── {CaoHong}.bmp
+    │       └── {ZhangLiao}.bmp
+    └── script                         # Global/Stage Scripts
+        ├── {stage_01}.lua
+        ├── {stage_02}.lua
+        └── config.lua                 # Global config script
 ```
 
 ### Bitmap Resource
