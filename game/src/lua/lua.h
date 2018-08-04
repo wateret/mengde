@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "ref.h"
 #include "table.h"
 
 extern "C" {
@@ -54,6 +55,17 @@ class ScriptRuntimeException : public LuaException {
   std::string message_;
 };
 
+class UncallableException : public LuaException {
+ public:
+  UncallableException(const Ref& ref) : LuaException{}, ref_{ref} {}
+  virtual const char* what() const throw() {
+    return ("Tried to call a value which is not a function (reference : " + std::to_string(ref_.value()) + ")").c_str();
+  }
+
+ private:
+  Ref ref_;
+};
+
 class LuaClass {
  public:
   template <typename T>
@@ -81,10 +93,20 @@ class Lua {
 
   void PopStack(unsigned n) { lua_pop(L, n); }
 
-  // Call a function with variadic template
+  // Call a function with function name
   template <typename R, typename... Args>
   R Call(const std::string& name, Args... args) {
     GetToStack(name);  // XXX should pop more when name is nested
+    return CallImpl<R>(0, args...);
+  }
+
+  // Call a function with reference
+  template <typename R, typename... Args>
+  R Call(Ref ref, Args... args) {
+    lua_rawgeti(L, LUA_REGISTRYINDEX, ref.value());
+    if (!lua_isfunction(L, -1)) {
+      throw UncallableException{ref};
+    }
     return CallImpl<R>(0, args...);
   }
 
@@ -243,6 +265,8 @@ class Lua {
   using is_string = std::is_same<std::string, T>;
   template <typename T>
   using is_table = std::is_same<Table*, T>;
+  template <typename T>
+  using is_ref = std::is_same<Ref, T>;
 
   template <typename T>
   struct is_vector {
@@ -412,6 +436,14 @@ class Lua {
     }
   }
   */
+
+  // lua::Ref type
+
+  template <typename T>
+  typename std::enable_if<is_ref<T>::value, T>::type GetTop() {
+    int raw_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    return Ref{raw_ref};
+  }
 
   void LogError(const std::string&);
   void LogWarning(const std::string&);
