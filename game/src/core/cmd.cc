@@ -59,7 +59,7 @@ unique_ptr<Cmd> CmdQueue::Do(Stage* game) {
         break;
       case Stage::Status::kVictory:
         LOG_DEBUG("Victory!");
-        game->Push(unique_ptr<CmdGameVictory>(new CmdGameVictory()));
+        game->Push(std::make_unique<CmdGameVictory>());
         break;
       default:
         break;
@@ -229,15 +229,15 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
       damage = damage * 3 / 4;  // 0.75x
     }
     damage = std::max(damage, 1);
-    ret->Append(unique_ptr<CmdHit>(new CmdHit(atk_, def_, CmdActResult::Type::kBasicAttack, hit_type, damage)));
+    ret->Append(std::make_unique<CmdHit>(atk_, def_, CmdActResult::Type::kBasicAttack, hit_type, damage));
   } else {
-    ret->Append(unique_ptr<CmdMiss>(new CmdMiss(atk_, def_, CmdActResult::Type::kBasicAttack)));
+    ret->Append(std::make_unique<CmdMiss>(atk_, def_, CmdActResult::Type::kBasicAttack));
   }
 
   // Double attack
   bool reserve_second_attack = TryBasicAttackDouble(game);
   if (!IsSecond() && reserve_second_attack) {
-    ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(atk_, def_, (Type)(type_ | Type::kSecond))));
+    ret->Append(std::make_unique<CmdBasicAttack>(atk_, def_, (Type)(type_ | Type::kSecond)));
   }
 
   // atk_->GainExp(def_);
@@ -246,7 +246,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
   bool is_last_attack = (reserve_second_attack == IsSecond());
   if (is_last_attack && !IsCounter() && def->IsInRange(atk->GetPosition())) {
     LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def->GetId().c_str(), atk->GetId().c_str());
-    ret->Append(unique_ptr<CmdBasicAttack>(new CmdBasicAttack(def_, atk_, CmdBasicAttack::Type::kCounter)));
+    ret->Append(std::make_unique<CmdBasicAttack>(def_, atk_, CmdBasicAttack::Type::kCounter));
   }
   return unique_ptr<Cmd>(ret);
 }
@@ -343,7 +343,7 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
     LOG_INFO("%s does damage to %s by %d (%s)", atk->GetId().c_str(), def->GetId().c_str(), damage_, hit_type.c_str());
 
     if (!def->DoDamage(damage_)) {  // unit is dead
-      ret = unique_ptr<CmdKilled>(new CmdKilled(def_));
+      ret = std::make_unique<CmdKilled>(def_);
     }
   } else {
     ASSERT(type_ == Type::kMagic);
@@ -400,7 +400,7 @@ unique_ptr<Cmd> CmdAction::Do(Stage* game) {
   auto doer = game->GetUnit(doer_id);
   ASSERT(doer != nullptr);
 
-  unique_ptr<CmdQueue> ret(new CmdQueue());
+  auto ret = std::make_unique<CmdQueue>();
 
   if (flag_ == Flag::kNone) {
     UNREACHABLE("Unsupported");

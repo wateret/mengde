@@ -72,7 +72,7 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
 
   switch (type) {
     case ActionType::kStay:
-      acts_.push_back(unique_ptr<CmdStay>(new CmdStay(uid)));
+      acts_.push_back(std::make_unique<CmdStay>(uid));
       break;
 
     case ActionType::kBasicAttack: {
@@ -83,8 +83,8 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
             if (!stage->IsValidCoords(pos)) return;
             auto def = stage->GetUnitInCell(pos);
             if (def != nullptr && atk->IsHostile(def)) {
-              acts_.push_back(unique_ptr<CmdBasicAttack>(
-                  new CmdBasicAttack(atk_id, def->GetUnitId(), CmdBasicAttack::Type::kActive)));
+              acts_.push_back(
+                  std::make_unique<CmdBasicAttack>(atk_id, def->GetUnitId(), CmdBasicAttack::Type::kActive));
             }
           },
           move_pos);
@@ -103,7 +103,7 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
               if (!stage->IsValidCoords(pos)) return;
               const Unit* def = stage->GetUnitInCell(pos);
               if (def != nullptr && atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
-                acts_.push_back(unique_ptr<CmdMagic>(new CmdMagic(atk_id, def->GetUnitId(), magic)));
+                acts_.push_back(std::make_unique<CmdMagic>(atk_id, def->GetUnitId(), magic));
               }
             },
             move_pos);
@@ -195,7 +195,7 @@ void UserInterface::PushAction(const UnitKey& unit_key, const MoveKey& move_id, 
   unique_ptr<CmdAct> act = GetActCmd(unit_key, move_id, type, act_id);
 
   CmdAction* cmd = new CmdAction(stage_->IsUserTurn() ? CmdAction::Flag::kUserInput : CmdAction::Flag::kDecompose);
-  cmd->SetCmdMove(unique_ptr<CmdMove>(new CmdMove(uid, pos)));
+  cmd->SetCmdMove(std::make_unique<CmdMove>(uid, pos));
   cmd->SetCmdAct(std::move(act));
 
   stage_->Push(unique_ptr<CmdAction>(cmd));

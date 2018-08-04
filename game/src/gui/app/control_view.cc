@@ -27,7 +27,7 @@ ControlView::ControlView(const Rect& rect, core::Stage* game, GameView* gv) : Co
     if (e.IsLeftButtonUp()) {
       // TODO Handle clicked twice in a frame
       this->SetEndTurnVisible(false);
-      this->stage_->Push(unique_ptr<core::CmdEndTurn>(new core::CmdEndTurn()));
+      this->stage_->Push(std::make_unique<core::CmdEndTurn>());
       gv->InitUIStateMachine();
       return true;
     }

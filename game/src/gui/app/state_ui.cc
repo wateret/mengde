@@ -245,7 +245,7 @@ void StateUIView::Update() {
   }
 
   if (stage_->IsAITurn()) {
-    stage_->Push(unique_ptr<core::CmdPlayAI>(new core::CmdPlayAI()));
+    stage_->Push(std::make_unique<core::CmdPlayAI>());
   }
 
   if (stage_->HasNext()) {
