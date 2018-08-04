@@ -25,7 +25,7 @@ gstage = {
             "fffffffWffffffrrrrrfffffffmm",
             "WWWWWWWWfffffrrrrrrffffffmmm"
         },
-        file = "map.bmp"
+        file = "map"
     },
     deploy = {
         unselectables = {
