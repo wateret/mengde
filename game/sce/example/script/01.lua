@@ -88,3 +88,7 @@ function end_condition(game)
     end
     return Enum.status.undecided
 end
+
+function main(game)
+    game:set_end_condition(end_condition)
+end

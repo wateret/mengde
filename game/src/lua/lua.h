@@ -431,6 +431,8 @@ class Lua {
   template <typename T>
   typename std::enable_if<is_ref<T>::value, T>::type GetTop() {
     int raw_ref = luaL_ref(L, LUA_REGISTRYINDEX);
+    // Must push the ref back since it is has been popped by luaL_ref
+    lua_rawgeti(L, LUA_REGISTRYINDEX, raw_ref);
     return Ref{raw_ref};
   }
 

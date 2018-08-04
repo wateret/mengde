@@ -10,4 +10,5 @@ MACRO_LUA_GAME(GetNumEnemiesAlive,  get_num_enemies_alive)
 MACRO_LUA_GAME(GetNumOwnsAlive,     get_num_owns_alive)
 MACRO_LUA_GAME(PushCmdMove,         push_cmd_move)
 MACRO_LUA_GAME(PushCmdSpeak,        push_cmd_speak)
+MACRO_LUA_GAME(SetEndCondition,     set_end_condition)
 

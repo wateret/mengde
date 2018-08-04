@@ -7,6 +7,8 @@
 #include "deployer.h"
 #include "event_effect.h"
 #include "formulae.h"
+#include "lua/ref.h"
+#include "lua_callbacks.h"
 #include "magic.h"
 #include "stage_unit_manager.h"
 #include "user_interface.h"
@@ -24,6 +26,7 @@ Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_scrip
       assets_(assets),  // FIXME Change this to clone the object as we need to rollback assets for some cases
       lua_(nullptr),
       lua_this_(this, "Game"),
+      lua_callbacks_{new LuaCallbacks},
       user_interface_(new UserInterface(this)),
       commander_(nullptr),
       deployer_(nullptr),
@@ -87,6 +90,10 @@ lua::Lua* Stage::CreateLua(const Path& stage_script_path) {
 
   // Run the main script
   lua->RunFile(stage_script_path.ToString());
+
+  // Run main function
+  lua->Call<void>(string{"main"}, lua_this_);
+
   return lua;
 }
 
@@ -252,7 +259,7 @@ void Stage::Push(unique_ptr<Cmd> cmd) {
 
 bool Stage::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
-  uint32_t res = lua_->Call<uint32_t>("end_condition", lua_this_);
+  uint32_t res = lua_->Call<uint32_t>(lua_callbacks_->end_condition(), lua_this_);
   status_ = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
@@ -312,6 +319,8 @@ void Stage::ObtainEquipment(const string& id, uint32_t amount) {
   Equipment* eq = rc_.equipment_manager->Get(id);
   assets_->AddEquipment(eq, amount);
 }
+
+void Stage::SetEndCondition(const lua::Ref& ref) { lua_callbacks_->end_condition(ref); }
 
 bool Stage::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);

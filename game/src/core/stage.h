@@ -7,6 +7,7 @@
 
 #include "i_deploy_helper.h"
 #include "lua/lua.h"
+#include "lua_callbacks.h"
 #include "map.h"
 #include "resource_manager.h"
 #include "turn.h"
@@ -17,7 +18,8 @@ class Path;
 
 namespace lua {
 class Lua;
-}
+class Ref;
+}  // namespace lua
 
 namespace mengde {
 namespace core {
@@ -25,6 +27,7 @@ namespace core {
 class Assets;
 class Cmd;
 class Commander;
+class LuaCallbacks;
 class Magic;
 class Deployer;
 class StageUnitManager;
@@ -91,6 +94,7 @@ class Stage : public IDeployHelper {
   uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
   //  bool UnitPutWeaponOn(uint32_t, const string&);
+  void SetEndCondition(const lua::Ref& ref);
 
   // APIs for AI //
   vector<Vec2D> FindMovablePos(Unit*);
@@ -113,7 +117,8 @@ class Stage : public IDeployHelper {
   ResourceManagers rc_;
   Assets* assets_;
   lua::Lua* lua_;
-  lua::LuaClass lua_this_;  // LuaClass with this object
+  lua::LuaClass lua_this_;  // LuaClass of this object
+  std::unique_ptr<LuaCallbacks> lua_callbacks_;
   UserInterface* user_interface_;
   Commander* commander_;
   Deployer* deployer_;
