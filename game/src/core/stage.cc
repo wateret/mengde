@@ -93,10 +93,10 @@ lua::Lua* Stage::CreateLua(const Path& stage_script_path) {
 Map* Stage::CreateMap() {
   ASSERT(lua_ != nullptr);
 
-  vector<uint32_t> size = lua_->GetVector<uint32_t>("gstage.map.size");
+  auto size = lua_->Get<vector<uint32_t>>("gstage.map.size");
   uint32_t cols = size[0];
   uint32_t rows = size[1];
-  vector<string> terrain = lua_->GetVector<string>("gstage.map.terrain");
+  auto terrain = lua_->Get<vector<string>>("gstage.map.terrain");
   string file = lua_->Get<string>("gstage.map.file");  // FIXME filename should be same as stage id + .bmp
   ASSERT(rows == terrain.size());
   for (auto e : terrain) {

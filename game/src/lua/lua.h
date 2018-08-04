@@ -110,17 +110,6 @@ class Lua {
     return CallImpl<R>(0, args...);
   }
 
-  template <typename T>
-  std::vector<T> GetVector(const std::string& name = "") {
-    std::vector<T> vec;
-    ForEachTableEntry(name, [&](Lua* lua, const std::string&) {
-      T val = lua->GetTop<T>();
-      vec.push_back(val);
-    });
-    // FIXME pop or not?
-    return vec;
-  }
-
   // Get a required entry
   // If the entry is not exist, emits an error.
   template <typename T>
