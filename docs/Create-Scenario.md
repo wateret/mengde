@@ -68,23 +68,42 @@ In the configuration, there will be all information that is samely affected in c
 
 #### The Game Flow
 
-One must define these functions in the global scope of Lua.
+You should call some set(register) functions from `main` function.
 
-1. `on_deploy(game)`
-	- Called when the very beggining of the stage
-	- Generate own units
-1. `on_begin(game)`
-	- Called right after the deployment
-	- Generate allies and enemies
-1. `end_condition(game)`
-	- Called every time after an unit does its action
-	- Must return an enum value - whether victory, defeat or undecided
-1. `on_victory(game)`
-	- Called when win the stage
-	- Add actions for the units on victory
-1. `on_defeat(game)`
-	- Called when lose the stage
-	- Add actions for the units on defeat
+For example,
+
+```lua
+function end_condition(game)
+    -- some code for end condition
+end
+
+function main(game)
+    game:set_end_condition(end_condition)
+end
+```
+
+Here is the list of register C APIs. Note that this list can change frequently as we are in the beggining stage of the development.
+
+1. `game:set_on_deploy(callback)`, where `void callback(game)`
+    - (Required)
+    - Called when the very beggining of the stage
+    - Generate own units
+1. `game:set_on_begin(callback)`, where `void callback(game)`
+    - (Required)
+    - Called right after the deployment
+    - Generate allies and enemies
+1. `game:set_on_victory(callback)`, where `void callback(game)`
+    - (Required)
+    - Called when win the stage
+    - Add actions for the units on victory
+1. `game:set_on_defeat(callback)`, where `void callback(game)`
+    - (Required)
+    - Called when lose the stage
+    - Add actions for the units on defeat
+1. `game:set_end_condition(callback)`, where `int callback(game)`
+    - (Required)
+    - Called every time after an unit does its action
+    - Must return an enum value - whether victory, defeat or undecided
 
 #### How to Write Script for Stage
 
