@@ -80,5 +80,6 @@ end
 
 
 function main(game)
+    game:set_on_deploy(on_deploy)
     game:set_end_condition(end_condition)
 end

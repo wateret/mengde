@@ -14,6 +14,9 @@ class Ref {
   Ref(int index) : index_{index} {}
   int value() const { return index_; }
 
+ public:
+  bool nil() const { return index_ == LUA_REFNIL; }
+
  private:
   int index_;
 };

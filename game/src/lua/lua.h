@@ -158,9 +158,7 @@ class Lua {
 
   template <typename T>
   void Set(const std::string& var_expr, T val) {
-#ifdef DEBUG
     int initial_stack_size = GetStackSize();
-#endif
 
     std::string var = "";
     int level = 0;
@@ -188,6 +186,8 @@ class Lua {
 
 #ifdef DEBUG
     assert(initial_stack_size == GetStackSize());
+#else
+    (void)initial_stack_size;
 #endif
   }
 
@@ -212,6 +212,8 @@ class Lua {
 
   void RegisterClass(const std::string& class_name);
   void RegisterMethod(const std::string& class_name, const std::string& method_name);
+
+  void UnRef(const Ref& ref) { luaL_unref(L, LUA_REGISTRYINDEX, ref.value()); }
 
   // For debugging
 

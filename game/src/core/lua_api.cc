@@ -103,12 +103,21 @@ LUA_IMPL(PushCmdSpeak) {
   return 0;
 }
 
+LUA_IMPL(SetOnDeploy) {
+  lua::Lua lua(L);
+
+  auto ref = lua.Pop<lua::Ref>();
+  Stage* game = lua.Pop<Stage*>();
+
+  game->SetOnDeploy(ref);
+
+  return 0;
+}
+
 LUA_IMPL(SetEndCondition) {
   lua::Lua lua(L);
 
-  lua.DumpStack();
   auto ref = lua.Pop<lua::Ref>();
-  lua.DumpStack();
   Stage* game = lua.Pop<Stage*>();
 
   game->SetEndCondition(ref);

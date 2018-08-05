@@ -3,7 +3,12 @@
 namespace mengde {
 namespace core {
 
-// No implementation
+void LuaCallbacks::SetRef(lua::Ref& ref, const lua::Ref& new_ref) {
+  if (!ref.nil()) {
+    lua_->UnRef(ref.value());
+  }
+  ref = new_ref;
+}
 
 }  // namespace core
 }  // namespace mengde

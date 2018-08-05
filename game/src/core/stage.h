@@ -94,6 +94,7 @@ class Stage : public IDeployHelper {
   uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
   //  bool UnitPutWeaponOn(uint32_t, const string&);
+  void SetOnDeploy(const lua::Ref& ref);
   void SetEndCondition(const lua::Ref& ref);
 
   // APIs for AI //
@@ -116,8 +117,8 @@ class Stage : public IDeployHelper {
  private:
   ResourceManagers rc_;
   Assets* assets_;
-  lua::Lua* lua_;
   lua::LuaClass lua_this_;  // LuaClass of this object
+  lua::Lua* lua_;
   std::unique_ptr<LuaCallbacks> lua_callbacks_;
   UserInterface* user_interface_;
   Commander* commander_;

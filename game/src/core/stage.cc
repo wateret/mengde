@@ -24,9 +24,9 @@ namespace core {
 Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_script_path)
     : rc_(rc),
       assets_(assets),  // FIXME Change this to clone the object as we need to rollback assets for some cases
-      lua_(nullptr),
       lua_this_(this, "Game"),
-      lua_callbacks_{new LuaCallbacks},
+      lua_{CreateLua(stage_script_path)},
+      lua_callbacks_{new LuaCallbacks{lua_}},
       user_interface_(new UserInterface(this)),
       commander_(nullptr),
       deployer_(nullptr),
@@ -34,9 +34,12 @@ Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_scrip
       stage_unit_manager_(nullptr),
       turn_(),
       status_(Status::kDeploying) {
-  lua_ = CreateLua(stage_script_path);
   map_ = CreateMap();
-  lua_->Call<void>(string("on_deploy"), lua_this_);
+
+  // Run main function
+  lua_->Call<void>(string{"main"}, lua_this_);
+
+  lua_->Call<void>(lua_callbacks_->on_deploy(), lua_this_);
   deployer_ = CreateDeployer();
 
   commander_ = new Commander();
@@ -90,9 +93,6 @@ lua::Lua* Stage::CreateLua(const Path& stage_script_path) {
 
   // Run the main script
   lua->RunFile(stage_script_path.ToString());
-
-  // Run main function
-  lua->Call<void>(string{"main"}, lua_this_);
 
   return lua;
 }
@@ -321,6 +321,8 @@ void Stage::ObtainEquipment(const string& id, uint32_t amount) {
 }
 
 void Stage::SetEndCondition(const lua::Ref& ref) { lua_callbacks_->end_condition(ref); }
+
+void Stage::SetOnDeploy(const lua::Ref& ref) { lua_callbacks_->on_deploy(ref); }
 
 bool Stage::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
