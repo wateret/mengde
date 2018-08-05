@@ -27,11 +27,11 @@ Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_scrip
       lua_this_(this, "Game"),
       lua_{CreateLua(stage_script_path)},
       lua_callbacks_{new LuaCallbacks{lua_}},
-      user_interface_(new UserInterface(this)),
-      commander_(nullptr),
+      user_interface_{new UserInterface{this}},
+      commander_{new Commander},
       deployer_(nullptr),
       map_(nullptr),
-      stage_unit_manager_(nullptr),
+      stage_unit_manager_{new StageUnitManager},
       turn_(),
       status_(Status::kDeploying) {
   map_ = CreateMap();
@@ -41,19 +41,13 @@ Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_scrip
 
   lua_->Call<void>(lua_callbacks_->on_deploy(), lua_this_);
   deployer_ = CreateDeployer();
-
-  commander_ = new Commander();
-  stage_unit_manager_ = new StageUnitManager();
 }
 
 Stage::~Stage() {
   // NOTE rc_ and assets_ are not deleted here
   delete lua_;
-  delete commander_;
   delete deployer_;
   delete map_;
-  delete stage_unit_manager_;
-  delete user_interface_;
 }
 
 lua::Lua* Stage::CreateLua(const Path& stage_script_path) {
@@ -109,7 +103,7 @@ Map* Stage::CreateMap() {
   for (auto e : terrain) {
     ASSERT(cols == e.size());
   }
-  return new Map(user_interface_, terrain, file, rc_.terrain_manager);
+  return new Map(user_interface(), terrain, file, rc_.terrain_manager);
 }
 
 Deployer* Stage::CreateDeployer() {

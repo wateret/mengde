@@ -80,7 +80,6 @@ class Stage : public IDeployHelper {
   bool CheckStatus();
   Status GetStatus() { return status_; }
   Assets* assets() { return assets_; }
-  const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }
 
   // IDeployHelper interfaces
   bool SubmitDeploy() override;
@@ -107,7 +106,8 @@ class Stage : public IDeployHelper {
 
  public:
   const lua::LuaClass& lua_this() { return lua_this_; }
-  UserInterface* user_interface() { return user_interface_; }
+  UserInterface* user_interface() { return user_interface_.get(); }
+  const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }
 
  private:
   lua::Lua* CreateLua(const Path&);
@@ -124,11 +124,11 @@ class Stage : public IDeployHelper {
   lua::LuaClass lua_this_;  // LuaClass of this object
   lua::Lua* lua_;
   std::unique_ptr<LuaCallbacks> lua_callbacks_;
-  UserInterface* user_interface_;
-  Commander* commander_;
+  std::unique_ptr<UserInterface> user_interface_;
+  std::unique_ptr<Commander> commander_;
   Deployer* deployer_;
   Map* map_;
-  StageUnitManager* stage_unit_manager_;
+  std::unique_ptr<StageUnitManager> stage_unit_manager_;
   Turn turn_;
   Status status_;
 };
