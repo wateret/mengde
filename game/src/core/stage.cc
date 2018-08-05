@@ -320,9 +320,15 @@ void Stage::ObtainEquipment(const string& id, uint32_t amount) {
   assets_->AddEquipment(eq, amount);
 }
 
-void Stage::SetEndCondition(const lua::Ref& ref) { lua_callbacks_->end_condition(ref); }
-
 void Stage::SetOnDeploy(const lua::Ref& ref) { lua_callbacks_->on_deploy(ref); }
+
+void Stage::SetOnBegin(const lua::Ref& ref) { lua_callbacks_->on_begin(ref); }
+
+void Stage::SetOnVictory(const lua::Ref& ref) { lua_callbacks_->on_victory(ref); }
+
+void Stage::SetOnDefeat(const lua::Ref& ref) { lua_callbacks_->on_defeat(ref); }
+
+void Stage::SetEndCondition(const lua::Ref& ref) { lua_callbacks_->end_condition(ref); }
 
 bool Stage::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
@@ -333,7 +339,7 @@ bool Stage::SubmitDeploy() {
   deployer_->ForEach([=](const DeployElement& e) { this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero)); });
 
   status_ = Status::kUndecided;
-  lua_->Call<void>(string("on_begin"), lua_this_);
+  lua_->Call<void>(lua_callbacks_->on_begin(), lua_this_);
   return true;
 }
 

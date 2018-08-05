@@ -114,6 +114,39 @@ LUA_IMPL(SetOnDeploy) {
   return 0;
 }
 
+LUA_IMPL(SetOnBegin) {
+  lua::Lua lua(L);
+
+  auto ref = lua.Pop<lua::Ref>();
+  Stage* game = lua.Pop<Stage*>();
+
+  game->SetOnBegin(ref);
+
+  return 0;
+}
+
+LUA_IMPL(SetOnVictory) {
+  lua::Lua lua(L);
+
+  auto ref = lua.Pop<lua::Ref>();
+  Stage* game = lua.Pop<Stage*>();
+
+  game->SetOnVictory(ref);
+
+  return 0;
+}
+
+LUA_IMPL(SetOnDefeat) {
+  lua::Lua lua(L);
+
+  auto ref = lua.Pop<lua::Ref>();
+  Stage* game = lua.Pop<Stage*>();
+
+  game->SetOnDefeat(ref);
+
+  return 0;
+}
+
 LUA_IMPL(SetEndCondition) {
   lua::Lua lua(L);
 

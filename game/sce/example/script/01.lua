@@ -91,5 +91,8 @@ end
 
 function main(game)
     game:set_on_deploy(on_deploy)
+    game:set_on_begin(on_begin)
+    game:set_on_victory(on_victory)
+    game:set_on_defeat(on_defeat)
     game:set_end_condition(end_condition)
 end

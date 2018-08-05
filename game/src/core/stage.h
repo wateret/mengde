@@ -80,6 +80,7 @@ class Stage : public IDeployHelper {
   bool CheckStatus();
   Status GetStatus() { return status_; }
   Assets* assets() { return assets_; }
+  const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }
 
   // IDeployHelper interfaces
   bool SubmitDeploy() override;
@@ -95,6 +96,9 @@ class Stage : public IDeployHelper {
   void ObtainEquipment(const string&, uint32_t);
   //  bool UnitPutWeaponOn(uint32_t, const string&);
   void SetOnDeploy(const lua::Ref& ref);
+  void SetOnBegin(const lua::Ref& ref);
+  void SetOnVictory(const lua::Ref& ref);
+  void SetOnDefeat(const lua::Ref& ref);
   void SetEndCondition(const lua::Ref& ref);
 
   // APIs for AI //

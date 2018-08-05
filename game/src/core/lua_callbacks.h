@@ -16,6 +16,12 @@ class LuaCallbacks {
   const lua::Ref& end_condition() const { return end_condition_; }
   void on_deploy(const lua::Ref& ref) { SetRef(on_deploy_, ref); }
   const lua::Ref& on_deploy() const { return on_deploy_; }
+  void on_begin(const lua::Ref& ref) { SetRef(on_begin_, ref); }
+  const lua::Ref& on_begin() const { return on_begin_; }
+  void on_victory(const lua::Ref& ref) { SetRef(on_victory_, ref); }
+  const lua::Ref& on_victory() const { return on_victory_; }
+  void on_defeat(const lua::Ref& ref) { SetRef(on_defeat_, ref); }
+  const lua::Ref& on_defeat() const { return on_defeat_; }
 
  private:
   void SetRef(lua::Ref& ref, const lua::Ref& new_ref);
@@ -23,6 +29,9 @@ class LuaCallbacks {
  private:
   lua::Lua* lua_;
   lua::Ref on_deploy_;
+  lua::Ref on_begin_;
+  lua::Ref on_victory_;
+  lua::Ref on_defeat_;
   lua::Ref end_condition_;
 };
 

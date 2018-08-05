@@ -503,7 +503,7 @@ CmdGameVictory::CmdGameVictory() : Cmd() {}
 
 unique_ptr<Cmd> CmdGameVictory::Do(Stage* game) {
   lua::Lua* lua = game->GetLuaScript();
-  lua->Call<void>("on_victory", game->lua_this());
+  lua->Call<void>(game->lua_callbacks()->on_victory(), game->lua_this());
 
   // Push a new CmdScenarioEnd just in case when user script does not specifiy the next scenario
   game->Push(unique_ptr<Cmd>(new CmdGameEnd(true)));
