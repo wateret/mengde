@@ -25,7 +25,6 @@ class Value {
 
  public:
   Value(const Value& lua_value);
-  Value(Value&& lua_value);
 
   Value(int32_t value);
   Value(double value);
@@ -34,7 +33,7 @@ class Value {
   Value(void* value);
   ~Value();
 
-  Type type() { return type_; }
+  Type type() const { return type_; }
 
   template <typename T>
   T Get() const {

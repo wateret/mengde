@@ -8,10 +8,7 @@ namespace lua {
 
 Value::Value(const Value& lua_value) {
   memcpy(static_cast<void*>(this), static_cast<const void*>(&lua_value), sizeof(Value));
-}
-
-Value::Value(Value&& lua_value) {
-  memcpy(static_cast<void*>(this), static_cast<const void*>(&lua_value), sizeof(Value));
+  assert(type_ == lua_value.type_);
 }
 
 Value::Value(int32_t value) {

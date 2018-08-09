@@ -2,9 +2,21 @@
 
 namespace lua {
 
+Table::Table(const Table& table) {
+  for (auto e : table.values_) {
+    values_.insert({e.first, new Value(*e.second)});
+  }
+}
+
 Table::~Table() {
   for (auto e : values_) {
     delete e.second;
+  }
+}
+
+void Table::ForEachNonArray(const std::function<void(const std::string& key, const lua::Value& val)>& fn) const {
+  for (auto e : values_) {
+    fn(e.first, *e.second);
   }
 }
 

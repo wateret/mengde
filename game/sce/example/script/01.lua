@@ -64,6 +64,12 @@ function on_begin(game)
     -- Enemies
     game:generate_unit("Bandit", 12, Enum.force.enemy, {9, 6})
 --    game:generate_unit("Cavalry", 18, Enum.force.enemy, {10, 7})
+
+    -- Get Unit Status Test
+    status = game:get_unit_info(0)
+--    print(status.uid)
+--    print(status.position.x)
+--    print(status.position.y)
 end
 
 

@@ -208,6 +208,34 @@ class Lua {
   void PushToStack(lua_CFunction fn);
   void PushToStack(const LuaClass& object);
 
+  void PushToStack(const Table& table) {
+    lua_newtable(L);
+    table.ForEachNonArray([this](const std::string& key, const lua::Value& val) {
+      lua_pushstring(L, key.c_str());
+      switch (val.type()) {
+        case lua::Value::Type::kInt32:
+          lua_pushnumber(L, val.Get<int32_t>());
+          break;
+        case lua::Value::Type::kDouble:
+          lua_pushnumber(L, val.Get<double>());
+          break;
+        case lua::Value::Type::kString:
+          lua_pushstring(L, val.Get<std::string>().c_str());
+          break;
+        case lua::Value::Type::kTable:
+          PushToStack(*val.Get<Table*>());
+          break;
+        case lua::Value::Type::kUserdata:
+          lua_pushlightuserdata(L, val.Get<void*>());
+          break;
+        default:
+          assert("Unreachable");
+          break;
+      }
+      lua_settable(L, -3);
+    });
+  }
+
   // OO-style registering class and method
 
   void RegisterClass(const std::string& class_name);

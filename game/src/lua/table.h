@@ -1,6 +1,9 @@
 #ifndef LUA_TABLE_H_
 #define LUA_TABLE_H_
 
+#include <functional>
+#include <string>
+
 #include "value.h"
 
 namespace lua {
@@ -8,6 +11,7 @@ namespace lua {
 class Table {
  public:
   Table() = default;
+  Table(const Table&);
   ~Table();
 
   template <typename T>
@@ -32,6 +36,8 @@ class Table {
     }
     return found->second->Get<T>();
   }
+
+  void ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const;
 
   void Dump();
 

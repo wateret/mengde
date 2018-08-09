@@ -81,6 +81,33 @@ LUA_IMPL(GetNumOwnsAlive) {
   return 1;
 }
 
+LUA_IMPL(GetUnitInfo) {
+  lua::Lua lua(L);
+
+  auto uid = UId{lua.Pop<uint32_t>()};
+  Stage* game = lua.Pop<Stage*>();
+
+  auto unit = game->GetUnit(uid);
+
+  // Build a lua table as a return value
+
+  lua::Table table;
+
+  table.Add("id", unit->GetId());
+  table.Add("uid", (int)unit->GetUnitId().Value());
+  {
+    lua::Table pos;
+    pos.Add("x", unit->GetPosition().x);
+    pos.Add("y", unit->GetPosition().y);
+    table.Add("position", pos);
+  }
+
+  lua.PushToStack(table);
+  lua.DumpStack();
+
+  return 1;
+}
+
 LUA_IMPL(PushCmdMove) {
   lua::Lua lua(L);
   Vec2D pos = GetVec2DFromLua(&lua);
