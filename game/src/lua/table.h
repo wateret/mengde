@@ -3,29 +3,34 @@
 
 #include <functional>
 #include <string>
+#include <memory>
 
 #include "value.h"
 
 namespace lua {
 
-class Table {
+class TableImpl {
  public:
-  Table() = default;
-  Table(const Table&);
-  ~Table();
+  TableImpl(const TableImpl&) = delete;
+  TableImpl(TableImpl&&) = delete;
 
+ public:
+  TableImpl() = default;
+  ~TableImpl() = default;
+
+ public:
   template <typename T>
   void Add(const std::string& key, T value) {
-    values_.insert({key, new Value(value)});
+    values_.insert({key, Value(value)});
   }
 
   template <typename T>
   T Get(const std::string& key) const {
     auto found = values_.find(key);
     if (found == values_.end()) {
-      throw "Given key '" + key + "' does not exist in Table.";
+      throw "Given key '" + key + "' does not exist in TableImpl.";
     }
-    return found->second->Get<T>();
+    return found->second.Get<T>();
   }
 
   template <typename T>
@@ -34,7 +39,7 @@ class Table {
     if (found == values_.end()) {
       return default_value;
     }
-    return found->second->Get<T>();
+    return found->second.Get<T>();
   }
 
   void ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const;
@@ -42,7 +47,42 @@ class Table {
   void Dump();
 
  private:
-  std::unordered_map<std::string, Value*> values_;
+  // TODO The key must be Value not just string.
+  std::unordered_map<std::string, Value> values_;
+};
+
+class Table {
+ public:
+  Table();
+
+ public:
+  Table(const Table& table) = default;
+  Table(Table&& table) = default;
+
+ public:
+  template <typename T>
+  void Add(const std::string& key, T value) {
+    table_->Add(key, value);
+  }
+
+  template <typename T>
+  T Get(const std::string& key) const {
+    return table_->Get<T>(key);
+  }
+
+  template <typename T>
+  T Get(const std::string& key, T default_value) const {
+    return table_->Get<T>(key, default_value);
+  }
+
+  void ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const;
+
+ public:
+  TableImpl* operator->() noexcept { return table_.operator->(); }
+  TableImpl& operator*() noexcept { return table_.operator*(); }
+
+ private:
+  std::shared_ptr<TableImpl> table_;
 };
 
 }  // namespace lua

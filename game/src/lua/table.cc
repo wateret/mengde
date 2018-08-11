@@ -2,38 +2,37 @@
 
 namespace lua {
 
-Table::Table(const Table& table) {
+/*
+TableImpl::TableImpl(const TableImpl& table) {
   for (auto e : table.values_) {
     values_.insert({e.first, new Value(*e.second)});
   }
 }
+*/
 
-Table::~Table() {
+void TableImpl::ForEachNonArray(const std::function<void(const std::string& key, const lua::Value& val)>& fn) const {
   for (auto e : values_) {
-    delete e.second;
+    fn(e.first, e.second);
   }
 }
 
-void Table::ForEachNonArray(const std::function<void(const std::string& key, const lua::Value& val)>& fn) const {
-  for (auto e : values_) {
-    fn(e.first, *e.second);
-  }
-}
-
-void Table::Dump() {
-#ifdef DEBUG
-  printf("Table {\n");
+void TableImpl::Dump() {
+  printf("TableImpl {\n");
   for (auto e : values_) {
     auto& key = e.first;
     auto value = e.second;
     printf("  %s: ", key.c_str());
-    switch (value->type()) {
+    switch (value.type()) {
       case Value::Type::kInt32:
-        printf("%d", value->Get<int32_t>());
+        printf("%d", value.Get<int32_t>());
+        break;
+
+      case Value::Type::kDouble:
+        printf("%f", value.Get<double>());
         break;
 
       case Value::Type::kString:
-        printf("\"%s\"", value->Get<std::string>().c_str());
+        printf("\"%s\"", value.Get<std::string>().c_str());
         break;
 
       default:
@@ -43,7 +42,12 @@ void Table::Dump() {
     printf("\n");
   }
   printf("}\n");
-#endif
+}
+
+Table::Table() : table_(std::make_shared<TableImpl>()) {}
+
+void Table::ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const {
+  table_->ForEachNonArray(fn);
 }
 
 }  // namespace lua

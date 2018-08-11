@@ -94,16 +94,16 @@ LUA_IMPL(GetUnitInfo) {
   lua::Table table;
 
   table.Add("id", unit->GetId());
-  table.Add("uid", (int)unit->GetUnitId().Value());
+  table.Add("uid", static_cast<int>(unit->GetUnitId().Value()));
   {
     lua::Table pos;
     pos.Add("x", unit->GetPosition().x);
     pos.Add("y", unit->GetPosition().y);
     table.Add("position", pos);
+    printf("DESTRUCTING table\n");
   }
 
   lua.PushToStack(table);
-  lua.DumpStack();
 
   return 1;
 }

@@ -24,9 +24,9 @@ EventEffectLoader::EventEffectLoader() {
   ocee_map_.insert({"on_normal_attacked", event::OnCmdEvent::kNormalAttacked});
 }
 
-GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table* table) const {
-  auto str_effect = table->Get<std::string>("effect");
-  auto str_event = table->Get<std::string>("event");
+GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table& table) const {
+  auto str_effect = table.Get<std::string>("effect");
+  auto str_event = table.Get<std::string>("event");
 
   // Find Event Type
   auto found = gee_map_.find(str_event);
@@ -36,17 +36,17 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table
 
   // Find Effect Type
   if (str_effect == "restore_hp") {
-    auto mult = table->Get<int>("multiplier", 0);
-    auto add = table->Get<int>("addend", 0);
+    auto mult = table.Get<int>("multiplier", 0);
+    auto add = table.Get<int>("addend", 0);
     return new GEERestoreHp(event, mult, add);
   }
 
   throw DataFormatException("Such GeneralEventEffect '" + str_effect + "' does not exist");
 }
 
-OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table* table) const {
-  auto str_effect = table->Get<std::string>("effect");
-  auto str_event = table->Get<std::string>("event");
+OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table& table) const {
+  auto str_effect = table.Get<std::string>("effect");
+  auto str_event = table.Get<std::string>("event");
 
   // Find Event Type
   auto found = ocee_map_.find(str_event);
@@ -58,8 +58,8 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table* ta
   if (str_effect == "preemptive_attack") {
     return new OCEEPreemptiveAttack(event);
   } else if (str_effect == "enhance_basic_attack") {
-    auto mult = table->Get<int>("multiplier", 0);
-    auto add = table->Get<int>("addend", 0);
+    auto mult = table.Get<int>("multiplier", 0);
+    auto add = table.Get<int>("addend", 0);
     return new OCEEEnhanceBasicAttack(event, mult, add);
   }
 
@@ -252,8 +252,8 @@ void ConfigLoader::ParseEquipments() {
     Equipment* equipment = new Equipment(id, type);
 
     l->ForEachTableEntry("effects", [=, &equipment](lua::Lua* l, const string&) {
-      auto table = l->Get<lua::Table*>();
-      auto event = table->Get<std::string>("event");
+      auto table = l->Get<lua::Table>();
+      auto event = table.Get<std::string>("event");
       auto ee_loader = EventEffectLoader::instance();
       if (ee_loader.IsGeneralEventEffect(event)) {
         equipment->AddGeneralEffect(ee_loader.CreateGeneralEventEffect(table));
@@ -262,7 +262,6 @@ void ConfigLoader::ParseEquipments() {
       } else {
         throw DataFormatException("Such event '" + event + "' does not exist.");
       }
-      delete table;  // TODO Do not manually delete pointer
     });
     l->ForEachTableEntry("modifiers", [=, &equipment](lua::Lua* l, const string&) {
       string stat_s = l->Get<string>("stat");

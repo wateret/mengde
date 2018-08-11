@@ -34,7 +34,7 @@ static int set_callback(lua_State* L) {
   g_ref_1 = ref;
   return 0;
 }
-} // extern "C"
+}  // extern "C"
 
 //
 // CalLuaCallbackFromCpp
@@ -54,4 +54,3 @@ BOOST_AUTO_TEST_CASE(CallLuaFunctionWithRefFromCpp_1) {
   int ret = l.Call<int>(g_ref_1, 10, 20);
   BOOST_CHECK(ret == 30);
 }
-

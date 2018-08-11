@@ -25,8 +25,8 @@ class EventEffectLoader {
  public:
   ~EventEffectLoader() = default;
 
-  GeneralEventEffect* CreateGeneralEventEffect(const lua::Table*) const;
-  OnCmdEventEffect* CreateOnCmdEventEffect(const lua::Table*) const;
+  GeneralEventEffect* CreateGeneralEventEffect(const lua::Table&) const;
+  OnCmdEventEffect* CreateOnCmdEventEffect(const lua::Table&) const;
   bool IsGeneralEventEffect(const std::string& key) const;
   bool IsOnCmdEventEffect(const std::string& key) const;
 

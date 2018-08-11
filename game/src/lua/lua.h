@@ -223,7 +223,7 @@ class Lua {
           lua_pushstring(L, val.Get<std::string>().c_str());
           break;
         case lua::Value::Type::kTable:
-          PushToStack(*val.Get<Table*>());
+          PushToStack(val.Get<Table>());
           break;
         case lua::Value::Type::kUserdata:
           lua_pushlightuserdata(L, val.Get<void*>());
@@ -283,7 +283,7 @@ class Lua {
   template <typename T>
   using is_string = std::is_same<std::string, T>;
   template <typename T>
-  using is_table = std::is_same<Table*, T>;
+  using is_table = std::is_same<Table, T>;
   template <typename T>
   using is_ref = std::is_same<Ref, T>;
 
@@ -373,12 +373,12 @@ class Lua {
   // Pointer types
 
   template <typename T>
-  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetDefault() {
+  typename std::enable_if<std::is_pointer<T>::value, T>::type GetDefault() {
     return nullptr;
   }
 
   template <typename T>
-  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetTop() {
+  typename std::enable_if<std::is_pointer<T>::value, T>::type GetTop() {
     if (lua_islightuserdata(L, -1)) {
       return reinterpret_cast<T>(lua_touserdata(L, -1));
     } else {
@@ -387,7 +387,7 @@ class Lua {
   }
 
   template <typename T>
-  typename std::enable_if<std::is_pointer<T>::value && !is_table<T>::value, T>::type GetTopOpt() {
+  typename std::enable_if<std::is_pointer<T>::value, T>::type GetTopOpt() {
     if (lua_islightuserdata(L, -1)) {
       return reinterpret_cast<T>(lua_touserdata(L, -1));
     } else {
@@ -399,22 +399,22 @@ class Lua {
 
   template <typename T>
   typename std::enable_if<is_table<T>::value, T>::type GetDefault() {
-    return nullptr;
+    return Table{};
   }
 
   template <typename T>
   typename std::enable_if<is_table<T>::value, T>::type GetTop() {
-    Table* table = new Table();
+    Table table;
     ForEachTableEntry("", [&](Lua*, const std::string& key) {
       if (lua_istable(L, -1)) {
-        table->Add(key, Get<Table*>());
+        table.Add(key, Get<Table>());
       } else if (lua_isnumber(L, -1)) {
         // FIXME handle double and other numeric types
-        table->Add(key, Get<int32_t>());
+        table.Add(key, Get<int32_t>());
       } else if (lua_isstring(L, -1)) {
-        table->Add(key, Get<std::string>());
+        table.Add(key, Get<std::string>());
       } else if (lua_isuserdata(L, -1)) {
-        table->Add(key, Get<void*>());
+        table.Add(key, Get<void*>());
       } else {
         assert(false && "Unsupported type.");
       }
