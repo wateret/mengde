@@ -1,8 +1,8 @@
 #ifndef LUA_VALUE_IMPLS_H_
 #define LUA_VALUE_IMPLS_H_
 
-#include "value_impl.h"
 #include "table.h"
+#include "value_impl.h"
 
 namespace lua {
 
@@ -17,9 +17,7 @@ class ValueImpls : public ValueImpl {
   ValueImpls(ValueImpls&& value) = delete;
 
  public:
-  virtual ValueImpl* New() {
-    return new ValueImpls{value_};
-  }
+  virtual ValueImpl* New() { return new ValueImpls{value_}; }
 
  public:
   T GetValue() const { return value_; }

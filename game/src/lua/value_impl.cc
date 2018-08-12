@@ -18,7 +18,6 @@ std::shared_ptr<ValueImpl> ValueImpl::New(const std::shared_ptr<ValueImpl>& valu
   }
 }
 
-
 template <typename T>
 T ValueImpl::Get() const {
   auto actual_this = dynamic_cast<const ValueImpls<T>*>(this);

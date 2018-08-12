@@ -2,8 +2,8 @@
 
 #include <string.h>
 
-#include "value_impls.h"
 #include "table.h"
+#include "value_impls.h"
 
 namespace lua {
 
@@ -15,9 +15,7 @@ ValueImpl* Value::operator->() noexcept { return value_.operator->(); }
 
 ValueImpl& Value::operator*() noexcept { return value_.operator*(); }
 
-Value::Value(const Value& value) {
-  value_ = ValueImpl::New(value.value_);
-}
+Value::Value(const Value& value) { value_ = ValueImpl::New(value.value_); }
 
 template <typename T>
 Value::Value(const T& value) {
@@ -56,7 +54,6 @@ template Value::Value(const std::string& value);
 template Value::Value(const Table& value);
 
 template Value::Value(const Userdata& value);
-
 
 template int32_t Value::Get<int32_t>() const;
 

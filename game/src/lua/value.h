@@ -4,9 +4,9 @@
 #include <assert.h>
 #include <stdint.h>
 
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <memory>
 
 namespace lua {
 
@@ -33,7 +33,7 @@ class Value {
  public:
   Value(const Value& value);
 
-  template<typename T>
+  template <typename T>
   Value(const T& value);
 
   ~Value() = default;

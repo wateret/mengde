@@ -2,8 +2,8 @@
 #define LUA_TABLE_H_
 
 #include <functional>
-#include <string>
 #include <memory>
+#include <string>
 
 #include "value.h"
 
@@ -20,7 +20,7 @@ class TableImpl {
 
  public:
   template <typename T>
-  void Add(const std::string& key, T value) {
+  void Set(const std::string& key, T value) {
     values_.insert({key, Value(value)});
   }
 
@@ -61,8 +61,8 @@ class Table {
 
  public:
   template <typename T>
-  void Add(const std::string& key, T value) {
-    table_->Add(key, value);
+  void Set(const std::string& key, T value) {
+    table_->Set(key, value);
   }
 
   template <typename T>

@@ -407,14 +407,14 @@ class Lua {
     Table table;
     ForEachTableEntry("", [&](Lua*, const std::string& key) {
       if (lua_istable(L, -1)) {
-        table.Add(key, Get<Table>());
+        table.Set(key, Get<Table>());
       } else if (lua_isnumber(L, -1)) {
         // FIXME handle double and other numeric types
-        table.Add(key, Get<int32_t>());
+        table.Set(key, Get<int32_t>());
       } else if (lua_isstring(L, -1)) {
-        table.Add(key, Get<std::string>());
+        table.Set(key, Get<std::string>());
       } else if (lua_isuserdata(L, -1)) {
-        table.Add(key, Get<void*>());
+        table.Set(key, Get<void*>());
       } else {
         assert(false && "Unsupported type.");
       }
