@@ -3,9 +3,17 @@
 
 #include "lua/lua.h"
 #include "lua/ref.h"
+#include "util/common.h"
 
 namespace mengde {
 namespace core {
+
+class Stage;
+
+struct EventCallback {
+  lua::Ref condition;
+  lua::Ref handler;
+};
 
 class LuaCallbacks {
  public:
@@ -23,6 +31,9 @@ class LuaCallbacks {
   void on_defeat(const lua::Ref& ref) { SetRef(on_defeat_, ref); }
   const lua::Ref& on_defeat() const { return on_defeat_; }
 
+  uint32_t RegisterEvent(const lua::Ref& condition, const lua::Ref& handler);
+  void RunEvents(const lua::LuaClass& stage);
+
  private:
   void SetRef(lua::Ref& ref, const lua::Ref& new_ref);
 
@@ -33,6 +44,7 @@ class LuaCallbacks {
   lua::Ref on_victory_;
   lua::Ref on_defeat_;
   lua::Ref end_condition_;
+  vector<EventCallback> events_;
 };
 
 }  // namespace core

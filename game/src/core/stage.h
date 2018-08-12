@@ -99,6 +99,7 @@ class Stage : public IDeployHelper {
   void SetOnVictory(const lua::Ref& ref);
   void SetOnDefeat(const lua::Ref& ref);
   void SetEndCondition(const lua::Ref& ref);
+  uint32_t RegisterEvent(const lua::Ref& condition, const lua::Ref& handler);
 
   // APIs for AI //
   vector<Vec2D> FindMovablePos(Unit*);

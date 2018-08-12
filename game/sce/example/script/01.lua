@@ -48,6 +48,11 @@ gstage = {
 }
 
 
+uid_caocao = 0
+uid_zhangliao = 1
+uid_bandit = nil
+
+
 function on_deploy(game)
     game:appoint_hero("CaoCao", 80)
     game:appoint_hero("ZhangLiao", 4)
@@ -62,21 +67,16 @@ end
 
 function on_begin(game)
     -- Enemies
-    game:generate_unit("Bandit", 12, Enum.force.enemy, {9, 6})
+    uid_bandit = game:generate_unit("Bandit", 12, Enum.force.enemy, {9, 6})
 --    game:generate_unit("Cavalry", 18, Enum.force.enemy, {10, 7})
 
-    -- Get Unit Status Test
-    status = game:get_unit_info(0)
---    print(status.uid)
---    print(status.position.x)
---    print(status.position.y)
 end
 
 
 function on_victory(game)
-    game:push_cmd_speak(0, "So long, losers!")
-    game:push_cmd_move(0, {0, 9})
-    game:push_cmd_move(1, {0, 10})
+    game:push_cmd_speak(uid_caocao, "So long, losers!")
+    game:push_cmd_move(uid_caocao, {0, 9})
+    game:push_cmd_move(uid_zhangliao, {0, 10})
 end
 
 
@@ -95,10 +95,25 @@ function end_condition(game)
     return Enum.status.undecided
 end
 
+
+function event1_condition(game)
+    info = game:get_unit_info(uid_caocao)
+    return info.position.x == 9 and info.position.y == 3
+end
+
+
+function event1_handler(game)
+    game:push_cmd_speak(uid_bandit, "You just activated my trap card!")
+    game:push_cmd_move(uid_caocao, {12, 3})
+end
+
+
 function main(game)
     game:set_on_deploy(on_deploy)
     game:set_on_begin(on_begin)
     game:set_on_victory(on_victory)
     game:set_on_defeat(on_defeat)
     game:set_end_condition(end_condition)
+
+    index = game:register_event(event1_condition, event1_handler)
 end

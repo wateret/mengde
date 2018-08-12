@@ -179,6 +179,10 @@ unique_ptr<Cmd> CmdEndAction::Do(Stage* game) {
   auto unit = game->GetUnit(unit_);
   unit->EndAction();
   game->Push(unit->RaiseEvent(event::GeneralEvent::kActionDone));
+
+  // FIXME Remove const_cast and change the way to call events
+  const_cast<LuaCallbacks*>(game->lua_callbacks())->RunEvents(game->lua_this());
+
   return nullptr;
 }
 

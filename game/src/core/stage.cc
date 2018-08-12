@@ -324,6 +324,10 @@ void Stage::SetOnDefeat(const lua::Ref& ref) { lua_callbacks_->on_defeat(ref); }
 
 void Stage::SetEndCondition(const lua::Ref& ref) { lua_callbacks_->end_condition(ref); }
 
+uint32_t Stage::RegisterEvent(const lua::Ref& condition, const lua::Ref& handler) {
+  return lua_callbacks_->RegisterEvent(condition, handler);
+}
+
 bool Stage::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
   if (status_ != Status::kDeploying) return true;
