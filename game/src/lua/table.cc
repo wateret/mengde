@@ -17,7 +17,7 @@ void TableImpl::ForEachNonArray(const std::function<void(const std::string& key,
 }
 
 void TableImpl::Dump() {
-  printf("TableImpl {\n");
+  printf("Table {\n");
   for (auto e : values_) {
     auto& key = e.first;
     auto value = e.second;

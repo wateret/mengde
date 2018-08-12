@@ -7,7 +7,6 @@ ValueImpls<T>::ValueImpls(const T& value) : value_(value) {}
 
 template <>
 ValueImpl* ValueImpls<Table>::New() {
-  printf("Table not really create a new object\n");
   // For table do not generate a new object just copy the pointer
   return this;
 }

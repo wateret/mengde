@@ -100,7 +100,6 @@ LUA_IMPL(GetUnitInfo) {
     pos.Set("x", unit->GetPosition().x);
     pos.Set("y", unit->GetPosition().y);
     table.Set("position", pos);
-    printf("DESTRUCTING table\n");
   }
 
   lua.PushToStack(table);
