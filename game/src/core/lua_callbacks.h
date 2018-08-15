@@ -1,9 +1,10 @@
 #ifndef MENGDE_CORE_LUA_CALLBACKS_H_
 #define MENGDE_CORE_LUA_CALLBACKS_H_
 
+#include <unordered_map>
+
 #include "lua/lua.h"
 #include "lua/ref.h"
-#include "util/common.h"
 
 namespace mengde {
 namespace core {
@@ -17,7 +18,7 @@ struct EventCallback {
 
 class LuaCallbacks {
  public:
-  LuaCallbacks(lua::Lua* lua) : lua_{lua} {}
+  LuaCallbacks(lua::Lua* lua) : lua_{lua}, next_event_id_{0u} {}
 
  public:
   void end_condition(const lua::Ref& ref) { SetRef(end_condition_, ref); }
@@ -32,6 +33,7 @@ class LuaCallbacks {
   const lua::Ref& on_defeat() const { return on_defeat_; }
 
   uint32_t RegisterEvent(const lua::Ref& condition, const lua::Ref& handler);
+  void UnregisterEvent(uint32_t id);
   void RunEvents(const lua::LuaClass& stage);
 
  private:
@@ -44,7 +46,8 @@ class LuaCallbacks {
   lua::Ref on_victory_;
   lua::Ref on_defeat_;
   lua::Ref end_condition_;
-  vector<EventCallback> events_;
+  std::unordered_map<uint32_t, EventCallback> events_;
+  uint32_t next_event_id_;
 };
 
 }  // namespace core

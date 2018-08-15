@@ -187,7 +187,6 @@ LUA_IMPL(SetEndCondition) {
 LUA_IMPL(RegisterEvent) {
   lua::Lua lua(L);
 
-  lua.DumpStack();
   auto handler = lua.Pop<lua::Ref>();
   auto condition = lua.Pop<lua::Ref>();
   Stage* game = lua.Pop<Stage*>();
@@ -197,6 +196,17 @@ LUA_IMPL(RegisterEvent) {
   lua.PushToStack(id);
 
   return 1;
+}
+
+LUA_IMPL(UnregisterEvent) {
+  lua::Lua lua(L);
+
+  auto id = lua.Pop<uint32_t>();
+  Stage* game = lua.Pop<Stage*>();
+
+  game->UnregisterEvent(id);
+
+  return 0;
 }
 
 #undef LUA_IMPL

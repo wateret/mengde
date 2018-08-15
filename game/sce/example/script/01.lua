@@ -102,9 +102,12 @@ function event1_condition(game)
 end
 
 
-function event1_handler(game)
+function event1_handler(game, event_id)
     game:push_cmd_speak(uid_bandit, "You just activated my trap card!")
     game:push_cmd_move(uid_caocao, {12, 3})
+
+    -- Unregister since it is just one time event
+    game:unregister_event(event_id)
 end
 
 

@@ -1,6 +1,7 @@
 #include "lua_callbacks.h"
 
 #include "stage.h"
+#include "util/logger.h"
 
 namespace mengde {
 namespace core {
@@ -13,16 +14,28 @@ void LuaCallbacks::SetRef(lua::Ref& ref, const lua::Ref& new_ref) {
 }
 
 uint32_t LuaCallbacks::RegisterEvent(const lua::Ref& condition, const lua::Ref& handler) {
-  auto id = static_cast<uint32_t>(events_.size());
-  events_.push_back({condition, handler});
+  auto id = next_event_id_++;
+  assert(events_.find(id) == events_.end());
+  events_.insert({id, {condition, handler}});
   return id;
+}
+
+void LuaCallbacks::UnregisterEvent(uint32_t id) {
+  auto found = events_.find(id);
+  if (found == events_.end()) {
+    LOG_WARNING("Tried to unregister the event that is not exist.");
+  } else {
+    events_.erase(found);
+  }
 }
 
 void LuaCallbacks::RunEvents(const lua::LuaClass& stage) {
   for (const auto& e : events_) {
-    auto matched = lua_->Call<bool>(e.condition, stage);
+    auto id = e.first;
+    auto cb = e.second;
+    auto matched = lua_->Call<bool>(cb.condition, stage);
     if (matched) {
-      lua_->Call<void>(e.handler, stage);
+      lua_->Call<void>(cb.handler, stage, id);
     }
   }
 }
