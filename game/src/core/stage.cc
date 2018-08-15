@@ -328,6 +328,10 @@ uint32_t Stage::RegisterEvent(const lua::Ref& condition, const lua::Ref& handler
   return lua_callbacks_->RegisterEvent(condition, handler);
 }
 
+void Stage::RunEvents() {
+  return lua_callbacks_->RunEvents(lua_this());
+}
+
 bool Stage::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
   if (status_ != Status::kDeploying) return true;
