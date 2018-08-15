@@ -5,6 +5,7 @@
 #include "magic_list.h"
 #include "path_tree.h"
 #include "stage.h"
+#include "turn.h"
 #include "unit.h"
 
 namespace mengde {
@@ -181,7 +182,13 @@ Vec2D UserInterface::GetMapSize() const { return stage_->GetMapSize(); }
 
 string UserInterface::GetMapId() const { return stage_->GetMapId(); }
 
+const Map* UserInterface::GetMap() const { return stage_->GetMap(); }
+
 bool UserInterface::HasNextCmd() const { return stage_->HasNext(); }
+
+const Cmd* UserInterface::GetNextCmd() const { return stage_->GetNextCmdConst(); }
+
+void UserInterface::DoNextCmd() { stage_->DoNext(); }
 
 AvailableMoves UserInterface::QueryMoves(const UnitKey& unit_key) const { return AvailableMoves(stage_, unit_key); }
 
@@ -201,6 +208,8 @@ void UserInterface::PushAction(const UnitKey& unit_key, const MoveKey& move_id, 
   stage_->Push(unique_ptr<CmdAction>(cmd));
 }
 
+void UserInterface::PushPlayAI() { stage_->Push(std::make_unique<core::CmdPlayAI>()); }
+
 Vec2D UserInterface::GetMovedPosition(const UnitKey& unit_key, const MoveKey& move_id) {
   auto moves = QueryMoves(unit_key);
   return moves.Get(move_id);
@@ -213,6 +222,21 @@ unique_ptr<CmdAct> UserInterface::GetActCmd(const UnitKey& unit_key, const MoveK
 }
 
 void UserInterface::ForEachUnit(const std::function<void(const Unit*)>& fn) const { stage_->ForEachUnit(fn); }
+
+bool UserInterface::IsUserTurn() const { return stage_->IsUserTurn(); }
+
+bool UserInterface::IsAITurn() const { return stage_->IsAITurn(); }
+
+const Turn& UserInterface::GetTurn() const { return stage_->GetTurn(); }
+
+bool UserInterface::IsValidCoords(Vec2D c) const { return stage_->IsValidCoords(c); }
+
+std::shared_ptr<core::MagicList> UserInterface::GetMagicList(const UId& uid) const {
+  auto unit = GetUnit(uid);
+  return std::make_shared<core::MagicList>(stage_->GetMagicManager(), unit);
+}
+
+const Magic* UserInterface::GetMagic(const string& id) const { return stage_->GetMagic(id); }
 
 }  // namespace core
 }  // namespace mengde

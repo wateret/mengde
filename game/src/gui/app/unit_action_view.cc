@@ -10,8 +10,8 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitActionView::UnitActionView(const Rect& frame, core::Stage* game, core::UserInterface* gi, GameView* gv)
-    : VerticalListView(frame), stage_(game), gi_(gi), gv_(gv) {
+UnitActionView::UnitActionView(const Rect& frame, core::UserInterface* gi, GameView* gv)
+    : VerticalListView(frame), gi_(gi), gv_(gv) {
   bg_color(COLOR("darkgray", 212));
   padding(8);
   Rect btn_frame = GetActualFrame();
@@ -27,19 +27,18 @@ UnitActionView::UnitActionView(const Rect& frame, core::Stage* game, core::UserI
 }
 
 void UnitActionView::SetUnitAndMoveKey(const core::UnitKey& ukey, const core::MoveKey& mkey) {
-  auto game = stage_;
   auto gi = gi_;
   auto gv = gv_;
 
   btn_attack_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUITargeting({game, gi, gv}, ukey, mkey));
+      gv_->PushUIState(new StateUITargeting({gi, gv}, ukey, mkey));
     }
     return true;
   });
   btn_magic_->SetMouseButtonHandler([=](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      gv_->PushUIState(new StateUIMagicSelection({game, gi, gv}, ukey, mkey));
+      gv_->PushUIState(new StateUIMagicSelection({gi, gv}, ukey, mkey));
     }
     return true;
   });

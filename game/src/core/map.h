@@ -22,12 +22,13 @@ class Map {
  public:
   string GetModelId();
   Vec2D GetSize() { return size_; }
-  Cell* GetCell(int, int);
-  Cell* GetCell(Vec2D);
+  const Cell* GetCell(int, int) const;
+  const Cell* GetCell(Vec2D) const;
   bool UnitInCell(Vec2D) const;
   UId GetUnitId(Vec2D) const;
   Terrain* GetTerrain(Vec2D);
-  int ApplyTerrainEffect(const Unit*, int);
+  const Terrain* GetTerrain(Vec2D) const;
+  int ApplyTerrainEffect(const Unit*, int) const;
   void EmptyCell(Vec2D);
   void MoveUnit(Vec2D, Vec2D);
   void RemoveUnit(Vec2D);

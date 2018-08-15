@@ -12,7 +12,7 @@ class Terrain {
   Terrain(const std::string&, const std::vector<int>&, const std::vector<int>&);
   int GetIndex();
   void SetIndex(int);
-  std::string GetName() { return name_; }
+  const std::string& GetName() const { return name_; }
   int GetMoveCost(int);
   int GetEffect(int);
 

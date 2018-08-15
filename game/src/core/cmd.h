@@ -11,6 +11,7 @@ namespace mengde {
 namespace core {
 
 class Stage;
+class UserInterface;
 class Map;
 
 extern const char* kCmdOpToString[];
@@ -305,7 +306,7 @@ class CmdRestoreHp : public CmdUnit {
   CmdRestoreHp(const UId&, int ratio, int adder);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op GetOp() const override { return Op::kCmdRestoreHp; }
-  int CalcAmount(Stage* stage) const;
+  int CalcAmount(UserInterface* stage) const;
 
  private:
   int ratio_;

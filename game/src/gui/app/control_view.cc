@@ -18,7 +18,8 @@ ControlView::ControlView(const Rect& rect, core::Stage* game, GameView* gv) : Co
 
   Rect frame_tv_turn = {0, 0, 100, 22};
   tv_turn_ = new TextView(frame_tv_turn);
-  SetTurnText(stage_->GetTurnCurrent(), stage_->GetTurnLimit());
+  const auto& turn = game->GetTurn();
+  SetTurnText(turn.GetCurrent(), turn.GetLimit());
   AddChild(tv_turn_);
 
   Rect button_coords = {0, 30, 100, 20};

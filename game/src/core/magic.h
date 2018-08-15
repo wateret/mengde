@@ -32,7 +32,7 @@ class Magic {
   void Perform(Unit*, Unit*);
   void AddLearnInfo(uint16_t, uint16_t);
 
-  const AttackRange& GetRange();
+  const AttackRange& GetRange() const;
 
  public:
   int CalcDamage(Unit*, Unit*);

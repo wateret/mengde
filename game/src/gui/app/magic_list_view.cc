@@ -61,7 +61,7 @@ void MagicListView::SetData(const core::UnitKey& ukey, const core::MoveKey& mkey
     string name = magic->GetId();
 
     // Variables to be captured for callback
-    StateUI::Base base = {stage_, gi_, gv_};
+    StateUI::Base base = {gi_, gv_};
 
     Rect button_frame({0, 0}, {frame_size.x, item_height_});
     ButtonView* button = new ButtonView(&button_frame, name);

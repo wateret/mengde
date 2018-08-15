@@ -9,7 +9,7 @@ namespace core {
 
 Formulae::Formulae() {}
 
-int Formulae::ComputeBasicAttackDamage(Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
+int Formulae::ComputeBasicAttackDamage(const Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
   const Attribute& a = unit_atk->GetCurrentAttr();
   const Attribute& d = unit_def->GetCurrentAttr();
   int atk = m->ApplyTerrainEffect(unit_atk, a.atk);
@@ -17,7 +17,7 @@ int Formulae::ComputeBasicAttackDamage(Map* m, const Unit* unit_atk, const Unit*
   return ComputeDamageBase(atk, def, unit_atk->GetLevel(), force);
 }
 
-int Formulae::ComputeMagicDamage(Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
+int Formulae::ComputeMagicDamage(const Map* m, const Unit* unit_atk, const Unit* unit_def, int force) {
   UNUSED(m);
   const Attribute& a = unit_atk->GetCurrentAttr();
   const Attribute& d = unit_def->GetCurrentAttr();

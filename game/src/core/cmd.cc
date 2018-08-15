@@ -538,14 +538,14 @@ CmdRestoreHp::CmdRestoreHp(const UId& unit, int ratio, int adder) : CmdUnit(unit
 
 unique_ptr<Cmd> CmdRestoreHp::Do(Stage* stage) {
   auto unit = stage->GetUnit(unit_);
-  int amount = CalcAmount(stage);
+  int amount = CalcAmount(stage->user_interface());
   unit->RestoreHP(amount);
   LOG_INFO("%s restores HP by %d", unit->GetId().c_str(), amount);
   return nullptr;
 }
 
-int CmdRestoreHp::CalcAmount(Stage* stage) const {
-  auto unit = stage->GetUnit(unit_);
+int CmdRestoreHp::CalcAmount(UserInterface* gi) const {
+  auto unit = gi->GetUnit(unit_);
 
   int amount = unit->GetOriginalHpMp().hp * ratio_ / 100;
   amount += adder_;

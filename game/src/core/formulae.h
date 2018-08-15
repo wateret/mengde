@@ -12,8 +12,8 @@ class Formulae {
   static const int kDefaultRatio = 100;
 
  public:
-  static int ComputeBasicAttackDamage(Map*, const Unit*, const Unit*, int = kDefaultRatio);
-  static int ComputeMagicDamage(Map*, const Unit*, const Unit*, int = kDefaultRatio);
+  static int ComputeBasicAttackDamage(const Map*, const Unit*, const Unit*, int = kDefaultRatio);
+  static int ComputeMagicDamage(const Map*, const Unit*, const Unit*, int = kDefaultRatio);
   static int ComputeBasicAttackAccuracy(const Unit*, const Unit*, int = kDefaultRatio);
   static int ComputeMagicAccuracy(const Unit*, const Unit*, int = kDefaultRatio);
   static int ComputeBasicAttackDouble(const Unit*, const Unit*);

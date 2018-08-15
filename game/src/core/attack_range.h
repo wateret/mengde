@@ -44,7 +44,7 @@ class AttackRangeManager {
   static AttackRangeManager& GetInstance();
 
  public:
-  const AttackRange& Get(Range::Type type);
+  const AttackRange& Get(Range::Type type) const;
 
  private:
   AttackRangeManager();

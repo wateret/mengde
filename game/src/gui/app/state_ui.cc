@@ -35,7 +35,7 @@ namespace app {
 
 // StateUI
 
-StateUI::StateUI(Base base) : stage_(base.game), gi_(base.gi), gv_(base.gv) {}
+StateUI::StateUI(Base base) : gi_(base.gi), gv_(base.gv) {}
 
 // StateUIMain
 
@@ -50,11 +50,11 @@ void StateUIDoCmd::Enter() {
   //       Can we do the command before StateUIView?
   if (cmd_to_do_) {
     // Run reserved command run
-    ASSERT(stage_->HasNext());
-    stage_->DoNext();
+    ASSERT(gi_->HasNextCmd());
+    gi_->DoNextCmd();
     cmd_to_do_ = false;
   }
-  while (stage_->HasNext()) {
+  while (gi_->HasNextCmd()) {
     StateUI* state = GenerateNextCmdUIState();
     if (state != nullptr) {
       gv_->PushUIState(state);
@@ -63,7 +63,7 @@ void StateUIDoCmd::Enter() {
       break;
     } else {
       // If we do not have UIState for the command do it immediately
-      stage_->DoNext();
+      gi_->DoNextCmd();
     }
   }
 }
@@ -71,8 +71,8 @@ void StateUIDoCmd::Enter() {
 // Generate corresponding StateUI for next Cmd
 // Returns nullptr when no UI needed
 StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
-  ASSERT(stage_->HasNext());
-  const core::Cmd* cmd = stage_->GetNextCmdConst();
+  ASSERT(gi_->HasNextCmd());
+  const core::Cmd* cmd = gi_->GetNextCmd();
   StateUI* no_state_ui = nullptr;
 
 #define DYNAMIC_CAST_CHECK(type)  \
@@ -129,7 +129,7 @@ StateUI* StateUIDoCmd::GenerateNextCmdUIState() {
     }
     case core::Cmd::Op::kCmdRestoreHp: {
       const core::CmdRestoreHp* c = DYNAMIC_CAST_CHECK(core::CmdRestoreHp);
-      int amount = c->CalcAmount(stage_);
+      int amount = c->CalcAmount(gi_);
       if (amount == 0) return no_state_ui;
       return new StateUIUnitTooltipAnim(WrapBase(), c->GetUnit(), amount, 0);
     }
@@ -148,7 +148,7 @@ void StateUIDoCmd::Exit() {}
 void StateUIDoCmd::Render(Drawer*) {}
 
 void StateUIDoCmd::Update() {
-  if (!stage_->HasNext()) {
+  if (!gi_->HasNextCmd()) {
     gv_->PopUIState();
   }
 }
@@ -224,7 +224,7 @@ bool StateUIOperable::IsScrollDown() { return scroll_down_; }
 
 // StateUIView
 
-StateUIView::StateUIView(Base base) : StateUIOperable(base), units_(stage_) {}
+StateUIView::StateUIView(Base base) : StateUIOperable(base), units_(gi_->QueryUnits()) {}
 
 void StateUIView::Update() {
   StateUIOperable::Update();
@@ -244,11 +244,11 @@ void StateUIView::Update() {
     unit_view->visible(false);
   }
 
-  if (stage_->IsAITurn()) {
-    stage_->Push(std::make_unique<core::CmdPlayAI>());
+  if (gi_->IsAITurn()) {
+    gi_->PushPlayAI();
   }
 
-  if (stage_->HasNext()) {
+  if (gi_->HasNextCmd()) {
     gv_->PushUIState(new StateUIDoCmd(WrapBase()));
   }
 }
@@ -302,7 +302,6 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, const core::UnitKey& unit_key)
     : StateUIOperable(base), unit_key_(unit_key), moves_(gi_->QueryMoves(unit_key_)) {
-  // TODO Change the way we handle temporary position (DO NOT move/restore the unit in stage_)
   const core::Unit* unit = gi_->GetUnit(unit_key_);
   origin_coords_ = unit->GetPosition();
 }
@@ -347,7 +346,7 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
       LOG_DEBUG("Move to pos (%d, %d) / move_id : %u", pos.x, pos.y, move_id);
       gv_->PushUIState(new StateUIMoving(WrapBase(), unit_key_, pos, core::MoveKey{move_id}));
     } else {
-      //      gv_->ChangeStateUI(new StateUIView(stage_, gv_));
+      //      gv_->ChangeStateUI(new StateUIView(WrapBase()));
     }
   } else if (e.IsRightButtonUp()) {
     gv_->PopUIState();
@@ -548,7 +547,7 @@ void StateUIKilled::Update() {
 StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords) : StateUI(base), coords_(coords) {}
 
 void StateUIEmptySelected::Enter() {
-  core::Map* map = stage_->GetMap();
+  const core::Map* map = gi_->GetMap();
   std::string name = map->GetTerrain(coords_)->GetName();
   gv_->terrain_info_view()->SetText(name);
   gv_->terrain_info_view()->visible(true);
@@ -792,7 +791,7 @@ const core::AttackRange& StateUITargeting::GetRange() {
   if (is_basic_attack_) {
     return gi_->GetUnit(unit_id_)->GetAttackRange();
   } else {
-    core::Magic* magic = stage_->GetMagic(magic_id_);
+    const core::Magic* magic = gi_->GetMagic(magic_id_);
     return magic->GetRange();
   }
 }
@@ -814,7 +813,7 @@ void StateUITargeting::Render(Drawer* drawer) {
   // Show Attack Range
   range_.ForEach(
       [&](Vec2D d) {
-        if (!stage_->IsValidCoords(d)) return;
+        if (!gi_->IsValidCoords(d)) return;
         drawer->SetDrawColor(Color(255, 64, 64, 128));
         drawer->FillCell(d);
       },
@@ -882,7 +881,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
   StateUIOperable::OnMouseMotionEvent(e);
 
   auto unit_tooltip_view = gv_->unit_tooltip_view();
-  core::Map* map = stage_->GetMap();
+  const core::Map* map = gi_->GetMap();
   Vec2D cursor_cell = GetCursorCell();
   const core::Unit* unit_target = gi_->GetUnit(cursor_cell);
   const core::Unit* unit = gi_->GetUnit(unit_key_);
@@ -963,10 +962,7 @@ StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, const core::Uni
 }
 
 void StateUIMagicSelection::Enter() {
-  const core::Unit* unit = gi_->GetUnit(unit_key_);
-
-  // TODO magic_list should not be acquired here (Move it to UserInterface)
-  auto magic_list = std::make_shared<core::MagicList>(stage_->GetMagicManager(), unit);
+  auto magic_list = gi_->GetMagicList(unit_id_);
   MagicListView* mlv = gv_->magic_list_view();
   mlv->SetData(unit_key_, move_id_, magic_list);
   mlv->SetCoords(layout::CalcPositionNearUnit(mlv->GetFrameSize(), gv_->GetFrameSize(), gv_->GetCameraCoords(), pos_));
@@ -1028,12 +1024,11 @@ void StateUINextTurn::Enter() {
 void StateUINextTurn::Exit() {
   gv_->dialog_view()->visible(false);
 
-  GameView* gv = gv_;
-  core::Stage* game = stage_;
-  gv_->NextFrame([=]() {
+  gv_->NextFrame([gv = gv_, gi = gi_]() {
     ControlView* control_view = gv->control_view();
-    control_view->SetTurnText(game->GetTurnCurrent(), game->GetTurnLimit());
-    control_view->SetEndTurnVisible(game->IsUserTurn());
+    const auto& turn = gi->GetTurn();
+    control_view->SetTurnText(turn.GetCurrent(), turn.GetLimit());
+    control_view->SetEndTurnVisible(gi->IsUserTurn());
   });
 }
 

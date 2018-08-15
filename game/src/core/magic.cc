@@ -69,7 +69,7 @@ bool Magic::IsAvailible(const Unit* unit) {
   return false;
 }
 
-const AttackRange& Magic::GetRange() { return AttackRangeManager::GetInstance().Get(range_); }
+const AttackRange& Magic::GetRange() const { return AttackRangeManager::GetInstance().Get(range_); }
 
 }  // namespace core
 }  // namespace mengde

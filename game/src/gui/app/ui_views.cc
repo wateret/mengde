@@ -104,7 +104,7 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
 
   {  // Initialize unit_action_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {150, 150}, LayoutHelper::kAlignLftTop);
-    unit_action_view_ = new UnitActionView(frame, game, game->user_interface(), game_view);
+    unit_action_view_ = new UnitActionView(frame, game->user_interface(), game_view);
     unit_action_view_->visible(false);
     AddChild(unit_action_view_);
   }

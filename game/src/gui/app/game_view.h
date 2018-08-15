@@ -44,7 +44,7 @@ class GameView : public View {
   typedef function<void()> NextFrameCallback;
 
  public:
-  GameView(const Rect& frame, core::Stage* game, App* app);
+  GameView(const Rect& frame, core::UserInterface* gi, App* app);
   ~GameView();
 
  public:
@@ -101,7 +101,6 @@ class GameView : public View {
   bool SkipRender(const core::UId& id) const;
 
  private:
-  core::Stage* stage_;  // TODO We should eventually remove this, use core::UserInterface instead.
   core::UserInterface* gi_;
 
   App* app_;

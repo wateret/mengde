@@ -17,6 +17,8 @@ class Stage;
 class PathTree;
 class Scenario;
 class Unit;
+class Turn;
+class MagicList;
 
 class AvailableUnits {
  public:
@@ -65,6 +67,7 @@ class UserInterface {
   AvailableMoves QueryMoves(const UnitKey& unit_key) const;
   AvailableActs QueryActs(const UnitKey& unit_key, const MoveKey& move_id, ActionType type) const;
   void PushAction(const UnitKey& unit_key, const MoveKey& move_id, ActionType type, const ActKey& act_id);
+  void PushPlayAI();
 
   const Unit* GetUnit(const UId& uid) const;
   const Unit* GetUnit(const UnitKey& unit_key) const;
@@ -72,12 +75,24 @@ class UserInterface {
   const Cell* GetCell(Vec2D pos) const;
   vector<Vec2D> GetPath(const UId& unit_id, Vec2D pos) const;
 
+  std::shared_ptr<core::MagicList> GetMagicList(const UId& uid) const;
+  const Magic* GetMagic(const string&) const;
+
   Vec2D GetMapSize() const;
   string GetMapId() const;
+  const Map* GetMap() const;
 
   bool HasNextCmd() const;
+  const Cmd* GetNextCmd() const;
+  void DoNextCmd();
 
   void ForEachUnit(const std::function<void(const Unit*)>& fn) const;
+
+  bool IsUserTurn() const;
+  bool IsAITurn() const;
+  const Turn& GetTurn() const;
+
+  bool IsValidCoords(Vec2D c) const;
 
  private:
   Vec2D GetMovedPosition(const UnitKey& unit_id, const MoveKey& move_id);

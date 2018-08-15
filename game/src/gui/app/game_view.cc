@@ -16,10 +16,9 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-GameView::GameView(const Rect& frame, core::Stage* game, App* app)
+GameView::GameView(const Rect& frame, core::UserInterface* gi, App* app)
     : View(frame),
-      stage_(game),
-      gi_(game->user_interface()),
+      gi_{gi},
       app_(app),
       ui_state_machine_(),
       frame_callbacks_(),
@@ -34,7 +33,7 @@ GameView::GameView(const Rect& frame, core::Stage* game, App* app)
   max_camera_coords_ = kMapSize - kWindowSize;
 
   ui_state_machine_.InitState();
-  ui_state_machine_.PushState(new StateUIView({stage_, gi_, this}));
+  ui_state_machine_.PushState(new StateUIView({gi_, this}));
 }
 
 GameView::~GameView() {}
@@ -122,9 +121,9 @@ void GameView::PopUIState() {
 void GameView::InitUIStateMachine() {
   NextFrame([this]() {
     ui_state_machine_.InitState();
-    ui_state_machine_.PushState(new StateUIView({stage_, gi_, this}));
+    ui_state_machine_.PushState(new StateUIView({gi_, this}));
     if (gi_->HasNextCmd()) {
-      ui_state_machine_.PushState(new StateUIDoCmd({stage_, gi_, this}));
+      ui_state_machine_.PushState(new StateUIDoCmd({gi_, this}));
     }
   });
 }

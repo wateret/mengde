@@ -45,6 +45,7 @@ class Stage : public IDeployHelper {
  public:
   // Map related //
   Map* GetMap() { return map_; }
+  const Map* GetMap() const { return map_; }
   Vec2D GetMapSize() { return map_->GetSize(); }
   std::string GetMapId() { return map_->GetModelId(); }
 
@@ -54,7 +55,7 @@ class Stage : public IDeployHelper {
   void MoveUnit(Unit*, Vec2D);
   void MoveUnit(const UId& uid, Vec2D dst);
   void KillUnit(Unit*);
-  bool IsValidCoords(Vec2D);
+  bool IsValidCoords(Vec2D) const;
   Magic* GetMagic(const std::string&);
   Unit* GetUnit(const UId&);
   const Unit* GetUnit(const UId&) const;
@@ -66,8 +67,7 @@ class Stage : public IDeployHelper {
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
   bool IsUserTurn() const;
-  uint16_t GetTurnCurrent() const;
-  uint16_t GetTurnLimit() const;
+  const Turn& GetTurn() const;
   bool HasNext() const;
   void DoNext();
   void Push(unique_ptr<Cmd>);

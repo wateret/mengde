@@ -63,7 +63,7 @@ AttackRangeManager& AttackRangeManager::GetInstance() {
   return instance;
 }
 
-const AttackRange& AttackRangeManager::Get(Range::Type type) { return ranges_[type]; }
+const AttackRange& AttackRangeManager::Get(Range::Type type) const { return ranges_[type]; }
 
 }  // namespace core
 }  // namespace mengde

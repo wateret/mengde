@@ -38,12 +38,12 @@ Map::~Map() {
 
 string Map::GetModelId() { return bitmap_path_; }
 
-Cell* Map::GetCell(int c, int r) {
+const Cell* Map::GetCell(int c, int r) const {
   ASSERT(IsValidCoords({c, r}));
   return grid_[r][c];
 }
 
-Cell* Map::GetCell(Vec2D v) {
+const Cell* Map::GetCell(Vec2D v) const {
   ASSERT(IsValidCoords(v));
   return grid_[v.y][v.x];
 }
@@ -61,6 +61,11 @@ void Map::RemoveUnit(Vec2D c) {
 }
 
 Terrain* Map::GetTerrain(Vec2D c) {
+  ASSERT(IsValidCoords(c));
+  return grid_[c.y][c.x]->GetTerrain();
+}
+
+const Terrain* Map::GetTerrain(Vec2D c) const {
   ASSERT(IsValidCoords(c));
   return grid_[c.y][c.x]->GetTerrain();
 }
@@ -196,7 +201,7 @@ bool Map::IsHostilePlaced(const UId& uid, Vec2D coords) const {
 
 bool Map::IsValidCoords(Vec2D c) const { return c.x >= 0 && c.x < size_.x && c.y >= 0 && c.y < size_.y; }
 
-int Map::ApplyTerrainEffect(const Unit* unit, int value) {
+int Map::ApplyTerrainEffect(const Unit* unit, int value) const {
   Vec2D v = unit->GetPosition();
   return grid_[v.y][v.x]->ApplyTerrainEffect(unit->GetClassIndex(), value);
 }

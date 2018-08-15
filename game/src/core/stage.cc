@@ -153,7 +153,7 @@ bool Stage::TryMagic(Unit* unit_atk, Unit* unit_def) {
   return GenRandom(100) < Formulae::ComputeMagicAccuracy(unit_atk, unit_def);
 }
 
-bool Stage::IsValidCoords(Vec2D c) { return map_->IsValidCoords(c); }
+bool Stage::IsValidCoords(Vec2D c) const { return map_->IsValidCoords(c); }
 
 Magic* Stage::GetMagic(const std::string& id) { return rc_.magic_manager->Get(id); }
 
@@ -211,9 +211,7 @@ bool Stage::IsAITurn() const { return !IsUserTurn(); }
 
 bool Stage::IsCurrentTurn(Unit* unit) const { return unit->GetForce() == turn_.GetForce(); }
 
-uint16_t Stage::GetTurnCurrent() const { return turn_.GetCurrent(); }
-
-uint16_t Stage::GetTurnLimit() const { return turn_.GetLimit(); }
+const Turn& Stage::GetTurn() const { return turn_; }
 
 vector<Vec2D> Stage::FindMovablePos(Unit* unit) {
   PathTree* path_tree = FindMovablePath(unit);
