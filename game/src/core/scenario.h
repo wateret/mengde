@@ -18,14 +18,14 @@ class Scenario {
   ~Scenario();
   const ResourceManagers& GetResourceManagers() { return rc_; }
   Assets* GetAssets() { return assets_; }
-  Stage* GetGame() { return stage_; }
+  Stage* GetStage() { return stage_; }
 
  public:
   void NextStage();
 
  private:
-  Stage* NewGame(const string& stage_id);
-  Stage* LoadGame(const string& save_file_path);
+  Stage* NewStage(const string& stage_id);
+  Stage* LoadStage(const string& save_file_path);
 
  private:
   string scenario_id_;

@@ -17,15 +17,15 @@ Scenario::Scenario(const string& scenario_id)
 
   // For the case of NEW GAME
   assets_ = new Assets();
-  stage_ = NewGame(stage_ids_[stage_no_]);
+  stage_ = NewStage(stage_ids_[stage_no_]);
 }
 
-Stage* Scenario::NewGame(const string& stage_id) {
+Stage* Scenario::NewStage(const string& stage_id) {
   const Path path = GameEnv::GetInstance()->GetScenarioPath() / scenario_id_ / "script" / (stage_id + ".lua");
   return new Stage(rc_, assets_, path);
 }
 
-Stage* Scenario::LoadGame(const string& save_file_path) {
+Stage* Scenario::LoadStage(const string& save_file_path) {
   UNUSED(save_file_path);
 
   // TODO Support save files
@@ -44,7 +44,7 @@ void Scenario::NextStage() {
 
   // Advance to the next stage
   delete stage_;
-  stage_ = NewGame(stage_ids_[++stage_no_]);
+  stage_ = NewStage(stage_ids_[++stage_no_]);
 }
 
 Scenario::~Scenario() {

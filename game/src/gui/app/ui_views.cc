@@ -22,7 +22,7 @@ namespace gui {
 namespace app {
 
 UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view) : CompositeView(rect) {
-  core::Stage* game = scenario->GetGame();
+  core::Stage* game = scenario->GetStage();
 
   {  // Initialize deploy_view_
     core::Assets* assets = scenario->GetAssets();
