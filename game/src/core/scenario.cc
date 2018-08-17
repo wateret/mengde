@@ -8,7 +8,7 @@ namespace mengde {
 namespace core {
 
 Scenario::Scenario(const string& scenario_id)
-    : scenario_id_(scenario_id), stage_ids_(), stage_no_(0), rc_(), assets_(nullptr), stage_(nullptr) {
+    : scenario_id_(scenario_id), stage_ids_(), stage_no_(0), rc_(), assets_(nullptr) {
   const Path base_path(scenario_id_);
 
   ConfigLoader loader(base_path / "script" / "config.lua");
@@ -17,34 +17,32 @@ Scenario::Scenario(const string& scenario_id)
 
   // For the case of NEW GAME
   assets_ = new Assets();
-  stage_ = NewStage(stage_ids_[stage_no_]);
+  current_stage_ = NewStage(stage_ids_[stage_no_]);
 }
 
-Stage* Scenario::NewStage(const string& stage_id) {
+unique_ptr<Stage> Scenario::NewStage(const string& stage_id) {
   const Path path = GameEnv::GetInstance()->GetScenarioPath() / scenario_id_ / "script" / (stage_id + ".lua");
-  return new Stage(rc_, assets_, path);
+  return std::make_unique<Stage>(rc_, assets_, path);
 }
 
-Stage* Scenario::LoadStage(const string& save_file_path) {
-  UNUSED(save_file_path);
-
-  // TODO Support save files
-  UNREACHABLE("NYI");
-  return nullptr;
-}
-
-void Scenario::NextStage() {
+bool Scenario::NextStage() {
   // FIXME Currently the below condition is always false.
   //       Need to change Lua API `on_deploy(game)` to `on_deploy(assets)
   // ASSERT(assets_ != stage_->assets());
+  ASSERT(assets_ == current_stage_->assets());  // FIXME Remove this temporary condition
 
   // Update Assets
   // delete assets_;
-  assets_ = stage_->assets();
+  assets_ = current_stage_->assets();
 
   // Advance to the next stage
-  delete stage_;
-  stage_ = NewStage(stage_ids_[++stage_no_]);
+  if (stage_no_ < stage_ids_.size() - 1) {
+    current_stage_ = NewStage(stage_ids_[++stage_no_]);
+    return true;
+  } else {
+    current_stage_ = nullptr;
+    return false;
+  }
 }
 
 Scenario::~Scenario() {
@@ -55,7 +53,6 @@ Scenario::~Scenario() {
   delete rc_.hero_tpl_manager;
 
   delete assets_;
-  delete stage_;
 }
 
 }  // namespace core

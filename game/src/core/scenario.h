@@ -18,14 +18,13 @@ class Scenario {
   ~Scenario();
   const ResourceManagers& GetResourceManagers() { return rc_; }
   Assets* GetAssets() { return assets_; }
-  Stage* GetStage() { return stage_; }
+  Stage* current_stage() { return current_stage_.get(); }
 
  public:
-  void NextStage();
+  bool NextStage();
 
  private:
-  Stage* NewStage(const string& stage_id);
-  Stage* LoadStage(const string& save_file_path);
+  unique_ptr<Stage> NewStage(const string& stage_id);
 
  private:
   string scenario_id_;
@@ -33,7 +32,7 @@ class Scenario {
   uint32_t stage_no_;
   ResourceManagers rc_;
   Assets* assets_;
-  Stage* stage_;
+  unique_ptr<Stage> current_stage_;
 };
 
 }  // namespace core

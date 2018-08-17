@@ -179,10 +179,18 @@ void App::StartNewScenario(const string& scenario_id) {
 
 void App::EndStage() {
   delete root_view_;
-  scenario_->NextStage();
-  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
-  target_view_ = root_view_;
-  LOG_DEBUG("root_view_ changed.");
+  bool has_next = scenario_->NextStage();
+
+  if (has_next) {
+    root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
+    target_view_ = root_view_;
+  } else {
+    root_view_ = nullptr;
+    target_view_ = main_view_;
+
+    delete scenario_;
+    scenario_ = nullptr;
+  }
 
   /* For the case of end of the scenario
   // FIXME We can't delete these objects now since this function is called from
