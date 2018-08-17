@@ -8,7 +8,7 @@ matrix:
           compiler:
               - clang
           before_install:
-              - ./ci/install_deps_osx.sh
+              - ./ci/install_deps_macos.sh
           cache:
               directories:
                   - $HOME/Library/Caches/Homebrew
