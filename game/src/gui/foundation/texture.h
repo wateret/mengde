@@ -26,9 +26,9 @@ class Texture {
 
  public:
   SDL_Texture* AsRawTexture();
-  int GetW();
-  int GetH();
-  Vec2D GetSize();
+  int w();
+  int h();
+  Vec2D size();
   void SetAlpha(uint8_t);
   void SetShade(uint8_t);
   bool Loaded() { return texture_ != nullptr; }

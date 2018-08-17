@@ -31,7 +31,7 @@ void ImageView::Render(Drawer* drawer) {
   ASSERT(texture_ != nullptr);
   Rect frame = GetFrame();
 
-  if (src_rect_.GetSize() != Vec2D(0, 0))
+  if (src_rect_.size() != Vec2D(0, 0))
     drawer->CopyTexture(texture_, &src_rect_, &frame);
   else
     drawer->CopyTexture(texture_, nullptr, &frame);

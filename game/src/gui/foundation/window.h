@@ -17,7 +17,7 @@ class Window {
   void Update();
   void InfoMessageBox(const char* title, const char* message);
   SDL_Window* AsRawWindow();
-  Vec2D GetSize();
+  Vec2D size();
 
  private:
   SDL_Window* handle_;

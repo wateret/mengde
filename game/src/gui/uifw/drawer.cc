@@ -13,7 +13,7 @@ namespace gui {
 namespace uifw {
 
 Drawer::Drawer(Window* window, const string& scenario_path, const string& font_path)
-    : window_size_(window->GetSize()), offset_(0, 0), viewports_() {
+    : window_size_(window->size()), offset_(0, 0), viewports_() {
   renderer_ = new Renderer(window);
   texture_manager_ = new TextureManager(renderer_, scenario_path, font_path);
   viewports_.push(Viewport(Rect(0, 0, window_size_.x, window_size_.y), {0, 0}));
@@ -43,7 +43,7 @@ void Drawer::CopyTexture(Texture* texture, Rect* rect_src, Rect* rect_dst, bool 
 
 void Drawer::CopyTextureToCell(Texture* texture, Rect* rect_src, Vec2D pos) {
   Vec2D dst = pos * app::config::kBlockSize;
-  Vec2D size = rect_src->GetSize();
+  Vec2D size = rect_src->size();
   Vec2D adjust = (size - app::config::kBlockSize) / 2;
   Rect rect_dst(dst - adjust, size);
   CopyTexture(texture, rect_src, &rect_dst);
@@ -148,15 +148,15 @@ void Drawer::FillRect(const Rect& r) {
 void Drawer::DrawText(const std::string& text, int size, Color color, Vec2D pos) {
   if (text == "") return;
   Texture* texture = texture_manager_->FetchTextTexture(text, size, color);
-  Rect rect(pos, texture->GetSize());
+  Rect rect(pos, texture->size());
   CopyTexture(texture, NULL, &rect);
 }
 
 void Drawer::DrawText(const std::string& text, int size, Color color, const Rect* frame, LayoutHelper::Align align) {
   if (text == "") return;
-  Texture* texture = texture_manager_->FetchTextTexture(text, size, color, frame->GetW());
+  Texture* texture = texture_manager_->FetchTextTexture(text, size, color, frame->w());
   // TODO Calc position every time could cause performance issue
-  Rect rect = LayoutHelper::CalcPosition(*frame, texture->GetSize(), align);
+  Rect rect = LayoutHelper::CalcPosition(*frame, texture->size(), align);
   CopyTexture(texture, NULL, &rect);
 }
 
@@ -176,20 +176,20 @@ void Drawer::SetViewport(const Rect* r) {
   Viewport top_vp = viewports_.top();
 
   Rect& rect = top_vp.rect;
-  Rect rr(rect.GetPos() + r->GetPos() + top_vp.neg_coords, r->GetSize());
-  ASSERT(rr.GetW() >= 0 && rr.GetH() >= 0);
+  Rect rr(rect.pos() + r->pos() + top_vp.neg_coords, r->size());
+  ASSERT(rr.w() >= 0 && rr.h() >= 0);
 
   Vec2D neg_coords;
-  neg_coords.x = std::min(0, rr.GetX() - rect.GetX());
-  neg_coords.y = std::min(0, rr.GetY() - rect.GetY());
+  neg_coords.x = std::min(0, rr.x() - rect.x());
+  neg_coords.y = std::min(0, rr.y() - rect.y());
   rr.Move(-neg_coords);
   //  rr -= neg_coords;
-  int rgt = std::min(0, rect.GetRight() - rr.GetRight());
-  int bot = std::min(0, rect.GetBottom() - rr.GetBottom());
+  int rgt = std::min(0, rect.right() - rr.right());
+  int bot = std::min(0, rect.bottom() - rr.bottom());
   rr += {rgt, bot};
 
   Viewport new_vp(rr, neg_coords);
-  //  LOG_INFO("Viewport push (%d %d %d %d) (%d %d)", rr.GetX(), rr.GetY(), rr.GetW(), rr.GetH(), neg_coords.x,
+  //  LOG_INFO("Viewport push (%d %d %d %d) (%d %d)", rr.x(), rr.y(), rr.w(), rr.h(), neg_coords.x,
   //  neg_coords.y);
   renderer_->SetViewport(&new_vp.rect);
   viewports_.push(new_vp);
@@ -198,7 +198,7 @@ void Drawer::SetViewport(const Rect* r) {
 void Drawer::ResetViewport() {
   viewports_.pop();
   Viewport vp = viewports_.top();
-  //  LOG_INFO("Viewport pop  (%d %d %d %d)", vp.rect.GetX(), vp.rect.GetY(), vp.rect.GetW(), vp.rect.GetH());
+  //  LOG_INFO("Viewport pop  (%d %d %d %d)", vp.rect.x(), vp.rect.y(), vp.rect.w(), vp.rect.h());
   renderer_->SetViewport(&vp.rect);
 }
 

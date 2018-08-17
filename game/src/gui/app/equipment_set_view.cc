@@ -15,7 +15,7 @@ namespace app {
 //
 
 EquipmentView::EquipmentView(const Rect& frame, const core::Equipment* equipment) : CallbackView(frame) {
-  Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().GetSize(), {32, 32}, LayoutHelper::kAlignLftMid);
+  Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().size(), {32, 32}, LayoutHelper::kAlignLftMid);
   iv_image_ = new ImageView(iv_frame, rcpath::EquipmentModelPath("60-1").ToString());  // FIXME hardcoded
   Rect tv_name_frame = {32 + 8, 0, 164, 16};
   tv_name_ = new TextView(tv_name_frame, "");
@@ -70,9 +70,9 @@ EquipmentSetView::EquipmentSetView(const Rect& frame) : CompositeView(frame), eq
 
   Rect equipment_view_frame = {0, 24, 204, 60};
   eqv_weapon_ = new EquipmentView(equipment_view_frame, weapon);
-  equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
+  equipment_view_frame.Move({0, equipment_view_frame.h() + 24});
   eqv_armor_ = new EquipmentView(equipment_view_frame, armor);
-  equipment_view_frame.Move({0, equipment_view_frame.GetH() + 24});
+  equipment_view_frame.Move({0, equipment_view_frame.h() + 24});
   eqv_aid_ = new EquipmentView(equipment_view_frame, aid);
 
   EquipmentView* equipment_views[] = {eqv_weapon_, eqv_armor_, eqv_aid_};

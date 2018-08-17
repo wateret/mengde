@@ -45,8 +45,8 @@ Rect LayoutHelper::CalcPosition(Vec2D cont_size, Vec2D elem_size, Align alignmen
 }
 
 Rect LayoutHelper::CalcPosition(const Rect& cont_rect, Vec2D elem_size, Align alignment, int margin) {
-  Rect ret = CalcPosition(cont_rect.GetSize(), elem_size, alignment, margin);
-  ret.Move(cont_rect.GetPos());
+  Rect ret = CalcPosition(cont_rect.size(), elem_size, alignment, margin);
+  ret.Move(cont_rect.pos());
   return ret;
 }
 

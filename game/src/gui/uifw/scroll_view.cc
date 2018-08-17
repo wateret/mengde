@@ -6,7 +6,7 @@ namespace gui {
 namespace uifw {
 
 ScrollView::ScrollView(const Rect& frame, View* view) : ViewDecorator(frame, view), coords_(0, 0) {
-  if (frame.GetSize() > view->GetFrame().GetSize()) {
+  if (frame.size() > view->GetFrame().size()) {
     LOG_WARNING("Wrapped frame size is smaller than ScrollView frame");
   }
   view_->SetCoords({0, 0});
@@ -27,7 +27,7 @@ bool ScrollView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
     coords_.x = std::min(coords_.x, 0);
   } else if (e.IsRight()) {
     coords_.x -= kDefaultScrollAmount;
-    int x_min = std::min(0, GetFrame().GetW() - view_->GetFrame().GetW());
+    int x_min = std::min(0, GetFrame().w() - view_->GetFrame().w());
     coords_.x = std::max(coords_.x, x_min);
   }
   if (e.IsUp()) {
@@ -35,7 +35,7 @@ bool ScrollView::OnMouseWheelEvent(const foundation::MouseWheelEvent& e) {
     coords_.y = std::min(coords_.y, 0);
   } else if (e.IsDown()) {
     coords_.y -= kDefaultScrollAmount;
-    int y_min = std::min(0, GetFrame().GetH() - view_->GetFrame().GetH());
+    int y_min = std::min(0, GetFrame().h() - view_->GetFrame().h());
     coords_.y = std::max(coords_.y, y_min);
   }
   view_->SetCoords(coords_);

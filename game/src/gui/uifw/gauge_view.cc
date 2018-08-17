@@ -26,7 +26,7 @@ GaugeView::~GaugeView() {}
 
 int GaugeView::CalcWidth(int val) {
   ASSERT(max_val_ > 0);
-  int w = GetFrame().GetW();
+  int w = GetFrame().w();
   return val * w / max_val_;
 }
 
@@ -38,14 +38,14 @@ void GaugeView::Render(Drawer* drawer) {
   int ext_x = CalcWidth(cur_val_ - ext_val_);
 
   Rect cur_rect = frame;
-  cur_rect.SetW(ext_x);
+  cur_rect.w(ext_x);
   drawer->SetDrawColor(cur_color_);
   drawer->FillRect(cur_rect);
 
   if (ext_val_ > 0) {
     Rect ext_rect = frame;
-    ext_rect.SetX(ext_rect.GetX() + ext_x);
-    ext_rect.SetW(CalcWidth(cur_val_) - ext_x);
+    ext_rect.x(ext_rect.x() + ext_x);
+    ext_rect.w(CalcWidth(cur_val_) - ext_x);
     drawer->SetDrawColor(ext_color_);
     drawer->FillRect(ext_rect);
   }

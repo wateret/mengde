@@ -25,8 +25,8 @@ class View : public IView {
   Vec2D GetActualFrameSize() const;
   Vec2D GetFrameCoords() const;
   Vec2D GetActualFrameCoords() const;
-  void SetCoords(Vec2D v) { frame_.SetPos(v); }
-  void SetSize(Vec2D v) { frame_.SetSize(v); }
+  void SetCoords(Vec2D v) { frame_.pos(v); }
+  void size(Vec2D v) { frame_.size(v); }
   void Move(Vec2D v) { frame_.Move(v); }
   void SetFrame(const Rect* r) { frame_ = *r; }
 

@@ -6,7 +6,7 @@ namespace uifw {
 
 VerticalListView::VerticalListView(const Rect& frame) : CompositeView(frame), margin_(0), total_element_height_(0) {
   // Initial height must be zero, the height value from frame is ignored
-  SetSize({GetFrameSize().x, 0});
+  size({GetFrameSize().x, 0});
 }
 
 void VerticalListView::AddElement(View* e) {
@@ -21,7 +21,7 @@ void VerticalListView::AddElement(View* e) {
   total_element_height_ += element_size.y + margin_;
   frame_size = {frame_size.x,
                 total_element_height_ + padding() * 2};  // Increment size of the frame by the element's height
-  this->SetSize(frame_size);
+  this->size(frame_size);
 
   AddChild(e);
 }

@@ -63,11 +63,11 @@ void Texture::InitBitmap(Renderer* renderer, const std::string& path, bool use_k
   CreateFromSurface(renderer, surface_);
 }
 
-int Texture::GetW() { return width_; }
+int Texture::w() { return width_; }
 
-int Texture::GetH() { return height_; }
+int Texture::h() { return height_; }
 
-Vec2D Texture::GetSize() { return {width_, height_}; }
+Vec2D Texture::size() { return {width_, height_}; }
 
 void Texture::SetAlpha(uint8_t alpha) { SDL_SetTextureAlphaMod(texture_, alpha); }
 

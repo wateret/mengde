@@ -12,16 +12,16 @@ View::View() : View(Rect()) {}
 
 Rect View::GetActualFrame() const { return Rect(Vec2D(0, 0), GetActualFrameSize()); }
 
-Vec2D View::GetFrameSize() const { return {frame_.GetW(), frame_.GetH()}; }
+Vec2D View::GetFrameSize() const { return {frame_.w(), frame_.h()}; }
 
 Vec2D View::GetActualFrameSize() const {
   int a = padding_ * 2;
-  return {frame_.GetW() - a, frame_.GetH() - a};
+  return {frame_.w() - a, frame_.h() - a};
 }
 
-Vec2D View::GetFrameCoords() const { return {frame_.GetX(), frame_.GetY()}; }
+Vec2D View::GetFrameCoords() const { return {frame_.x(), frame_.y()}; }
 
-Vec2D View::GetActualFrameCoords() const { return {frame_.GetX() + padding_, frame_.GetY() + padding_}; }
+Vec2D View::GetActualFrameCoords() const { return {frame_.x() + padding_, frame_.y() + padding_}; }
 
 void View::visible(bool b) {
   visible_ = b;

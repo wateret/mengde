@@ -9,7 +9,7 @@ namespace gui {
 namespace app {
 
 UnitView::UnitView(const Rect& frame) : TabView(frame), unit_(NULL) {
-  Vec2D size = frame.GetSize();
+  Vec2D size = frame.size();
   size -= {0, -28};
   Rect subframe({0, 28}, size);
   unit_over_view_ = new UnitOverView(subframe);

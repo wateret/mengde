@@ -784,7 +784,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit
                            is_basic_attack_ ? core::ActionType::kBasicAttack : core::ActionType::kMagic)) {
   Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
-  frame.Move(frame.GetW() + LayoutHelper::kDefaultSpace, 0);
+  frame.Move(frame.w() + LayoutHelper::kDefaultSpace, 0);
 }
 
 const core::AttackRange& StateUITargeting::GetRange() {

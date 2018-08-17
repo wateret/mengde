@@ -25,7 +25,7 @@ void Window::InfoMessageBox(const char* title, const char* message) {
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, title, message, handle_);
 }
 
-Vec2D Window::GetSize() {
+Vec2D Window::size() {
   Vec2D size;
   SDL_GetWindowSize(handle_, &size.x, &size.y);
   return size;

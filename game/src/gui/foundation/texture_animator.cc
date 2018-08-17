@@ -7,7 +7,7 @@ namespace foundation {
 
 TextureAnimator::TextureAnimator(Texture* texture, int fpc)
     : texture_(texture), cut_size_(0), num_cuts_(0), frames_per_cut_(fpc), frame_no_(0) {
-  Vec2D texture_size = texture->GetSize();
+  Vec2D texture_size = texture->size();
   cut_size_ = texture_size.x;
   num_cuts_ = texture_size.y / cut_size_;
   ASSERT(texture_size.y % texture_size.x == 0);

@@ -15,7 +15,7 @@ UnitActionView::UnitActionView(const Rect& frame, core::UserInterface* gi, GameV
   bg_color(COLOR("darkgray", 212));
   padding(8);
   Rect btn_frame = GetActualFrame();
-  btn_frame.SetH(24);
+  btn_frame.h(24);
 
   btn_attack_ = new ButtonView(&btn_frame, "Attack");
   AddElement(btn_attack_);

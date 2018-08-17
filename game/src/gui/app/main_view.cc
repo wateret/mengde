@@ -33,7 +33,7 @@ MainView::MainView(const Rect& frame, App* app) : CompositeView(frame) {
   AddChild(start_button);
   AddChild(quit_button);
 
-  Rect scenario_select_frame(start_frame.GetRight() + 8, start_frame.GetH(), 240, 300);
+  Rect scenario_select_frame(start_frame.right() + 8, start_frame.h(), 240, 300);
   scenario_select_view_ = new ScenarioSelectView(scenario_select_frame, app);
   scenario_select_view_->visible(false);
 

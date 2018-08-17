@@ -83,12 +83,12 @@ void Rect::Move(int dx, int dy) {
 
 void Rect::Move(Vec2D v) { Move(v.x, v.y); }
 
-void Rect::SetPos(Vec2D v) {
+void Rect::pos(Vec2D v) {
   rect_.x = v.x;
   rect_.y = v.y;
 }
 
-void Rect::SetSize(Vec2D v) {
+void Rect::size(Vec2D v) {
   rect_.w = v.x;
   rect_.h = v.y;
 }
@@ -100,9 +100,9 @@ void Rect::Contract(int amount) {
   rect_.h -= amount * 2;
 }
 
-bool Rect::Contains(Vec2D v) const {
-  return rect_.x <= v.x && v.x < rect_.x + rect_.w && rect_.y <= v.y && v.y < rect_.y + rect_.h;
-}
+bool Rect::Contains(Vec2D v) const { return left() <= v.x && v.x <= right() && top() <= v.y && v.y <= bottom(); }
+
+bool Rect::Contains(const Rect& v) const { return Contains(v.pos()) && Contains(v.pos() + v.size() - 1); }
 
 }  // namespace foundation
 }  // namespace gui
