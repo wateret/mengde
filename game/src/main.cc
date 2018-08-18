@@ -6,10 +6,8 @@ int main(int argc, char** argv) {
   UNUSED(argv);
 
   try {
-    mengde::gui::app::App* app = new mengde::gui::app::App(1024, 768, 60);
-    app->Run();
-
-    delete app;
+    mengde::gui::app::App app{1024, 768, 60};
+    app.Run();
   } catch (const char* msg) {
     LOG_FATAL("Caught Exception : %s", msg);
     return 1;
