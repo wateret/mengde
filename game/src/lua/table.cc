@@ -50,4 +50,6 @@ void Table::ForEachNonArray(const std::function<void(const std::string&, const l
   table_->ForEachNonArray(fn);
 }
 
+bool Table::empty() const { return table_->empty(); }
+
 }  // namespace lua

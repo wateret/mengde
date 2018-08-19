@@ -9,6 +9,7 @@
 #include "gui/foundation/texture_manager.h"
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/sprite_type.h"
+#include "model_finder.h"
 #include "resource_path.h"
 #include "ui_views.h"
 
@@ -94,7 +95,7 @@ void GameView::RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos) {
     sprite_no = 0;
     sprite_effect = {kEffectShade, 128};
   }
-  drawer->CopySprite(unit->GetModelId(), stype, unit->GetDirection(), sprite_no, sprite_effect, pos);
+  drawer->CopySprite(GetModelId(unit->GetUnitId()), stype, unit->GetDirection(), sprite_no, sprite_effect, pos);
 }
 
 void GameView::ChangeUIState(StateUI* state_ui) {
@@ -182,6 +183,23 @@ void GameView::SetSkipRender(const core::UId& id, bool b) {
 }
 
 bool GameView::SkipRender(const core::UId& id) const { return skip_render_.find(id.Value()) != skip_render_.end(); }
+
+#include "util/game_env.h"
+
+string GameView::GetModelId(const core::UId& uid) {
+  auto found = model_ids_.find(uid.Value());
+  if (found == model_ids_.end()) {
+    auto unit = gi_->GetUnit(uid);
+    auto hero_id = unit->GetId();
+    auto hero_class = unit->GetClass()->GetId();
+    auto force = unit->GetForce();
+    auto model_id = FindModelId(app_->GetCurrentScenarioPath(), hero_class, hero_id, force);
+
+    model_ids_[uid.Value()] = model_id;
+  }
+
+  return model_ids_[uid.Value()];
+}
 
 }  // namespace app
 }  // namespace gui

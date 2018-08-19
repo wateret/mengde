@@ -21,6 +21,7 @@ class Scenario {
   Stage* current_stage() { return current_stage_.get(); }
 
  public:
+  const string& id() const { return scenario_id_; }
   bool NextStage();
 
  private:

@@ -437,8 +437,8 @@ void StateUIMoving::Render(Drawer* drawer) {
   Direction dir = Vec2DRelativePosition(path_[path_idx], path_[path_idx - 1]);
   Vec2D diff = path_[path_idx - 1] - path_[path_idx];
   Vec2D diff_pos = diff * (percentage * (float)config::kBlockSize);
-  drawer->CopySprite(gi_->GetUnit(unit_id_)->GetModelId(), kSpriteMove, dir, sprite_no, {kEffectNone, 0},
-                     path_[path_idx], diff_pos);
+  drawer->CopySprite(gv_->GetModelId(unit_id_), kSpriteMove, dir, sprite_no, {kEffectNone, 0}, path_[path_idx],
+                     diff_pos);
   gv_->CenterCamera(path_[path_idx] * config::kBlockSize + diff_pos + (config::kBlockSize / 2));
 }
 
@@ -483,13 +483,14 @@ void StateUIMagic::Render(Drawer* drawer) {
   Vec2D def_pos = def_->GetPosition();
   Direction dir = Vec2DRelativePosition(unit_pos, def_pos);
 
-  drawer->CopySprite(atk_->GetModelId(), kSpriteAttack, dir, 0, {kEffectNone, 0}, unit_pos);
+  drawer->CopySprite(gv_->GetModelId(unit_id_atk_), kSpriteAttack, dir, 0, {kEffectNone, 0}, unit_pos);
 
   const SpriteType target_sprite_hit =
       magic_->IsTypeDeal() ? kSpriteDamaged : kSpriteBuff;  // This condition may not be accurate
   const SpriteType target_sprite = hit_ ? target_sprite_hit : kSpriteBlocked;
 
-  drawer->CopySprite(def_->GetModelId(), target_sprite, OppositeDirection(dir), 0, {kEffectNone, 0}, def_pos);
+  drawer->CopySprite(gv_->GetModelId(unit_id_def_), target_sprite, OppositeDirection(dir), 0, {kEffectNone, 0},
+                     def_pos);
 
   Rect src_rect = animator_->GetCurrentCutRect();
   drawer->CopyTextureToCell(animator_->GetTexture(), &src_rect, def_pos);
@@ -532,7 +533,8 @@ void StateUIKilled::Render(Drawer* drawer) {
     if (f > hold) progress = (f - hold) * 255 / (kStateDuration - hold);
   }
   const core::Unit* unit = gi_->GetUnit(unit_id_);
-  drawer->CopySprite(unit->GetModelId(), kSpriteLowHP, kDirNone, 0, {kEffectShade, progress}, unit->GetPosition());
+  drawer->CopySprite(gv_->GetModelId(unit_id_), kSpriteLowHP, kDirNone, 0, {kEffectShade, progress},
+                     unit->GetPosition());
 }
 
 void StateUIKilled::Update() {
@@ -657,13 +659,15 @@ void StateUIAttack::Render(Drawer* drawer) {
   }
 
   if (atk_->GetPosition().y > def_->GetPosition().y) {
-    drawer->CopySprite(def_->GetModelId(), cut_def->sprite, OppositeDirection(dir), cut_def->no, {kEffectNone, 0},
-                       def_pos, def_offset);
-    drawer->CopySprite(atk_->GetModelId(), cut_atk->sprite, dir, cut_atk->no, sprite_effect, atk_pos, atk_offset);
+    drawer->CopySprite(gv_->GetModelId(unit_id_def_), cut_def->sprite, OppositeDirection(dir), cut_def->no,
+                       {kEffectNone, 0}, def_pos, def_offset);
+    drawer->CopySprite(gv_->GetModelId(unit_id_atk_), cut_atk->sprite, dir, cut_atk->no, sprite_effect, atk_pos,
+                       atk_offset);
   } else {
-    drawer->CopySprite(atk_->GetModelId(), cut_atk->sprite, dir, cut_atk->no, sprite_effect, atk_pos, atk_offset);
-    drawer->CopySprite(def_->GetModelId(), cut_def->sprite, OppositeDirection(dir), cut_def->no, {kEffectNone, 0},
-                       def_pos, def_offset);
+    drawer->CopySprite(gv_->GetModelId(unit_id_atk_), cut_atk->sprite, dir, cut_atk->no, sprite_effect, atk_pos,
+                       atk_offset);
+    drawer->CopySprite(gv_->GetModelId(unit_id_def_), cut_def->sprite, OppositeDirection(dir), cut_def->no,
+                       {kEffectNone, 0}, def_pos, def_offset);
   }
 
   // Render Damage Text

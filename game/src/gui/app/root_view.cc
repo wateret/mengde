@@ -19,7 +19,7 @@ RootView::RootView(const Rect& frame, core::Scenario* scenario, App* app)
     : View(frame), app_(app), game_view_(nullptr), ui_views_(nullptr) {
   game_view_ = new GameView(frame, scenario->current_stage()->user_interface(), app_);
 
-  ui_views_ = new UIViews(frame, scenario, game_view_);
+  ui_views_ = new UIViews(frame, scenario, game_view_, app->GetCurrentScenarioPath());
   ui_views_->SetTransparent();
 
   game_view_->SetUIViews(ui_views_);

@@ -94,6 +94,7 @@ class GameView : public View {
   void RaiseMouseOverEvent();
   void SetSkipRender(const core::UId& id, bool b);
   void RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos);
+  string GetModelId(const core::UId& uid);
 
  private:
   void RunCallbacks();
@@ -106,6 +107,7 @@ class GameView : public View {
   App* app_;
 
   std::unordered_set<uint32_t> skip_render_;
+  std::unordered_map<uint32_t, string> model_ids_;
 
   StateMachine<StateUI*> ui_state_machine_;
   queue<NextFrameCallback> frame_callbacks_;

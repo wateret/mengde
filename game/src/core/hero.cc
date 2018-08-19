@@ -30,8 +30,6 @@ Hero::~Hero() { delete equipment_set_; }
 
 string Hero::GetId() const { return hero_tpl_->GetId(); }
 
-string Hero::GetModelId() const { return hero_tpl_->GetModelId(); }
-
 const UnitClass* Hero::GetClass() const { return hero_tpl_->GetClass(); }
 
 int Hero::GetClassIndex() const { return hero_tpl_->GetClassIndex(); }

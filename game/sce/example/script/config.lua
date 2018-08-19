@@ -1,109 +1,104 @@
 gconfig = {
     id = "CaoCao",
     unit_classes = {
-        {   id           = "Lord",
-            promotions   = 3,
+        {   id           = "Lord-1",
             stat_grades  = "AAAAA",
             attack_range = "Adjacent4",
             move         = 6,
             hp           = {100, 5},
             mp           = {30, 1}
         },
-        {   id           = "Infantry",
-            promotions   = 3,
+        {   id           = "Infantry-1",
             stat_grades  = "BASBB",
             attack_range = "Adjacent8",
             move         = 5,
             hp           = {110, 6},
             mp           = {10, 1}
         },
-        {   id           = "Cavalry",
-            promotions   = 3,
+        {   id           = "Cavalry-1",
             stat_grades  = "SBABB",
             attack_range = "Adjacent4",
             move         = 6,
             hp           = {100, 5},
-            mp           = {10, 1}
+            mp           = {10, 1},
+            promotion    = { id = "Cavalry-2", level = 20 }
         },
-        {   id           = "Archer",
-            promotions   = 3,
+        {   id           = "Cavalry-2",
+            stat_grades  = "SBABB",
+            attack_range = "Adjacent8",
+            move         = 7,
+            hp           = {150, 5},
+            mp           = {20, 1}
+        },
+        {   id           = "Archer-1",
             stat_grades  = "ABBBS",
             attack_range = "Distance2_8",
             move         = 5,
             hp           = {90, 4},
             mp           = {10, 1}
         },
-        {   id           = "HorseArcher",
-            promotions   = 3,
+        {   id           = "HorseArcher-1",
             stat_grades  = "SBBBA",
             attack_range = "Distance2_4",
             move         = 6,
             hp           = {100, 5},
             mp           = {10, 1}
         },
-        {   id           = "Carriage",
-            promotions   = 3,
+        {   id           = "Carriage-1",
             stat_grades  = "SBACA",
             attack_range = "Distance4",
             move         = 4,
             hp           = {90, 4},
             mp           = {10, 1}
         },
-        {   id           = "Fighter",
-            promotions   = 3,
+        {   id           = "Fighter-1",
             stat_grades  = "ACASB",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {90, 4},
             mp           = {20, 1}
         },
-        {   id =          "Bandit",
-            promotions =  3,
-            stat_grades =  "SCBBS",
+        {   id           = "Bandit-1",
+            stat_grades  = "SCBBS",
             attack_range = "Adjacent4",
-            move =        5,
-            hp =          {100, 5},
-            mp =          {20, 1}
+            move         = 5,
+            hp           = {100, 5},
+            mp           = {20, 1}
         },
-        {   id =          "Strategist",
-            promotions =  3,
-            stat_grades =  "BSBBB",
+        {   id           = "Strategist-1",
+            stat_grades  = "BSBBB",
             attack_range = "Adjacent4",
-            move =        5,
-            hp =          {90, 4},
-            mp =          {40, 2}
+            move         = 5,
+            hp           = {90, 4},
+            mp           = {40, 2}
         },
-        {   id =          "Support",
-            promotions =  3,
-            stat_grades =  "CSCAA",
+        {   id           = "Support-1",
+            stat_grades  = "CSCAA",
             attack_range = "Adjacent4",
-            move =        5,
-            hp =          {80, 3},
-            mp =          {50, 2}
+            move         = 5,
+            hp           = {80, 3},
+            mp           = {50, 2}
         },
-        {   id =          "Guru",
-            promotions =  3,
-            stat_grades =  "CSBAB",
+        {   id           = "Guru-1",
+            stat_grades  = "CSBAB",
             attack_range = "Adjacent4",
-            move =        5,
-            hp =          {80, 3},
-            mp =          {40, 2}
+            move         = 5,
+            hp           = {80, 3},
+            mp           = {40, 2}
         },
-        {   id =          "HorseStrategist",
-            promotions =  3,
-            stat_grades =  "ASBBC",
+        {   id           = "HorseStrategist-1",
+            stat_grades  = "ASBBC",
             attack_range = "Adjacent4",
-            move =        5,
-            hp =          {100, 5},
-            mp =          {50, 2}
+            move         = 5,
+            hp           = {100, 5},
+            mp           = {50, 2}
         },
-        {   id =          "Dancer",
-            promotions =  3,
-            stat_grades =  "ABBSB",
+        {   id           = "Dancer-1",
+            stat_grades  = "ABBSB",
             attack_range = "Adjacent4",
-            move =        5,
-            hp =          {90, 3},
-            mp =          {35, 1}
+            move         = 5,
+            hp           = {90, 3},
+            mp           = {35, 1}
         }
     },
     terrains = {
@@ -131,23 +126,23 @@ gconfig = {
     },
     terrain_movecost = {
         -- Rows : terrain / Cols : unit class
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1},
-        {2, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1},
-        {3, 2, 2, 3, 3, 2, 2, 1, 2, 2, 2, 3, 2},
-        {9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9},
-        {9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9}
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {2, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1},
+        {2, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1},
+        {3, 2, 2, 2, 3, 3, 2, 2, 1, 2, 2, 2, 3, 2},
+        {9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9},
+        {9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9}
     },
     terrain_effect = {
         -- Rows : terrain / Cols : unit class
-        {100, 100, 110, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
-        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
-        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
-        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
-        {100, 100, 100, 100, 100, 100, 100, 110, 100, 100, 100, 100, 100},
-        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
-        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100}
+        {100, 100, 110, 110, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+        {100, 100, 100, 100, 100, 100, 100, 100, 110, 100, 100, 100, 100, 100},
+        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100},
+        {100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100}
     },
     magics = {
         {   id       = "fire_0",
@@ -156,8 +151,8 @@ gconfig = {
             range    = "Distance4_Incl",
             mp       = 10,
             learnat  = {
-                { class = "Lord",       level = 10 },
-                { class = "Strategist", level = 5 }
+                { class = "Lord-1",       level = 10 },
+                { class = "Strategist-1", level = 5 }
             },
             type  = "deal",
             power = 70
@@ -168,8 +163,8 @@ gconfig = {
             range    = "Distance4_Incl",
             mp       = 10,
             learnat  = {
-                { class = "Support",    level = 5 },
-                { class = "Strategist", level = 15 }
+                { class = "Support-1",    level = 5 },
+                { class = "Strategist-1", level = 15 }
             },
             type  = "heal",
             power = 50
@@ -180,7 +175,7 @@ gconfig = {
             range    = "Distance3_Incl",
             mp       = 8,
             learnat  = {
-                { class = "Support", level = 5 }
+                { class = "Support-1", level = 5 }
             },
             type   = "stat_mod",
             stat   = "dex",
@@ -190,44 +185,37 @@ gconfig = {
     },
     heroes = {
         {   id    = "CaoCao",
-            class = "Lord",
+            class = "Lord-1",
             stat  = {82, 99, 80, 90, 95},
-            model = "CaoCao-1"
         },
         {   id    = "DianWei",
-            class = "Fighter",
+            class = "Fighter-1",
             stat  = {97, 60, 99, 50, 90},
-            model = "dianwei-1"
         },
         {   id    = "ZhangLiao",
-            class = "Cavalry",
+            class = "Cavalry-1",
             stat  = {90, 92, 64, 80, 75},
-            model = "ZhangLiao-1"
         },
         {   id    = "ManChong",
-            class = "Support",
+            class = "Support-1",
             stat  = {20, 60, 50, 90, 50},
-            model = "support-1-red"
         },
         {   id    = "XiahouDun",
-            class = "Cavalry",
+            class = "Cavalry-1",
             stat  = {94, 84, 72, 48, 95},
-            model = "XiahouDun-1"
         },
         {   id    = "XunYu",
-            class = "Strategist",
+            class = "Strategist-1",
             stat  = {34, 75, 77, 98, 64},
             model = "Strategist-1-red"
         },
         {   id    = "Bandit",
-            class = "Bandit",
+            class = "Bandit-1",
             stat  = {70, 70, 50, 30, 60},
-            model = "Bandit-1-blue"
         },
         {   id    = "Cavalry",
-            class = "Cavalry",
+            class = "Cavalry-1",
             stat  = {70, 70, 55, 30, 50},
-            model = "cavalry-1-blue"
         }
     },
     equipments = {

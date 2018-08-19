@@ -21,14 +21,15 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view) : CompositeView(rect) {
+UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view, const Path& base_path)
+    : CompositeView(rect) {
   core::Stage* game = scenario->current_stage();
 
   {  // Initialize deploy_view_
     core::Assets* assets = scenario->GetAssets();
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
 
-    deploy_view_ = new DeployView(frame, assets, game, game_view);
+    deploy_view_ = new DeployView(frame, assets, game, game_view, base_path);
     deploy_view_->visible(true);
     AddChild(deploy_view_);
   }

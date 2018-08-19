@@ -51,8 +51,6 @@ uint16_t Unit::GetExp() const { return hero_->GetExp(); }
 
 int Unit::GetMove() const { return hero_->GetMove(); }
 
-string Unit::GetModelId() const { return hero_->GetModelId(); }
-
 const Attribute& Unit::GetOriginalAttr() const { return hero_->GetUnitPureStat(); }
 
 const HpMp& Unit::GetOriginalHpMp() const { return hero_->GetOriginalHpMp(); }

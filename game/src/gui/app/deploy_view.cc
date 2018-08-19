@@ -15,6 +15,7 @@
 #include "gui/uifw/button_view.h"
 #include "gui/uifw/image_view.h"
 #include "gui/uifw/text_view.h"
+#include "model_finder.h"
 #include "resource_path.h"
 #include "unit_over_view.h"
 #include "unit_view.h"
@@ -23,13 +24,15 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::IDeployHelper* deploy_helper)
+HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::IDeployHelper* deploy_helper,
+                             const Path& base_path)
     : CallbackView(frame), hero_(hero), deploy_no_(0), required_unselectable_(false), tv_no_(nullptr) {
   padding(4);
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.size(), LayoutHelper::kAlignCenter);
   iv_frame.y(iv_frame.y() - 8);
-  ImageView* iv_hero = new ImageView(iv_frame, rcpath::UnitModelPath(hero->GetModelId(), kSpriteStand).ToString());
+  string model_id = FindModelId(base_path, hero->GetClass()->GetId(), hero->GetId(), core::Force::kOwn);
+  ImageView* iv_hero = new ImageView(iv_frame, rcpath::UnitModelPath(model_id, kSpriteStand).ToString());
   iv_hero->SetSourceRect(img_src_rect);
   AddChild(iv_hero);
 
@@ -62,13 +65,14 @@ void HeroModelView::UpdateViews() {
 }
 
 HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core::Hero*>& hero_list,
-                                     core::IDeployHelper* deploy_helper, DeployDirector* director)
+                                     core::IDeployHelper* deploy_helper, DeployDirector* director,
+                                     const Path& base_path)
     : CompositeView(frame) {
   bg_color(COLOR("navy"));
   static const Vec2D kHeroModelSize = {96, 80};
   Rect hero_model_frame({0, 0}, kHeroModelSize);
   for (auto hero : hero_list) {
-    HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper);
+    HeroModelView* model_view = new HeroModelView(hero_model_frame, hero, deploy_helper, base_path);
     model_view->SetMouseButtonHandler(
         [model_view, hero, deploy_helper, director](const foundation::MouseButtonEvent& e) -> bool {
           if (e.IsLeftButtonUp()) {
@@ -92,7 +96,8 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
   }
 }
 
-DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHelper* deploy_helper, GameView* gv)
+DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHelper* deploy_helper, GameView* gv,
+                       const Path& base_path)
     : CompositeView(frame), gv_(gv) {
   padding(8);
   bg_color(COLOR("darkgray"));
@@ -141,7 +146,8 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   {
     Rect hero_model_list_frame = GetActualFrame();
     hero_model_list_frame.w(4 * 96);
-    hero_model_list_view = new HeroModelListView(hero_model_list_frame, assets->GetHeroes(), deploy_helper, director_);
+    hero_model_list_view =
+        new HeroModelListView(hero_model_list_frame, assets->GetHeroes(), deploy_helper, director_, base_path);
     AddChild(hero_model_list_view);
   }
 

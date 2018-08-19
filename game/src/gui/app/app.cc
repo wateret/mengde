@@ -87,6 +87,8 @@ App::~App() {
   Misc::Quit();
 }
 
+Path App::GetCurrentScenarioPath() const { return GameEnv::GetInstance()->GetScenarioPath() / scenario_->id(); }
+
 void App::SetupScenario(const string& scenario_id) {
   try {
     scenario_ = new core::Scenario(scenario_id);
@@ -97,7 +99,7 @@ void App::SetupScenario(const string& scenario_id) {
   }
 
   root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
-  drawer_->SetBitmapBasePath((GameEnv::GetInstance()->GetScenarioPath() / scenario_id).ToString());
+  drawer_->SetBitmapBasePath(GetCurrentScenarioPath().ToString());
 }
 
 Drawer* App::GetDrawer() { return drawer_; }

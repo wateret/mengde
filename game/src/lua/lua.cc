@@ -26,9 +26,13 @@ Lua::~Lua() {
 }
 
 void Lua::RunFile(const std::string& filename) {
-  if (luaL_loadfile(L, filename.c_str())) {
-    // TODO Throw appropriate exception;
-    throw "Loadfile error";
+  if (auto code = luaL_loadfile(L, filename.c_str())) {
+    if (code == LUA_ERRSYNTAX) {
+      auto s = std::string(lua_tostring(L, -1));
+      throw ScriptSyntaxException{s};
+    } else {
+      throw ScriptRuntimeException{std::string("Unknown error while running script.")};
+    }
   }
   if (lua_pcall(L, 0, 0, 0)) {
     std::string message(lua_tostring(L, -1));

@@ -13,9 +13,13 @@ Path MapPath(const std::string& id) {
   return map_dir / Path(id + kBitmapExt);
 }
 
-Path UnitModelPath(const std::string& id, SpriteType type) {
+Path UnitModelPath(const std::string& id) {
   static const Path model_dir = Path{Path("gui") / Path("model")};
-  return model_dir / id / Path(std::string(kSpriteBitmapName[type]) + kBitmapExt);
+  return model_dir / id;
+}
+
+Path UnitModelPath(const std::string& id, SpriteType type) {
+  return UnitModelPath(id) / (Path(std::string(kSpriteBitmapName[type]) + kBitmapExt));
 }
 
 Path EquipmentModelPath(const std::string& id) {

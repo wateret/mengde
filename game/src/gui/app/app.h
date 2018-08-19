@@ -6,6 +6,7 @@
 #include "gui/foundation/event_fetcher.h"
 #include "gui/foundation/timer.h"
 #include "util/common.h"
+#include "util/path.h"
 
 #include "common.h"
 
@@ -62,6 +63,7 @@ class App {
   void Run();
 
   // Getters and Setters
+  Path GetCurrentScenarioPath() const;
   Drawer* GetDrawer();
   Vec2D GetWindowSize() { return window_size_; }
   uint16_t GetMaxFps() { return frame_config_.GetMaxFps(); }

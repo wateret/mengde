@@ -5,6 +5,7 @@
 #include "gui/uifw/composite_view.h"
 
 #include "common.h"
+#include "util/path.h"
 
 namespace mengde {
 namespace core {
@@ -29,7 +30,7 @@ class DeployDirector;
 
 class HeroModelView : public CallbackView {
  public:
-  HeroModelView(const Rect&, const core::Hero*, core::IDeployHelper*);
+  HeroModelView(const Rect&, const core::Hero*, core::IDeployHelper*, const Path& base_path);
   void UpdateViews();
   void SetDeployNo(uint32_t no) { deploy_no_ = no; }
   bool IsSelected() { return deploy_no_ != 0; }
@@ -43,14 +44,15 @@ class HeroModelView : public CallbackView {
 
 class HeroModelListView : public CompositeView {
  public:
-  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, DeployDirector*);
+  HeroModelListView(const Rect&, const vector<const core::Hero*>&, core::IDeployHelper*, DeployDirector*,
+                    const Path& base_path);
 };
 
 // DeployView is a UI view for deploying heroes
 
 class DeployView : public CompositeView {
  public:
-  DeployView(const Rect&, core::Assets*, core::IDeployHelper*, GameView*);
+  DeployView(const Rect&, core::Assets*, core::IDeployHelper*, GameView*, const Path& base_path);
 
  private:
   GameView* gv_;

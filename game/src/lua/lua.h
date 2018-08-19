@@ -48,10 +48,11 @@ class WrongTypeException : public LuaException {
 
 class ScriptRuntimeException : public LuaException {
  public:
+  ScriptRuntimeException() = default;
   ScriptRuntimeException(const std::string& message) : LuaException(), message_(message) {}
   virtual const char* what() const throw() { return message_.c_str(); }
 
- private:
+ protected:
   std::string message_;
 };
 
@@ -59,11 +60,22 @@ class UncallableException : public LuaException {
  public:
   UncallableException(const Ref& ref) : LuaException{}, ref_{ref} {}
   virtual const char* what() const throw() {
-    return ("Tried to call a value which is not a function (reference : " + std::to_string(ref_.value()) + ")").c_str();
+    static const std::string actual_message =
+        "Tried to call a value which is not a function (reference : " + std::to_string(ref_.value()) + ")";
+    return actual_message.c_str();
   }
 
  private:
   Ref ref_;
+};
+
+class ScriptSyntaxException : public ScriptRuntimeException {
+ public:
+  ScriptSyntaxException(const std::string& message) : ScriptRuntimeException{message} {}
+  virtual const char* what() const throw() {
+    static const std::string actual_message = "lua script syntax error - " + message_;
+    return actual_message.c_str();
+  }
 };
 
 class LuaClass {
@@ -131,6 +143,10 @@ class Lua {
     assert(L != nullptr);
 
     int to_be_popped = GetToStackOpt(var_expr);
+    if (!var_expr.empty() && to_be_popped == 0) {
+      return GetDefault<T>();
+    }
+
     T result = GetTopOpt<T>();
 
     PopStack(to_be_popped);
@@ -404,6 +420,10 @@ class Lua {
 
   template <typename T>
   typename std::enable_if<is_table<T>::value, T>::type GetTop() {
+    if (!lua_istable(L, -1)) {
+      throw WrongTypeException("Table", "?");
+    }
+
     Table table;
     ForEachTableEntry("", [&](Lua*, const std::string& key) {
       if (lua_istable(L, -1)) {
@@ -422,11 +442,14 @@ class Lua {
     return table;
   }
 
-  /*
-  template<typename T>
+  template <typename T>
   typename std::enable_if<is_table<T>::value, T>::type GetTopOpt() {
+    if (lua_istable(L, -1)) {
+      return GetTop<T>();
+    } else {
+      return GetDefault<T>();
+    }
   }
-  */
 
   // std::vector types
 

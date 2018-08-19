@@ -128,10 +128,10 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   int class_idx = 0;
   lua_config_->ForEachTableEntry("gconfig.unit_classes", [&](lua::Lua* l, const string&) {
     string id = l->Get<string>("id");
-    int promotions = l->Get<int>("promotions");
     string grades = l->Get<string>("stat_grades");
     string range_s = l->Get<string>("attack_range");
     int move = l->Get<int>("move");
+    auto promotion_info_table = l->GetOpt<lua::Table>("promotion");
     vector<int> hp = l->Get<vector<int>>("hp");
     vector<int> mp = l->Get<vector<int>>("mp");
 
@@ -144,10 +144,18 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
       if (grade == 'D') return 1;
       return 0;
     };
+
+    boost::optional<PromotionInfo> promotion_info;
+    if (!promotion_info_table.empty()) {
+      auto id = promotion_info_table->Get<string>("id");
+      auto level = promotion_info_table->Get<int>("level");
+      promotion_info = PromotionInfo{id, level};
+    }
+
     Attribute stat_grades = {GradeCharToInt(grades[0]), GradeCharToInt(grades[1]), GradeCharToInt(grades[2]),
                              GradeCharToInt(grades[3]), GradeCharToInt(grades[4])};
-    UnitClass* cla = new UnitClass(id, class_idx++, promotions, stat_grades, (Range::Type)range, move, {hp[0], hp[1]},
-                                   {mp[0], mp[1]});
+    UnitClass* cla = new UnitClass(id, class_idx++, stat_grades, (Range::Type)range, move, {hp[0], hp[1]},
+                                   {mp[0], mp[1]}, promotion_info);
     this->rc_.unit_class_manager->Add(id, cla);
   });
   uint32_t class_count = rc_.unit_class_manager->GetNumElements();
@@ -280,12 +288,8 @@ void ConfigLoader::ParseHeroTemplates() {
     string id = l->Get<string>("id");
     string uclass = l->Get<string>("class");
     vector<int> statr = l->Get<vector<int>>("stat");
-    string model = l->GetOpt<string>("model");
-    if (model == "nil") {
-      model = "infantry-1-red";  // XXX hardcoded. Make this to find default model
-    }
     Attribute stat = {statr[0], statr[1], statr[2], statr[3], statr[4]};
-    HeroTemplate* hero_tpl = new HeroTemplate(id, model, rc_.unit_class_manager->Get(uclass), stat);
+    HeroTemplate* hero_tpl = new HeroTemplate(id, rc_.unit_class_manager->Get(uclass), stat);
     rc_.hero_tpl_manager->Add(id, hero_tpl);
   });
 }

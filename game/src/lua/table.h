@@ -44,6 +44,8 @@ class TableImpl {
 
   void ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const;
 
+  bool empty() const { return values_.empty(); }
+
   void Dump();
 
  private:
@@ -76,6 +78,9 @@ class Table {
   }
 
   void ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const;
+
+ public:
+  bool empty() const;
 
  public:
   TableImpl* operator->() noexcept { return table_.operator->(); }

@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include "gui/uifw/composite_view.h"
+#include "util/path.h"
 
 namespace mengde {
 namespace core {
@@ -29,7 +30,7 @@ class UnitActionView;
 
 class UIViews : public CompositeView {
  public:
-  UIViews(const Rect& rect, core::Scenario*, GameView*);
+  UIViews(const Rect& rect, core::Scenario*, GameView*, const Path& base_path);
 
  public:
   // UI view getters
