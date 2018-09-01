@@ -216,6 +216,10 @@ gconfig = {
         {   id    = "Cavalry",
             class = "Cavalry-1",
             stat  = {70, 70, 55, 30, 50},
+        },
+        {   id    = "LuBu",
+            class = "Cavalry-1",
+            stat  = {100, 98, 90, 15, 99},
         }
     },
     equipments = {

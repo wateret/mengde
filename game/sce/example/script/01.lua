@@ -48,14 +48,19 @@ gstage = {
 }
 
 
-uid_caocao = 0
-uid_zhangliao = 1
-uid_bandit = nil
+owns = {
+    caocao = 0,
+    zhangliao = 1
+}
+
+enemies = {
+    lubu = nil
+}
 
 
 function on_deploy(game)
     game:appoint_hero("CaoCao", 80)
-    game:appoint_hero("ZhangLiao", 4)
+    game:appoint_hero("ZhangLiao", 19)
     game:appoint_hero("DianWei", 25)
     game:appoint_hero("ManChong", 20)
     game:appoint_hero("XiahouDun", 23)
@@ -67,16 +72,16 @@ end
 
 function on_begin(game)
     -- Enemies
-    uid_bandit = game:generate_unit("Bandit", 12, Enum.force.enemy, {9, 6})
+    enemies.lubu = game:generate_unit("LuBu", 12, Enum.force.enemy, {9, 6})
 --    game:generate_unit("Cavalry", 18, Enum.force.enemy, {10, 7})
 
 end
 
 
 function on_victory(game)
-    game:push_cmd_speak(uid_caocao, "So long, losers!")
-    game:push_cmd_move(uid_caocao, {0, 9})
-    game:push_cmd_move(uid_zhangliao, {0, 10})
+    game:push_cmd_speak(owns.caocao, "So long, losers!")
+    game:push_cmd_move(owns.caocao, {0, 9})
+    game:push_cmd_move(owns.zhangliao, {0, 10})
 end
 
 
@@ -97,14 +102,14 @@ end
 
 
 function event1_condition(game)
-    info = game:get_unit_info(uid_caocao)
+    info = game:get_unit_info(owns.caocao)
     return info.position.x == 9 and info.position.y == 3
 end
 
 
 function event1_handler(game, event_id)
-    game:push_cmd_speak(uid_bandit, "You just activated my trap card!")
-    game:push_cmd_move(uid_caocao, {12, 3})
+    game:push_cmd_speak(enemies.lubu, "You just activated my trap card!")
+    game:push_cmd_move(owns.caocao, {12, 3})
 
     -- Unregister since it is just one time event
     game:unregister_event(event_id)
