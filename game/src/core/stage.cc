@@ -221,14 +221,15 @@ vector<Vec2D> Stage::FindMovablePos(Unit* unit) {
   // TODO Enhance this inefficient algorithm O(M * N) where
   //      M is the number of res elements
   //      N is the number of units in this stage
-  list.erase(
-      std::remove_if(list.begin(), list.end(),
-                     [&](const Vec2D& e) {
-                       bool erase = false;
-                       ForEachUnit([&](const Unit* u) { erase = erase || (unit != u && u->GetPosition() == e); });
-                       return erase;
-                     }),
-      list.end());
+  list.erase(std::remove_if(list.begin(), list.end(),
+                            [&](const Vec2D& e) {
+                              bool erase = false;
+                              ForEachUnit([&](const Unit* u) {
+                                erase = erase || (unit != u && !u->IsDead() && u->GetPosition() == e);
+                              });
+                              return erase;
+                            }),
+             list.end());
 
   return list;
 }
