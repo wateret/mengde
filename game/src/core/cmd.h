@@ -324,6 +324,13 @@ class CmdGainExp : public CmdUnit {
   uint32_t exp_;
 };
 
+class CmdLevelUp : public CmdUnit {
+ public:
+  CmdLevelUp(const UId& unit);
+  virtual unique_ptr<Cmd> Do(Stage*) override;
+  virtual Cmd::Op op() const override { return Op::kCmdLevelUp; }
+};
+
 }  // namespace core
 }  // namespace mengde
 

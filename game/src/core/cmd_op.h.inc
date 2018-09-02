@@ -23,6 +23,7 @@ MACRO_CMD_OP(GameEnd    )
 MACRO_CMD_OP(RestoreHp  )
 MACRO_CMD_OP(EndAction  )
 MACRO_CMD_OP(GainExp    )
+MACRO_CMD_OP(LevelUp    )
 
 #undef MACRO_CMD_OP
 

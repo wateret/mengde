@@ -578,8 +578,21 @@ CmdGainExp::CmdGainExp(const UId& unit, uint32_t exp) : CmdUnit(unit), exp_(exp)
 
 unique_ptr<Cmd> CmdGainExp::Do(Stage* game) {
   auto unit = game->GetUnit(unit_);
-  unit->GainExp(exp_);
+  unique_ptr<Cmd> ret;
+  if (unit->GainExp(exp_)) {
+    ret = std::make_unique<CmdLevelUp>(unit_);
+  }
   LOG_INFO("%s gains exp by %u", unit->id().c_str(), exp_);
+  return ret;
+}
+
+// CmdLevelUp
+
+CmdLevelUp::CmdLevelUp(const UId& unit) : CmdUnit(unit) {}
+
+unique_ptr<Cmd> CmdLevelUp::Do(Stage* game) {
+  auto unit = game->GetUnit(unit_);
+  unit->LevelUp();
   return nullptr;
 }
 

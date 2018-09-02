@@ -38,6 +38,7 @@ class Hero : public IUnitBase, IEquipper {
   const Attribute& GetHeroStatBase() const;
   const Attribute& GetHeroStat() const { return hero_attr_; }
   void GainExp(uint16_t exp) { level_.exp += exp; }
+  bool IsExpFull() const { return level_.exp >= Level::kExpLimit; }
   const Attribute& GetUnitPureStat() const { return unit_pure_attr_; }
   void LevelUp();
   void PutOn(const Equipment*);

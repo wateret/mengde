@@ -42,6 +42,7 @@ const Attribute& Hero::GetHeroStatBase() const { return hero_tpl_->GetHeroStat()
 
 void Hero::LevelUp() {
   level_.level++;
+  level_.exp = 0;
   UpdateStat();
 }
 

@@ -95,7 +95,10 @@ bool Unit::IsInRange(Vec2D c, const AttackRange& range) const {
 
 bool Unit::IsInRange(Vec2D c) const { return IsInRange(c, attack_range()); }
 
-void Unit::GainExp(uint16_t exp) { hero_->GainExp(exp); }
+bool Unit::GainExp(uint16_t exp) {
+  hero_->GainExp(exp);
+  return hero_->IsExpFull();
+}
 
 void Unit::LevelUp() {
   // TODO check if Unit is alread in max level
