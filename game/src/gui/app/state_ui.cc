@@ -161,7 +161,7 @@ void StateUIView::Update() {
   if (unit) {
     const core::Cell* cell = gi_->GetCell(cursor_cell_);
     unit_tooltip_view->SetUnitTerrainInfo(cell, unit);
-    unit_tooltip_view->SetCoordsByUnitCoords(unit->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
+    unit_tooltip_view->SetCoordsByUnitCoords(unit->position(), gv_->GetCameraCoords(), gv_->GetFrameSize());
     unit_view->SetUnit(unit);
 
     unit_tooltip_view->visible(true);
@@ -229,7 +229,7 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, const core::UnitKey& unit_key)
     : StateUIOperable(base), unit_key_(unit_key), moves_(gi_->QueryMoves(unit_key_)) {
   const core::Unit* unit = gi_->GetUnit(unit_key_);
-  origin_coords_ = unit->GetPosition();
+  origin_coords_ = unit->position();
 }
 
 void StateUIUnitSelected::Enter() {}
@@ -240,7 +240,7 @@ void StateUIUnitSelected::Render(Drawer* drawer) {
   const core::Unit* unit = gi_->GetUnit(unit_key_);
 
   drawer->SetDrawColor(Color(0, 255, 0, 128));
-  drawer->BorderCell(unit->GetPosition(), 4);
+  drawer->BorderCell(unit->position(), 4);
 
   drawer->SetDrawColor(Color(0, 0, 192, 96));
   for (auto pos : moves_.moves()) {
@@ -338,7 +338,7 @@ void StateUIMoving::Update() {
   if (LastFrame()) {  // Arrived at the destination
     if (path_.size() > 1) {
       //      Direction dir = Vec2DRelativePosition(path_[1], path_[0]);
-      //      unit_->SetDirection(dir);  // Do this here?
+      //      unit_->direction(dir);  // Do this here?
     }
     if (flag_ == Flag::kInputActNext) {
       gv_->ChangeUIState(new StateUIAction(WrapBase(), unit_key_, move_id_));
@@ -405,8 +405,8 @@ void StateUIMagic::Render(Drawer* drawer) {
     animator_ = new TextureAnimator(texture, kFramesPerCut);
   }
 
-  Vec2D unit_pos = atk_->GetPosition();
-  Vec2D def_pos = def_->GetPosition();
+  Vec2D unit_pos = atk_->position();
+  Vec2D def_pos = def_->position();
   Direction dir = Vec2DRelativePosition(unit_pos, def_pos);
 
   drawer->CopySprite(gv_->GetModelId(unit_id_atk_), kSpriteAttack, dir, 0, {kEffectNone, 0}, unit_pos);
@@ -459,8 +459,7 @@ void StateUIKilled::Render(Drawer* drawer) {
     if (f > hold) progress = (f - hold) * 255 / (kStateDuration - hold);
   }
   const core::Unit* unit = gi_->GetUnit(unit_id_);
-  drawer->CopySprite(gv_->GetModelId(unit_id_), kSpriteLowHP, kDirNone, 0, {kEffectShade, progress},
-                     unit->GetPosition());
+  drawer->CopySprite(gv_->GetModelId(unit_id_), kSpriteLowHP, kDirNone, 0, {kEffectShade, progress}, unit->position());
 }
 
 void StateUIKilled::Update() {
@@ -563,10 +562,10 @@ void StateUIAttack::Render(Drawer* drawer) {
   ASSERT(cut_no < kNumCuts);
   const CutInfo* cut_atk = &kCutInfoAtk[cut_no];
   const CutInfo* cut_def = hit_ ? &kCutInfoDefDamaged[cut_no] : &kCutInfoDefBlocked[cut_no];
-  Vec2D atk_pos = atk_->GetPosition();
-  Vec2D def_pos = def_->GetPosition();
-  Vec2D atk_offset = GenerateVec2DOffset(atk_->GetDirection(), cut_atk->offset);
-  Vec2D def_offset = GenerateVec2DOffset(def_->GetDirection(), cut_def->offset);
+  Vec2D atk_pos = atk_->position();
+  Vec2D def_pos = def_->position();
+  Vec2D atk_offset = GenerateVec2DOffset(atk_->direction(), cut_atk->offset);
+  Vec2D def_offset = GenerateVec2DOffset(def_->direction(), cut_def->offset);
   Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
 
   SpriteEffect sprite_effect = {kEffectNone, 0};
@@ -584,7 +583,7 @@ void StateUIAttack::Render(Drawer* drawer) {
     sprite_effect = {kEffectBright, progress};
   }
 
-  if (atk_->GetPosition().y > def_->GetPosition().y) {
+  if (atk_->position().y > def_->position().y) {
     drawer->CopySprite(gv_->GetModelId(unit_id_def_), cut_def->sprite, OppositeDirection(dir), cut_def->no,
                        {kEffectNone, 0}, def_pos, def_offset);
     drawer->CopySprite(gv_->GetModelId(unit_id_atk_), cut_atk->sprite, dir, cut_atk->no, sprite_effect, atk_pos,
@@ -692,8 +691,8 @@ void StateUIUnitTooltipAnim::Update() {
     hpmp_mod.mp += mp_ * cur_anim_frames / max_anim_frames;
   }
 
-  gv_->unit_tooltip_view()->SetContents(unit->GetId(), unit->GetLevel(), hpmp_mod, unit->GetOriginalHpMp(), hpmp_rem);
-  gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
+  gv_->unit_tooltip_view()->SetContents(unit->id(), unit->GetLevel(), hpmp_mod, unit->GetOriginalHpMp(), hpmp_rem);
+  gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->position(), gv_->GetCameraCoords(), gv_->GetFrameSize());
 }
 
 void StateUIUnitTooltipAnim::Render(Drawer*) {}
@@ -828,7 +827,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
     } else {
       unit_tooltip_view->SetUnitTerrainInfo(map->GetCell(cursor_cell), unit_target);
     }
-    unit_tooltip_view->SetCoordsByUnitCoords(unit_target->GetPosition(), gv_->GetCameraCoords(), gv_->GetFrameSize());
+    unit_tooltip_view->SetCoordsByUnitCoords(unit_target->position(), gv_->GetCameraCoords(), gv_->GetFrameSize());
   }
   unit_tooltip_view->visible(unit_target != nullptr);
   return true;
@@ -974,7 +973,7 @@ void StateUISpeak::Enter() {
   unit_dialog_view->SetUnit(unit);
   unit_dialog_view->SetText(words_);
   unit_dialog_view->SetCoords(layout::CalcPositionNearUnit(gv_->unit_dialog_view()->GetFrameSize(), gv_->GetFrameSize(),
-                                                           gv_->GetCameraCoords(), unit->GetPosition()));
+                                                           gv_->GetCameraCoords(), unit->position()));
   unit_dialog_view_wrapper->visible(true);
 }
 

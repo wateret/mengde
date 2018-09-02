@@ -34,7 +34,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
 
  public:
   // IUnitBase interfaces
-  virtual string GetId() const override;
+  virtual string id() const override;
   virtual const UnitClass* GetClass() const override;
   virtual int GetMove() const override;
   virtual const AttackRange& GetAttackRange() const override;
@@ -47,17 +47,20 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   virtual const EquipmentSet* GetEquipmentSet() const override { return equipment_set_; }
   virtual void UpdateStat() override;
 
-  void SetUnitId(const UId& uid) { uid_ = uid; }
-  UId GetUnitId() const { return uid_; }
+ public:
+  void uid(const UId& uid) { uid_ = uid; }
+  UId uid() const { return uid_; }
+  uint16_t max_exp() { return Level::kExpLimit; }
+  void position(Vec2D pos) { position_ = pos; }
+  Vec2D position() const { return position_; }
+  void direction(Direction direction) { direction_ = direction; }
+  Direction direction() const { return direction_; }
+  int class_index() const;
+  Force force() const { return force_; }
+
+ public:
   void AddStatModifier(StatModifier*);
   void AddEventEffect(EventEffect*);
-  uint16_t GetMaxExp() { return Level::kExpLimit; }
-  void SetPosition(Vec2D pos) { position_ = pos; }
-  Vec2D GetPosition() const { return position_; }
-  void SetDirection(Direction direction) { direction_ = direction; }
-  Direction GetDirection() const { return direction_; }
-  int GetClassIndex() const;
-  Force GetForce() const { return force_; }
   bool IsHPLow() const;
   bool IsDead() const;
   bool DoDamage(int);

@@ -66,7 +66,7 @@ void UnitOverView::SetUnit(const core::IUnitBase* unit) {
 void UnitOverView::OnUnitUpdate() {
   ASSERT(unit_ != NULL);
 
-  std::string str_name = unit_->GetId();
+  std::string str_name = unit_->id();
   std::string str_lv = "Lv " + std::to_string(unit_->GetLevel());
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
@@ -90,7 +90,7 @@ void UnitOverView::OnUnitUpdate() {
     gv_stats_[j]->SetMaxVal(400);
     gv_stats_[j]->SetExtVal(cur_attr.GetValueByIndex(i) - ori_attr.GetValueByIndex(i));
   }
-  Path portrait_path = rcpath::PortraitPath(unit_->GetId());
+  Path portrait_path = rcpath::PortraitPath(unit_->id());
   iv_portrait_->SetPath(portrait_path.ToString());
 }
 

@@ -93,12 +93,12 @@ LUA_IMPL(GetUnitInfo) {
 
   lua::Table table;
 
-  table.Set("id", unit->GetId());
-  table.Set("uid", static_cast<int>(unit->GetUnitId().Value()));
+  table.Set("id", unit->id());
+  table.Set("uid", static_cast<int>(unit->uid().Value()));
   {
     lua::Table pos;
-    pos.Set("x", unit->GetPosition().x);
-    pos.Set("y", unit->GetPosition().y);
+    pos.Set("x", unit->position().x);
+    pos.Set("y", unit->position().y);
     table.Set("position", pos);
   }
 

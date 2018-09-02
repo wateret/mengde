@@ -12,7 +12,7 @@ class Turn {
   bool Next();
   uint16_t GetCurrent() const { return current_; }
   uint16_t GetLimit() const { return limit_; }
-  Force GetForce() const { return force_; }
+  Force force() const { return force_; }
 
  private:
   uint16_t current_;

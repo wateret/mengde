@@ -41,9 +41,9 @@ void UnitDialogView::SetText(const string& s) { tv_message_->SetText(s); }
 void UnitDialogView::SetUnit(const core::Unit* u) {
   if (u == nullptr) return;
 
-  Path portrait_path = rcpath::PortraitPath(u->GetId());
+  Path portrait_path = rcpath::PortraitPath(u->id());
   iv_portrait_->SetPath(portrait_path.ToString());
-  tv_name_->SetText(u->GetId());
+  tv_name_->SetText(u->id());
 }
 
 bool UnitDialogView::OnMouseButtonEvent(const foundation::MouseButtonEvent&) {

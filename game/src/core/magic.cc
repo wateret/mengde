@@ -62,7 +62,7 @@ void Magic::AddLearnInfo(uint16_t class_id, uint16_t level) { learn_info_list_.p
 
 bool Magic::IsAvailible(const Unit* unit) {
   for (auto e : learn_info_list_) {
-    if (unit->GetClassIndex() == e.id && unit->GetLevel() >= e.lv) {
+    if (unit->class_index() == e.id && unit->GetLevel() >= e.lv) {
       return true;
     }
   }

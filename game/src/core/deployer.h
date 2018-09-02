@@ -64,7 +64,7 @@ class Deployer {
   uint32_t Find(const Hero* hero);
   uint32_t GetNextSelectableNo();
   void ForEach(ForEachFn);
-  Vec2D GetPosition(const Hero* hero);
+  Vec2D position(const Hero* hero);
   bool IsReady();
   uint32_t GetNumAssigned();
 

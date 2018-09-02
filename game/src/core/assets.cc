@@ -28,7 +28,7 @@ Assets::~Assets() {
 }
 
 void Assets::AddHero(Hero* hero) {
-  string id = hero->GetId();
+  string id = hero->id();
   auto found = heroes_.find(id);
   if (found == heroes_.end()) {
     heroes_[id] = hero;

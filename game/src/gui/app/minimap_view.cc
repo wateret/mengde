@@ -43,7 +43,7 @@ MinimapUnitsView::MinimapUnitsView(const Rect& frame, core::Stage* game, Vec2D m
 
 void MinimapUnitsView::Render(Drawer* drawer) {
   stage_->ForEachUnit([=](core::Unit* u) {
-    switch (u->GetForce()) {
+    switch (u->force()) {
       case core::Force::kOwn:
         drawer->SetDrawColor({192, 0, 0, 255});
         break;
@@ -59,7 +59,7 @@ void MinimapUnitsView::Render(Drawer* drawer) {
         break;
     }
 
-    Rect rect(u->GetPosition(), {1, 1});
+    Rect rect(u->position(), {1, 1});
     rect.Magnify(unit_size_);
     rect -= 1;
     drawer->FillRect(rect);

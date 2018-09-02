@@ -84,7 +84,7 @@ PathTree* Map::FindPath(const UId& uid, Vec2D dest) {
   vector<int> dist(N, kInf);
   vector<bool> used(N, false);
   vector<PathNode*> from(N, NULL);
-  Vec2D coords = unit->GetPosition();
+  Vec2D coords = unit->position();
   int sc = SerializeVec2D(coords);
   int stat_move = kInf;
   if (dest == Vec2D(-1, -1)) {
@@ -131,7 +131,7 @@ PathTree* Map::FindPath(const UId& uid, Vec2D dest) {
       Vec2D nvec(nc, nr);
       if (!IsValidCoords(nvec)) continue;
       int next = SerializeVec2D(nvec);
-      int new_dist = dist[current] + grid_[nr][nc]->GetMoveCost(unit->GetClassIndex());
+      int new_dist = dist[current] + grid_[nr][nc]->GetMoveCost(unit->class_index());
 
       // handle ZOC
       if (new_dist < stat_move && IsHostileAdjacent(uid, nvec) && nvec != dest) {
@@ -202,8 +202,8 @@ bool Map::IsHostilePlaced(const UId& uid, Vec2D coords) const {
 bool Map::IsValidCoords(Vec2D c) const { return c.x >= 0 && c.x < size_.x && c.y >= 0 && c.y < size_.y; }
 
 int Map::ApplyTerrainEffect(const Unit* unit, int value) const {
-  Vec2D v = unit->GetPosition();
-  return grid_[v.y][v.x]->ApplyTerrainEffect(unit->GetClassIndex(), value);
+  Vec2D v = unit->position();
+  return grid_[v.y][v.x]->ApplyTerrainEffect(unit->class_index(), value);
 }
 
 }  // namespace core

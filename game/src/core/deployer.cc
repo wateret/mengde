@@ -90,7 +90,7 @@ void Deployer::ForEach(ForEachFn fn) {
   std::for_each(selectables_ordered.begin(), selectables_ordered.end(), fn);
 }
 
-Vec2D Deployer::GetPosition(const Hero* hero) {
+Vec2D Deployer::position(const Hero* hero) {
   auto found = FindImpl(hero);
   const Type type = found.first;
   const DeployElement& deploy_element = found.second;

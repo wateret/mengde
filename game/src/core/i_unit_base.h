@@ -20,7 +20,7 @@ class IUnitBase {
  public:
   virtual ~IUnitBase() = default;
 
-  virtual string GetId() const = 0;
+  virtual string id() const = 0;
   virtual const UnitClass* GetClass() const = 0;
   virtual int GetMove() const = 0;
   virtual const AttackRange& GetAttackRange() const = 0;

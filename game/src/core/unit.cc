@@ -43,7 +43,7 @@ bool Unit::IsHostile(const Unit* u) const {
   return false;
 }
 
-string Unit::GetId() const { return hero_->GetId(); }
+string Unit::id() const { return hero_->id(); }
 
 uint16_t Unit::GetLevel() const { return hero_->GetLevel(); }
 
@@ -79,7 +79,7 @@ void Unit::Kill() { current_hpmp_.hp = 0; }
 
 const UnitClass* Unit::GetClass() const { return hero_->GetClass(); }
 
-int Unit::GetClassIndex() const { return hero_->GetClassIndex(); }
+int Unit::class_index() const { return hero_->class_index(); }
 
 const AttackRange& Unit::GetAttackRange() const { return hero_->GetAttackRange(); }
 
@@ -101,7 +101,7 @@ void Unit::LevelUp() {
   // TODO check if Unit is alread in max level
   hero_->LevelUp();
   UpdateStat();
-  LOG_INFO("'%s' Level Up! (Level : %d)", hero_->GetId().c_str(), hero_->GetLevel());
+  LOG_INFO("'%s' Level Up! (Level : %d)", hero_->id().c_str(), hero_->GetLevel());
 }
 
 void Unit::EndAction() { done_action_ = true; }

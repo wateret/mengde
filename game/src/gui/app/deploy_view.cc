@@ -31,13 +31,13 @@ HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::ID
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.size(), LayoutHelper::kAlignCenter);
   iv_frame.y(iv_frame.y() - 8);
-  string model_id = FindModelId(base_path, hero->GetClass()->GetId(), hero->GetId(), core::Force::kOwn);
+  string model_id = FindModelId(base_path, hero->GetClass()->GetId(), hero->id(), core::Force::kOwn);
   ImageView* iv_hero = new ImageView(iv_frame, rcpath::UnitModelPath(model_id, kSpriteStand).ToString());
   iv_hero->SetSourceRect(img_src_rect);
   AddChild(iv_hero);
 
   Rect tv_hero_frame = GetActualFrame();
-  TextView* tv_hero = new TextView(tv_hero_frame, hero_->GetId(), COLOR("white"), 14, LayoutHelper::kAlignMidBot);
+  TextView* tv_hero = new TextView(tv_hero_frame, hero_->id(), COLOR("white"), 14, LayoutHelper::kAlignMidBot);
   AddChild(tv_hero);
 
   Rect tv_no_frame = GetActualFrame();

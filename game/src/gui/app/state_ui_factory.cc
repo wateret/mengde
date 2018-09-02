@@ -40,7 +40,7 @@ StateUI* StateUIFactory::GenerateNext(void) {
     }
     case core::Cmd::Op::kCmdMove: {
       const core::CmdMove* c = DYNAMIC_CAST_CHECK(core::CmdMove);
-      if (gi_->GetUnit(c->GetUnit())->GetPosition() == c->GetDest()) {
+      if (gi_->GetUnit(c->GetUnit())->position() == c->GetDest()) {
         return no_state_ui;
       } else {
         return new StateUIMoving(WrapBase(), c->GetUnit() /* FIXME */, c->GetDest());

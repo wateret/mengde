@@ -28,11 +28,11 @@ Hero::Hero(const Hero& hero)
 
 Hero::~Hero() { delete equipment_set_; }
 
-string Hero::GetId() const { return hero_tpl_->GetId(); }
+string Hero::id() const { return hero_tpl_->id(); }
 
 const UnitClass* Hero::GetClass() const { return hero_tpl_->GetClass(); }
 
-int Hero::GetClassIndex() const { return hero_tpl_->GetClassIndex(); }
+int Hero::class_index() const { return hero_tpl_->class_index(); }
 
 int Hero::GetMove() const { return hero_tpl_->GetMove(); }
 

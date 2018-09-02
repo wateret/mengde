@@ -151,8 +151,8 @@ CmdTwoUnits::CmdTwoUnits(const UId& atk, const UId& def) : atk_(atk), def_(def) 
 
 #ifdef DEBUG
 void CmdTwoUnits::DebugPrint(Stage* stage) const {
-  string atk = (!atk_) ? "N/A" : stage->GetUnit(atk_)->GetId();
-  string def = (!def_) ? "N/A" : stage->GetUnit(def_)->GetId();
+  string atk = (!atk_) ? "N/A" : stage->GetUnit(atk_)->id();
+  string def = (!def_) ? "N/A" : stage->GetUnit(def_)->id();
   printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(op())], atk.c_str(), def.c_str());
 }
 #endif
@@ -201,14 +201,14 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
 
   if (atk->IsDead() || def->IsDead()) return nullptr;
 
-  Vec2D atk_pos = atk->GetPosition();
-  Vec2D def_pos = def->GetPosition();
+  Vec2D atk_pos = atk->position();
+  Vec2D def_pos = def->position();
   Direction dir = Vec2DRelativePosition(atk_pos, def_pos);
-  atk->SetDirection(dir);
-  def->SetDirection(OppositeDirection(dir));
+  atk->direction(dir);
+  def->direction(OppositeDirection(dir));
 
   LOG_INFO("%s(%s) '%s' -> '%s'", IsCounter() ? "CounterAttack" : "Attack", IsSecond() ? "2nd" : "1st",
-           atk->GetId().c_str(), def->GetId().c_str());
+           atk->id().c_str(), def->id().c_str());
 
   CmdQueue* ret = new CmdQueue();
 
@@ -245,8 +245,8 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
 
   // Counter attack
   bool is_last_attack = (reserve_second_attack == IsSecond());
-  if (is_last_attack && !IsCounter() && def->IsInRange(atk->GetPosition())) {
-    LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def->GetId().c_str(), atk->GetId().c_str());
+  if (is_last_attack && !IsCounter() && def->IsInRange(atk->position())) {
+    LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def->id().c_str(), atk->id().c_str());
     ret->Append(std::make_unique<CmdBasicAttack>(def_, atk_, CmdBasicAttack::Type::kCounter));
   }
 
@@ -299,7 +299,7 @@ unique_ptr<Cmd> CmdMagic::Do(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
-  LOG_INFO("'%s' tries magic '%s' to '%s'", atk->GetId().c_str(), magic_->GetId().c_str(), def->GetId().c_str());
+  LOG_INFO("'%s' tries magic '%s' to '%s'", atk->id().c_str(), magic_->GetId().c_str(), def->id().c_str());
   bool hit = magic_->TryPerform(atk, def);
   Cmd* ret = nullptr;
   if (hit) {
@@ -341,7 +341,7 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
   unique_ptr<CmdQueue> ret{new CmdQueue};
   if (type_ == Type::kBasicAttack) {
     const string hit_type = (hit_type_ == HitType::kCritical) ? "Critical" : "Normal";
-    LOG_INFO("%s does damage to %s by %d (%s)", atk->GetId().c_str(), def->GetId().c_str(), damage_, hit_type.c_str());
+    LOG_INFO("%s does damage to %s by %d (%s)", atk->id().c_str(), def->id().c_str(), damage_, hit_type.c_str());
 
     if (!def->DoDamage(damage_)) {  // unit is dead
       ret->Append(std::make_unique<CmdKilled>(def_));
@@ -371,7 +371,7 @@ CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type) : CmdActResult(atk, 
 unique_ptr<Cmd> CmdMiss::Do(Stage* stage) {
   UNUSED(stage);
 
-  LOG_INFO("%s misses!", stage->GetUnit(atk_)->GetId().c_str());
+  LOG_INFO("%s misses!", stage->GetUnit(atk_)->id().c_str());
   return nullptr;
 }
 
@@ -390,8 +390,8 @@ CmdMove::CmdMove(const UId& unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {}
 
 unique_ptr<Cmd> CmdMove::Do(Stage* game) {
   auto unit = game->GetUnit(unit_);
-  LOG_INFO("Unit '%s' moved from (%d, %d) to (%d, %d)", unit->GetId().c_str(), unit->GetPosition().x,
-           unit->GetPosition().y, dest_.x, dest_.y);
+  LOG_INFO("Unit '%s' moved from (%d, %d) to (%d, %d)", unit->id().c_str(), unit->position().x, unit->position().y,
+           dest_.x, dest_.y);
   game->MoveUnit(unit, dest_);
   return nullptr;
 }
@@ -547,7 +547,7 @@ unique_ptr<Cmd> CmdRestoreHp::Do(Stage* stage) {
   auto unit = stage->GetUnit(unit_);
   int amount = CalcAmount(stage->user_interface());
   unit->RestoreHP(amount);
-  LOG_INFO("%s restores HP by %d", unit->GetId().c_str(), amount);
+  LOG_INFO("%s restores HP by %d", unit->id().c_str(), amount);
   return nullptr;
 }
 
@@ -566,7 +566,7 @@ CmdGainExp::CmdGainExp(const UId& unit, uint32_t exp) : CmdUnit(unit), exp_(exp)
 unique_ptr<Cmd> CmdGainExp::Do(Stage* game) {
   auto unit = game->GetUnit(unit_);
   unit->GainExp(exp_);
-  LOG_INFO("%s gains exp by %u", unit->GetId().c_str(), exp_);
+  LOG_INFO("%s gains exp by %u", unit->id().c_str(), exp_);
   return nullptr;
 }
 

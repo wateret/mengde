@@ -22,7 +22,7 @@ class Hero : public IUnitBase, IEquipper {
 
  public:
   // IUnitBase interfaces
-  virtual string GetId() const override;
+  virtual string id() const override;
   virtual const UnitClass* GetClass() const override;
   virtual int GetMove() const override;
   virtual const AttackRange& GetAttackRange() const override;
@@ -41,7 +41,7 @@ class Hero : public IUnitBase, IEquipper {
   const Attribute& GetUnitPureStat() const { return unit_pure_attr_; }
   void LevelUp();
   void PutOn(const Equipment*);
-  int GetClassIndex() const;
+  int class_index() const;
 
  private:
   HpMp CalcHpMp() const;

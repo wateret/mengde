@@ -64,8 +64,8 @@ void GameView::Render(Drawer* drawer) {
 
   // Render units
   gi_->ForEachUnit([this, drawer](const core::Unit* unit) {
-    if (this->SkipRender(unit->GetUnitId()) || unit->IsDead()) return;
-    RenderUnit(drawer, unit, unit->GetPosition());
+    if (this->SkipRender(unit->uid()) || unit->IsDead()) return;
+    RenderUnit(drawer, unit, unit->position());
   });
 
   drawer->SetOffset({0, 0});
@@ -95,7 +95,7 @@ void GameView::RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos) {
     sprite_no = 0;
     sprite_effect = {kEffectShade, 128};
   }
-  drawer->CopySprite(GetModelId(unit->GetUnitId()), stype, unit->GetDirection(), sprite_no, sprite_effect, pos);
+  drawer->CopySprite(GetModelId(unit->uid()), stype, unit->direction(), sprite_no, sprite_effect, pos);
 }
 
 void GameView::ChangeUIState(StateUI* state_ui) {
@@ -190,9 +190,9 @@ string GameView::GetModelId(const core::UId& uid) {
   auto found = model_ids_.find(uid.Value());
   if (found == model_ids_.end()) {
     auto unit = gi_->GetUnit(uid);
-    auto hero_id = unit->GetId();
+    auto hero_id = unit->id();
     auto hero_class = unit->GetClass()->GetId();
-    auto force = unit->GetForce();
+    auto force = unit->force();
     auto model_id = FindModelId(app_->GetCurrentScenarioPath(), hero_class, hero_id, force);
 
     model_ids_[uid.Value()] = model_id;

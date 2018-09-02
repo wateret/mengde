@@ -11,9 +11,9 @@ namespace core {
 class HeroTemplate {
  public:
   HeroTemplate(const string& id, const UnitClass* unit_class, const Attribute& hero_attr);
-  string GetId() const { return id_; }
+  string id() const { return id_; }
   const UnitClass* GetClass() const { return unit_class_; }
-  int GetClassIndex() const;
+  int class_index() const;
   int GetMove() const;
   const Attribute& GetHeroStat() const { return hero_attr_; }
   const AttackRange& GetAttackRange() const;

@@ -132,16 +132,16 @@ void Stage::ForEachUnit(std::function<void(Unit*)> fn) { stage_unit_manager_->Fo
 void Stage::ForEachUnitConst(std::function<void(const Unit*)> fn) const { stage_unit_manager_->ForEachConst(fn); }
 
 void Stage::MoveUnit(Unit* unit, Vec2D dst) {
-  Vec2D src = unit->GetPosition();
+  Vec2D src = unit->position();
   if (src == dst) return;
   map_->MoveUnit(src, dst);
-  unit->SetPosition(dst);
+  unit->position(dst);
 }
 
 void Stage::MoveUnit(const UId& uid, Vec2D dst) { MoveUnit(GetUnit(uid), dst); }
 
 void Stage::KillUnit(Unit* unit) {
-  map_->RemoveUnit(unit->GetPosition());
+  map_->RemoveUnit(unit->position());
   stage_unit_manager_->Kill(unit);
 }
 
@@ -181,7 +181,7 @@ uint32_t Stage::GetUnitId(const Unit* unit) {
 
 Equipment* Stage::GetEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
 
-Force Stage::GetCurrentForce() const { return turn_.GetForce(); }
+Force Stage::GetCurrentForce() const { return turn_.force(); }
 
 bool Stage::EndForceTurn() {
   ForEachUnit([this](Unit* u) {
@@ -205,11 +205,11 @@ bool Stage::EndForceTurn() {
   return IsUserTurn();
 }
 
-bool Stage::IsUserTurn() const { return turn_.GetForce() == Force::kOwn; }
+bool Stage::IsUserTurn() const { return turn_.force() == Force::kOwn; }
 
 bool Stage::IsAITurn() const { return !IsUserTurn(); }
 
-bool Stage::IsCurrentTurn(Unit* unit) const { return unit->GetForce() == turn_.GetForce(); }
+bool Stage::IsCurrentTurn(Unit* unit) const { return unit->force() == turn_.force(); }
 
 const Turn& Stage::GetTurn() const { return turn_; }
 
@@ -225,7 +225,7 @@ vector<Vec2D> Stage::FindMovablePos(Unit* unit) {
                             [&](const Vec2D& e) {
                               bool erase = false;
                               ForEachUnit([&](const Unit* u) {
-                                erase = erase || (unit != u && !u->IsDead() && u->GetPosition() == e);
+                                erase = erase || (unit != u && !u->IsDead() && u->position() == e);
                               });
                               return erase;
                             }),
@@ -234,7 +234,7 @@ vector<Vec2D> Stage::FindMovablePos(Unit* unit) {
   return list;
 }
 
-PathTree* Stage::FindMovablePath(Unit* unit) { return map_->FindMovablePath(unit->GetUnitId()); }
+PathTree* Stage::FindMovablePath(Unit* unit) { return map_->FindMovablePath(unit->uid()); }
 
 bool Stage::HasNext() const { return commander_->HasNext(); }
 
@@ -275,7 +275,7 @@ bool Stage::CheckStatus() {
 uint32_t Stage::GetNumEnemiesAlive() {
   uint32_t count = 0;
   ForEachUnit([=, &count](Unit* u) {
-    if (!u->IsDead() && u->GetForce() == Force::kEnemy) {
+    if (!u->IsDead() && u->force() == Force::kEnemy) {
       count++;
     }
   });
@@ -285,7 +285,7 @@ uint32_t Stage::GetNumEnemiesAlive() {
 uint32_t Stage::GetNumOwnsAlive() {
   uint32_t count = 0;
   ForEachUnit([=, &count](Unit* u) {
-    if (!u->IsDead() && u->GetForce() == Force::kOwn) {
+    if (!u->IsDead() && u->force() == Force::kOwn) {
       count++;
     }
   });
@@ -306,9 +306,9 @@ uint32_t Stage::GenerateOwnUnit(const string& id, Vec2D pos) {
 uint32_t Stage::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Force::kOwn);
   auto uid = stage_unit_manager_->Deploy(unit);
-  unit->SetPosition(pos);
+  unit->position(pos);
   map_->PlaceUnit(uid, pos);
-  ASSERT(unit->GetUnitId() == uid);
+  ASSERT(unit->uid() == uid);
   return uid.Value();
 }
 
@@ -317,9 +317,9 @@ uint32_t Stage::GenerateUnit(const string& id, uint16_t level, Force force, Vec2
   Hero* hero = new Hero(hero_tpl, level);
   Unit* unit = new Unit(hero, force);
   auto uid = stage_unit_manager_->Deploy(unit);
-  unit->SetPosition(pos);
+  unit->position(pos);
   map_->PlaceUnit(uid, pos);
-  ASSERT(unit->GetUnitId() == uid);
+  ASSERT(unit->uid() == uid);
   return uid.Value();
 }
 
@@ -352,7 +352,7 @@ bool Stage::SubmitDeploy() {
 
   if (!deployer_->IsReady()) return false;
 
-  deployer_->ForEach([=](const DeployElement& e) { this->GenerateOwnUnit(e.hero, deployer_->GetPosition(e.hero)); });
+  deployer_->ForEach([=](const DeployElement& e) { this->GenerateOwnUnit(e.hero, deployer_->position(e.hero)); });
 
   status_ = Status::kUndecided;
   lua_->Call<void>(lua_callbacks_->on_begin(), lua_this_);

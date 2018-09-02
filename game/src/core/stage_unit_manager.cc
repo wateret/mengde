@@ -10,7 +10,7 @@ StageUnitManager::StageUnitManager() : units_() {}
 UId StageUnitManager::Deploy(Unit* unit) {
   UId uid{static_cast<uint32_t>(units_.size())};
   units_.push_back(unit);
-  unit->SetUnitId(uid);
+  unit->uid(uid);
   return uid;
 }
 

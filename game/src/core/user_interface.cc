@@ -17,8 +17,8 @@ namespace core {
 
 AvailableUnits::AvailableUnits(Stage* stage) {
   stage->ForEachUnitConst([&](const Unit* unit) {
-    if (unit->GetForce() == stage->GetCurrentForce() && !unit->IsDoneAction()) {
-      units_.push_back(std::make_pair(unit->GetUnitId(), unit->GetPosition()));
+    if (unit->force() == stage->GetCurrentForce() && !unit->IsDoneAction()) {
+      units_.push_back(std::make_pair(unit->uid(), unit->position()));
     }
   });
 }
@@ -84,8 +84,7 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
             if (!stage->IsValidCoords(pos)) return;
             auto def = stage->GetUnitInCell(pos);
             if (def != nullptr && atk->IsHostile(def)) {
-              acts_.push_back(
-                  std::make_unique<CmdBasicAttack>(atk_id, def->GetUnitId(), CmdBasicAttack::Type::kActive));
+              acts_.push_back(std::make_unique<CmdBasicAttack>(atk_id, def->uid(), CmdBasicAttack::Type::kActive));
             }
           },
           move_pos);
@@ -104,7 +103,7 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
               if (!stage->IsValidCoords(pos)) return;
               const Unit* def = stage->GetUnitInCell(pos);
               if (def != nullptr && atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
-                acts_.push_back(std::make_unique<CmdMagic>(atk_id, def->GetUnitId(), magic));
+                acts_.push_back(std::make_unique<CmdMagic>(atk_id, def->uid(), magic));
               }
             },
             move_pos);
@@ -133,7 +132,7 @@ ActKey AvailableActs::Find(Vec2D pos) {
   for (auto&& act : acts_) {
     // TODO Keep position info in the object rather than querying stage here
     Unit* def = stage_->GetUnit(act->GetUnitDef());
-    if (def->GetPosition() == pos) {
+    if (def->position() == pos) {
       return ActKey{idx};
     }
     idx++;
@@ -151,7 +150,7 @@ ActKey AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
     const Magic* magic = cm->magic();
     // TODO Keep position info in the object rather than querying stage here
     Unit* def = stage_->GetUnit(cm->GetUnitDef());
-    if (magic->GetId() == magic_id && def->GetPosition() == pos) {
+    if (magic->GetId() == magic_id && def->position() == pos) {
       return ActKey{idx};
     }
     idx++;
