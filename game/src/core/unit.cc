@@ -95,17 +95,6 @@ bool Unit::IsInRange(Vec2D c, const AttackRange& range) const {
 
 bool Unit::IsInRange(Vec2D c) const { return IsInRange(c, GetAttackRange()); }
 
-void Unit::GainExp(Unit* object) {
-  int level_diff = object->GetLevel() - this->GetLevel();
-  uint16_t exp = 0;
-  if (level_diff < 0) {
-    exp = std::max(1, 8 + level_diff);
-  } else {
-    exp = std::min(100, 8 + 2 * level_diff);
-  }
-  GainExp(exp);
-}
-
 void Unit::GainExp(uint16_t exp) { hero_->GainExp(exp); }
 
 void Unit::LevelUp() {

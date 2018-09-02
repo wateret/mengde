@@ -243,14 +243,13 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
     ret->Append(std::make_unique<CmdBasicAttack>(atk_, def_, (Type)(type_ | Type::kSecond)));
   }
 
-  // atk_->GainExp(def_);
-
   // Counter attack
   bool is_last_attack = (reserve_second_attack == IsSecond());
   if (is_last_attack && !IsCounter() && def->IsInRange(atk->GetPosition())) {
     LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def->GetId().c_str(), atk->GetId().c_str());
     ret->Append(std::make_unique<CmdBasicAttack>(def_, atk_, CmdBasicAttack::Type::kCounter));
   }
+
   return unique_ptr<Cmd>(ret);
 }
 
@@ -310,7 +309,6 @@ unique_ptr<Cmd> CmdMagic::Do(Stage* stage) {
     ret = new CmdMiss(atk_, def_, CmdActResult::Type::kMagic, magic_);
   }
 
-  atk->GainExp(def);
   return unique_ptr<Cmd>(ret);
 }
 
@@ -340,18 +338,27 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
-  unique_ptr<Cmd> ret = nullptr;
+  unique_ptr<CmdQueue> ret{new CmdQueue};
   if (type_ == Type::kBasicAttack) {
     const string hit_type = (hit_type_ == HitType::kCritical) ? "Critical" : "Normal";
     LOG_INFO("%s does damage to %s by %d (%s)", atk->GetId().c_str(), def->GetId().c_str(), damage_, hit_type.c_str());
 
     if (!def->DoDamage(damage_)) {  // unit is dead
-      ret = std::make_unique<CmdKilled>(def_);
+      ret->Append(std::make_unique<CmdKilled>(def_));
     }
   } else {
     ASSERT(type_ == Type::kMagic);
     magic_->Perform(atk, def);
   }
+
+  // Gain experience
+  {
+    uint32_t exp = Formulae::ComputeExp(atk, def);
+    if (exp > 0) {
+      ret->Append(std::make_unique<CmdGainExp>(atk_, exp));
+    }
+  }
+
   return ret;
 }
 
@@ -550,6 +557,17 @@ int CmdRestoreHp::CalcAmount(UserInterface* gi) const {
   int amount = unit->GetOriginalHpMp().hp * ratio_ / 100;
   amount += adder_;
   return std::min(amount, unit->GetOriginalHpMp().hp - unit->GetCurrentHpMp().hp);
+}
+
+// CmdGainExp
+
+CmdGainExp::CmdGainExp(const UId& unit, uint32_t exp) : CmdUnit(unit), exp_(exp) {}
+
+unique_ptr<Cmd> CmdGainExp::Do(Stage* game) {
+  auto unit = game->GetUnit(unit_);
+  unit->GainExp(exp_);
+  LOG_INFO("%s gains exp by %u", unit->GetId().c_str(), exp_);
+  return nullptr;
 }
 
 }  // namespace core

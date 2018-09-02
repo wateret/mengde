@@ -313,6 +313,17 @@ class CmdRestoreHp : public CmdUnit {
   int adder_;
 };
 
+class CmdGainExp : public CmdUnit {
+ public:
+  CmdGainExp(const UId& unit, uint32_t exp);
+  virtual unique_ptr<Cmd> Do(Stage*) override;
+  virtual Cmd::Op GetOp() const override { return Op::kCmdGainExp; }
+  uint32_t exp() const { return exp_; }
+
+ private:
+  uint32_t exp_;
+};
+
 }  // namespace core
 }  // namespace mengde
 

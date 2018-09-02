@@ -1,6 +1,8 @@
 #ifndef MENGDE_CORE_FORMULAE_H_
 #define MENGDE_CORE_FORMULAE_H_
 
+#include <stdint.h>
+
 namespace mengde {
 namespace core {
 
@@ -18,6 +20,7 @@ class Formulae {
   static int ComputeMagicAccuracy(const Unit*, const Unit*, int = kDefaultRatio);
   static int ComputeBasicAttackDouble(const Unit*, const Unit*);
   static int ComputeBasicAttackCritical(const Unit*, const Unit*);
+  static uint32_t ComputeExp(const Unit*, const Unit*);
   static int ApplyRatio(int, int);
 
  private:

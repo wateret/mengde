@@ -68,7 +68,6 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   bool IsInRange(Vec2D, const AttackRange&) const;
   bool IsInRange(Vec2D) const;
   bool IsDoneAction() const { return done_action_; }
-  void GainExp(Unit*);
   void GainExp(uint16_t exp);
   void LevelUp();
   void EndAction();

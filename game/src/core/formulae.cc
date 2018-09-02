@@ -88,5 +88,16 @@ int Formulae::ComputeAccuracyBase(int atk, int def, int cap) {
 // ratio is a percentage value, 100 is default
 int Formulae::ApplyRatio(int value, int ratio) { return value * ratio / 100; }
 
+uint32_t Formulae::ComputeExp(const Unit* doer, const Unit* doee) {
+  int level_diff = doee->GetLevel() - doer->GetLevel();
+  uint16_t exp = 0;
+  if (level_diff < 0) {
+    exp = std::max(1, 16 + level_diff);
+  } else {
+    exp = std::min(200, 16 + 4 * level_diff);
+  }
+  return exp;
+}
+
 }  // namespace core
 }  // namespace mengde
