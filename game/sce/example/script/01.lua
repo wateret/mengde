@@ -75,6 +75,7 @@ function on_begin(game)
     enemies.lubu = game:generate_unit("LuBu", 12, Enum.force.enemy, {9, 6})
 --    game:generate_unit("Cavalry", 18, Enum.force.enemy, {10, 7})
 
+    game:push_cmd_gain_exp(owns.zhangliao, 199)
 end
 
 

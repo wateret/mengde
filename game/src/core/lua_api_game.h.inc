@@ -15,6 +15,7 @@ MACRO_LUA_GAME(GetUnitInfo,         get_unit_info)
 // Pushing commands
 MACRO_LUA_GAME(PushCmdMove,         push_cmd_move)
 MACRO_LUA_GAME(PushCmdSpeak,        push_cmd_speak)
+MACRO_LUA_GAME(PushCmdGainExp,      push_cmd_gain_exp)
 
 // Callback registration
 MACRO_LUA_GAME(SetOnDeploy,         set_on_deploy)

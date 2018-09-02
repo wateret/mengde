@@ -129,6 +129,18 @@ LUA_IMPL(PushCmdSpeak) {
   return 0;
 }
 
+LUA_IMPL(PushCmdGainExp) {
+  lua::Lua lua(L);
+
+  int exp = lua.Pop<int>();
+  int uid = lua.Pop<int>();
+  Stage* game = lua.Pop<Stage*>();
+
+  game->Push(std::make_unique<CmdGainExp>(uid, exp));
+
+  return 0;
+}
+
 LUA_IMPL(SetOnDeploy) {
   lua::Lua lua(L);
 
