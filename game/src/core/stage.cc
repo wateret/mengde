@@ -214,8 +214,23 @@ bool Stage::IsCurrentTurn(Unit* unit) const { return unit->GetForce() == turn_.G
 const Turn& Stage::GetTurn() const { return turn_; }
 
 vector<Vec2D> Stage::FindMovablePos(Unit* unit) {
-  PathTree* path_tree = FindMovablePath(unit);
-  return path_tree->GetNodeList();
+  std::unique_ptr<PathTree> path_tree{FindMovablePath(unit)};
+  auto list = path_tree->GetNodeList();
+
+  // Remove positions that another unit is present
+  // TODO Enhance this inefficient algorithm O(M * N) where
+  //      M is the number of res elements
+  //      N is the number of units in this stage
+  list.erase(
+      std::remove_if(list.begin(), list.end(),
+                     [&](const Vec2D& e) {
+                       bool erase = false;
+                       ForEachUnit([&](const Unit* u) { erase = erase || (unit != u && u->GetPosition() == e); });
+                       return erase;
+                     }),
+      list.end());
+
+  return list;
 }
 
 PathTree* Stage::FindMovablePath(Unit* unit) { return map_->FindMovablePath(unit->GetUnitId()); }
