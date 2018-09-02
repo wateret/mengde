@@ -339,8 +339,8 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
   auto def = stage->GetUnit(def_);
 
   uint32_t exp_factor{1u};
+  CmdQueue* ret = new CmdQueue;
 
-  unique_ptr<CmdQueue> ret{new CmdQueue};
   if (type_ == Type::kBasicAttack) {
     const string hit_type = (hit_type_ == HitType::kCritical) ? "Critical" : "Normal";
     LOG_INFO("%s does damage to %s by %d (%s)", atk->id().c_str(), def->id().c_str(), damage_, hit_type.c_str());
@@ -362,7 +362,7 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
     }
   }
 
-  return ret;
+  return unique_ptr<Cmd>{ret};
 }
 
 // CmdMiss
