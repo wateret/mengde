@@ -27,11 +27,11 @@ class Cmd {
   virtual ~Cmd() = default;
   virtual unique_ptr<Cmd> Do(Stage*) = 0;
   // virtual Cmd* Undo(Stage*) = 0;
-  virtual Cmd::Op GetOp() const = 0;
+  virtual Cmd::Op op() const = 0;
 
 #ifdef DEBUG
   //  static string OpToString(Op op) { return kCmdOpToString[static_cast<int>(op)]; }
-  virtual void DebugPrint(Stage*) const { printf("%s\n", kCmdOpToString[static_cast<int>(GetOp())]); }
+  virtual void DebugPrint(Stage*) const { printf("%s\n", kCmdOpToString[static_cast<int>(op())]); }
 #endif
 };
 
@@ -43,7 +43,7 @@ class CmdQueue : public Cmd {
   CmdQueue();
   ~CmdQueue();
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdQueue; }
+  virtual Cmd::Op op() const override { return Op::kCmdQueue; }
 
 #ifdef DEBUG
   virtual void DebugPrint(Stage* stage) const override;
@@ -105,14 +105,14 @@ class CmdEndAction : public CmdUnit {
  public:
   CmdEndAction(const UId&);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdEndAction; }
+  virtual Cmd::Op op() const override { return Op::kCmdEndAction; }
 };
 
 class CmdStay : public CmdAct {
  public:
   CmdStay(const UId&);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdStay; }
+  virtual Cmd::Op op() const override { return Op::kCmdStay; }
 };
 
 class CmdBasicAttack : public CmdAct {
@@ -123,7 +123,7 @@ class CmdBasicAttack : public CmdAct {
  public:
   CmdBasicAttack(const UId&, const UId&, Type);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdBasicAttack; }
+  virtual Cmd::Op op() const override { return Op::kCmdBasicAttack; }
 
  public:
   bool IsCounter() { return type_ & Type::kCounter; }
@@ -149,7 +149,7 @@ class CmdMagic : public CmdAct {
  public:
   CmdMagic(const UId&, const UId&, Magic*);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdMagic; }
+  virtual Cmd::Op op() const override { return Op::kCmdMagic; }
   const Magic* magic() { return magic_; }
 
  private:
@@ -192,7 +192,7 @@ class CmdHit : public CmdActResult {
   CmdHit(const UId&, const UId&, Type, HitType, Magic*, int);
   CmdHit(const UId&, const UId&, Type, HitType, int);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdHit; }
+  virtual Cmd::Op op() const override { return Op::kCmdHit; }
 
  public:
   HitType GetHitType() const { return hit_type_; }
@@ -208,21 +208,21 @@ class CmdMiss : public CmdActResult {
   CmdMiss(const UId&, const UId&, Type, Magic*);
   CmdMiss(const UId&, const UId&, Type);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdMiss; }
+  virtual Cmd::Op op() const override { return Op::kCmdMiss; }
 };
 
 class CmdKilled : public CmdUnit {
  public:
   CmdKilled(const UId&);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdKilled; }
+  virtual Cmd::Op op() const override { return Op::kCmdKilled; }
 };
 
 class CmdMove : public CmdUnit {
  public:
   CmdMove(const UId&, Vec2D);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdMove; }
+  virtual Cmd::Op op() const override { return Op::kCmdMove; }
   Vec2D GetDest() const { return dest_; }
 
  private:
@@ -246,7 +246,7 @@ class CmdAction : public Cmd {
   CmdAction();
   CmdAction(Flag);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdAction; }
+  virtual Cmd::Op op() const override { return Op::kCmdAction; }
 
  public:
   void SetCmdMove(unique_ptr<CmdMove>);
@@ -262,28 +262,28 @@ class CmdEndTurn : public Cmd {
  public:
   CmdEndTurn();
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdEndTurn; }
+  virtual Cmd::Op op() const override { return Op::kCmdEndTurn; }
 };
 
 class CmdPlayAI : public Cmd {
  public:
   CmdPlayAI();
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdPlayAI; }
+  virtual Cmd::Op op() const override { return Op::kCmdPlayAI; }
 };
 
 class CmdGameVictory : public Cmd {
  public:
   CmdGameVictory();
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdGameVictory; }
+  virtual Cmd::Op op() const override { return Op::kCmdGameVictory; }
 };
 
 class CmdGameEnd : public Cmd {
  public:
   CmdGameEnd(bool is_victory);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdGameEnd; }
+  virtual Cmd::Op op() const override { return Op::kCmdGameEnd; }
   bool is_victory() const { return is_victory_; }
 
  private:
@@ -294,7 +294,7 @@ class CmdSpeak : public CmdUnit {
  public:
   CmdSpeak(const UId&, const string&);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdSpeak; }
+  virtual Cmd::Op op() const override { return Op::kCmdSpeak; }
   string GetWords() const { return words_; }
 
  private:
@@ -305,7 +305,7 @@ class CmdRestoreHp : public CmdUnit {
  public:
   CmdRestoreHp(const UId&, int ratio, int adder);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdRestoreHp; }
+  virtual Cmd::Op op() const override { return Op::kCmdRestoreHp; }
   int CalcAmount(UserInterface* stage) const;
 
  private:
@@ -317,7 +317,7 @@ class CmdGainExp : public CmdUnit {
  public:
   CmdGainExp(const UId& unit, uint32_t exp);
   virtual unique_ptr<Cmd> Do(Stage*) override;
-  virtual Cmd::Op GetOp() const override { return Op::kCmdGainExp; }
+  virtual Cmd::Op op() const override { return Op::kCmdGainExp; }
   uint32_t exp() const { return exp_; }
 
  private:

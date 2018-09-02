@@ -13,7 +13,7 @@ StateUI* StateUIFactory::GenerateNext(void) {
   dynamic_cast<const type*>(cmd); \
   ASSERT(c != nullptr);
 
-  switch (cmd->GetOp()) {
+  switch (cmd->op()) {
     case core::Cmd::Op::kCmdAction:
     case core::Cmd::Op::kCmdPlayAI:
     case core::Cmd::Op::kCmdGameVictory:

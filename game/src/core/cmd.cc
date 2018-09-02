@@ -153,7 +153,7 @@ CmdTwoUnits::CmdTwoUnits(const UId& atk, const UId& def) : atk_(atk), def_(def) 
 void CmdTwoUnits::DebugPrint(Stage* stage) const {
   string atk = (!atk_) ? "N/A" : stage->GetUnit(atk_)->GetId();
   string def = (!def_) ? "N/A" : stage->GetUnit(def_)->GetId();
-  printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(GetOp())], atk.c_str(), def.c_str());
+  printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(op())], atk.c_str(), def.c_str());
 }
 #endif
 
