@@ -338,6 +338,8 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
   auto atk = stage->GetUnit(atk_);
   auto def = stage->GetUnit(def_);
 
+  uint32_t exp_factor{1u};
+
   unique_ptr<CmdQueue> ret{new CmdQueue};
   if (type_ == Type::kBasicAttack) {
     const string hit_type = (hit_type_ == HitType::kCritical) ? "Critical" : "Normal";
@@ -345,6 +347,7 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
 
     if (!def->DoDamage(damage_)) {  // unit is dead
       ret->Append(std::make_unique<CmdKilled>(def_));
+      exp_factor = 3u;
     }
   } else {
     ASSERT(type_ == Type::kMagic);
@@ -353,7 +356,7 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
 
   // Gain experience
   {
-    uint32_t exp = Formulae::ComputeExp(atk, def);
+    uint32_t exp = Formulae::ComputeExp(atk, def) * exp_factor;
     if (exp > 0) {
       ret->Append(std::make_unique<CmdGainExp>(atk_, exp));
     }
@@ -369,9 +372,19 @@ CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type, Magic* magic) : CmdA
 CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type) : CmdActResult(atk, def, type) {}
 
 unique_ptr<Cmd> CmdMiss::Do(Stage* stage) {
-  UNUSED(stage);
+  auto atk = stage->GetUnit(atk_);
+  auto def = stage->GetUnit(def_);
 
   LOG_INFO("%s misses!", stage->GetUnit(atk_)->id().c_str());
+
+  // Gain experience
+  {
+    uint32_t exp = Formulae::ComputeExp(atk, def) / 2;
+    if (exp > 0) {
+      return std::make_unique<CmdGainExp>(atk_, exp);
+    }
+  }
+
   return nullptr;
 }
 
