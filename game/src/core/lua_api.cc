@@ -108,7 +108,7 @@ LUA_IMPL(GetUnitInfo) {
   return 1;
 }
 
-LUA_IMPL(PushCmdMove) {
+LUA_IMPL(CmdMove) {
   lua::Lua lua(L);
   Vec2D pos = GetVec2DFromLua(&lua);
   UId uid{lua.Pop<uint32_t>()};
@@ -119,7 +119,7 @@ LUA_IMPL(PushCmdMove) {
   return 0;
 }
 
-LUA_IMPL(PushCmdSpeak) {
+LUA_IMPL(CmdSpeak) {
   lua::Lua lua(L);
   string words = lua.Pop<string>();
   UId uid{lua.Pop<uint32_t>()};
@@ -130,7 +130,7 @@ LUA_IMPL(PushCmdSpeak) {
   return 0;
 }
 
-LUA_IMPL(PushCmdGainExp) {
+LUA_IMPL(CmdGainExp) {
   lua::Lua lua(L);
 
   int exp = lua.Pop<int>();

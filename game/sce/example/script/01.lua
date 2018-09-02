@@ -75,14 +75,14 @@ function on_begin(game)
     enemies.lubu = game:generate_unit("LuBu", 12, Enum.force.enemy, {9, 6})
 --    game:generate_unit("Cavalry", 18, Enum.force.enemy, {10, 7})
 
-    game:push_cmd_gain_exp(owns.zhangliao, 199)
+    game:cmd_gain_exp(owns.zhangliao, 199)
 end
 
 
 function on_victory(game)
-    game:push_cmd_speak(owns.caocao, "So long, losers!")
-    game:push_cmd_move(owns.caocao, {0, 9})
-    game:push_cmd_move(owns.zhangliao, {0, 10})
+    game:cmd_speak(owns.caocao, "So long, losers!")
+    game:cmd_move(owns.caocao, {0, 9})
+    game:cmd_move(owns.zhangliao, {0, 10})
 end
 
 
@@ -109,8 +109,8 @@ end
 
 
 function event1_handler(game, event_id)
-    game:push_cmd_speak(enemies.lubu, "You just activated my trap card!")
-    game:push_cmd_move(owns.caocao, {12, 3})
+    game:cmd_speak(enemies.lubu, "You just activated my trap card!")
+    game:cmd_move(owns.caocao, {12, 3})
 
     -- Unregister since it is just one time event
     game:unregister_event(event_id)
