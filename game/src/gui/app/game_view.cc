@@ -191,7 +191,7 @@ string GameView::GetModelId(const core::UId& uid) {
   if (found == model_ids_.end()) {
     auto unit = gi_->GetUnit(uid);
     auto hero_id = unit->id();
-    auto hero_class = unit->GetClass()->GetId();
+    auto hero_class = unit->unit_class()->GetId();
     auto force = unit->force();
     auto model_id = FindModelId(app_->GetCurrentScenarioPath(), hero_class, hero_id, force);
 

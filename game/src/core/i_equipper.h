@@ -12,7 +12,7 @@ class IEquipper {
   virtual ~IEquipper() = default;
   virtual void UpdateStat() = 0;
   //  void UpdateHpMp() = 0;
-  virtual const UnitClass* GetClass() const = 0;
+  virtual const UnitClass* unit_class() const = 0;
 };
 
 }  // namespace core

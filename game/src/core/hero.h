@@ -23,9 +23,9 @@ class Hero : public IUnitBase, IEquipper {
  public:
   // IUnitBase interfaces
   virtual string id() const override;
-  virtual const UnitClass* GetClass() const override;
-  virtual int GetMove() const override;
-  virtual const AttackRange& GetAttackRange() const override;
+  virtual const UnitClass* unit_class() const override;
+  virtual int move() const override;
+  virtual const AttackRange& attack_range() const override;
   virtual uint16_t GetLevel() const override { return level_.level; }
   virtual uint16_t GetExp() const override { return level_.exp; }
   virtual const HpMp& GetOriginalHpMp() const override { return hpmp_; }

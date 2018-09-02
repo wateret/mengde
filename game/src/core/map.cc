@@ -88,7 +88,7 @@ PathTree* Map::FindPath(const UId& uid, Vec2D dest) {
   int sc = SerializeVec2D(coords);
   int stat_move = kInf;
   if (dest == Vec2D(-1, -1)) {
-    stat_move = unit->GetMove();
+    stat_move = unit->move();
   }
   dist[sc] = 0;
 

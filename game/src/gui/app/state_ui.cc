@@ -718,7 +718,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit
 
 const core::AttackRange& StateUITargeting::GetRange() {
   if (is_basic_attack_) {
-    return gi_->GetUnit(unit_id_)->GetAttackRange();
+    return gi_->GetUnit(unit_id_)->attack_range();
   } else {
     const core::Magic* magic = gi_->GetMagic(magic_id_);
     return magic->GetRange();

@@ -12,11 +12,11 @@ class HeroTemplate {
  public:
   HeroTemplate(const string& id, const UnitClass* unit_class, const Attribute& hero_attr);
   string id() const { return id_; }
-  const UnitClass* GetClass() const { return unit_class_; }
+  const UnitClass* unit_class() const { return unit_class_; }
   int class_index() const;
-  int GetMove() const;
+  int move() const;
   const Attribute& GetHeroStat() const { return hero_attr_; }
-  const AttackRange& GetAttackRange() const;
+  const AttackRange& attack_range() const;
 
  private:
   string id_;

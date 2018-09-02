@@ -79,7 +79,7 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
     case ActionType::kBasicAttack: {
       auto atk_id = uid;
       Unit* atk = stage->GetUnit(uid);
-      atk->GetAttackRange().ForEach(
+      atk->attack_range().ForEach(
           [&](Vec2D pos) {
             if (!stage->IsValidCoords(pos)) return;
             auto def = stage->GetUnitInCell(pos);

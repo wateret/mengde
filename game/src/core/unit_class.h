@@ -28,8 +28,8 @@ class UnitClass {
             const BaseAndIncr, const boost::optional<PromotionInfo>& promotion_info);
   int GetIndex() const { return index_; }
   string GetId() const { return id_; }
-  const AttackRange& GetAttackRange() const { return AttackRangeManager::GetInstance().Get(attack_range_); }
-  int GetMove() const { return move_; }
+  const AttackRange& attack_range() const { return AttackRangeManager::GetInstance().Get(attack_range_); }
+  int move() const { return move_; }
   BaseAndIncr GetBniHp() const { return bni_hp_; }
   BaseAndIncr GetBniMp() const { return bni_mp_; }
   const Attribute& GetStatGrade() const { return stat_grade_; }

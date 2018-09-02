@@ -21,9 +21,9 @@ class IUnitBase {
   virtual ~IUnitBase() = default;
 
   virtual string id() const = 0;
-  virtual const UnitClass* GetClass() const = 0;
-  virtual int GetMove() const = 0;
-  virtual const AttackRange& GetAttackRange() const = 0;
+  virtual const UnitClass* unit_class() const = 0;
+  virtual int move() const = 0;
+  virtual const AttackRange& attack_range() const = 0;
   virtual uint16_t GetLevel() const = 0;
   virtual uint16_t GetExp() const = 0;
   virtual const HpMp& GetOriginalHpMp() const = 0;

@@ -35,9 +35,9 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
  public:
   // IUnitBase interfaces
   virtual string id() const override;
-  virtual const UnitClass* GetClass() const override;
-  virtual int GetMove() const override;
-  virtual const AttackRange& GetAttackRange() const override;
+  virtual const UnitClass* unit_class() const override;
+  virtual int move() const override;
+  virtual const AttackRange& attack_range() const override;
   virtual uint16_t GetLevel() const override;
   virtual uint16_t GetExp() const override;
   virtual const HpMp& GetOriginalHpMp() const override;

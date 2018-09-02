@@ -8,9 +8,9 @@ HeroTemplate::HeroTemplate(const string& id, const UnitClass* unit_class, const 
 
 int HeroTemplate::class_index() const { return unit_class_->GetIndex(); }
 
-int HeroTemplate::GetMove() const { return unit_class_->GetMove(); }
+int HeroTemplate::move() const { return unit_class_->move(); }
 
-const AttackRange& HeroTemplate::GetAttackRange() const { return unit_class_->GetAttackRange(); }
+const AttackRange& HeroTemplate::attack_range() const { return unit_class_->attack_range(); }
 
 }  // namespace core
 }  // namespace mengde

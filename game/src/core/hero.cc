@@ -30,13 +30,13 @@ Hero::~Hero() { delete equipment_set_; }
 
 string Hero::id() const { return hero_tpl_->id(); }
 
-const UnitClass* Hero::GetClass() const { return hero_tpl_->GetClass(); }
+const UnitClass* Hero::unit_class() const { return hero_tpl_->unit_class(); }
 
 int Hero::class_index() const { return hero_tpl_->class_index(); }
 
-int Hero::GetMove() const { return hero_tpl_->GetMove(); }
+int Hero::move() const { return hero_tpl_->move(); }
 
-const AttackRange& Hero::GetAttackRange() const { return hero_tpl_->GetAttackRange(); }
+const AttackRange& Hero::attack_range() const { return hero_tpl_->attack_range(); }
 
 const Attribute& Hero::GetHeroStatBase() const { return hero_tpl_->GetHeroStat(); }
 
@@ -49,7 +49,7 @@ void Hero::PutOn(const Equipment* equipment) { equipment_set_->SetEquipment(equi
 
 HpMp Hero::CalcHpMp() const {
   HpMp xtat;
-#define UPDATE_HPMP(x, xc) xtat.x = GetClass()->GetBni##xc().base + GetClass()->GetBni##xc().incr * level_.level
+#define UPDATE_HPMP(x, xc) xtat.x = unit_class()->GetBni##xc().base + unit_class()->GetBni##xc().incr * level_.level
   UPDATE_HPMP(hp, Hp);
   UPDATE_HPMP(mp, Mp);
 #undef UPDATE_HPMP
@@ -58,7 +58,7 @@ HpMp Hero::CalcHpMp() const {
 
 Attribute Hero::CalcUnitPureAttr() const {
   Attribute unit_stat =
-      ((hero_attr_ / 2) + ((100 + 10 * (GetClass()->GetStatGrade() - 1)) * level_.level * hero_attr_) / 2000);
+      ((hero_attr_ / 2) + ((100 + 10 * (unit_class()->GetStatGrade() - 1)) * level_.level * hero_attr_) / 2000);
   return unit_stat;
 }
 

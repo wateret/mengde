@@ -31,7 +31,7 @@ HeroModelView::HeroModelView(const Rect& frame, const core::Hero* hero, core::ID
   Rect img_src_rect(0, 0, 48, 48);
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrameSize(), img_src_rect.size(), LayoutHelper::kAlignCenter);
   iv_frame.y(iv_frame.y() - 8);
-  string model_id = FindModelId(base_path, hero->GetClass()->GetId(), hero->id(), core::Force::kOwn);
+  string model_id = FindModelId(base_path, hero->unit_class()->GetId(), hero->id(), core::Force::kOwn);
   ImageView* iv_hero = new ImageView(iv_frame, rcpath::UnitModelPath(model_id, kSpriteStand).ToString());
   iv_hero->SetSourceRect(img_src_rect);
   AddChild(iv_hero);

@@ -49,7 +49,7 @@ uint16_t Unit::GetLevel() const { return hero_->GetLevel(); }
 
 uint16_t Unit::GetExp() const { return hero_->GetExp(); }
 
-int Unit::GetMove() const { return hero_->GetMove(); }
+int Unit::move() const { return hero_->move(); }
 
 const Attribute& Unit::GetOriginalAttr() const { return hero_->GetUnitPureStat(); }
 
@@ -77,11 +77,11 @@ bool Unit::IsDead() const { return GetCurrentHpMp().hp <= 0; }
 
 void Unit::Kill() { current_hpmp_.hp = 0; }
 
-const UnitClass* Unit::GetClass() const { return hero_->GetClass(); }
+const UnitClass* Unit::unit_class() const { return hero_->unit_class(); }
 
 int Unit::class_index() const { return hero_->class_index(); }
 
-const AttackRange& Unit::GetAttackRange() const { return hero_->GetAttackRange(); }
+const AttackRange& Unit::attack_range() const { return hero_->attack_range(); }
 
 bool Unit::IsInRange(Vec2D c, const AttackRange& range) const {
   Vec2D dv = c - position_;
@@ -93,7 +93,7 @@ bool Unit::IsInRange(Vec2D c, const AttackRange& range) const {
   return res;
 }
 
-bool Unit::IsInRange(Vec2D c) const { return IsInRange(c, GetAttackRange()); }
+bool Unit::IsInRange(Vec2D c) const { return IsInRange(c, attack_range()); }
 
 void Unit::GainExp(uint16_t exp) { hero_->GainExp(exp); }
 
