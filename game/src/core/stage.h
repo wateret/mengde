@@ -61,6 +61,7 @@ class Stage : public IDeployHelper {
   const Unit* GetUnit(const UId&) const;
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
+  const UnitClassManager* GetUnitClassManager() { return rc_.unit_class_manager; }
   lua::Lua* GetLuaScript() { return lua_; }
   Force GetCurrentForce() const;
   bool EndForceTurn();

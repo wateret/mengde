@@ -8,41 +8,50 @@ namespace core {
 
 Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
     : hero_tpl_(hero_tpl),
+      unit_class_{hero_tpl_->unit_class()},
       equipment_set_(new EquipmentSet(this)),
       level_(level, 0),
       hero_attr_(hero_tpl->GetHeroStat()),
       unit_attr_(),
       unit_pure_attr_(),
       hpmp_() {
+  ASSERT(unit_class_ != nullptr);
+  // TODO Handle promotion chain
   UpdateStat();
 }
 
 Hero::Hero(const Hero& hero)
     : hero_tpl_(hero.hero_tpl_),
+      unit_class_{hero_tpl_->unit_class()},
       equipment_set_(hero.GetEquipmentSet()->Clone(this)),
       level_(hero.level_),
       hero_attr_(hero.hero_attr_),
       unit_attr_(hero.unit_attr_),
       unit_pure_attr_(hero.unit_pure_attr_),
-      hpmp_(hero.hpmp_) {}
+      hpmp_(hero.hpmp_) {
+  ASSERT(unit_class_ != nullptr);
+  // TODO Handle promotion chain
+}
 
 Hero::~Hero() { delete equipment_set_; }
 
 string Hero::id() const { return hero_tpl_->id(); }
 
-const UnitClass* Hero::unit_class() const { return hero_tpl_->unit_class(); }
+int Hero::class_index() const { return unit_class_->GetIndex(); }
 
-int Hero::class_index() const { return hero_tpl_->class_index(); }
+int Hero::move() const { return unit_class_->move(); }
 
-int Hero::move() const { return hero_tpl_->move(); }
-
-const AttackRange& Hero::attack_range() const { return hero_tpl_->attack_range(); }
+const AttackRange& Hero::attack_range() const { return unit_class_->attack_range(); }
 
 const Attribute& Hero::GetHeroStatBase() const { return hero_tpl_->GetHeroStat(); }
 
 void Hero::LevelUp() {
+  ASSERT(IsExpFull());
+  ASSERT(level_.exp >= Level::kExpLimit);
+
+  level_.exp -= Level::kExpLimit;
   level_.level++;
-  level_.exp = 0;
+
   UpdateStat();
 }
 
@@ -73,6 +82,25 @@ void Hero::UpdateStat() {
 
     unit_attr_.ApplyModifier(multipliers, addends);
   }
+}
+
+bool Hero::ReadyPromotion() const {
+  auto promotion_info = unit_class_->promotion_info();
+  if (promotion_info) {
+    return GetLevel() >= promotion_info->level;
+  }
+  return false;
+}
+
+void Hero::Promote(const UnitClassManager* ucm) {
+  ASSERT(ReadyPromotion());
+
+  auto promotion_info = unit_class_->promotion_info();
+  auto unit_class_id = promotion_info->id;
+  unit_class_ = ucm->Get(unit_class_id);
+  ASSERT(unit_class_ != nullptr);
+
+  UpdateStat();
 }
 
 }  // namespace core

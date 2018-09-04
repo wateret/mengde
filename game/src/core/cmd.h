@@ -331,6 +331,13 @@ class CmdLevelUp : public CmdUnit {
   virtual Cmd::Op op() const override { return Op::kCmdLevelUp; }
 };
 
+class CmdPromote : public CmdUnit {
+ public:
+  CmdPromote(const UId& unit);
+  virtual unique_ptr<Cmd> Do(Stage*) override;
+  virtual Cmd::Op op() const override { return Op::kCmdPromote; }
+};
+
 }  // namespace core
 }  // namespace mengde
 

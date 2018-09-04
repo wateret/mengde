@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "equipment.h"
-#include "hero.h"
+#include "hero_template.h"
 #include "magic.h"
 #include "terrain.h"
 #include "unit_class.h"
@@ -32,7 +32,9 @@ class ResourceManager {
     container_[id] = e;
   }
 
-  T* Get(const string& id) {
+  T* Get(const string& id) { return const_cast<T*>(static_cast<const ResourceManager*>(this)->Get(id)); }
+
+  const T* Get(const string& id) const {
     auto iter = container_.find(id);
     if (iter != container_.end()) {
       return iter->second;
@@ -55,11 +57,11 @@ class ResourceManager {
   std::unordered_map<string, T*> container_;
 };
 
-typedef ResourceManager<Magic> MagicManager;
-typedef ResourceManager<Equipment> EquipmentManager;
-typedef ResourceManager<UnitClass> UnitClassManager;
-typedef ResourceManager<Terrain> TerrainManager;
-typedef ResourceManager<HeroTemplate> HeroTemplateManager;
+using MagicManager = ResourceManager<Magic>;
+using EquipmentManager = ResourceManager<Equipment>;
+using UnitClassManager = ResourceManager<UnitClass>;
+using TerrainManager = ResourceManager<Terrain>;
+using HeroTemplateManager = ResourceManager<HeroTemplate>;
 
 struct ResourceManagers {
   UnitClassManager* unit_class_manager;

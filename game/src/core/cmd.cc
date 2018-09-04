@@ -592,7 +592,22 @@ CmdLevelUp::CmdLevelUp(const UId& unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdLevelUp::Do(Stage* game) {
   auto unit = game->GetUnit(unit_);
+  unique_ptr<Cmd> ret;
   unit->LevelUp();
+  if (unit->ReadyPromotion()) {
+    ret = std::make_unique<CmdPromote>(unit_);
+  }
+  return ret;
+}
+
+// CmdLevelUp
+
+CmdPromote::CmdPromote(const UId& unit) : CmdUnit(unit) {}
+
+unique_ptr<Cmd> CmdPromote::Do(Stage* game) {
+  auto unit = game->GetUnit(unit_);
+  ASSERT(unit->ReadyPromotion());
+  unit->Promote(game->GetUnitClassManager());
   return nullptr;
 }
 

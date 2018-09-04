@@ -24,6 +24,7 @@ MACRO_CMD_OP(RestoreHp  )
 MACRO_CMD_OP(EndAction  )
 MACRO_CMD_OP(GainExp    )
 MACRO_CMD_OP(LevelUp    )
+MACRO_CMD_OP(Promote    )
 
 #undef MACRO_CMD_OP
 

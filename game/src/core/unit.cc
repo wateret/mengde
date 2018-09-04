@@ -107,6 +107,13 @@ void Unit::LevelUp() {
   LOG_INFO("'%s' Level Up! (Level : %d)", hero_->id().c_str(), hero_->GetLevel());
 }
 
+bool Unit::ReadyPromotion() const { return hero_->ReadyPromotion(); }
+
+void Unit::Promote(const UnitClassManager* ucm) {
+  hero_->Promote(ucm);
+  UpdateStat();
+}
+
 void Unit::EndAction() { done_action_ = true; }
 
 void Unit::ResetAction() { done_action_ = false; }

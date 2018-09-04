@@ -11,6 +11,7 @@
 #include "i_event.h"
 #include "i_unit_base.h"
 #include "id.h"
+#include "resource_manager.h"
 #include "stat_modifier_list.h"
 #include "util/common.h"
 
@@ -73,6 +74,8 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   bool IsDoneAction() const { return done_action_; }
   bool GainExp(uint16_t exp);
   void LevelUp();
+  bool ReadyPromotion() const;
+  void Promote(const UnitClassManager* ucm);
   void EndAction();
   void ResetAction();
 
