@@ -95,6 +95,7 @@ class GameView : public View {
   void SetSkipRender(const core::UId& id, bool b);
   void RenderUnit(Drawer* drawer, const core::Unit* unit, Vec2D pos);
   string GetModelId(const core::UId& uid);
+  void UpdateModelId(const core::UId& uid);
 
  private:
   void RunCallbacks();

@@ -189,16 +189,20 @@ bool GameView::SkipRender(const core::UId& id) const { return skip_render_.find(
 string GameView::GetModelId(const core::UId& uid) {
   auto found = model_ids_.find(uid.Value());
   if (found == model_ids_.end()) {
-    auto unit = gi_->GetUnit(uid);
-    auto hero_id = unit->id();
-    auto hero_class = unit->unit_class()->GetId();
-    auto force = unit->force();
-    auto model_id = FindModelId(app_->GetCurrentScenarioPath(), hero_class, hero_id, force);
-
-    model_ids_[uid.Value()] = model_id;
+    UpdateModelId(uid);
   }
 
   return model_ids_[uid.Value()];
+}
+
+void GameView::UpdateModelId(const core::UId& uid) {
+  auto unit = gi_->GetUnit(uid);
+  auto hero_id = unit->id();
+  auto hero_class = unit->unit_class()->GetId();
+  auto force = unit->force();
+  auto model_id = FindModelId(app_->GetCurrentScenarioPath(), hero_class, hero_id, force);
+
+  model_ids_[uid.Value()] = model_id;
 }
 
 }  // namespace app
