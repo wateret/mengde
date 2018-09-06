@@ -10,6 +10,7 @@
 namespace mengde {
 namespace core {
 
+class CmdVisitor;
 class Stage;
 class UserInterface;
 class Map;
@@ -19,6 +20,7 @@ extern const char* kCmdOpToString[];
 class Cmd {
  public:
   enum class Op {
+    kCmdInvalid,
 #define MACRO_CMD_OP(name) kCmd##name,
 #include "cmd_op.h.inc"
   };
@@ -29,6 +31,9 @@ class Cmd {
   // virtual Cmd* Undo(Stage*) = 0;
   virtual Cmd::Op op() const = 0;
 
+ public:
+  virtual void Accept(CmdVisitor& visitor) const = 0;
+
 #ifdef DEBUG
   //  static string OpToString(Op op) { return kCmdOpToString[static_cast<int>(op)]; }
   virtual void DebugPrint(Stage*) const { printf("%s\n", kCmdOpToString[static_cast<int>(op())]); }
@@ -36,14 +41,24 @@ class Cmd {
 };
 
 //
+// CmdInvalid : Unused, cannot be instantiated
+//
+
+class CmdInvalid : public Cmd {
+};
+
+//
 // CmdQueue : command queue
 //
 class CmdQueue : public Cmd {
  public:
-  CmdQueue();
-  ~CmdQueue();
+  CmdQueue() = default;
+  ~CmdQueue() = default;
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdQueue; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 
 #ifdef DEBUG
   virtual void DebugPrint(Stage* stage) const override;
@@ -56,6 +71,10 @@ class CmdQueue : public Cmd {
   const Cmd* GetNextCmdConst() const;
 
   CmdQueue& operator+=(unique_ptr<Cmd>);
+
+ public:
+  deque<unique_ptr<Cmd>>::const_iterator begin() const { return q_.begin(); }
+  deque<unique_ptr<Cmd>>::const_iterator end() const { return q_.end(); }
 
  private:
   void Insert(unique_ptr<Cmd>, bool prepend);
@@ -106,6 +125,9 @@ class CmdEndAction : public CmdUnit {
   CmdEndAction(const UId&);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdEndAction; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdStay : public CmdAct {
@@ -113,6 +135,9 @@ class CmdStay : public CmdAct {
   CmdStay(const UId&);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdStay; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdBasicAttack : public CmdAct {
@@ -124,6 +149,9 @@ class CmdBasicAttack : public CmdAct {
   CmdBasicAttack(const UId&, const UId&, Type);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdBasicAttack; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 
  public:
   bool IsCounter() { return type_ & Type::kCounter; }
@@ -151,6 +179,9 @@ class CmdMagic : public CmdAct {
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdMagic; }
   const Magic* magic() { return magic_; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 
  private:
   int ComputeDamage(Map*, const Unit*, const Unit*);
@@ -195,6 +226,9 @@ class CmdHit : public CmdActResult {
   virtual Cmd::Op op() const override { return Op::kCmdHit; }
 
  public:
+  virtual void Accept(CmdVisitor& visitor) const override;
+
+ public:
   HitType GetHitType() const { return hit_type_; }
   int GetDamage() const { return damage_; }
 
@@ -209,6 +243,9 @@ class CmdMiss : public CmdActResult {
   CmdMiss(const UId&, const UId&, Type);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdMiss; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdKilled : public CmdUnit {
@@ -216,6 +253,9 @@ class CmdKilled : public CmdUnit {
   CmdKilled(const UId&);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdKilled; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdMove : public CmdUnit {
@@ -224,6 +264,9 @@ class CmdMove : public CmdUnit {
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdMove; }
   Vec2D GetDest() const { return dest_; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 
  private:
   Vec2D dest_;
@@ -249,6 +292,9 @@ class CmdAction : public Cmd {
   virtual Cmd::Op op() const override { return Op::kCmdAction; }
 
  public:
+  virtual void Accept(CmdVisitor& visitor) const override;
+
+ public:
   void SetCmdMove(unique_ptr<CmdMove>);
   void SetCmdAct(unique_ptr<CmdAct>);
 
@@ -263,6 +309,9 @@ class CmdEndTurn : public Cmd {
   CmdEndTurn();
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdEndTurn; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdPlayAI : public Cmd {
@@ -270,6 +319,9 @@ class CmdPlayAI : public Cmd {
   CmdPlayAI();
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdPlayAI; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdGameVictory : public Cmd {
@@ -277,6 +329,9 @@ class CmdGameVictory : public Cmd {
   CmdGameVictory();
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdGameVictory; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdGameEnd : public Cmd {
@@ -285,6 +340,9 @@ class CmdGameEnd : public Cmd {
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdGameEnd; }
   bool is_victory() const { return is_victory_; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 
  private:
   bool is_victory_;
@@ -297,6 +355,9 @@ class CmdSpeak : public CmdUnit {
   virtual Cmd::Op op() const override { return Op::kCmdSpeak; }
   string GetWords() const { return words_; }
 
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
+
  private:
   string words_;
 };
@@ -307,6 +368,9 @@ class CmdRestoreHp : public CmdUnit {
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdRestoreHp; }
   int CalcAmount(UserInterface* stage) const;
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 
  private:
   int ratio_;
@@ -320,6 +384,9 @@ class CmdGainExp : public CmdUnit {
   virtual Cmd::Op op() const override { return Op::kCmdGainExp; }
   uint32_t exp() const { return exp_; }
 
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
+
  private:
   uint32_t exp_;
 };
@@ -329,6 +396,9 @@ class CmdLevelUp : public CmdUnit {
   CmdLevelUp(const UId& unit);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdLevelUp; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 class CmdPromote : public CmdUnit {
@@ -336,6 +406,9 @@ class CmdPromote : public CmdUnit {
   CmdPromote(const UId& unit);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdPromote; }
+
+ public:
+  virtual void Accept(CmdVisitor& visitor) const override;
 };
 
 }  // namespace core

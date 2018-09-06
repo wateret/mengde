@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "cmd_visitor.h"
 #include "core/path_tree.h"
 #include "formulae.h"
 #include "lua/lua.h"
@@ -13,15 +14,22 @@ namespace mengde {
 namespace core {
 
 const char* kCmdOpToString[] = {
+    "Invalid",
 #define MACRO_CMD_OP(ename) #ename,
 #include "cmd_op.h.inc"
     nullptr};
 
+//
+// Accept methods for all nodes
+//
+
+#define MACRO_CMD_OP(name) \
+  void Cmd##name::Accept(CmdVisitor& visitor) const { \
+    visitor.Visit(*this); \
+  }
+#include "cmd_op.h.inc"
+
 // CmdQueue
-
-CmdQueue::CmdQueue() : Cmd() {}
-
-CmdQueue::~CmdQueue() {}
 
 unique_ptr<Cmd> CmdQueue::Do(Stage* game) {
   ASSERT(!IsEmpty());

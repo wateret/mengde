@@ -3,12 +3,13 @@
 #endif
 
 //           enum name
-MACRO_CMD_OP(Invalid    )
+
+// Non-unit Cmds
 MACRO_CMD_OP(Queue      )
 MACRO_CMD_OP(PlayAI     )
 MACRO_CMD_OP(GameVictory)
 
-// Unit related
+// Unit related Cmds
 MACRO_CMD_OP(Action     )
 MACRO_CMD_OP(Move       )
 MACRO_CMD_OP(BasicAttack)
