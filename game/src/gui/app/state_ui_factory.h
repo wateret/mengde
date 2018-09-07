@@ -1,8 +1,8 @@
 #ifndef MENGDE_GUI_APP_STATE_UI_FACTORY_H_
 #define MENGDE_GUI_APP_STATE_UI_FACTORY_H_
 
-#include "state_ui.h"
 #include "core/cmd_visitor.h"
+#include "state_ui.h"
 
 namespace mengde {
 namespace gui {

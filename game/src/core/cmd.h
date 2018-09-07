@@ -44,8 +44,7 @@ class Cmd {
 // CmdInvalid : Unused, cannot be instantiated
 //
 
-class CmdInvalid : public Cmd {
-};
+class CmdInvalid : public Cmd {};
 
 //
 // CmdQueue : command queue
