@@ -442,6 +442,18 @@ class StateUIEnd : public StateUI {
   bool is_victory_;
 };
 
+class StateUIPromote : public StateUI {
+ public:
+  StateUIPromote(StateUI::Base, const core::UId& uid);
+  virtual void Update() override;
+#ifdef DEBUG
+  virtual string GetStateID() const override { return "StateUIPromote"; }
+#endif
+
+ private:
+  core::UId uid_;
+};
+
 }  // namespace app
 }  // namespace gui
 }  // namespace mengde

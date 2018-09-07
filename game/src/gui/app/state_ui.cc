@@ -1011,6 +1011,18 @@ void StateUIEnd::Update() {
   }
 }
 
+//
+// StateUIPromote
+//
+
+StateUIPromote::StateUIPromote(StateUI::Base base, const core::UId& uid)
+    : StateUI{base}, uid_{uid} {}
+
+void StateUIPromote::Update() {
+  gv_->UpdateModelId(uid_);
+  gv_->PopUIState();
+}
+
 }  // namespace app
 }  // namespace gui
 }  // namespace mengde
