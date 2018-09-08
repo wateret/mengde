@@ -17,11 +17,14 @@ UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL
   iv_portrait_ = new ImageView(portrait_frame);
   Rect top_frame = {64 + LayoutHelper::kDefaultSpace, 0, 200, 16};
   tv_name_ = new TextView(top_frame, "name");
-  top_frame.Move({0, 16});
+  top_frame.Move({0, 18});
   tv_lv_ = new TextView(top_frame, "lv");
+  top_frame.Move({0, 18});
+  tv_class_ = new TextView(top_frame, "");
   AddChild(iv_portrait_);
   AddChild(tv_name_);
   AddChild(tv_lv_);
+  AddChild(tv_class_);
 
   const Vec2D frame_space = {0, 24};
   const int kLabelWidth = 45;
@@ -68,8 +71,10 @@ void UnitOverView::OnUnitUpdate() {
 
   std::string str_name = unit_->id();
   std::string str_lv = "Lv " + std::to_string(unit_->GetLevel());
+  std::string str_class = unit_->unit_class()->GetId();
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
+  tv_class_->SetText(str_class);
 
   const core::Attribute& ori_attr = unit_->GetOriginalAttr();
   const core::Attribute& cur_attr = unit_->GetCurrentAttr();

@@ -36,6 +36,7 @@ class UnitOverView : public CompositeView {
   ImageView* iv_portrait_;
   TextView* tv_name_;
   TextView* tv_lv_;
+  TextView* tv_class_;
   TextView* tv_stats_[kNumGVs];
   GaugeView* gv_stats_[kNumGVs];
 };
