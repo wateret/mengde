@@ -13,7 +13,7 @@ class Equipment;
 
 class Money {
  public:
-  Money() : amount_(0u) {}
+  Money() : amount_{0u} {}
   Money(const Money&) = default;
   bool Affordable(const Money& cost) const { return (amount_ >= cost.amount_); }
   void Pay(const Money& cost);
@@ -34,35 +34,42 @@ struct Amount {
   bool HasNone() { return amount == 0; }
 };
 
-typedef Amount<const Equipment*> EquipmentWithAmount;
+using EquipmentWithAmount = Amount<const Equipment*>;
 
 class Assets {
  public:
-  Assets();
-  // NOTE Default copy constructor does exactly what we want for now, but should be careful when members are added
-  Assets(const Assets&) = default;
-  ~Assets();
+  Assets() = default;
+  ~Assets() = default;
 
-  void AddHero(Hero*);
-  void RemoveHero(const string&);
-  Hero* GetHero(const string&);
+ public:
+  Assets(const Assets&);
+  Assets& operator=(const Assets&) = delete;
+
+ public:
+  // Hero related //
+  void AddHero(unique_ptr<Hero>&& hero);
+  void RemoveHero(const string& id);
+  Hero* GetHero(const string& id);
   vector<const Hero*> GetHeroes();
 
-  void AddEquipment(const Equipment*, uint32_t);
-  void RemoveEquipment(const string&, uint32_t);
-  const Equipment* GetEquipment(const string&);
-  uint32_t GetAmountEquipment(const string&);
+  // Equipment related //
+  void AddEquipment(const Equipment* equipment, uint32_t amount);
+  void RemoveEquipment(const string& id, uint32_t amount);
+  const Equipment* GetEquipment(const string& id);
+  uint32_t GetAmountEquipment(const string& id);
   vector<EquipmentWithAmount> GetEquipmentsWithAmount();
   vector<const Equipment*> GetEquipments();
 
-  void PayMoney(const Money&);
-  void GainMoney(const Money&);
+  // Money related //
+  void PayMoney(const Money& cost);
+  void GainMoney(const Money& money);
   uint32_t GetAmountMoney();
 
+  // Others //
   void HeroPutEquipmentOn(Hero*, const Equipment*);
 
  private:
-  std::map<string, Hero*> heroes_;
+  std::map<string, unique_ptr<Hero>> heroes_;
   std::map<string, EquipmentWithAmount> equipments_;
   //  std::map<string, Amount<Consumable*>>
   Money money_;

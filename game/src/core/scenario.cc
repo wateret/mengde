@@ -16,24 +16,21 @@ Scenario::Scenario(const string& scenario_id)
   stage_ids_ = loader.GetStages();
 
   // For the case of NEW GAME
-  assets_ = new Assets();
+  assets_ = std::make_unique<Assets>();
   current_stage_ = NewStage(stage_ids_[stage_no_]);
 }
 
 unique_ptr<Stage> Scenario::NewStage(const string& stage_id) {
   const Path path = GameEnv::GetInstance()->GetScenarioPath() / scenario_id_ / "script" / (stage_id + ".lua");
-  return std::make_unique<Stage>(rc_, assets_, path);
+  return std::make_unique<Stage>(rc_, assets_.get(), path);
 }
 
 bool Scenario::NextStage() {
-  // FIXME Currently the below condition is always false.
-  //       Need to change Lua API `on_deploy(game)` to `on_deploy(assets)
-  // ASSERT(assets_ != stage_->assets());
-  ASSERT(assets_ == current_stage_->assets());  // FIXME Remove this temporary condition
+  auto&& stage_assets = current_stage_->ReturnAssets();
+  ASSERT(assets_.get() != stage_assets.get());
 
   // Update Assets
-  // delete assets_;
-  assets_ = current_stage_->assets();
+  assets_ = std::move(stage_assets);
 
   // Advance to the next stage
   if (stage_no_ < stage_ids_.size() - 1) {
@@ -51,8 +48,6 @@ Scenario::~Scenario() {
   delete rc_.magic_manager;
   delete rc_.equipment_manager;
   delete rc_.hero_tpl_manager;
-
-  delete assets_;
 }
 
 }  // namespace core

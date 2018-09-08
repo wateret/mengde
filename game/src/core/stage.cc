@@ -21,9 +21,9 @@
 namespace mengde {
 namespace core {
 
-Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_script_path)
+Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage_script_path)
     : rc_(rc),
-      assets_{assets},  // FIXME Change this to clone the object as we need to rollback assets for some cases
+      assets_{std::make_unique<Assets>(*assets)},
       lua_this_(this, "Game"),
       lua_{CreateLua(stage_script_path)},
       lua_callbacks_{new LuaCallbacks{lua_.get()}},
@@ -288,8 +288,7 @@ uint32_t Stage::GetNumOwnsAlive() {
 
 void Stage::AppointHero(const string& id, uint16_t level) {
   LOG_INFO("Hero added to asset '%s' with Lv %d", id.c_str(), level);
-  Hero* hero = new Hero(rc_.hero_tpl_manager->Get(id), level);
-  assets_->AddHero(hero);
+  assets_->AddHero(std::make_unique<Hero>(rc_.hero_tpl_manager->Get(id), level));
 }
 
 uint32_t Stage::GenerateOwnUnit(const string& id, Vec2D pos) {

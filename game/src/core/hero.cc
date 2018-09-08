@@ -23,7 +23,7 @@ Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
 Hero::Hero(const Hero& hero)
     : hero_tpl_(hero.hero_tpl_),
       unit_class_{hero_tpl_->unit_class()},
-      equipment_set_(hero.GetEquipmentSet()->Clone(this)),
+      equipment_set_{new EquipmentSet{this}},
       level_(hero.level_),
       hero_attr_(hero.hero_attr_),
       unit_attr_(hero.unit_attr_),
@@ -33,7 +33,7 @@ Hero::Hero(const Hero& hero)
   // TODO Handle promotion chain
 }
 
-Hero::~Hero() { delete equipment_set_; }
+Hero::~Hero() {}
 
 string Hero::id() const { return hero_tpl_->id(); }
 

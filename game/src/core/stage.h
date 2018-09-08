@@ -39,7 +39,7 @@ class Stage : public IDeployHelper {
   enum class Status { kNone, kDeploying, kUndecided, kVictory, kDefeat };
 
  public:
-  Stage(const ResourceManagers&, Assets*, const Path&);
+  Stage(const ResourceManagers&, const Assets*, const Path&);
   ~Stage();
 
  public:
@@ -83,7 +83,8 @@ class Stage : public IDeployHelper {
   uint32_t GetNumOwnsAlive();
   bool CheckStatus();
   Status GetStatus() { return status_; }
-  Assets* assets() { return assets_; }
+  Assets* assets() { return assets_.get(); }
+  unique_ptr<Assets>&& ReturnAssets() { return std::move(assets_); }
 
   // IDeployHelper interfaces
   bool SubmitDeploy() override;
@@ -128,7 +129,7 @@ class Stage : public IDeployHelper {
 
  private:
   ResourceManagers rc_;
-  Assets* assets_;
+  std::unique_ptr<Assets> assets_;
   lua::LuaClass lua_this_;  // LuaClass of this object
   std::unique_ptr<lua::Lua> lua_;
   std::unique_ptr<LuaCallbacks> lua_callbacks_;

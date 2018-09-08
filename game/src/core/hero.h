@@ -33,7 +33,7 @@ class Hero : public IUnitBase, IEquipper {
   virtual const Attribute& GetOriginalAttr() const override { return unit_pure_attr_; }
   virtual const HpMp& GetCurrentHpMp() const override { return GetOriginalHpMp(); }
   virtual const Attribute& GetCurrentAttr() const override { return unit_attr_; }
-  virtual const EquipmentSet* GetEquipmentSet() const override { return equipment_set_; }
+  virtual const EquipmentSet* GetEquipmentSet() const override { return equipment_set_.get(); }
   virtual void UpdateStat() override;
 
   const Attribute& GetHeroStatBase() const;
@@ -54,7 +54,7 @@ class Hero : public IUnitBase, IEquipper {
  private:
   const HeroTemplate* hero_tpl_;
   const UnitClass* unit_class_;
-  EquipmentSet* equipment_set_;
+  unique_ptr<EquipmentSet> equipment_set_;
   Level level_;
   Attribute hero_attr_;
   Attribute unit_attr_;

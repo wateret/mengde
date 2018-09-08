@@ -1,6 +1,6 @@
 #include "assets.h"
 
-#include <limits.h>
+#include <limits>
 
 #include "core/equipment_set.h"
 #include "equipment.h"
@@ -15,23 +15,24 @@ void Money::Pay(const Money& cost) {
 }
 
 void Money::Gain(const Money& money) {
-  ASSERT(amount_ > UINT32_MAX - money.amount_);  // Check overflow
-  amount_ += money.amount_;
-}
+  const uint32_t money_limit = std::numeric_limits<uint32_t>::max();
+  const uint32_t gain_limit = money_limit - amount_;
 
-Assets::Assets() {}
+  ASSERT_LE(money.amount_, gain_limit);  // Check overflow
 
-Assets::~Assets() {
-  for (auto e : heroes_) {
-    delete e.second;
+  if (money.amount_ <= gain_limit) {
+    amount_ += money.amount_;
+  } else {
+    // NOTE In debug mode this case will fail with assertion check but this code is added for relase mode
+    amount_ = money_limit;
   }
 }
 
-void Assets::AddHero(Hero* hero) {
+void Assets::AddHero(unique_ptr<Hero>&& hero) {
   string id = hero->id();
   auto found = heroes_.find(id);
   if (found == heroes_.end()) {
-    heroes_[id] = hero;
+    heroes_[id] = std::move(hero);
   } else {
     UNREACHABLE("Hero already exists.");
   }
@@ -47,19 +48,19 @@ void Assets::RemoveHero(const string& id) {
 }
 
 Hero* Assets::GetHero(const string& id) {
-  auto found = heroes_.find(id);
+  auto&& found = heroes_.find(id);
   if (found == heroes_.end()) {
     UNREACHABLE("Hero does not exist.");
     return nullptr;
   } else {
-    return found->second;
+    return found->second.get();
   }
 }
 
 vector<const Hero*> Assets::GetHeroes() {
   vector<const Hero*> ret;
-  for (auto kv : heroes_) {
-    ret.push_back(kv.second);
+  for (auto&& kv : heroes_) {
+    ret.push_back(kv.second.get());
   }
   return ret;
 }
@@ -143,6 +144,13 @@ void Assets::HeroPutEquipmentOn(Hero* hero, const Equipment* equipment) {
   RemoveEquipment(equipment_new->GetId(), 1);
 
   hero->PutOn(equipment_new);
+}
+
+Assets::Assets(const Assets& o) : heroes_{}, equipments_{o.equipments_}, money_{o.money_} {
+  // Explicitly deep-copy hero elements
+  for (auto&& e : o.heroes_) {
+    heroes_.insert({e.first, std::make_unique<Hero>(*e.second.get())});
+  }
 }
 
 }  // namespace core

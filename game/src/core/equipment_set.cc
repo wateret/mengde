@@ -18,21 +18,6 @@ void EquipmentSet::CopyEquipmentSet(const EquipmentSet& eqset) {
   SetAid(eqset.GetAid());
 }
 
-// Clones this object with given Equipper*
-// returns newly created object
-EquipmentSet* EquipmentSet::Clone(IEquipper* equipper) const {
-  EquipmentSet* cloned = new EquipmentSet(equipper);
-  cloned->slot_weapon_ = this->slot_weapon_;
-  cloned->slot_armor_ = this->slot_armor_;
-  cloned->slot_aid_ = this->slot_aid_;
-  /*
-  cloned->PutEquipmentOn(this->GetWeapon());
-  cloned->PutEquipmentOn(this->GetArmor());
-  cloned->PutEquipmentOn(this->GetVid());
-  */
-  return cloned;
-}
-
 void EquipmentSet::SetEquipment(const Equipment* e) {
   switch (e->GetType()) {
     case Equipment::Type::kWeapon:
