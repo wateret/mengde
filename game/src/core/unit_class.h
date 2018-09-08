@@ -33,7 +33,7 @@ class UnitClass {
   BaseAndIncr GetBniHp() const { return bni_hp_; }
   BaseAndIncr GetBniMp() const { return bni_mp_; }
   const Attribute& GetStatGrade() const { return stat_grade_; }
-  const PromotionInfo* promotion_info() const { return &(*promotion_info_); }
+  const boost::optional<PromotionInfo>& promotion_info() const { return promotion_info_; }
 
  private:
   string id_;

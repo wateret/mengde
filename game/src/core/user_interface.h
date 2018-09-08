@@ -76,7 +76,8 @@ class UserInterface {
   vector<Vec2D> GetPath(const UId& unit_id, Vec2D pos) const;
 
   std::shared_ptr<core::MagicList> GetMagicList(const UId& uid) const;
-  const Magic* GetMagic(const string&) const;
+  const Magic* GetMagic(const string& id) const;
+  const UnitClass* GetUnitClass(const string& id) const;
 
   Vec2D GetMapSize() const;
   string GetMapId() const;

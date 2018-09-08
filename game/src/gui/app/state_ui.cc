@@ -656,6 +656,9 @@ StateUIUnitTooltipAnim::StateUIUnitTooltipAnim(StateUI::Base base, const core::U
 void StateUIUnitTooltipAnim::Enter() {
   Misc::SetShowCursor(false);
   gv_->unit_tooltip_view()->visible(true);
+
+  auto unit = gi_->GetUnit(unit_id_);
+  gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->position(), gv_->GetCameraCoords(), gv_->GetFrameSize());
 }
 
 void StateUIUnitTooltipAnim::Exit() {
@@ -675,6 +678,7 @@ void StateUIUnitTooltipAnim::Update() {
   const int cur_anim_frames = std::min(max_anim_frames, frames_);
 
   core::HpMp hpmp_mod = unit->GetCurrentHpMp();
+
   core::HpMp hpmp_rem = {0, 0};
   if (hp_ < 0) {
     hpmp_rem.hp = -hp_ * (max_anim_frames - cur_anim_frames) / max_anim_frames;
@@ -691,8 +695,8 @@ void StateUIUnitTooltipAnim::Update() {
     hpmp_mod.mp += mp_ * cur_anim_frames / max_anim_frames;
   }
 
+  // TODO Update only HP and MP
   gv_->unit_tooltip_view()->SetContents(unit->id(), unit->GetLevel(), hpmp_mod, unit->GetOriginalHpMp(), hpmp_rem);
-  gv_->unit_tooltip_view()->SetCoordsByUnitCoords(unit->position(), gv_->GetCameraCoords(), gv_->GetFrameSize());
 }
 
 void StateUIUnitTooltipAnim::Render(Drawer*) {}
@@ -1015,8 +1019,7 @@ void StateUIEnd::Update() {
 // StateUIPromote
 //
 
-StateUIPromote::StateUIPromote(StateUI::Base base, const core::UId& uid)
-    : StateUI{base}, uid_{uid} {}
+StateUIPromote::StateUIPromote(StateUI::Base base, const core::UId& uid) : StateUI{base}, uid_{uid} {}
 
 void StateUIPromote::Update() {
   gv_->UpdateModelId(uid_);

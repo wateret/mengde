@@ -73,9 +73,7 @@ void StateUIGenerator::Visit(const CmdGainExp&) { generated_ = nullptr; }
 
 void StateUIGenerator::Visit(const CmdLevelUp&) { generated_ = nullptr; }
 
-void StateUIGenerator::Visit(const CmdPromote& cmd) {
-  generated_ = new StateUIPromote(WrapBase(), cmd.GetUnit());
-}
+void StateUIGenerator::Visit(const CmdPromote& cmd) { generated_ = new StateUIPromote(WrapBase(), cmd.GetUnit()); }
 
 }  // namespace app
 }  // namespace gui
