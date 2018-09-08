@@ -44,8 +44,8 @@ class Stage : public IDeployHelper {
 
  public:
   // Map related //
-  Map* GetMap() { return map_; }
-  const Map* GetMap() const { return map_; }
+  Map* GetMap() { return map_.get(); }
+  const Map* GetMap() const { return map_.get(); }
   Vec2D GetMapSize() { return map_->GetSize(); }
   std::string GetMapId() { return map_->GetModelId(); }
 
@@ -62,7 +62,7 @@ class Stage : public IDeployHelper {
   Equipment* GetEquipment(const std::string&);
   MagicManager* GetMagicManager() { return rc_.magic_manager; }
   const UnitClassManager* GetUnitClassManager() { return rc_.unit_class_manager; }
-  lua::Lua* GetLuaScript() { return lua_; }
+  lua::Lua* GetLuaScript() { return lua_.get(); }
   Force GetCurrentForce() const;
   bool EndForceTurn();
   bool IsCurrentTurn(Unit*) const;
@@ -126,12 +126,12 @@ class Stage : public IDeployHelper {
   ResourceManagers rc_;
   Assets* assets_;
   lua::LuaClass lua_this_;  // LuaClass of this object
-  lua::Lua* lua_;
+  std::unique_ptr<lua::Lua> lua_;
   std::unique_ptr<LuaCallbacks> lua_callbacks_;
   std::unique_ptr<UserInterface> user_interface_;
   std::unique_ptr<Commander> commander_;
-  Deployer* deployer_;
-  Map* map_;
+  std::unique_ptr<Deployer> deployer_;
+  std::unique_ptr<Map> map_;
   std::unique_ptr<StageUnitManager> stage_unit_manager_;
   Turn turn_;
   Status status_;

@@ -23,31 +23,28 @@ namespace core {
 
 Stage::Stage(const ResourceManagers& rc, Assets* assets, const Path& stage_script_path)
     : rc_(rc),
-      assets_(assets),  // FIXME Change this to clone the object as we need to rollback assets for some cases
+      assets_{assets},  // FIXME Change this to clone the object as we need to rollback assets for some cases
       lua_this_(this, "Game"),
       lua_{CreateLua(stage_script_path)},
-      lua_callbacks_{new LuaCallbacks{lua_}},
+      lua_callbacks_{new LuaCallbacks{lua_.get()}},
       user_interface_{new UserInterface{this}},
       commander_{new Commander},
-      deployer_(nullptr),
-      map_(nullptr),
+      deployer_{nullptr},
+      map_{nullptr},
       stage_unit_manager_{new StageUnitManager},
       turn_(),
       status_(Status::kDeploying) {
-  map_ = CreateMap();
+  map_ = std::unique_ptr<Map>(CreateMap());
 
   // Run main function
   lua_->Call<void>(string{"main"}, lua_this_);
 
   lua_->Call<void>(lua_callbacks_->on_deploy(), lua_this_);
-  deployer_ = CreateDeployer();
+  deployer_ = std::unique_ptr<Deployer>(CreateDeployer());
 }
 
 Stage::~Stage() {
   // NOTE rc_ and assets_ are not deleted here
-  delete lua_;
-  delete deployer_;
-  delete map_;
 }
 
 lua::Lua* Stage::CreateLua(const Path& stage_script_path) {
