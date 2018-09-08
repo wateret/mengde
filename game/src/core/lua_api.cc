@@ -88,7 +88,7 @@ LUA_IMPL(GetUnitInfo) {
   auto uid = UId{lua.Pop<uint32_t>()};
   Stage* stage = lua.Pop<Stage*>();
 
-  auto unit = stage->GetUnit(uid);
+  auto unit = stage->LookupUnit(uid);
 
   // Build a lua table as a return value
 

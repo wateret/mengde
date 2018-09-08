@@ -135,7 +135,7 @@ void Stage::MoveUnit(Unit* unit, Vec2D dst) {
   unit->position(dst);
 }
 
-void Stage::MoveUnit(const UId& uid, Vec2D dst) { MoveUnit(GetUnit(uid), dst); }
+void Stage::MoveUnit(const UId& uid, Vec2D dst) { MoveUnit(LookupUnit(uid), dst); }
 
 void Stage::KillUnit(Unit* unit) {
   map_->RemoveUnit(unit->position());
@@ -152,14 +152,11 @@ bool Stage::TryMagic(Unit* unit_atk, Unit* unit_def) {
 
 bool Stage::IsValidCoords(Vec2D c) const { return map_->IsValidCoords(c); }
 
-Magic* Stage::GetMagic(const std::string& id) { return rc_.magic_manager->Get(id); }
+Magic* Stage::LookupMagic(const std::string& id) { return rc_.magic_manager->Get(id); }
 
-Unit* Stage::GetUnit(const UId& id) { return stage_unit_manager_->Get(id); }
+Unit* Stage::LookupUnit(const UId& id) { return stage_unit_manager_->Get(id); }
 
-const Unit* Stage::GetUnit(const UId& id) const {
-  //  LOG_DEBUG("GetUnit UID : %u", id.Value());
-  return stage_unit_manager_->Get(id);
-}
+const Unit* Stage::LookupUnit(const UId& id) const { return stage_unit_manager_->Get(id); }
 
 /*
 uint32_t Stage::GetUnitId(const Unit* unit) {
@@ -176,7 +173,7 @@ uint32_t Stage::GetUnitId(const Unit* unit) {
 }
 */
 
-Equipment* Stage::GetEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
+Equipment* Stage::LookupEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
 
 Force Stage::GetCurrentForce() const { return turn_.force(); }
 
@@ -244,7 +241,7 @@ bool Stage::UnitInCell(Vec2D c) const { return map_->UnitInCell(c); }
 
 const Unit* Stage::GetUnitInCell(Vec2D c) const {
   if (!map_->UnitInCell(c)) return nullptr;
-  return GetUnit(map_->GetUnitId(c));
+  return LookupUnit(map_->GetUnitId(c));
 }
 
 const Cell* Stage::GetCell(Vec2D c) const { return map_->GetCell(c); }

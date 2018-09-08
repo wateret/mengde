@@ -49,30 +49,33 @@ class Stage : public IDeployHelper {
   Vec2D GetMapSize() { return map_->GetSize(); }
   std::string GetMapId() { return map_->GetModelId(); }
 
-  // General //
+  // Unit related //
   void ForEachUnitConst(std::function<void(const Unit*)> fn) const;
   void ForEachUnit(std::function<void(Unit*)>);
   void MoveUnit(Unit*, Vec2D);
   void MoveUnit(const UId& uid, Vec2D dst);
   void KillUnit(Unit*);
+  Unit* LookupUnit(const UId&);
+  const Unit* LookupUnit(const UId&) const;
+
+  // Cmd related //
+  bool HasNext() const;
+  void DoNext();
+  void Push(unique_ptr<Cmd>);
+  const Cmd* GetNextCmdConst() const;
+
+  // General //
+  Magic* LookupMagic(const std::string&);
+  Equipment* LookupEquipment(const std::string&);
+  MagicManager* magic_manager() { return rc_.magic_manager; }
+  const UnitClassManager* unit_class_manager() { return rc_.unit_class_manager; }
   bool IsValidCoords(Vec2D) const;
-  Magic* GetMagic(const std::string&);
-  Unit* GetUnit(const UId&);
-  const Unit* GetUnit(const UId&) const;
-  Equipment* GetEquipment(const std::string&);
-  MagicManager* GetMagicManager() { return rc_.magic_manager; }
-  const UnitClassManager* GetUnitClassManager() { return rc_.unit_class_manager; }
-  lua::Lua* GetLuaScript() { return lua_.get(); }
   Force GetCurrentForce() const;
   bool EndForceTurn();
   bool IsCurrentTurn(Unit*) const;
   bool IsAITurn() const;
   bool IsUserTurn() const;
   const Turn& GetTurn() const;
-  bool HasNext() const;
-  void DoNext();
-  void Push(unique_ptr<Cmd>);
-  const Cmd* GetNextCmdConst() const;
   bool UnitInCell(Vec2D) const;
   const Unit* GetUnitInCell(Vec2D) const;
   const Cell* GetCell(Vec2D) const;
@@ -109,6 +112,7 @@ class Stage : public IDeployHelper {
   PathTree* FindMovablePath(Unit*);
 
  public:
+  lua::Lua* lua_script() { return lua_.get(); }
   const lua::LuaClass& lua_this() { return lua_this_; }
   UserInterface* user_interface() { return user_interface_.get(); }
   const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }

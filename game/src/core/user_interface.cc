@@ -46,7 +46,7 @@ UnitKey AvailableUnits::FindByPos(Vec2D pos) {
 
 AvailableMoves::AvailableMoves(Stage* stage, const UnitKey& ukey) {
   auto uid = AvailableUnits(stage).Get(ukey);
-  Unit* unit = stage->GetUnit(uid);
+  Unit* unit = stage->LookupUnit(uid);
   moves_ = stage->FindMovablePos(unit);
 }
 
@@ -78,7 +78,7 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
 
     case ActionType::kBasicAttack: {
       auto atk_id = uid;
-      Unit* atk = stage->GetUnit(uid);
+      Unit* atk = stage_->LookupUnit(uid);
       atk->attack_range().ForEach(
           [&](Vec2D pos) {
             if (!stage->IsValidCoords(pos)) return;
@@ -93,8 +93,8 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
 
     case ActionType::kMagic: {
       auto atk_id = uid;
-      Unit* atk = stage->GetUnit(uid);
-      MagicList magic_list(stage->GetMagicManager(), atk);
+      Unit* atk = stage_->LookupUnit(uid);
+      MagicList magic_list(stage->magic_manager(), atk);
 
       for (int i = 0; i < magic_list.NumMagics(); i++) {
         Magic* magic = magic_list.GetMagic(i);
@@ -131,7 +131,7 @@ ActKey AvailableActs::Find(Vec2D pos) {
   uint32_t idx = 0;
   for (auto&& act : acts_) {
     // TODO Keep position info in the object rather than querying stage here
-    Unit* def = stage_->GetUnit(act->GetUnitDef());
+    Unit* def = stage_->LookupUnit(act->GetUnitDef());
     if (def->position() == pos) {
       return ActKey{idx};
     }
@@ -149,7 +149,7 @@ ActKey AvailableActs::FindMagic(const string& magic_id, Vec2D pos) {
     ASSERT(cm != nullptr);
     const Magic* magic = cm->magic();
     // TODO Keep position info in the object rather than querying stage here
-    Unit* def = stage_->GetUnit(cm->GetUnitDef());
+    Unit* def = stage_->LookupUnit(cm->GetUnitDef());
     if (magic->GetId() == magic_id && def->position() == pos) {
       return ActKey{idx};
     }
@@ -166,7 +166,7 @@ AvailableUnits UserInterface::QueryUnits() const { return AvailableUnits(stage_)
 
 const Unit* UserInterface::GetUnit(Vec2D pos) const { return stage_->GetUnitInCell(pos); }
 
-const Unit* UserInterface::GetUnit(const UId& unit_id) const { return stage_->GetUnit(unit_id); }
+const Unit* UserInterface::GetUnit(const UId& unit_id) const { return stage_->LookupUnit(unit_id); }
 
 const Unit* UserInterface::GetUnit(const UnitKey& unit_key) const { return GetUnit(QueryUnits().Get(unit_key)); }
 
@@ -232,13 +232,13 @@ bool UserInterface::IsValidCoords(Vec2D c) const { return stage_->IsValidCoords(
 
 std::shared_ptr<core::MagicList> UserInterface::GetMagicList(const UId& uid) const {
   auto unit = GetUnit(uid);
-  return std::make_shared<core::MagicList>(stage_->GetMagicManager(), unit);
+  return std::make_shared<core::MagicList>(stage_->magic_manager(), unit);
 }
 
-const Magic* UserInterface::GetMagic(const string& id) const { return stage_->GetMagic(id); }
+const Magic* UserInterface::GetMagic(const string& id) const { return stage_->LookupMagic(id); }
 
 const UnitClass* UserInterface::GetUnitClass(const string& id) const {
-  auto ucm = stage_->GetUnitClassManager();
+  auto ucm = stage_->unit_class_manager();
   return ucm->Get(id);
 }
 

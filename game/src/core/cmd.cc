@@ -156,8 +156,8 @@ CmdTwoUnits::CmdTwoUnits(const UId& atk, const UId& def) : atk_(atk), def_(def) 
 
 #ifdef DEBUG
 void CmdTwoUnits::DebugPrint(Stage* stage) const {
-  string atk = (!atk_) ? "N/A" : stage->GetUnit(atk_)->id();
-  string def = (!def_) ? "N/A" : stage->GetUnit(def_)->id();
+  string atk = (!atk_) ? "N/A" : stage->LookupUnit(atk_)->id();
+  string def = (!def_) ? "N/A" : stage->LookupUnit(def_)->id();
   printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(op())], atk.c_str(), def.c_str());
 }
 #endif
@@ -181,7 +181,7 @@ unique_ptr<Cmd> CmdStay::Do(Stage*) {
 CmdEndAction::CmdEndAction(const UId& unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdEndAction::Do(Stage* game) {
-  auto unit = game->GetUnit(unit_);
+  auto unit = game->LookupUnit(unit_);
   unit->EndAction();
   game->Push(unit->RaiseEvent(event::GeneralEvent::kActionDone));
 
@@ -201,8 +201,8 @@ CmdBasicAttack::CmdBasicAttack(const UId& atk, const UId& def, Type type)
 }
 
 unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
-  auto atk = game->GetUnit(atk_);
-  auto def = game->GetUnit(def_);
+  auto atk = game->LookupUnit(atk_);
+  auto def = game->LookupUnit(def_);
 
   if (atk->IsDead() || def->IsDead()) return nullptr;
 
@@ -259,8 +259,8 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
 }
 
 bool CmdBasicAttack::TryBasicAttack(Stage* stage) {
-  auto atk = stage->GetUnit(atk_);
-  auto def = stage->GetUnit(def_);
+  auto atk = stage->LookupUnit(atk_);
+  auto def = stage->LookupUnit(def_);
 
   int chance = Formulae::ComputeBasicAttackAccuracy(atk, def);
   LOG_INFO("Chance of Hit : %d%", chance);
@@ -268,8 +268,8 @@ bool CmdBasicAttack::TryBasicAttack(Stage* stage) {
 }
 
 bool CmdBasicAttack::TryBasicAttackCritical(Stage* stage) {
-  auto atk = stage->GetUnit(atk_);
-  auto def = stage->GetUnit(def_);
+  auto atk = stage->LookupUnit(atk_);
+  auto def = stage->LookupUnit(def_);
 
   int chance = Formulae::ComputeBasicAttackCritical(atk, def);
   LOG_INFO("Chance of Critical : %d%", chance);
@@ -277,8 +277,8 @@ bool CmdBasicAttack::TryBasicAttackCritical(Stage* stage) {
 }
 
 bool CmdBasicAttack::TryBasicAttackDouble(Stage* stage) {
-  auto atk = stage->GetUnit(atk_);
-  auto def = stage->GetUnit(def_);
+  auto atk = stage->LookupUnit(atk_);
+  auto def = stage->LookupUnit(def_);
 
   int chance = Formulae::ComputeBasicAttackDouble(atk, def);
   LOG_INFO("Chance of Double Attack : %d%", chance);
@@ -286,8 +286,8 @@ bool CmdBasicAttack::TryBasicAttackDouble(Stage* stage) {
 }
 
 int CmdBasicAttack::ComputeDamage(Stage* stage, Map* map) {
-  auto atk = stage->GetUnit(atk_);
-  auto def = stage->GetUnit(def_);
+  auto atk = stage->LookupUnit(atk_);
+  auto def = stage->LookupUnit(def_);
 
   int damage = Formulae::ComputeBasicAttackDamage(map, atk, def);
   damage += addend_;
@@ -301,8 +301,8 @@ int CmdBasicAttack::ComputeDamage(Stage* stage, Map* map) {
 CmdMagic::CmdMagic(const UId& atk, const UId& def, Magic* magic) : CmdAct(atk, def), magic_(magic) {}
 
 unique_ptr<Cmd> CmdMagic::Do(Stage* stage) {
-  auto atk = stage->GetUnit(atk_);
-  auto def = stage->GetUnit(def_);
+  auto atk = stage->LookupUnit(atk_);
+  auto def = stage->LookupUnit(def_);
 
   LOG_INFO("'%s' tries magic '%s' to '%s'", atk->id().c_str(), magic_->GetId().c_str(), def->id().c_str());
   bool hit = magic_->TryPerform(atk, def);
@@ -340,8 +340,8 @@ CmdHit::CmdHit(const UId& atk, const UId& def, Type type, HitType hit_type, int 
     : CmdActResult(atk, def, type), hit_type_(hit_type), damage_(damage) {}
 
 unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
-  auto atk = stage->GetUnit(atk_);
-  auto def = stage->GetUnit(def_);
+  auto atk = stage->LookupUnit(atk_);
+  auto def = stage->LookupUnit(def_);
 
   uint32_t exp_factor{1u};
   CmdQueue* ret = new CmdQueue;
@@ -377,10 +377,10 @@ CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type, Magic* magic) : CmdA
 CmdMiss::CmdMiss(const UId& atk, const UId& def, Type type) : CmdActResult(atk, def, type) {}
 
 unique_ptr<Cmd> CmdMiss::Do(Stage* stage) {
-  auto atk = stage->GetUnit(atk_);
-  auto def = stage->GetUnit(def_);
+  auto atk = stage->LookupUnit(atk_);
+  auto def = stage->LookupUnit(def_);
 
-  LOG_INFO("%s misses!", stage->GetUnit(atk_)->id().c_str());
+  LOG_INFO("%s misses!", stage->LookupUnit(atk_)->id().c_str());
 
   // Gain experience
   {
@@ -398,7 +398,7 @@ unique_ptr<Cmd> CmdMiss::Do(Stage* stage) {
 CmdKilled::CmdKilled(const UId& unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdKilled::Do(Stage* stage) {
-  stage->KillUnit(stage->GetUnit(unit_));
+  stage->KillUnit(stage->LookupUnit(unit_));
   return nullptr;
 }
 
@@ -407,7 +407,7 @@ unique_ptr<Cmd> CmdKilled::Do(Stage* stage) {
 CmdMove::CmdMove(const UId& unit, Vec2D dest) : CmdUnit(unit), dest_(dest) {}
 
 unique_ptr<Cmd> CmdMove::Do(Stage* game) {
-  auto unit = game->GetUnit(unit_);
+  auto unit = game->LookupUnit(unit_);
   LOG_INFO("Unit '%s' moved from (%d, %d) to (%d, %d)", unit->id().c_str(), unit->position().x, unit->position().y,
            dest_.x, dest_.y);
   game->MoveUnit(unit, dest_);
@@ -425,7 +425,7 @@ void CmdAction::SetCmdMove(unique_ptr<CmdMove> cmd) { cmd_move_ = std::move(cmd)
 void CmdAction::SetCmdAct(unique_ptr<CmdAct> cmd) { cmd_act_ = std::move(cmd); }
 unique_ptr<Cmd> CmdAction::Do(Stage* game) {
   auto doer_id = cmd_act_ ? cmd_act_->GetUnitAtk() : cmd_move_->GetUnit();
-  auto doer = game->GetUnit(doer_id);
+  auto doer = game->LookupUnit(doer_id);
   ASSERT(doer != nullptr);
 
   auto ret = std::make_unique<CmdQueue>();
@@ -530,7 +530,7 @@ unique_ptr<Cmd> CmdPlayAI::Do(Stage* game) {
 CmdGameVictory::CmdGameVictory() : Cmd() {}
 
 unique_ptr<Cmd> CmdGameVictory::Do(Stage* game) {
-  lua::Lua* lua = game->GetLuaScript();
+  auto lua = game->lua_script();
   lua->Call<void>(game->lua_callbacks()->on_victory(), game->lua_this());
 
   // Push a new CmdScenarioEnd just in case when user script does not specifiy the next scenario
@@ -562,7 +562,7 @@ unique_ptr<Cmd> CmdSpeak::Do(Stage*) {
 CmdRestoreHp::CmdRestoreHp(const UId& unit, int ratio, int adder) : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
 
 unique_ptr<Cmd> CmdRestoreHp::Do(Stage* stage) {
-  auto unit = stage->GetUnit(unit_);
+  auto unit = stage->LookupUnit(unit_);
   int amount = CalcAmount(stage->user_interface());
   unit->RestoreHP(amount);
   LOG_INFO("%s restores HP by %d", unit->id().c_str(), amount);
@@ -582,7 +582,7 @@ int CmdRestoreHp::CalcAmount(UserInterface* gi) const {
 CmdGainExp::CmdGainExp(const UId& unit, uint32_t exp) : CmdUnit(unit), exp_(exp) {}
 
 unique_ptr<Cmd> CmdGainExp::Do(Stage* game) {
-  auto unit = game->GetUnit(unit_);
+  auto unit = game->LookupUnit(unit_);
   unique_ptr<Cmd> ret;
   if (unit->GainExp(exp_)) {
     ret = std::make_unique<CmdLevelUp>(unit_);
@@ -596,7 +596,7 @@ unique_ptr<Cmd> CmdGainExp::Do(Stage* game) {
 CmdLevelUp::CmdLevelUp(const UId& unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdLevelUp::Do(Stage* game) {
-  auto unit = game->GetUnit(unit_);
+  auto unit = game->LookupUnit(unit_);
   unique_ptr<Cmd> ret;
   unit->LevelUp();
   if (unit->ReadyPromotion()) {
@@ -610,9 +610,9 @@ unique_ptr<Cmd> CmdLevelUp::Do(Stage* game) {
 CmdPromote::CmdPromote(const UId& unit) : CmdUnit(unit) {}
 
 unique_ptr<Cmd> CmdPromote::Do(Stage* game) {
-  auto unit = game->GetUnit(unit_);
+  auto unit = game->LookupUnit(unit_);
   ASSERT(unit->ReadyPromotion());
-  unit->Promote(game->GetUnitClassManager());
+  unit->Promote(game->unit_class_manager());
   return nullptr;
 }
 
