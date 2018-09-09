@@ -149,7 +149,7 @@ void Assets::HeroPutEquipmentOn(Hero* hero, const Equipment* equipment) {
 Assets::Assets(const Assets& o) : heroes_{}, equipments_{o.equipments_}, money_{o.money_} {
   // Explicitly deep-copy hero elements
   for (auto&& e : o.heroes_) {
-    heroes_.insert({e.first, std::make_unique<Hero>(*e.second.get())});
+    heroes_[e.first] = std::make_unique<Hero>(*e.second.get());
   }
 }
 
