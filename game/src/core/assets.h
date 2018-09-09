@@ -49,21 +49,21 @@ class Assets {
   // Hero related //
   void AddHero(unique_ptr<Hero>&& hero);
   void RemoveHero(const string& id);
-  Hero* GetHero(const string& id);
+  Hero* LookupHero(const string& id);
   vector<const Hero*> GetHeroes();
 
   // Equipment related //
   void AddEquipment(const Equipment* equipment, uint32_t amount);
   void RemoveEquipment(const string& id, uint32_t amount);
-  const Equipment* GetEquipment(const string& id);
-  uint32_t GetAmountEquipment(const string& id);
+  const Equipment* LookupEquipment(const string& id);
+  uint32_t LookupEquipmentAmount(const string& id);
   vector<EquipmentWithAmount> GetEquipmentsWithAmount();
   vector<const Equipment*> GetEquipments();
 
   // Money related //
   void PayMoney(const Money& cost);
   void GainMoney(const Money& money);
-  uint32_t GetAmountMoney();
+  uint32_t GetMoneyAmount();
 
   // Others //
   void HeroPutEquipmentOn(Hero*, const Equipment*);

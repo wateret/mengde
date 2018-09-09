@@ -111,7 +111,7 @@ Deployer* Stage::CreateDeployer() {
     vector<int> pos_vec = l->Get<vector<int>>("position");
     string hero_id = l->Get<string>("hero");
     Vec2D position(pos_vec[0], pos_vec[1]);
-    Hero* hero = assets_->GetHero(hero_id);  // TODO Check if Hero exists in our assets
+    Hero* hero = assets_->LookupHero(hero_id);  // TODO Check if Hero exists in our assets
     unselectable_info_list.push_back({position, hero});
   });
   uint32_t num_required = lua_->Get<uint32_t>("gstage.deploy.num_required_selectables");
@@ -292,7 +292,7 @@ void Stage::AppointHero(const string& id, uint16_t level) {
 }
 
 uint32_t Stage::GenerateOwnUnit(const string& id, Vec2D pos) {
-  auto hero = assets_->GetHero(id);
+  auto hero = assets_->LookupHero(id);
   return GenerateOwnUnit(hero, pos);
 }
 
@@ -346,7 +346,7 @@ bool Stage::SubmitDeploy() {
   if (!deployer_->IsReady()) return false;
 
   deployer_->ForEach([=](const DeployElement& e) {
-    auto hero = assets_->GetHero(e.hero->id());
+    auto hero = assets_->LookupHero(e.hero->id());
     ASSERT(hero == e.hero);
     this->GenerateOwnUnit(hero, deployer_->position(hero));
   });

@@ -47,7 +47,7 @@ void Assets::RemoveHero(const string& id) {
   }
 }
 
-Hero* Assets::GetHero(const string& id) {
+Hero* Assets::LookupHero(const string& id) {
   auto&& found = heroes_.find(id);
   if (found == heroes_.end()) {
     UNREACHABLE("Hero does not exist.");
@@ -90,7 +90,7 @@ void Assets::RemoveEquipment(const string& id, uint32_t amount) {
   }
 }
 
-const Equipment* Assets::GetEquipment(const string& id) {
+const Equipment* Assets::LookupEquipment(const string& id) {
   auto found = equipments_.find(id);
   if (found == equipments_.end()) {
     UNREACHABLE("Equipment does not exist.");
@@ -102,7 +102,7 @@ const Equipment* Assets::GetEquipment(const string& id) {
   }
 }
 
-uint32_t Assets::GetAmountEquipment(const string& id) {
+uint32_t Assets::LookupEquipmentAmount(const string& id) {
   auto found = equipments_.find(id);
   if (found == equipments_.end()) {
     UNREACHABLE("Equipment does not exist.");
@@ -133,7 +133,7 @@ vector<const Equipment*> Assets::GetEquipments() {
 }
 
 void Assets::HeroPutEquipmentOn(Hero* hero, const Equipment* equipment) {
-  const Equipment* equipment_new = GetEquipment(equipment->GetId());
+  const Equipment* equipment_new = LookupEquipment(equipment->GetId());
   ASSERT(equipment_new != nullptr);
   if (equipment == nullptr || equipment_new == nullptr) return;
 
