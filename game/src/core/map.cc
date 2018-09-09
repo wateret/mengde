@@ -111,7 +111,10 @@ PathTree* Map::FindPath(const UId& uid, Vec2D dest) {
 
     Vec2D vec_current = DeserializeVec2D(current);
     used[current] = true;
-    if (dist[current] <= stat_move && !IsHostilePlaced(uid, vec_current)) {
+
+    if (IsHostilePlaced(uid, vec_current)) continue;
+
+    if (dist[current] <= stat_move) {
       if (pathtree == nullptr) {
         pathtree = new PathTree(vec_current);
         from[current] = pathtree->GetRoot();
