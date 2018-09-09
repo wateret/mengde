@@ -22,7 +22,7 @@ Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
 
 Hero::Hero(const Hero& hero)
     : hero_tpl_(hero.hero_tpl_),
-      unit_class_{hero_tpl_->unit_class()},
+      unit_class_{hero.unit_class()},
       equipment_set_{new EquipmentSet{this}},
       level_(hero.level_),
       hero_attr_(hero.hero_attr_),
@@ -30,7 +30,6 @@ Hero::Hero(const Hero& hero)
       unit_pure_attr_(hero.unit_pure_attr_),
       hpmp_(hero.hpmp_) {
   ASSERT(unit_class_ != nullptr);
-  // TODO Handle promotion chain
 }
 
 Hero::~Hero() {}

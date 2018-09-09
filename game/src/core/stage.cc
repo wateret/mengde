@@ -292,11 +292,11 @@ void Stage::AppointHero(const string& id, uint16_t level) {
 }
 
 uint32_t Stage::GenerateOwnUnit(const string& id, Vec2D pos) {
-  const Hero* hero = assets_->GetHero(id);
+  auto hero = assets_->GetHero(id);
   return GenerateOwnUnit(hero, pos);
 }
 
-uint32_t Stage::GenerateOwnUnit(const Hero* hero, Vec2D pos) {
+uint32_t Stage::GenerateOwnUnit(Hero* hero, Vec2D pos) {
   Unit* unit = new Unit(hero, Force::kOwn);
   auto uid = stage_unit_manager_->Deploy(unit);
   unit->position(pos);
@@ -345,7 +345,11 @@ bool Stage::SubmitDeploy() {
 
   if (!deployer_->IsReady()) return false;
 
-  deployer_->ForEach([=](const DeployElement& e) { this->GenerateOwnUnit(e.hero, deployer_->position(e.hero)); });
+  deployer_->ForEach([=](const DeployElement& e) {
+    auto hero = assets_->GetHero(e.hero->id());
+    ASSERT(hero == e.hero);
+    this->GenerateOwnUnit(hero, deployer_->position(hero));
+  });
 
   status_ = Status::kUndecided;
   lua_->Call<void>(lua_callbacks_->on_begin(), lua_this_);

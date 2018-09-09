@@ -7,8 +7,8 @@
 namespace mengde {
 namespace core {
 
-Unit::Unit(const Hero* hero, Force force)
-    : hero_(new Hero(*hero)),  // NOTE deep-copy is done here
+Unit::Unit(Hero* hero, Force force)
+    : hero_(hero),
       equipment_set_(new EquipmentSet(this)),
       current_attr_(hero->GetOriginalAttr()),
       current_hpmp_(hero->GetOriginalHpMp()),

@@ -23,7 +23,7 @@ class EquipmentSet;
 
 class Unit : public IUnitBase, public IEvent, public IEquipper {
  public:
-  Unit(const Hero*, Force);
+  Unit(Hero*, Force);
   virtual ~Unit();
 
  public:

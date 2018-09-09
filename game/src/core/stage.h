@@ -95,7 +95,7 @@ class Stage : public IDeployHelper {
   // APIs for Lua //
   void AppointHero(const string&, uint16_t);
   uint32_t GenerateOwnUnit(const string&, Vec2D);
-  uint32_t GenerateOwnUnit(const Hero*, Vec2D);
+  uint32_t GenerateOwnUnit(Hero*, Vec2D);
   uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
   //  bool UnitPutWeaponOn(uint32_t, const string&);
