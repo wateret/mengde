@@ -237,7 +237,7 @@ void ConfigLoader::ParseMagics() {
     l->ForEachTableEntry("learnat", [=, &magic](lua::Lua* l, const string&) {
       string uclass = l->Get<string>("class");
       uint16_t level = (uint16_t)l->Get<int>("level");
-      magic->AddLearnInfo(rc_.unit_class_manager->Get(uclass)->GetIndex(), level);  // FIXME
+      magic->AddLearnInfo(rc_.unit_class_manager->Get(uclass)->index(), level);  // FIXME
     });
     rc_.magic_manager->Add(id, magic);
   });

@@ -26,13 +26,13 @@ class UnitClass {
  public:
   UnitClass(const string&, const int, const Attribute&, const Range::Type, const int, const BaseAndIncr,
             const BaseAndIncr, const boost::optional<PromotionInfo>& promotion_info);
-  int GetIndex() const { return index_; }
-  string GetId() const { return id_; }
+  int index() const { return index_; }
+  string id() const { return id_; }
   const AttackRange& attack_range() const { return AttackRangeManager::GetInstance().Get(attack_range_); }
   int move() const { return move_; }
-  BaseAndIncr GetBniHp() const { return bni_hp_; }
-  BaseAndIncr GetBniMp() const { return bni_mp_; }
-  const Attribute& GetStatGrade() const { return stat_grade_; }
+  BaseAndIncr bni_hp() const { return bni_hp_; }
+  BaseAndIncr bni_mp() const { return bni_mp_; }
+  const Attribute& stat_grade() const { return stat_grade_; }
   const boost::optional<PromotionInfo>& promotion_info() const { return promotion_info_; }
 
  private:

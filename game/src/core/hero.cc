@@ -36,7 +36,7 @@ Hero::~Hero() {}
 
 string Hero::id() const { return hero_tpl_->id(); }
 
-int Hero::class_index() const { return unit_class_->GetIndex(); }
+int Hero::class_index() const { return unit_class_->index(); }
 
 int Hero::move() const { return unit_class_->move(); }
 
@@ -57,17 +57,17 @@ void Hero::LevelUp() {
 void Hero::PutOn(const Equipment* equipment) { equipment_set_->SetEquipment(equipment); }
 
 HpMp Hero::CalcHpMp() const {
-  HpMp xtat;
-#define UPDATE_HPMP(x, xc) xtat.x = unit_class()->GetBni##xc().base + unit_class()->GetBni##xc().incr * level_.level
-  UPDATE_HPMP(hp, Hp);
-  UPDATE_HPMP(mp, Mp);
+  HpMp hpmp;
+#define UPDATE_HPMP(x) hpmp.x = unit_class()->bni_##x().base + unit_class()->bni_##x().incr * level_.level
+  UPDATE_HPMP(hp);
+  UPDATE_HPMP(mp);
 #undef UPDATE_HPMP
-  return xtat;
+  return hpmp;
 }
 
 Attribute Hero::CalcUnitPureAttr() const {
   Attribute unit_stat =
-      ((hero_attr_ / 2) + ((100 + 10 * (unit_class()->GetStatGrade() - 1)) * level_.level * hero_attr_) / 2000);
+      ((hero_attr_ / 2) + ((100 + 10 * (unit_class()->stat_grade() - 1)) * level_.level * hero_attr_) / 2000);
   return unit_stat;
 }
 
