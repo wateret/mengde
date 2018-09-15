@@ -445,6 +445,7 @@ class StateUIEnd : public StateUI {
 class StateUIPromote : public StateUI {
  public:
   StateUIPromote(StateUI::Base, const core::UId& uid);
+  virtual void Enter() override;
   virtual void Update() override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIPromote"; }

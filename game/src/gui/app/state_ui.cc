@@ -1,5 +1,7 @@
 #include "state_ui.h"
 
+#include <boost/format.hpp>
+
 #include "config.h"
 #include "control_view.h"
 #include "core/attack_range.h"
@@ -1021,9 +1023,23 @@ void StateUIEnd::Update() {
 
 StateUIPromote::StateUIPromote(StateUI::Base base, const core::UId& uid) : StateUI{base}, uid_{uid} {}
 
+void StateUIPromote::Enter() {
+  ModalDialogView* modal_dialog_view = gv_->dialog_view();
+
+  const auto unit = gi_->GetUnit(uid_);
+  const auto class_id = unit->unit_class()->promotion_info()->id;
+  modal_dialog_view->SetText(boost::str(boost::format("%s has been promoted to %s") % unit->id() % class_id));
+  modal_dialog_view->visible(true);
+}
+
 void StateUIPromote::Update() {
-  gv_->UpdateModelId(uid_);
-  gv_->PopUIState();
+  ModalDialogView* modal_dialog_view = gv_->dialog_view();
+
+  gv_->UpdateModelId(uid_);  // FIXME DO NOT do this every frame
+
+  if (!modal_dialog_view->visible()) {
+    gv_->PopUIState();
+  }
 }
 
 }  // namespace app
