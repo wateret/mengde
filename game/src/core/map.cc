@@ -4,8 +4,8 @@
 
 #include "cell.h"
 #include "core/path_tree.h"
+#include "hero_class.h"
 #include "unit.h"
-#include "unit_class.h"
 #include "util/common.h"
 
 namespace mengde {

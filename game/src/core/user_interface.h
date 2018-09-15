@@ -77,7 +77,7 @@ class UserInterface {
 
   std::shared_ptr<core::MagicList> GetMagicList(const UId& uid) const;
   const Magic* GetMagic(const string& id) const;
-  const UnitClass* GetUnitClass(const string& id) const;
+  const HeroClass* GetUnitClass(const string& id) const;
 
   Vec2D GetMapSize() const;
   string GetMapId() const;

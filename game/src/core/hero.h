@@ -1,12 +1,12 @@
 #ifndef MENGDE_CORE_HERO_H_
 #define MENGDE_CORE_HERO_H_
 
+#include "hero_class.h"
 #include "hero_template.h"
 #include "i_equipper.h"
 #include "i_unit_base.h"
 #include "resource_manager.h"
 #include "stat.h"
-#include "unit_class.h"
 #include "util/common.h"
 
 namespace mengde {
@@ -24,7 +24,7 @@ class Hero : public IUnitBase, IEquipper {
  public:
   // IUnitBase interfaces
   virtual string id() const override;
-  virtual const UnitClass* unit_class() const override { return unit_class_; }
+  virtual const HeroClass* unit_class() const override { return unit_class_; }
   virtual int move() const override;
   virtual const AttackRange& attack_range() const override;
   virtual uint16_t GetLevel() const override { return level_.level; }
@@ -53,7 +53,7 @@ class Hero : public IUnitBase, IEquipper {
 
  private:
   const HeroTemplate* hero_tpl_;
-  const UnitClass* unit_class_;
+  const HeroClass* unit_class_;
   unique_ptr<EquipmentSet> equipment_set_;
   Level level_;
   Attribute hero_attr_;

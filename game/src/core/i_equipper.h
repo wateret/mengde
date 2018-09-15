@@ -4,7 +4,7 @@
 namespace mengde {
 namespace core {
 
-class UnitClass;
+class HeroClass;
 class EquipmentSet;
 
 class IEquipper {
@@ -12,7 +12,7 @@ class IEquipper {
   virtual ~IEquipper() = default;
   virtual void UpdateStat() = 0;
   //  void UpdateHpMp() = 0;
-  virtual const UnitClass* unit_class() const = 0;
+  virtual const HeroClass* unit_class() const = 0;
 };
 
 }  // namespace core

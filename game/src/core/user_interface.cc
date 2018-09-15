@@ -237,7 +237,7 @@ std::shared_ptr<core::MagicList> UserInterface::GetMagicList(const UId& uid) con
 
 const Magic* UserInterface::GetMagic(const string& id) const { return stage_->LookupMagic(id); }
 
-const UnitClass* UserInterface::GetUnitClass(const string& id) const {
+const HeroClass* UserInterface::GetUnitClass(const string& id) const {
   auto ucm = stage_->unit_class_manager();
   return ucm->Get(id);
 }

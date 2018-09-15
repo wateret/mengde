@@ -1,9 +1,9 @@
-#include "unit_class.h"
+#include "hero_class.h"
 
 namespace mengde {
 namespace core {
 
-UnitClass::UnitClass(const string& id, const int index, const Attribute& stat_grade, const Range::Type range,
+HeroClass::HeroClass(const string& id, const int index, const Attribute& stat_grade, const Range::Type range,
                      const int move, const BaseAndIncr bni_hp, const BaseAndIncr bni_mp,
                      const boost::optional<PromotionInfo>& promotion_info)
     : id_{id},

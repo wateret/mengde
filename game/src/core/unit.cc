@@ -2,7 +2,7 @@
 
 #include "cmd.h"  // TODO Only for CmdQueue
 #include "equipment_set.h"
-#include "unit_class.h"
+#include "hero_class.h"
 
 namespace mengde {
 namespace core {
@@ -77,7 +77,7 @@ bool Unit::IsDead() const { return GetCurrentHpMp().hp <= 0; }
 
 void Unit::Kill() { current_hpmp_.hp = 0; }
 
-const UnitClass* Unit::unit_class() const { return hero_->unit_class(); }
+const HeroClass* Unit::unit_class() const { return hero_->unit_class(); }
 
 int Unit::class_index() const { return hero_->class_index(); }
 

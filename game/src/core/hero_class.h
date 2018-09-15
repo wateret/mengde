@@ -22,9 +22,9 @@ struct PromotionInfo {
   PromotionInfo(const string& id, int level) : id(id), level(level) {}
 };
 
-class UnitClass {
+class HeroClass {
  public:
-  UnitClass(const string&, const int, const Attribute&, const Range::Type, const int, const BaseAndIncr,
+  HeroClass(const string&, const int, const Attribute&, const Range::Type, const int, const BaseAndIncr,
             const BaseAndIncr, const boost::optional<PromotionInfo>& promotion_info);
   int index() const { return index_; }
   string id() const { return id_; }

@@ -5,12 +5,12 @@
 #include "event_effect.h"
 #include "exceptions.h"
 #include "hero.h"
+#include "hero_class.h"
 #include "lua/lua.h"
 #include "magic.h"
 #include "stat.h"
 #include "stat_modifier.h"
 #include "terrain.h"
-#include "unit_class.h"
 #include "util/common.h"
 #include "util/path.h"
 
@@ -154,7 +154,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
     Attribute stat_grades = {GradeCharToInt(grades[0]), GradeCharToInt(grades[1]), GradeCharToInt(grades[2]),
                              GradeCharToInt(grades[3]), GradeCharToInt(grades[4])};
-    UnitClass* cla = new UnitClass(id, class_idx++, stat_grades, (Range::Type)range, move, {hp[0], hp[1]},
+    HeroClass* cla = new HeroClass(id, class_idx++, stat_grades, (Range::Type)range, move, {hp[0], hp[1]},
                                    {mp[0], mp[1]}, promotion_info);
     this->rc_.unit_class_manager->Add(id, cla);
   });

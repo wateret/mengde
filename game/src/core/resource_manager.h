@@ -4,10 +4,10 @@
 #include <unordered_map>
 
 #include "equipment.h"
+#include "hero_class.h"
 #include "hero_template.h"
 #include "magic.h"
 #include "terrain.h"
-#include "unit_class.h"
 #include "util/common.h"
 
 namespace mengde {
@@ -59,7 +59,7 @@ class ResourceManager {
 
 using MagicManager = ResourceManager<Magic>;
 using EquipmentManager = ResourceManager<Equipment>;
-using UnitClassManager = ResourceManager<UnitClass>;
+using UnitClassManager = ResourceManager<HeroClass>;
 using TerrainManager = ResourceManager<Terrain>;
 using HeroTemplateManager = ResourceManager<HeroTemplate>;
 
