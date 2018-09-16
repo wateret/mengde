@@ -388,7 +388,7 @@ class StateUITargeting : public StateUIOperable {
  private:
   core::UnitKey unit_key_;
   core::UId unit_id_;
-  core::MoveKey move_id_;
+  core::MoveKey move_key_;
   Vec2D pos_;
   string magic_id_;
   bool is_basic_attack_;

@@ -705,17 +705,17 @@ void StateUIUnitTooltipAnim::Render(Drawer*) {}
 
 // StateUITargeting
 
-StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit_key, const core::MoveKey& move_id,
+StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit_key, const core::MoveKey& move_key,
                                    const string& magic_id)
     : StateUIOperable(base),
       unit_key_(unit_key),
       unit_id_(gi_->QueryUnits().Get(unit_key_)),
-      move_id_(move_id),
-      pos_(gi_->QueryMoves(unit_key_).Get(move_id_)),
+      move_key_(move_key),
+      pos_(gi_->QueryMoves(unit_key_).Get(move_key_)),
       magic_id_(magic_id),
       is_basic_attack_(!magic_id.compare("basic_attack")),
       range_(GetRange()),
-      acts_(gi_->QueryActs(unit_key_, move_id_,
+      acts_(gi_->QueryActs(unit_key_, move_key_,
                            is_basic_attack_ ? core::ActionType::kBasicAttack : core::ActionType::kMagic)) {
   Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
@@ -763,33 +763,21 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
   if (e.IsLeftButtonUp()) {
     Vec2D map_pos = GetCursorCell();
 
-    // Variables to be captured (No better way for C++11)
-    auto unit_key = unit_key_;
-    auto move_id = move_id_;
-
     if (is_basic_attack_) {
       auto act_id = acts_.Find(map_pos);
       if (act_id) {
         gv_->InitUIStateMachine();
-        // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
-        auto gi = gi_;
-        gv_->NextFrame([=]() {
-          gi->PushAction(unit_key, move_id, core::ActionType::kBasicAttack, act_id);
-          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_key.Value(), move_id.Value(),
-                    act_id.Value());
-        });
+        gi_->PushAction(unit_key_, move_key_, core::ActionType::kBasicAttack, act_id);
+        LOG_DEBUG("Pushing Action {UnitKey:%u, MoveKey:%u, BasicAttack ActId:%u}", unit_key_.Value(), move_key_.Value(),
+                  act_id.Value());
       }
     } else {
       auto act_id = acts_.FindMagic(magic_id_, map_pos);
       if (act_id) {
         gv_->InitUIStateMachine();
-        // TODO Not necessarily done in NextFrame. Fix it after removing temporal move
-        auto gi = gi_;
-        gv_->NextFrame([=]() {
-          gi->PushAction(unit_key, move_id, core::ActionType::kMagic, act_id);
-          LOG_DEBUG("Pushing Action {UnitId:%u, MoveId:%u, BasicAttack ActId:%u}", unit_key.Value(), move_id.Value(),
-                    act_id.Value());
-        });
+        gi_->PushAction(unit_key_, move_key_, core::ActionType::kMagic, act_id);
+        LOG_DEBUG("Pushing Action {UnitKey:%u, MoveKey:%u, BasicAttack ActId:%u}", unit_key_.Value(), move_key_.Value(),
+                  act_id.Value());
       }
     }
   } else if (e.IsRightButtonUp()) {
