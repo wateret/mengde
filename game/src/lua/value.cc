@@ -41,6 +41,7 @@ Value::Type Value::type() const {
     return Type::kUserdata;
   }
   assert(!"Unknown type of value");
+  return Type::kNone;
 }
 
 using Userdata = void*;
