@@ -83,6 +83,8 @@ def main():
     if not path_exists(res_path):
         os.mkdir(res_path)
 
+    print(os.getcwd())
+
     font_url = "https://github.com/powerline/fonts/raw/master/LiberationMono/Literation%20Mono%20Powerline.ttf"
     font_filename = "Literation Mono Powerline.ttf"
     font_filepath = os.path.join(res_path, font_filename)
@@ -98,7 +100,7 @@ def main():
         os.mkdir(res_ipath)
 
     font_ifilepath = os.path.join(res_ipath, font_filename)
-    if not path_exists(font_ifilepath):
+    if path_exists(font_filepath) and not path_exists(font_ifilepath):
         shutil.copyfile(font_filepath, font_ifilepath)
 
 if __name__ == "__main__":
