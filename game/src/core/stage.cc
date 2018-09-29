@@ -160,21 +160,6 @@ Unit* Stage::LookupUnit(const UId& id) { return stage_unit_manager_->Get(id); }
 
 const Unit* Stage::LookupUnit(const UId& id) const { return stage_unit_manager_->Get(id); }
 
-/*
-uint32_t Stage::GetUnitId(const Unit* unit) {
-  // TODO The implementation is temoporary. Remove this method or write a safer implementation
-  uint32_t id = 0;
-  uint32_t idx = 0;
-  ForEachUnit([&](Unit* u) {
-    if (unit == u) {
-      id = idx;
-    }
-    idx++;
-  });
-  return id;
-}
-*/
-
 Equipment* Stage::LookupEquipment(const std::string& id) { return rc_.equipment_manager->Get(id); }
 
 Force Stage::GetCurrentForce() const { return turn_.force(); }
