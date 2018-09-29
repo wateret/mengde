@@ -46,7 +46,7 @@ Each hero has different class, attributes and features. But itself is just a spe
 
 Each Hero belongs to exactly one class which represents the type of the troop.
 
-Also Heroes can be promoted, refer to [Hero Promotion](#Hero Promotion) for more.
+Also Heroes can be promoted, refer to [Hero Promotion](#Hero-Promotion) for more.
 
 ### Hero Promotion
 
