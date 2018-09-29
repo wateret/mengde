@@ -1,10 +1,14 @@
 
 language: cpp
 
+branches:
+    only:
+        - master
+
 matrix:
     include:
         - os: osx
-          osx_image: xcode8
+          osx_image: xcode9
           compiler:
               - clang
           before_install:
