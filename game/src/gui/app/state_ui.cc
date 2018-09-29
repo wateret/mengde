@@ -950,7 +950,7 @@ void StateUINextTurn::Exit() {
   gv_->NextFrame([gv = gv_, gi = gi_]() {
     ControlView* control_view = gv->control_view();
     const auto& turn = gi->GetTurn();
-    control_view->SetTurnText(turn.GetCurrent(), turn.GetLimit());
+    control_view->SetTurnText(turn.current(), turn.limit());
     control_view->SetEndTurnVisible(gi->IsUserTurn());
   });
 }

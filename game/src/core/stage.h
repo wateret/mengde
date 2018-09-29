@@ -122,6 +122,7 @@ class Stage : public IDeployHelper {
   lua::Lua* CreateLua(const Path&);
   Map* CreateMap();
   Deployer* CreateDeployer();
+  uint16_t GetTurnLimit();
   bool TryBasicAttack(Unit*, Unit*);
   bool TryMagic(Unit*, Unit*);
 

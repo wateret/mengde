@@ -32,7 +32,7 @@ Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage
       deployer_{nullptr},
       map_{nullptr},
       stage_unit_manager_{new StageUnitManager},
-      turn_(),
+      turn_{GetTurnLimit()},
       status_(Status::kDeploying) {
   map_ = std::unique_ptr<Map>(CreateMap());
 
@@ -123,6 +123,8 @@ Deployer* Stage::CreateDeployer() {
   });
   return new Deployer(unselectable_info_list, selectable_info_list, num_required);
 }
+
+uint16_t Stage::GetTurnLimit() { return lua_->Get<uint16_t>("gstage.turn_limit"); }
 
 void Stage::ForEachUnit(std::function<void(Unit*)> fn) { stage_unit_manager_->ForEach(fn); }
 

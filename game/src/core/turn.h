@@ -8,10 +8,10 @@ namespace core {
 
 class Turn {
  public:
-  Turn();
+  Turn(uint16_t limit, uint16_t current = 1);
   bool Next();
-  uint16_t GetCurrent() const { return current_; }
-  uint16_t GetLimit() const { return limit_; }
+  uint16_t current() const { return current_; }
+  uint16_t limit() const { return limit_; }
   Force force() const { return force_; }
 
  private:
