@@ -91,9 +91,9 @@ void UnitOverView::OnUnitUpdate() {
 
   for (int i = 0; i < kNumStats; i++) {
     int j = i + 1 + kNumHpMp;
-    gv_stats_[j]->SetCurVal(cur_attr.GetValueByIndex(i));
+    gv_stats_[j]->SetCurVal(cur_attr[i]);
     gv_stats_[j]->SetMaxVal(400);
-    gv_stats_[j]->SetExtVal(cur_attr.GetValueByIndex(i) - ori_attr.GetValueByIndex(i));
+    gv_stats_[j]->SetExtVal(cur_attr[i] - ori_attr[i]);
   }
   Path portrait_path = rcpath::PortraitPath(unit_->id());
   iv_portrait_->SetPath(portrait_path.ToString());

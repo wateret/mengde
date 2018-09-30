@@ -48,7 +48,7 @@ void StatModifierList::NextTurn() {
 Attribute StatModifierList::CalcAddends() const {
   Attribute calc_mods = {0, 0, 0, 0, 0};
   for (auto e : elements_) {
-    calc_mods.AddValueByIndex(e->stat_id(), e->addend());
+    calc_mods[e->stat_id()] += e->addend();
   }
   return calc_mods;
 }
@@ -56,7 +56,7 @@ Attribute StatModifierList::CalcAddends() const {
 Attribute StatModifierList::CalcMultipliers() const {
   Attribute calc_mods = {0, 0, 0, 0, 0};
   for (auto e : elements_) {
-    calc_mods.AddValueByIndex(e->stat_id(), e->multiplier());
+    calc_mods[e->stat_id()] += e->multiplier();
   }
   return calc_mods;
 }

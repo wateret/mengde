@@ -21,20 +21,9 @@ struct Attribute {
 
   void ApplyModifier(const Attribute& addend, const Attribute& multiplier);
 
-  int GetValueByIndex(int index) const {
-    // Fragile but fast implementation
-    return *((int*)(this) + index);
-  }
+  int& operator[](uint32_t index) { return *((int*)(this) + index); }
 
-  void AddValueByIndex(int index, int value) {
-    // Fragile but fast implementation
-    ((int*)(this))[index] += value;
-  }
-
-  void SetValueByIndex(int index, int value) {
-    // Fragile but fast implementation
-    ((int*)(this))[index] = value;
-  }
+  int operator[](uint32_t index) const { return *((int*)(this) + index); }
 };
 
 #define ATTRIBUTE_BIN_OP_DECL(OP) Attribute operator OP(const Attribute& lhs, const Attribute& rhs);
