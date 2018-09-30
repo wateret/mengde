@@ -17,11 +17,11 @@ StatModifierList::~StatModifierList() {
 void StatModifierList::AddModifier(StatModifier* m) {
   for (int i = 0, sz = elements_.size(); i < sz; i++) {
     StatModifier* e = elements_[i];
-    if (e->GetId() == m->GetId() && e->GetStatId() == m->GetStatId()) {
+    if (e->id() == m->id() && e->stat_id() == m->stat_id()) {
       // If both two have the same sign it will be replaced
       // or it will be erased (cancelling out)
       delete e;
-      if (e->GetMultiplier() * m->GetMultiplier() >= 0) {
+      if (e->multiplier() * m->multiplier() >= 0) {
         elements_[i] = m;
       } else {
         elements_.erase(elements_.begin() + i);
@@ -35,7 +35,7 @@ void StatModifierList::AddModifier(StatModifier* m) {
 
 void StatModifierList::NextTurn() {
   elements_.erase(remove_if(elements_.begin(), elements_.end(), [](StatModifier* m) -> bool {
-    bool remove = (m->GetTurnsLeft() == 0);
+    bool remove = (m->turns_left() == 0);
     if (remove) delete m;
     return remove;
   }));
@@ -48,7 +48,7 @@ void StatModifierList::NextTurn() {
 Attribute StatModifierList::CalcAddends() const {
   Attribute calc_mods = {0, 0, 0, 0, 0};
   for (auto e : elements_) {
-    calc_mods.AddValueByIndex(e->GetStatId(), e->GetAddend());
+    calc_mods.AddValueByIndex(e->stat_id(), e->addend());
   }
   return calc_mods;
 }
@@ -56,7 +56,7 @@ Attribute StatModifierList::CalcAddends() const {
 Attribute StatModifierList::CalcMultipliers() const {
   Attribute calc_mods = {0, 0, 0, 0, 0};
   for (auto e : elements_) {
-    calc_mods.AddValueByIndex(e->GetStatId(), e->GetMultiplier());
+    calc_mods.AddValueByIndex(e->stat_id(), e->multiplier());
   }
   return calc_mods;
 }

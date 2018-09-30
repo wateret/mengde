@@ -19,11 +19,11 @@ class StatModifier {
 
  public:
   StatModifier(const std::string& id, uint16_t stat_id, StatMod mod, uint16_t turns_left = kTurnInfinity);
-  std::string GetId() const { return id_; }
-  uint16_t GetStatId() const { return stat_id_; }
-  int16_t GetAddend() const { return mod_.addend; }
-  uint16_t GetMultiplier() const { return mod_.multiplier; }
-  uint16_t GetTurnsLeft() const { return turns_left_; }
+  std::string id() const { return id_; }
+  uint16_t stat_id() const { return stat_id_; }
+  int16_t addend() const { return mod_.addend; }
+  uint16_t multiplier() const { return mod_.multiplier; }
+  uint16_t turns_left() const { return turns_left_; }
   void NextTurn();
 
  private:
