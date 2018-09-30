@@ -273,9 +273,9 @@ void ConfigLoader::ParseEquipments() {
     });
     l->ForEachTableEntry("modifiers", [=, &equipment](lua::Lua* l, const string&) {
       string stat_s = l->Get<string>("stat");
-      uint16_t addend = l->GetOpt<uint16_t>("addend");
-      uint16_t multiplier = l->GetOpt<uint16_t>("multiplier");
-      StatModifier* mod = new StatModifier(id, StatStrToIdx(stat_s), addend, multiplier);
+      auto addend = l->GetOpt<int16_t>("addend");
+      auto multiplier = l->GetOpt<int16_t>("multiplier");
+      StatModifier* mod = new StatModifier{id, StatStrToIdx(stat_s), {addend, multiplier}};
       equipment->AddModifier(mod);
     });
     this->rc_.equipment_manager->Add(id, equipment);

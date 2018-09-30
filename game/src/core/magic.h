@@ -26,7 +26,7 @@ class Magic {
   };
 
  public:
-  Magic(const std::string&, MagicType, Range::Type, bool, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
+  Magic(const std::string&, MagicType, Range::Type, bool, uint16_t, uint16_t, uint16_t, int16_t, uint16_t);
   const string& GetId() const { return id_; }
   bool GetIsTargetEnemy() { return is_target_enemy_; }
   void Perform(Unit*, Unit*);
@@ -51,7 +51,7 @@ class Magic {
   uint16_t mp_cost_;
   uint16_t power_;
   uint16_t stat_id_;
-  uint16_t amount_;
+  int16_t amount_;
   uint16_t turns_;
 };
 

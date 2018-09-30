@@ -9,7 +9,7 @@ namespace mengde {
 namespace core {
 
 Magic::Magic(const std::string& id, MagicType type, Range::Type range, bool is_target_enemy, uint16_t mp_cost,
-             uint16_t power, uint16_t stat_id, uint16_t amount, uint16_t turns)
+             uint16_t power, uint16_t stat_id, int16_t amount, uint16_t turns)
     : id_(id),
       type_(type),
       range_(range),
@@ -18,7 +18,7 @@ Magic::Magic(const std::string& id, MagicType type, Range::Type range, bool is_t
       mp_cost_(mp_cost),
       power_(power),
       stat_id_(stat_id),
-      amount_(amount),
+      amount_{amount},
       turns_(turns) {
   // TODO Make use of these
   UNUSED(mp_cost_);
@@ -44,7 +44,7 @@ void Magic::Perform(Unit* unit_atk, Unit* unit_def) {
   }
 
   if (type_ & kMagicStatMod) {
-    unit_def->AddStatModifier(new StatModifier("magic", stat_id_, 0, amount_, turns_));
+    unit_def->AddStatModifier(new StatModifier("magic", stat_id_, {0, amount_}, turns_));
   }
 }
 
