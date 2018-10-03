@@ -4,7 +4,6 @@
 #include <boost/optional.hpp>
 
 #include "equipment_set.h"
-#include "event_effect_list.h"
 #include "force.h"
 #include "hero.h"
 #include "i_equipper.h"
@@ -12,8 +11,8 @@
 #include "i_unit_base.h"
 #include "id.h"
 #include "resource_manager.h"
-#include "stat_modifier_list.h"
 #include "util/common.h"
+#include "volatile_attribute.h"
 
 namespace mengde {
 namespace core {
@@ -86,8 +85,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   EquipmentSet* equipment_set_;
   Attribute current_attr_;
   HpMp current_hpmp_;
-  StatModifierList modifier_list_;
-  EventEffectList effect_list_;
+  VolatileAttribute volatile_attribute_;
 
   // TODO Consider below variables to move (to gui or another core module)
   Vec2D position_;       // Position on the map

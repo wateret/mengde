@@ -25,4 +25,3 @@ void UnitStatusView::OnUnitUpdate() {
 }  // namespace app
 }  // namespace gui
 }  // namespace mengde
-
