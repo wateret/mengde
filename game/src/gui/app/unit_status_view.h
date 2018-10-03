@@ -1,10 +1,14 @@
 #ifndef MENGDE_GUI_APP_UNIT_STATUS_VIEW_H_
 #define MENGDE_GUI_APP_UNIT_STATUS_VIEW_H_
 
-#include "gui/uifw/vertical_list_view.h"
 #include "common.h"
+#include "gui/uifw/vertical_list_view.h"
 
-namespace mengde { namespace core { class IUnitBase; } }
+namespace mengde {
+namespace core {
+class IUnitBase;
+}
+}  // namespace mengde
 
 namespace mengde {
 namespace gui {

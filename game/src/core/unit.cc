@@ -12,8 +12,7 @@ Unit::Unit(Hero* hero, Force force)
       equipment_set_(new EquipmentSet(this)),
       current_attr_(hero->GetOriginalAttr()),
       current_hpmp_(hero->GetOriginalHpMp()),
-      modifier_list_(),
-      effect_list_(),
+      volatile_attribute_{},
       position_(0, 0),
       direction_(kDirDown),
       force_(force),
@@ -59,20 +58,18 @@ void Unit::UpdateStat() {
   // TODO update HpMp
   current_attr_ = hero_->GetUnitPureStat();
   {
-    Attribute addends = modifier_list_.CalcAddends() + equipment_set_->CalcAddends();
-    Attribute multipliers = modifier_list_.CalcMultipliers() + equipment_set_->CalcMultipliers();
+    const auto& modifier_list = volatile_attribute_.stat_modifier_list();
+    Attribute addends = modifier_list.CalcAddends() + equipment_set_->CalcAddends();
+    Attribute multipliers = modifier_list.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
     current_attr_.ApplyModifier(addends, multipliers);
   }
 }
 
-void Unit::NextTurn() {
-  modifier_list_.NextTurn();
-  effect_list_.NextTurn();
-}
+void Unit::NextTurn() { volatile_attribute_.NextTurn(); }
 
 void Unit::AddStatModifier(StatModifier* sm) {
-  modifier_list_.AddModifier(sm);
+  volatile_attribute_.stat_modifier_list().AddModifier(sm);
   UpdateStat();
 }
 

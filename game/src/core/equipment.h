@@ -3,10 +3,9 @@
 
 #include <string>
 
-#include "event_effect_list.h"
 #include "i_event.h"
-#include "stat_modifier_list.h"
 #include "util/common.h"
+#include "volatile_attribute.h"
 
 namespace mengde {
 namespace core {
@@ -36,8 +35,7 @@ class Equipment : public IEvent {
  private:
   string id_;
   Type type_;
-  StatModifierList modifier_list_;
-  EventEffectList effect_list_;
+  VolatileAttribute volatile_attribute_;
 };
 
 }  // namespace core
