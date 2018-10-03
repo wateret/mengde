@@ -3,6 +3,7 @@
 #include "core/i_unit_base.h"
 #include "equipment_set_view.h"
 #include "unit_over_view.h"
+#include "unit_status_view.h"
 
 namespace mengde {
 namespace gui {
@@ -14,9 +15,12 @@ UnitView::UnitView(const Rect& frame) : TabView(frame), unit_(NULL) {
   Rect subframe({0, 28}, size);
   unit_over_view_ = new UnitOverView(subframe);
   equipment_set_view_ = new EquipmentSetView(subframe);
+  unit_status_view_ = new UnitStatusView(subframe);
+
   // TODO Hardcoded tab button name
   AddTab("Stat", unit_over_view_);
   AddTab("Equip", equipment_set_view_);
+  AddTab("Status", unit_status_view_);
   //  SetViewIndex(1);
 }
 
