@@ -3,8 +3,6 @@ project(core)
 file(GLOB SOURCES *.cc)
 file(GLOB HEADERS *.h)
 
-include_directories(.)
-
 add_library(core SHARED ${SOURCES} ${HEADERS})
 
 target_link_libraries(core lua util)
