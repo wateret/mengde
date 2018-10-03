@@ -175,6 +175,7 @@ bool Stage::EndForceTurn() {
 
   ForEachUnit([this](Unit* u) {
     if (this->IsCurrentTurn(u)) {
+      u->NextTurn();
       commander_->Push(u->RaiseEvent(event::GeneralEvent::kTurnBegin));
     }
   });

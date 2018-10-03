@@ -66,6 +66,11 @@ void Unit::UpdateStat() {
   }
 }
 
+void Unit::NextTurn() {
+  modifier_list_.NextTurn();
+  effect_list_.NextTurn();
+}
+
 void Unit::AddStatModifier(StatModifier* sm) {
   modifier_list_.AddModifier(sm);
   UpdateStat();
