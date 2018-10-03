@@ -18,6 +18,7 @@ namespace app {
 
 class UnitOverView;
 class EquipmentSetView;
+class UnitStatusView;
 
 class UnitView : public TabView {
  public:
@@ -30,6 +31,7 @@ class UnitView : public TabView {
   const core::IUnitBase* unit_;
   UnitOverView* unit_over_view_;          // tab 0
   EquipmentSetView* equipment_set_view_;  // tab 1
+  UnitStatusView* unit_status_view_;      // tab 2
 };
 
 }  // namespace app
