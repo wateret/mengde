@@ -78,6 +78,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   void Promote(const UnitClassManager* ucm);
   void EndAction();
   void ResetAction();
+  void NextTurn();
 
  private:
   UId uid_;
