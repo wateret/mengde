@@ -7,8 +7,8 @@
 #include "deployer.h"
 #include "event_effect.h"
 #include "formulae.h"
-#include "lua/ref.h"
 #include "lua_callbacks.h"
+#include "luab/ref.h"
 #include "magic.h"
 #include "stage_unit_manager.h"
 #include "user_interface.h"
@@ -47,8 +47,8 @@ Stage::~Stage() {
   // NOTE rc_ and assets_ are not deleted here
 }
 
-lua::Lua* Stage::CreateLua(const Path& stage_script_path) {
-  lua::Lua* lua = new lua::Lua();
+luab::Lua* Stage::CreateLua(const Path& stage_script_path) {
+  luab::Lua* lua = new luab::Lua();
 
 #define GAME_PREFIX "Game_"
 
@@ -107,7 +107,7 @@ Deployer* Stage::CreateDeployer() {
   ASSERT(lua_ != nullptr);
 
   vector<DeployInfoUnselectable> unselectable_info_list;
-  lua_->ForEachTableEntry("gstage.deploy.unselectables", [=, &unselectable_info_list](lua::Lua* l, const string&) {
+  lua_->ForEachTableEntry("gstage.deploy.unselectables", [=, &unselectable_info_list](luab::Lua* l, const string&) {
     vector<int> pos_vec = l->Get<vector<int>>("position");
     string hero_id = l->Get<string>("hero");
     Vec2D position(pos_vec[0], pos_vec[1]);
@@ -116,7 +116,7 @@ Deployer* Stage::CreateDeployer() {
   });
   uint32_t num_required = lua_->Get<uint32_t>("gstage.deploy.num_required_selectables");
   vector<DeployInfoSelectable> selectable_info_list;
-  lua_->ForEachTableEntry("gstage.deploy.selectables", [=, &selectable_info_list](lua::Lua* l, const string&) mutable {
+  lua_->ForEachTableEntry("gstage.deploy.selectables", [=, &selectable_info_list](luab::Lua* l, const string&) mutable {
     vector<int> pos_vec = l->Get<vector<int>>("position");
     Vec2D position(pos_vec[0], pos_vec[1]);
     selectable_info_list.push_back({position});
@@ -309,17 +309,17 @@ void Stage::ObtainEquipment(const string& id, uint32_t amount) {
   assets_->AddEquipment(eq, amount);
 }
 
-void Stage::SetOnDeploy(const lua::Ref& ref) { lua_callbacks_->on_deploy(ref); }
+void Stage::SetOnDeploy(const luab::Ref& ref) { lua_callbacks_->on_deploy(ref); }
 
-void Stage::SetOnBegin(const lua::Ref& ref) { lua_callbacks_->on_begin(ref); }
+void Stage::SetOnBegin(const luab::Ref& ref) { lua_callbacks_->on_begin(ref); }
 
-void Stage::SetOnVictory(const lua::Ref& ref) { lua_callbacks_->on_victory(ref); }
+void Stage::SetOnVictory(const luab::Ref& ref) { lua_callbacks_->on_victory(ref); }
 
-void Stage::SetOnDefeat(const lua::Ref& ref) { lua_callbacks_->on_defeat(ref); }
+void Stage::SetOnDefeat(const luab::Ref& ref) { lua_callbacks_->on_defeat(ref); }
 
-void Stage::SetEndCondition(const lua::Ref& ref) { lua_callbacks_->end_condition(ref); }
+void Stage::SetEndCondition(const luab::Ref& ref) { lua_callbacks_->end_condition(ref); }
 
-uint32_t Stage::RegisterEvent(const lua::Ref& condition, const lua::Ref& handler) {
+uint32_t Stage::RegisterEvent(const luab::Ref& condition, const luab::Ref& handler) {
   return lua_callbacks_->RegisterEvent(condition, handler);
 }
 

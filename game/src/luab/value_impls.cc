@@ -1,6 +1,6 @@
 #include "value_impls.h"
 
-namespace lua {
+namespace luab {
 
 template <typename T>
 ValueImpls<T>::ValueImpls(const T& value) : value_(value) {}
@@ -17,4 +17,4 @@ template class ValueImpls<std::string>;
 template class ValueImpls<Table>;
 template class ValueImpls<void*>;
 
-}  // namespace lua
+}  // namespace luab

@@ -8,7 +8,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace lua {
+namespace luab {
 
 //
 // Value is a wrapper of ValueImpl to have data as shared_ptr inside
@@ -53,6 +53,6 @@ class Value {
   std::shared_ptr<ValueImpl> value_;
 };
 
-}  // namespace lua
+}  // namespace luab
 
 #endif  // LUA_VALUE_H_

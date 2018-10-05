@@ -17,7 +17,7 @@ extern "C" {
 #include "lualib.h"
 }
 
-namespace lua {
+namespace luab {
 
 class LuaException : public std::exception {
  public:
@@ -226,22 +226,22 @@ class Lua {
 
   void PushToStack(const Table& table) {
     lua_newtable(L);
-    table.ForEachNonArray([this](const std::string& key, const lua::Value& val) {
+    table.ForEachNonArray([this](const std::string& key, const luab::Value& val) {
       lua_pushstring(L, key.c_str());
       switch (val.type()) {
-        case lua::Value::Type::kInt32:
+        case luab::Value::Type::kInt32:
           lua_pushnumber(L, val.Get<int32_t>());
           break;
-        case lua::Value::Type::kDouble:
+        case luab::Value::Type::kDouble:
           lua_pushnumber(L, val.Get<double>());
           break;
-        case lua::Value::Type::kString:
+        case luab::Value::Type::kString:
           lua_pushstring(L, val.Get<std::string>().c_str());
           break;
-        case lua::Value::Type::kTable:
+        case luab::Value::Type::kTable:
           PushToStack(val.Get<Table>());
           break;
-        case lua::Value::Type::kUserdata:
+        case luab::Value::Type::kUserdata:
           lua_pushlightuserdata(L, val.Get<void*>());
           break;
         default:
@@ -411,7 +411,7 @@ class Lua {
     }
   }
 
-  // lua::Table type
+  // luab::Table type
 
   template <typename T>
   typename std::enable_if<is_table<T>::value, T>::type GetDefault() {
@@ -479,7 +479,7 @@ class Lua {
   }
   */
 
-  // lua::Ref type
+  // luab::Ref type
 
   template <typename T>
   typename std::enable_if<is_ref<T>::value, T>::type GetTop() {
@@ -526,6 +526,6 @@ class Lua {
 template <>
 void Lua::CallImpl<void>(unsigned argc);
 
-}  // namespace lua
+}  // namespace luab
 
 #endif  // LUA_LUA_H_

@@ -6,7 +6,7 @@ extern "C" {
 #include "lauxlib.h"
 }
 
-namespace lua {
+namespace luab {
 
 class Ref {
  public:
@@ -21,6 +21,6 @@ class Ref {
   int index_;
 };
 
-}  // namespace lua
+}  // namespace luab
 
 #endif  // LUA_REF_H_

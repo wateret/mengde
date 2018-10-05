@@ -3,7 +3,7 @@
 
 #include <memory>
 
-namespace lua {
+namespace luab {
 
 //
 // ValueImpl is a generic type for lua values
@@ -22,6 +22,6 @@ class ValueImpl {
   T Get() const;
 };
 
-}  // namespace lua
+}  // namespace luab
 
 #endif  // LUA_VALUE_IMPL_H_

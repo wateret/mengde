@@ -6,7 +6,7 @@
 #include "exceptions.h"
 #include "hero.h"
 #include "hero_class.h"
-#include "lua/lua.h"
+#include "luab/lua.h"
 #include "magic.h"
 #include "stat.h"
 #include "stat_modifier.h"
@@ -24,7 +24,7 @@ EventEffectLoader::EventEffectLoader() {
   ocee_map_.insert({"on_normal_attacked", event::OnCmdEvent::kNormalAttacked});
 }
 
-GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table& table) const {
+GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const luab::Table& table) const {
   auto str_effect = table.Get<std::string>("effect");
   auto str_event = table.Get<std::string>("event");
 
@@ -44,7 +44,7 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const lua::Table
   throw DataFormatException("Such GeneralEventEffect '" + str_effect + "' does not exist");
 }
 
-OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const lua::Table& table) const {
+OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const luab::Table& table) const {
   auto str_effect = table.Get<std::string>("effect");
   auto str_event = table.Get<std::string>("event");
 
@@ -81,7 +81,7 @@ const EventEffectLoader& EventEffectLoader::instance() {
 
 ConfigLoader::ConfigLoader(const Path& filename) : lua_config_(nullptr), rc_() {
   Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
-  lua_config_ = new ::lua::Lua();
+  lua_config_ = new ::luab::Lua();
 
   try {
     lua_config_->RunFile(path.ToString());
@@ -90,13 +90,13 @@ ConfigLoader::ConfigLoader(const Path& filename) : lua_config_(nullptr), rc_() {
     ParseEquipments();
     ParseHeroTemplates();
     ParseStages();
-  } catch (const lua::UndeclaredVariableException& e) {
+  } catch (const luab::UndeclaredVariableException& e) {
     LOG_ERROR("%s", e.what());
     throw ConfigLoadException(e.what());
-  } catch (const lua::WrongTypeException& e) {
+  } catch (const luab::WrongTypeException& e) {
     LOG_ERROR("%s", e.what());
     throw ConfigLoadException(e.what());
-  } catch (const lua::ScriptRuntimeException& e) {
+  } catch (const luab::ScriptRuntimeException& e) {
     LOG_ERROR("%s", e.what());
     throw ConfigLoadException(e.what());
   } catch (const DataFormatException& e) {
@@ -126,12 +126,12 @@ uint16_t ConfigLoader::StatStrToIdx(const string& s) {
 void ConfigLoader::ParseUnitClassesAndTerrains() {
   rc_.unit_class_manager = new UnitClassManager();
   int class_idx = 0;
-  lua_config_->ForEachTableEntry("gconfig.unit_classes", [&](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.unit_classes", [&](luab::Lua* l, const string&) {
     string id = l->Get<string>("id");
     string grades = l->Get<string>("stat_grades");
     string range_s = l->Get<string>("attack_range");
     int move = l->Get<int>("move");
-    auto promotion_info_table = l->GetOpt<lua::Table>("promotion");
+    auto promotion_info_table = l->GetOpt<luab::Table>("promotion");
     vector<int> hp = l->Get<vector<int>>("hp");
     vector<int> mp = l->Get<vector<int>>("mp");
 
@@ -163,7 +163,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   rc_.terrain_manager = new TerrainManager();
   vector<string> ids;
   vector<char> cmaps;
-  lua_config_->ForEachTableEntry("gconfig.terrains", [=, &ids, &cmaps](lua::Lua* l, const string&) mutable {
+  lua_config_->ForEachTableEntry("gconfig.terrains", [=, &ids, &cmaps](luab::Lua* l, const string&) mutable {
     string id = l->Get<string>("id");
     char cmap = l->Get<string>("char")[0];
     ids.push_back(id);
@@ -195,7 +195,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
 void ConfigLoader::ParseMagics() {
   rc_.magic_manager = new MagicManager();
-  lua_config_->ForEachTableEntry("gconfig.magics", [this](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.magics", [this](luab::Lua* l, const string&) {
     string id = l->Get<string>("id");
     string range_s = l->Get<string>("range");
     string target_s = l->Get<string>("target");
@@ -234,7 +234,7 @@ void ConfigLoader::ParseMagics() {
         break;
     };
 
-    l->ForEachTableEntry("learnat", [=, &magic](lua::Lua* l, const string&) {
+    l->ForEachTableEntry("learnat", [=, &magic](luab::Lua* l, const string&) {
       string uclass = l->Get<string>("class");
       uint16_t level = (uint16_t)l->Get<int>("level");
       magic->AddLearnInfo(rc_.unit_class_manager->Get(uclass)->index(), level);  // FIXME
@@ -245,7 +245,7 @@ void ConfigLoader::ParseMagics() {
 
 void ConfigLoader::ParseEquipments() {
   rc_.equipment_manager = new EquipmentManager();
-  lua_config_->ForEachTableEntry("gconfig.equipments", [this](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.equipments", [this](luab::Lua* l, const string&) {
     string id = l->Get<string>("id");
     string type_s = l->Get<string>("type");
     string equipable = l->Get<string>("equipable");
@@ -259,8 +259,8 @@ void ConfigLoader::ParseEquipments() {
 
     Equipment* equipment = new Equipment(id, type);
 
-    l->ForEachTableEntry("effects", [=, &equipment](lua::Lua* l, const string&) {
-      auto table = l->Get<lua::Table>();
+    l->ForEachTableEntry("effects", [=, &equipment](luab::Lua* l, const string&) {
+      auto table = l->Get<luab::Table>();
       auto event = table.Get<std::string>("event");
       auto ee_loader = EventEffectLoader::instance();
       if (ee_loader.IsGeneralEventEffect(event)) {
@@ -271,7 +271,7 @@ void ConfigLoader::ParseEquipments() {
         throw DataFormatException("Such event '" + event + "' does not exist.");
       }
     });
-    l->ForEachTableEntry("modifiers", [=, &equipment](lua::Lua* l, const string&) {
+    l->ForEachTableEntry("modifiers", [=, &equipment](luab::Lua* l, const string&) {
       string stat_s = l->Get<string>("stat");
       auto addend = l->GetOpt<int16_t>("addend");
       auto multiplier = l->GetOpt<int16_t>("multiplier");
@@ -284,7 +284,7 @@ void ConfigLoader::ParseEquipments() {
 
 void ConfigLoader::ParseHeroTemplates() {
   rc_.hero_tpl_manager = new HeroTemplateManager();
-  lua_config_->ForEachTableEntry("gconfig.heroes", [this](lua::Lua* l, const string&) {
+  lua_config_->ForEachTableEntry("gconfig.heroes", [this](luab::Lua* l, const string&) {
     string id = l->Get<string>("id");
     string uclass = l->Get<string>("class");
     vector<int> statr = l->Get<vector<int>>("stat");

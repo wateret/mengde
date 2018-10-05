@@ -5,7 +5,7 @@
 #include "cmd_visitor.h"
 #include "core/path_tree.h"
 #include "formulae.h"
-#include "lua/lua.h"
+#include "luab/lua.h"
 #include "magic.h"
 #include "stage.h"
 #include "user_interface.h"

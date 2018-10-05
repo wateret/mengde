@@ -7,7 +7,7 @@
 
 #include "value.h"
 
-namespace lua {
+namespace luab {
 
 class TableImpl {
  public:
@@ -42,7 +42,7 @@ class TableImpl {
     return found->second.Get<T>();
   }
 
-  void ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const;
+  void ForEachNonArray(const std::function<void(const std::string&, const luab::Value&)>& fn) const;
 
   bool empty() const { return values_.empty(); }
 
@@ -77,7 +77,7 @@ class Table {
     return table_->Get<T>(key, default_value);
   }
 
-  void ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const;
+  void ForEachNonArray(const std::function<void(const std::string&, const luab::Value&)>& fn) const;
 
  public:
   bool empty() const;
@@ -90,6 +90,6 @@ class Table {
   std::shared_ptr<TableImpl> table_;
 };
 
-}  // namespace lua
+}  // namespace luab
 
 #endif  // LUA_TABLE_H_

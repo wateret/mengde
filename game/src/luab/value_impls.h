@@ -4,7 +4,7 @@
 #include "table.h"
 #include "value_impl.h"
 
-namespace lua {
+namespace luab {
 
 template <typename T>
 class ValueImpls : public ValueImpl {
@@ -29,6 +29,6 @@ class ValueImpls : public ValueImpl {
 template <>
 ValueImpl* ValueImpls<Table>::New();
 
-}  // namespace lua
+}  // namespace luab
 
 #endif  // LUA_VALUE_IMPLS_
