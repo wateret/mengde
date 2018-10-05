@@ -7,10 +7,10 @@
 
 class Path;
 
-namespace lua {
+namespace luab {
 class Lua;
 class Table;
-}  // namespace lua
+}  // namespace luab
 
 namespace mengde {
 namespace core {
@@ -25,8 +25,8 @@ class EventEffectLoader {
  public:
   ~EventEffectLoader() = default;
 
-  GeneralEventEffect* CreateGeneralEventEffect(const lua::Table&) const;
-  OnCmdEventEffect* CreateOnCmdEventEffect(const lua::Table&) const;
+  GeneralEventEffect* CreateGeneralEventEffect(const luab::Table&) const;
+  OnCmdEventEffect* CreateOnCmdEventEffect(const luab::Table&) const;
   bool IsGeneralEventEffect(const std::string& key) const;
   bool IsOnCmdEventEffect(const std::string& key) const;
 
@@ -54,7 +54,7 @@ class ConfigLoader {
   uint16_t StatStrToIdx(const string&);
 
  private:
-  ::lua::Lua* lua_config_;
+  ::luab::Lua* lua_config_;
   ResourceManagers rc_;
   vector<string> stages_;
 };

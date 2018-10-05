@@ -12,7 +12,7 @@ std::string string_replace_all(const std::string& str, const std::string& from, 
 
 }  // namespace
 
-namespace lua {
+namespace luab {
 
 Lua::Lua() : L(nullptr), destroy_(true) {
   L = luaL_newstate();
@@ -202,4 +202,4 @@ void Lua::NewGlobalTable(const std::string& name) {
   lua_setglobal(L, name.c_str());
 }
 
-}  // namespace lua
+}  // namespace luab

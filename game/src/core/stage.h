@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "i_deploy_helper.h"
-#include "lua/lua.h"
 #include "lua_callbacks.h"
+#include "luab/lua.h"
 #include "map.h"
 #include "resource_manager.h"
 #include "turn.h"
@@ -16,10 +16,10 @@
 
 class Path;
 
-namespace lua {
+namespace luab {
 class Lua;
 class Ref;
-}  // namespace lua
+}  // namespace luab
 
 namespace mengde {
 namespace core {
@@ -99,12 +99,12 @@ class Stage : public IDeployHelper {
   uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
   //  bool UnitPutWeaponOn(uint32_t, const string&);
-  void SetOnDeploy(const lua::Ref& ref);
-  void SetOnBegin(const lua::Ref& ref);
-  void SetOnVictory(const lua::Ref& ref);
-  void SetOnDefeat(const lua::Ref& ref);
-  void SetEndCondition(const lua::Ref& ref);
-  uint32_t RegisterEvent(const lua::Ref& condition, const lua::Ref& handler);
+  void SetOnDeploy(const luab::Ref& ref);
+  void SetOnBegin(const luab::Ref& ref);
+  void SetOnVictory(const luab::Ref& ref);
+  void SetOnDefeat(const luab::Ref& ref);
+  void SetEndCondition(const luab::Ref& ref);
+  uint32_t RegisterEvent(const luab::Ref& condition, const luab::Ref& handler);
   void UnregisterEvent(uint32_t id);
   void RunEvents();
 
@@ -113,13 +113,13 @@ class Stage : public IDeployHelper {
   PathTree* FindMovablePath(Unit*);
 
  public:
-  lua::Lua* lua_script() { return lua_.get(); }
-  const lua::LuaClass& lua_this() { return lua_this_; }
+  luab::Lua* lua_script() { return lua_.get(); }
+  const luab::LuaClass& lua_this() { return lua_this_; }
   UserInterface* user_interface() { return user_interface_.get(); }
   const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }
 
  private:
-  lua::Lua* CreateLua(const Path&);
+  luab::Lua* CreateLua(const Path&);
   Map* CreateMap();
   Deployer* CreateDeployer();
   uint16_t GetTurnLimit();
@@ -131,8 +131,8 @@ class Stage : public IDeployHelper {
  private:
   ResourceManagers rc_;
   std::unique_ptr<Assets> assets_;
-  lua::LuaClass lua_this_;  // LuaClass of this object
-  std::unique_ptr<lua::Lua> lua_;
+  luab::LuaClass lua_this_;  // LuaClass of this object
+  std::unique_ptr<luab::Lua> lua_;
   std::unique_ptr<LuaCallbacks> lua_callbacks_;
   std::unique_ptr<UserInterface> user_interface_;
   std::unique_ptr<Commander> commander_;

@@ -13,7 +13,7 @@ file(GLOB SOURCES src/main.cc)
 
 include_directories(src)
 
-add_subdirectory(src/lua)
+add_subdirectory(src/luab)
 add_subdirectory(src/util)
 add_subdirectory(src/core)
 add_subdirectory(src/gui)

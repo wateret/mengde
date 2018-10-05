@@ -1,6 +1,6 @@
 #include "table.h"
 
-namespace lua {
+namespace luab {
 
 /*
 TableImpl::TableImpl(const TableImpl& table) {
@@ -10,7 +10,7 @@ TableImpl::TableImpl(const TableImpl& table) {
 }
 */
 
-void TableImpl::ForEachNonArray(const std::function<void(const std::string& key, const lua::Value& val)>& fn) const {
+void TableImpl::ForEachNonArray(const std::function<void(const std::string& key, const luab::Value& val)>& fn) const {
   for (auto e : values_) {
     fn(e.first, e.second);
   }
@@ -46,10 +46,10 @@ void TableImpl::Dump() {
 
 Table::Table() : table_(std::make_shared<TableImpl>()) {}
 
-void Table::ForEachNonArray(const std::function<void(const std::string&, const lua::Value&)>& fn) const {
+void Table::ForEachNonArray(const std::function<void(const std::string&, const luab::Value&)>& fn) const {
   table_->ForEachNonArray(fn);
 }
 
 bool Table::empty() const { return table_->empty(); }
 
-}  // namespace lua
+}  // namespace luab

@@ -2,7 +2,7 @@
 
 #include "value_impls.h"
 
-namespace lua {
+namespace luab {
 
 // Generate a new ValueImpl from the argument value
 // Depend on the type, the underlying value is copied or can be just poniter is copied.
@@ -31,4 +31,4 @@ template std::string ValueImpl::Get<std::string>() const;
 template Table ValueImpl::Get<Table>() const;
 template void* ValueImpl::Get<void*>() const;
 
-}  // namespace lua
+}  // namespace luab

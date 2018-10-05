@@ -5,7 +5,7 @@
 #include "table.h"
 #include "value_impls.h"
 
-namespace lua {
+namespace luab {
 
 //
 // Value
@@ -66,4 +66,4 @@ template Table Value::Get<Table>() const;
 
 template Userdata Value::Get<Userdata>() const;
 
-}  // namespace lua
+}  // namespace luab

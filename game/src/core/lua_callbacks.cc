@@ -6,14 +6,14 @@
 namespace mengde {
 namespace core {
 
-void LuaCallbacks::SetRef(lua::Ref& ref, const lua::Ref& new_ref) {
+void LuaCallbacks::SetRef(luab::Ref& ref, const luab::Ref& new_ref) {
   if (!ref.nil()) {
     lua_->UnRef(ref.value());
   }
   ref = new_ref;
 }
 
-uint32_t LuaCallbacks::RegisterEvent(const lua::Ref& condition, const lua::Ref& handler) {
+uint32_t LuaCallbacks::RegisterEvent(const luab::Ref& condition, const luab::Ref& handler) {
   auto id = next_event_id_++;
   assert(events_.find(id) == events_.end());
   events_.insert({id, {condition, handler}});
@@ -29,7 +29,7 @@ void LuaCallbacks::UnregisterEvent(uint32_t id) {
   }
 }
 
-void LuaCallbacks::RunEvents(const lua::LuaClass& stage) {
+void LuaCallbacks::RunEvents(const luab::LuaClass& stage) {
   for (const auto& e : events_) {
     auto id = e.first;
     auto cb = e.second;
