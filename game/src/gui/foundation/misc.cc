@@ -11,6 +11,9 @@ void Misc::Init() {
   if (SDL_Init(SDL_INIT_VIDEO) != 0) {
     throw "SDL_Init Error";
   }
+
+  // metal renderer has priority
+  SDL_SetHintWithPriority(SDL_HINT_RENDER_DRIVER, "metal", SDL_HINT_OVERRIDE);
 }
 
 void Misc::Quit() { SDL_Quit(); }

@@ -13,7 +13,15 @@ Renderer::Renderer(Window* window) {
 #else
                                SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 #endif
+
   if (handle_ == NULL) throw Misc::GetErrorMessage() + " - SDL_CreateRenderer";
+
+  {
+    SDL_RendererInfo renderer_info;
+    SDL_GetRendererInfo(handle_, &renderer_info);
+    LOG_INFO("Renderer: %s", renderer_info.name);
+  }
+
   SDL_SetRenderDrawColor(handle_, 0xFF, 0xFF, 0xFF, 0xFF);
   SDL_SetRenderDrawBlendMode(handle_, SDL_BLENDMODE_BLEND);
 
