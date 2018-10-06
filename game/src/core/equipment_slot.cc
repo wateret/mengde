@@ -22,7 +22,7 @@ Attribute EquipmentSlot::CalcAddends() const {
   if (IsEquipmentOn()) {
     return equipment_->CalcAddends();
   } else {
-    return {0, 0, 0, 0, 0};
+    return Attribute{};
   }
 }
 
@@ -30,7 +30,7 @@ Attribute EquipmentSlot::CalcMultipliers() const {
   if (IsEquipmentOn()) {
     return equipment_->CalcMultipliers();
   } else {
-    return {0, 0, 0, 0, 0};
+    return Attribute{};
   }
 }
 

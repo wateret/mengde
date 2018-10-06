@@ -7,17 +7,15 @@ namespace mengde {
 namespace core {
 
 struct Attribute {
-  enum { kStatIdAtk, kStatIdDef, kStatIdDex, kStatIdItl, kStatIdMor };
-
   int atk;
   int def;
   int dex;
   int itl;
   int mor;
 
-  Attribute() : atk(0), def(0), dex(0), itl(0), mor(0) {}
+  Attribute() : Attribute{0, 0, 0, 0, 0} {}
 
-  Attribute(int atk, int def, int dex, int itl, int mor) : atk(atk), def(def), dex(dex), itl(itl), mor(mor) {}
+  Attribute(int atk, int def, int dex, int itl, int mor) : atk{atk}, def{def}, dex{dex}, itl{itl}, mor{mor} {}
 
   void ApplyModifier(const Attribute& addend, const Attribute& multiplier);
 
