@@ -32,7 +32,8 @@ gstage = {
             { position = {9, 2}, hero = "CaoCao" },
             { position = {9, 1}, hero = "ZhangLiao" },
             { position = {9, 9}, hero = "XunYu" },
-            { position = {5, 3}, hero = "DianWei" }
+            { position = {5, 3}, hero = "DianWei" },
+            { position = {9, 3}, hero = "ManChong" }
         },
         num_required_selectables = 0,
         selectables = {

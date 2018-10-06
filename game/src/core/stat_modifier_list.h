@@ -1,6 +1,7 @@
 #ifndef MENGDE_CORE_STAT_MODIFIER_LIST_H_
 #define MENGDE_CORE_STAT_MODIFIER_LIST_H_
 
+#include <functional>
 #include <vector>
 
 #include "stat.h"
@@ -14,13 +15,14 @@ class StatModifierList {
  public:
   StatModifierList();
   ~StatModifierList();
-  void AddModifier(StatModifier*);
+  void AddModifier(StatModifier *);
   void NextTurn();
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
+  void iterate(const std::function<void(const StatModifier &)> &fn) const;
 
  private:
-  std::vector<StatModifier*> elements_;
+  std::vector<StatModifier *> elements_;
 };
 
 }  // namespace core

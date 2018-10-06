@@ -6,7 +6,7 @@
 
 namespace mengde {
 namespace core {
-class IUnitBase;
+class Unit;
 }
 }  // namespace mengde
 
@@ -19,13 +19,13 @@ class UnitStatusView : public uifw::VerticalListView {
   UnitStatusView(const Rect& frame);
 
  public:
-  void SetUnit(const core::IUnitBase* unit);
+  void SetUnit(const core::Unit* unit);
 
  private:
   void OnUnitUpdate();
 
  private:
-  const core::IUnitBase* unit_;
+  const core::Unit* unit_;
 };
 
 }  // namespace app

@@ -61,5 +61,11 @@ Attribute StatModifierList::CalcMultipliers() const {
   return calc_mods;
 }
 
+void StatModifierList::iterate(const std::function<void(const StatModifier&)>& fn) const {
+  for (auto e : elements_) {
+    fn(*e);
+  }
+}
+
 }  // namespace core
 }  // namespace mengde

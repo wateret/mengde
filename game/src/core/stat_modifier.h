@@ -26,6 +26,9 @@ class StatModifier {
   uint16_t turns_left() const { return turns_left_; }
   void NextTurn();
 
+ public:
+  string ToString() const;
+
  private:
   std::string id_;
   uint16_t stat_id_;

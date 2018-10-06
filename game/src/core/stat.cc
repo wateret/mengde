@@ -5,6 +5,8 @@
 namespace mengde {
 namespace core {
 
+const char* Attribute::kToString[] = {"atk", "def", "dex", "itl", "mor", nullptr};
+
 void Attribute::ApplyModifier(const Attribute& addend, const Attribute& multiplier) {
   ASSERT(multiplier > -100);
 
