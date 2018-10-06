@@ -1,6 +1,7 @@
 #include "unit_view.h"
 
 #include "core/i_unit_base.h"
+#include "core/unit.h"
 #include "equipment_set_view.h"
 #include "unit_over_view.h"
 #include "unit_status_view.h"
@@ -29,6 +30,12 @@ void UnitView::SetUnit(const core::IUnitBase* unit) {
     unit_ = unit;
     unit_over_view_->SetUnit(unit);
     equipment_set_view_->SetEquipmentSet(unit->GetEquipmentSet());
+
+    // FIXME Fix dynamic_cast workaround
+    auto unit = dynamic_cast<const core::Unit*>(unit_);
+    if (unit != nullptr) {
+      unit_status_view_->SetUnit(unit);
+    }
   }
 }
 

@@ -7,6 +7,8 @@ namespace mengde {
 namespace core {
 
 struct Attribute {
+  static const char* kToString[];
+
   int atk;
   int def;
   int dex;

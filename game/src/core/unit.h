@@ -57,6 +57,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   Direction direction() const { return direction_; }
   int class_index() const;
   Force force() const { return force_; }
+  const VolatileAttribute& volatile_attribute() const { return volatile_attribute_; }
 
  public:
   void AddStatModifier(StatModifier*);

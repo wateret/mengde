@@ -1,5 +1,6 @@
 #include "stat_modifier.h"
 
+#include "stat.h"
 #include "util/common.h"
 
 namespace mengde {
@@ -13,6 +14,22 @@ void StatModifier::NextTurn() {
   if (turns_left_ != kTurnInfinity) {
     turns_left_--;
   }
+}
+
+string StatModifier::ToString() const {
+  string ret;
+
+  //  ret += "[" + id_ + "]";
+  //  ret += " ";
+  ret += Attribute::kToString[stat_id_];
+  ret += " ";
+  ret += std::to_string(turns_left_) + "T";
+  ret += "/";
+  ret += std::to_string(addend()) + "+";
+  ret += "/";
+  ret += std::to_string(multiplier()) + "%";
+
+  return ret;
 }
 
 }  // namespace core
