@@ -46,7 +46,7 @@ void StatModifierList::NextTurn() {
 }
 
 Attribute StatModifierList::CalcAddends() const {
-  Attribute calc_mods = {0, 0, 0, 0, 0};
+  Attribute calc_mods;
   for (auto e : elements_) {
     calc_mods[e->stat_id()] += e->addend();
   }
@@ -54,7 +54,7 @@ Attribute StatModifierList::CalcAddends() const {
 }
 
 Attribute StatModifierList::CalcMultipliers() const {
-  Attribute calc_mods = {0, 0, 0, 0, 0};
+  Attribute calc_mods;
   for (auto e : elements_) {
     calc_mods[e->stat_id()] += e->multiplier();
   }
