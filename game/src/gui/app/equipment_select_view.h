@@ -22,7 +22,7 @@ class EquipmentSetView;
 
 class ItemIconView : public CallbackView {
  public:
-  ItemIconView(const Rect&, const string& equipment_id, uint32_t amount);
+  ItemIconView(const Rect&, const core::EquipmentWithAmount&);
 };
 
 class EquipmentSelectView : public CompositeView {

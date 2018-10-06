@@ -19,7 +19,9 @@ namespace app {
 // EquipmentIconView
 //
 
-ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32_t amount) : CallbackView(frame) {
+ItemIconView::ItemIconView(const Rect& frame, const core::EquipmentWithAmount& equipment) : CallbackView(frame) {
+  const string& equipment_id = equipment.object->GetId();
+  uint32_t amount = equipment.amount;
   bg_color(COLOR("transparent"));
   padding(8);
 
@@ -35,9 +37,11 @@ ItemIconView::ItemIconView(const Rect& frame, const string& equipment_id, uint32
   SetMouseMotionHandler([this](const foundation::MouseMotionEvent& e) {
     if (e.IsMotionOver()) {
       this->bg_color(COLOR("darkgray"));
+      // TODO : Show Item detail tooltip
     } else {
       ASSERT(e.IsMotionOut());
       this->bg_color(COLOR("transparent"));
+      // TODO : Hide Item detail tooltip
     }
     return true;
   });
@@ -61,8 +65,7 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   auto hero = assets->LookupHero(hero_->id());  // For non-const core::Hero and capture
   auto equipment_set_view = equipment_set_view_;
   for (auto equipment : equipments) {
-    ItemIconView* item_icon_view =
-        new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment.object->GetId(), equipment.amount);
+    ItemIconView* item_icon_view = new ItemIconView(Rect(0, 0, kItemSize, kItemSize), equipment);
     item_icon_view->SetMouseButtonHandler(
         [this, assets, hero, equipment, equipment_set_view](const foundation::MouseButtonEvent& e) {
           if (e.IsLeftButtonUp()) {
