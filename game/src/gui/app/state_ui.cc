@@ -129,7 +129,7 @@ bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) 
     if (mouse_coords.y < kUpScroll) SetScrollUp();
     if (mouse_coords.y > kDownScroll) SetScrollDown();
   }
-  return false;
+  return true;
 }
 
 void StateUIOperable::ClearScrolls() { scroll_left_ = scroll_right_ = scroll_up_ = scroll_down_ = false; }
