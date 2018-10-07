@@ -24,9 +24,11 @@ Vec2D View::GetFrameCoords() const { return {frame_.x(), frame_.y()}; }
 Vec2D View::GetActualFrameCoords() const { return {frame_.x() + padding_, frame_.y() + padding_}; }
 
 void View::visible(bool b) {
+  if (visible_ == b) return;
+
   visible_ = b;
 
-  if (visible_) {
+  if (!visible_) {
     // To reset if there was hovered objects
     OnMouseMotionEvent({foundation::MouseMotionEvent::Type::kOut});
   }
