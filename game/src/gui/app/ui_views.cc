@@ -23,29 +23,28 @@ namespace app {
 
 UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view, const Path& base_path)
     : CompositeView(rect) {
-  core::Stage* game = scenario->current_stage();
+  core::Stage* stage = scenario->current_stage();
 
   {  // Initialize deploy_view_
-    auto assets = game->assets();
+    auto assets = stage->assets();
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
 
-    deploy_view_ = new DeployView(frame, assets, game, game_view, base_path);
+    deploy_view_ = new DeployView(frame, assets, stage, game_view, base_path);
     deploy_view_->visible(true);
     AddChild(deploy_view_);
   }
 
-  // Create UI views
-
-  Rect unit_frame =
-      LayoutHelper::CalcPosition(GetFrameSize(), {220, 320}, LayoutHelper::kAlignRgtTop, LayoutHelper::kDefaultSpace);
-  unit_view_ = new UnitView(unit_frame);
-  //  unit_view_->visible(false);
-  AddChild(unit_view_);
+  {  // Initialize unit_view_
+    Rect unit_frame =
+        LayoutHelper::CalcPosition(GetFrameSize(), {220, 320}, LayoutHelper::kAlignRgtTop, LayoutHelper::kDefaultSpace);
+    unit_view_ = new UnitView(unit_frame);
+    AddChild(unit_view_);
+  }
 
   {  // Initialize control_view_
     Rect control_frame =
         LayoutHelper::CalcPosition(GetFrameSize(), {300, 136}, LayoutHelper::kAlignRgtBot, LayoutHelper::kDefaultSpace);
-    control_view_ = new ControlView(control_frame, game, game_view);
+    control_view_ = new ControlView(control_frame, stage, game_view);
     AddChild(control_view_);
   }
 
@@ -58,7 +57,7 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
 
   {  // Initialize magic_list_view_;
     Rect magic_list_frame = {8, 8, 170, 200};
-    magic_list_view_ = new MagicListView(magic_list_frame, game, game->user_interface(), game_view);
+    magic_list_view_ = new MagicListView(magic_list_frame, stage, stage->user_interface(), game_view);
     magic_list_view_->visible(false);
     AddChild(magic_list_view_);
   }
@@ -97,7 +96,7 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
 #if 0
   {  // Initialize unit_list_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
-    unit_list_view_ = new UnitListView(frame, game->GetCurrentTurnUnits());
+    unit_list_view_ = new UnitListView(frame, stage->GetCurrentTurnUnits());
     unit_list_view_->visible(false);
     AddChild(unit_list_view_);
   }
@@ -105,7 +104,7 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
 
   {  // Initialize unit_action_view_
     Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {150, 150}, LayoutHelper::kAlignLftTop);
-    unit_action_view_ = new UnitActionView(frame, game->user_interface(), game_view);
+    unit_action_view_ = new UnitActionView(frame, stage->user_interface(), game_view);
     unit_action_view_->visible(false);
     AddChild(unit_action_view_);
   }
