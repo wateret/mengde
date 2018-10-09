@@ -1,7 +1,7 @@
 project(util)
 
-file(GLOB SOURCES *.cc)
-file(GLOB HEADERS *.h)
+file(GLOB_RECURSE SOURCES *.cc)
+file(GLOB_RECURSE HEADERS *.h)
 
 add_library(util SHARED ${SOURCES} ${HEADERS})
 
