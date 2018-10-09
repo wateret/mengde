@@ -36,7 +36,7 @@ void StatModifierList::AddModifier(StatModifier* m) {
 
 void StatModifierList::NextTurn() {
   util::std::VectorEraseIf(elements_, [](StatModifier* m) -> bool {
-    bool remove = (m->turns_left() == 0);
+    bool remove = (m->turn().left() == 0);
     if (remove) delete m;
     return remove;
   });

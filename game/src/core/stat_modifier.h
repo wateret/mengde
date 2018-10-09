@@ -1,8 +1,8 @@
 #ifndef MENGDE_CORE_STAT_MODIFIER_H_
 #define MENGDE_CORE_STAT_MODIFIER_H_
 
-#include <limits>
 #include <string>
+#include "turn_based.h"
 #include "util/common.h"
 
 namespace mengde {
@@ -15,15 +15,12 @@ struct StatMod {
 
 class StatModifier {
  public:
-  static const uint16_t kTurnInfinity = std::numeric_limits<uint16_t>::max();
-
- public:
-  StatModifier(const std::string& id, uint16_t stat_id, StatMod mod, uint16_t turns_left = kTurnInfinity);
+  StatModifier(const std::string& id, uint16_t stat_id, StatMod mod, TurnBased turn = TurnBased{});
   std::string id() const { return id_; }
   uint16_t stat_id() const { return stat_id_; }
   int16_t addend() const { return mod_.addend; }
   uint16_t multiplier() const { return mod_.multiplier; }
-  uint16_t turns_left() const { return turns_left_; }
+  const TurnBased& turn() const { return turn_; }
   void NextTurn();
 
  public:
@@ -32,7 +29,7 @@ class StatModifier {
  private:
   std::string id_;
   uint16_t stat_id_;
-  uint16_t turns_left_;
+  TurnBased turn_;
   StatMod mod_;
 };
 
