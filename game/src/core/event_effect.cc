@@ -10,6 +10,13 @@ namespace core {
 
 EventEffectBase::EventEffectBase(uint16_t turns_left) : turns_left_(turns_left) {}
 
+void EventEffectBase::NextTurn() {
+  ASSERT(turns_left_ > 0);
+  if (turns_left_ != kTurnInfinity) {
+    turns_left_--;
+  }
+}
+
 // class GeneralEventEffect
 
 GeneralEventEffect::GeneralEventEffect(event::GeneralEvent type, uint16_t turns_left)

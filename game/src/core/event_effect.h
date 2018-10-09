@@ -24,7 +24,7 @@ class EventEffectBase {
  public:
   EventEffectBase(uint16_t turns_left);
   virtual ~EventEffectBase() = default;
-  uint16_t GetTurnsLeft() { return turns_left_; }
+  uint16_t GetTurnsLeft() const { return turns_left_; }
   void NextTurn();
 
  private:
