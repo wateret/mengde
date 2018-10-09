@@ -2,6 +2,7 @@
 
 #include "assets.h"
 #include "cmd.h"
+#include "cmd_debug_printer.h"
 #include "commander.h"
 #include "core/path_tree.h"
 #include "deployer.h"
@@ -237,7 +238,12 @@ const Cell* Stage::GetCell(Vec2D c) const { return map_->GetCell(c); }
 void Stage::DoNext() {
   ASSERT(HasNext());
 #ifdef DEBUG
-  commander_->DebugPrint(this);
+  {
+    const auto& cmdq = commander_->queue();
+    CmdDebugPrinter printer{this};
+    cmdq.Accept(printer);
+    LOG_INFO("%s", printer.TakeDumped().c_str());
+  }
 #endif
   commander_->DoNext(this);
 }

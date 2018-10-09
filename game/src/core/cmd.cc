@@ -134,16 +134,6 @@ const Cmd* CmdQueue::GetNextCmdConst() const {
   */
 }
 
-#ifdef DEBUG
-void CmdQueue::DebugPrint(Stage* stage) const {
-  printf("CmdQueue {\n");
-  for (auto&& e : q_) {
-    e->DebugPrint(stage);
-  }
-  printf("}\n");
-}
-#endif
-
 // CmdUnit
 
 CmdUnit::CmdUnit(const UId& unit) : unit_(unit) { ASSERT(unit_); }
@@ -153,14 +143,6 @@ CmdUnit::CmdUnit(const UId& unit) : unit_(unit) { ASSERT(unit_); }
 CmdTwoUnits::CmdTwoUnits(const UId& atk, const UId& def) : atk_(atk), def_(def) {
   ASSERT(atk_);  // def_(second unit) could be none
 }
-
-#ifdef DEBUG
-void CmdTwoUnits::DebugPrint(Stage* stage) const {
-  string atk = (!atk_) ? "N/A" : stage->LookupUnit(atk_)->id();
-  string def = (!def_) ? "N/A" : stage->LookupUnit(def_)->id();
-  printf("%s (atk:%s def:%s)\n", kCmdOpToString[static_cast<int>(op())], atk.c_str(), def.c_str());
-}
-#endif
 
 void CmdTwoUnits::SwapAtkDef() { std::swap(atk_, def_); }
 

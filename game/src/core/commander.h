@@ -18,7 +18,9 @@ class Commander {
   void DoNext(Stage*);
   //  void UnDo(Stage*);
   void Push(unique_ptr<Cmd>);
-  void DebugPrint(Stage* stage) const;
+
+ public:
+  const CmdQueue& queue() const { return *cmdq_current_.get(); }
 
  private:
   unique_ptr<CmdQueue> cmdq_current_;

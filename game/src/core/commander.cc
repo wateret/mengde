@@ -24,12 +24,5 @@ void Commander::Push(unique_ptr<Cmd> cmd) {
   cmdq_current_->Append(std::move(cmd));
 }
 
-void Commander::DebugPrint(Stage* stage) const {
-  UNUSED(stage);
-#ifdef DEBUG
-  cmdq_current_->DebugPrint(stage);
-#endif  // DEBUG
-}
-
 }  // namespace core
 }  // namespace mengde

@@ -33,11 +33,6 @@ class Cmd {
 
  public:
   virtual void Accept(CmdVisitor& visitor) const = 0;
-
-#ifdef DEBUG
-  //  static string OpToString(Op op) { return kCmdOpToString[static_cast<int>(op)]; }
-  virtual void DebugPrint(Stage*) const { printf("%s\n", kCmdOpToString[static_cast<int>(op())]); }
-#endif
 };
 
 //
@@ -58,10 +53,6 @@ class CmdQueue : public Cmd {
 
  public:
   virtual void Accept(CmdVisitor& visitor) const override;
-
-#ifdef DEBUG
-  virtual void DebugPrint(Stage* stage) const override;
-#endif
 
  public:
   void Prepend(unique_ptr<Cmd>);
@@ -98,10 +89,6 @@ class CmdTwoUnits : public Cmd {
  public:
   CmdTwoUnits(const UId&, const UId&);
   virtual unique_ptr<Cmd> Do(Stage*) override = 0;
-
-#ifdef DEBUG
-  virtual void DebugPrint(Stage* stage) const override;
-#endif
 
  public:
   UId GetUnitAtk() const { return atk_; }
