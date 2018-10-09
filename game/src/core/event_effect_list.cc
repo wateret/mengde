@@ -3,6 +3,7 @@
 #include "cmd.h"  // TODO Only for CmdQueue
 #include "event_effect.h"
 #include "util/common.h"
+#include "util/std/util.h"
 
 namespace mengde {
 namespace core {
@@ -41,18 +42,21 @@ void EventEffectList::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act
 }
 
 void EventEffectList::NextTurn() {
-  // TODO Implement NextTurn
-  /*
-  elements_.erase(remove_if(elements_.begin(), elements_.end(), [] (EventEffectBase* e) {
+  auto pred = [](EventEffectBase* e) {
     bool remove = (e->GetTurnsLeft() == 0);
     if (remove) delete e;
     return remove;
-  }), elements_.end());
+  };
 
-  for (auto e : elements_) {
+  util::std::VectorEraseIf(general_elements_, pred);
+  for (auto e : general_elements_) {
     e->NextTurn();
   }
-  */
+
+  util::std::VectorEraseIf(oncmd_elements_, pred);
+  for (auto e : oncmd_elements_) {
+    e->NextTurn();
+  }
 }
 
 void EventEffectList::iterate(const std::function<void(const EventEffectBase&)>& fn) const {

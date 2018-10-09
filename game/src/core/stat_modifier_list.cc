@@ -2,6 +2,7 @@
 
 #include "stat_modifier.h"
 #include "util/common.h"
+#include "util/std/util.h"
 
 namespace mengde {
 namespace core {
@@ -34,13 +35,11 @@ void StatModifierList::AddModifier(StatModifier* m) {
 }
 
 void StatModifierList::NextTurn() {
-  elements_.erase(remove_if(elements_.begin(), elements_.end(),
-                            [](StatModifier* m) -> bool {
-                              bool remove = (m->turns_left() == 0);
-                              if (remove) delete m;
-                              return remove;
-                            }),
-                  elements_.end());
+  util::std::VectorEraseIf(elements_, [](StatModifier* m) -> bool {
+    bool remove = (m->turns_left() == 0);
+    if (remove) delete m;
+    return remove;
+  });
 
   for (auto e : elements_) {
     e->NextTurn();
