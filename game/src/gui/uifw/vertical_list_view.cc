@@ -26,6 +26,11 @@ void VerticalListView::AddElement(View* e) {
   AddChild(e);
 }
 
+void VerticalListView::Clear() {
+  RemoveAllChildren();
+  total_element_height_ = 0;
+}
+
 }  // namespace uifw
 }  // namespace gui
 }  // namespace mengde

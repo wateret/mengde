@@ -31,6 +31,7 @@ class Equipment : public IEvent {
   void AddOnCmdEffect(OnCmdEventEffect*);
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
+  const VolatileAttribute& volatile_attribute() const { return volatile_attribute_; }
 
  private:
   string id_;

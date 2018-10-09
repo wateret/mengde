@@ -34,11 +34,13 @@ void StatModifierList::AddModifier(StatModifier* m) {
 }
 
 void StatModifierList::NextTurn() {
-  elements_.erase(remove_if(elements_.begin(), elements_.end(), [](StatModifier* m) -> bool {
-    bool remove = (m->turns_left() == 0);
-    if (remove) delete m;
-    return remove;
-  }));
+  elements_.erase(remove_if(elements_.begin(), elements_.end(),
+                            [](StatModifier* m) -> bool {
+                              bool remove = (m->turns_left() == 0);
+                              if (remove) delete m;
+                              return remove;
+                            }),
+                  elements_.end());
 
   for (auto e : elements_) {
     e->NextTurn();

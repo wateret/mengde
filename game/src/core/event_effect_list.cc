@@ -43,19 +43,25 @@ void EventEffectList::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act
 void EventEffectList::NextTurn() {
   // TODO Implement NextTurn
   /*
-  elements_.erase(remove_if(elements_.begin(), elements_.end(), [] (EventEffect* e) {
-    if (e->GetTurnsLeft() < 0) {
-      LOG_WARNING("turns_left_ must not be less than 0");
-    }
-    bool remove = (e->GetTurnsLeft() <= 0);
+  elements_.erase(remove_if(elements_.begin(), elements_.end(), [] (EventEffectBase* e) {
+    bool remove = (e->GetTurnsLeft() == 0);
     if (remove) delete e;
     return remove;
-  }));
+  }), elements_.end());
 
   for (auto e : elements_) {
     e->NextTurn();
   }
   */
+}
+
+void EventEffectList::iterate(const std::function<void(const EventEffectBase&)>& fn) const {
+  for (auto e : general_elements_) {
+    fn(*e);
+  }
+  for (auto e : oncmd_elements_) {
+    fn(*e);
+  }
 }
 
 }  // namespace core

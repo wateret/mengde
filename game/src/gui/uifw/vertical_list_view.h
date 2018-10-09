@@ -14,6 +14,7 @@ class VerticalListView : public CompositeView {
   VerticalListView(const Rect&);
   void AddElement(View* view);
   void SetMargin(int margin) { margin_ = margin; }
+  void Clear();
 
  private:
   int margin_;
