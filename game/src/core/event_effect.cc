@@ -8,31 +8,24 @@ namespace core {
 
 // class EventEffectBase
 
-EventEffectBase::EventEffectBase(uint16_t turns_left) : turns_left_(turns_left) {}
+EventEffectBase::EventEffectBase(TurnBased turn) : turn_{turn} {}
 
-void EventEffectBase::NextTurn() {
-  ASSERT(turns_left_ > 0);
-  if (turns_left_ != kTurnInfinity) {
-    turns_left_--;
-  }
-}
+void EventEffectBase::NextTurn() { turn_.Next(); }
 
 // class GeneralEventEffect
 
-GeneralEventEffect::GeneralEventEffect(event::GeneralEvent type, uint16_t turns_left)
-    : EventEffectBase(turns_left), type_(type) {}
+GeneralEventEffect::GeneralEventEffect(event::GeneralEvent type, TurnBased turn) : EventEffectBase(turn), type_(type) {}
 
 // class GeneralEventEffect
 
-OnCmdEventEffect::OnCmdEventEffect(event::OnCmdEvent type, uint16_t turns_left)
-    : EventEffectBase(turns_left), type_(type) {}
+OnCmdEventEffect::OnCmdEventEffect(event::OnCmdEvent type, TurnBased turn) : EventEffectBase(turn), type_(type) {}
 
 // GeneralEventEffect Derivatives
 
 // class GEERestoreHp
 
-GEERestoreHp::GEERestoreHp(event::GeneralEvent type, int multiplier, int addend, uint16_t turns_left)
-    : GeneralEventEffect(type, turns_left), multiplier_(multiplier), addend_(addend) {}
+GEERestoreHp::GEERestoreHp(event::GeneralEvent type, int multiplier, int addend, TurnBased turn)
+    : GeneralEventEffect(type, turn), multiplier_(multiplier), addend_(addend) {}
 
 unique_ptr<Cmd> GEERestoreHp::OnEvent(Unit* unit) {
   return unique_ptr<Cmd>(new CmdRestoreHp(unit->uid(), multiplier_, addend_));
@@ -42,8 +35,7 @@ unique_ptr<Cmd> GEERestoreHp::OnEvent(Unit* unit) {
 
 // class OCEEPreemptiveAttack
 
-OCEEPreemptiveAttack::OCEEPreemptiveAttack(event::OnCmdEvent type, uint16_t turns_left)
-    : OnCmdEventEffect(type, turns_left) {}
+OCEEPreemptiveAttack::OCEEPreemptiveAttack(event::OnCmdEvent type, TurnBased turn) : OnCmdEventEffect(type, turn) {}
 
 void OCEEPreemptiveAttack::OnEvent(Unit* unit, CmdAct* act) {
   LOG_INFO("'%s' Preemptive Attack activated.", unit->id().c_str());
@@ -56,8 +48,8 @@ void OCEEPreemptiveAttack::OnEvent(Unit* unit, CmdAct* act) {
 }
 
 // class OCEEEnhanceBasicAttack
-OCEEEnhanceBasicAttack::OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multiplier, int addend, uint16_t turns_left)
-    : OnCmdEventEffect(type, turns_left), multiplier_(multiplier), addend_(addend) {}
+OCEEEnhanceBasicAttack::OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multiplier, int addend, TurnBased turn)
+    : OnCmdEventEffect(type, turn), multiplier_(multiplier), addend_(addend) {}
 
 void OCEEEnhanceBasicAttack::OnEvent(Unit* unit, CmdAct* act) {
   LOG_INFO("'%s' the damage will be enhanced by (%d%%,+%d)", unit->id().c_str(), multiplier_, addend_);

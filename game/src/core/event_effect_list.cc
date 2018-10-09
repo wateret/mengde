@@ -43,7 +43,7 @@ void EventEffectList::RaiseEvent(event::OnCmdEvent type, Unit* unit, CmdAct* act
 
 void EventEffectList::NextTurn() {
   auto pred = [](EventEffectBase* e) {
-    bool remove = (e->GetTurnsLeft() == 0);
+    bool remove = (e->turn().left() == 0);
     if (remove) delete e;
     return remove;
   };

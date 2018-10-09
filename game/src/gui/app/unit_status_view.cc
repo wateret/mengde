@@ -40,7 +40,7 @@ void UnitStatusView::OnUnitUpdate() {
 
   {
     auto ee_handler = [&](const core::EventEffectBase& eff) {
-      auto turns_left = std::to_string(eff.GetTurnsLeft()) + "T";
+      auto turns_left = std::to_string(eff.turn().left()) + "T";
       AddElement(new TextView{element_rect, "[some_effect] " + turns_left});
     };
 
