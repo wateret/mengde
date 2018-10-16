@@ -9,6 +9,7 @@
 #include "gui/uifw/modal_dialog_view.h"
 #include "gui/uifw/modal_view.h"
 #include "gui/uifw/scroll_view.h"
+#include "item_detail_view.h"
 #include "magic_list_view.h"
 #include "terrain_info_view.h"
 #include "unit_action_view.h"
@@ -32,6 +33,14 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
     deploy_view_ = new DeployView(frame, assets, stage, game_view, base_path);
     deploy_view_->visible(true);
     AddChild(deploy_view_);
+  }
+
+  {  // Initialize item_detail_tooltip_view_
+    Rect item_detail_tooltip_frame =
+        LayoutHelper::CalcPosition(GetFrameSize(), {220, 80}, LayoutHelper::kAlignLftTop, LayoutHelper::kDefaultSpace);
+    item_detail_tooltip_view_ = new ItemDetailView(item_detail_tooltip_frame);
+    item_detail_tooltip_view_->visible(false);
+    AddChild(item_detail_tooltip_view_);
   }
 
   {  // Initialize unit_view_

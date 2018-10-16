@@ -19,19 +19,24 @@ namespace gui {
 namespace app {
 
 class EquipmentSetView;
+class GameView;
 
 class ItemIconView : public CallbackView {
  public:
-  ItemIconView(const Rect&, const core::EquipmentWithAmount&);
+  ItemIconView(GameView*, const Rect&, const core::EquipmentWithAmount&);
+
+ private:
+  GameView* gv_;
 };
 
 class EquipmentSelectView : public CompositeView {
  public:
-  EquipmentSelectView(const Rect&, EquipmentSetView*);
+  EquipmentSelectView(GameView*, const Rect&, EquipmentSetView*);
   void SetHero(const core::Hero* hero) { hero_ = hero; }
   void SetEquipments(const vector<core::EquipmentWithAmount>&, core::Assets*);
 
  private:
+  GameView* gv_;
   const core::Hero* hero_;
   RowMajorListView* equipment_list_view_;
   EquipmentSetView* equipment_set_view_;

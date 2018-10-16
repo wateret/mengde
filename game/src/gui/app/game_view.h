@@ -36,6 +36,7 @@ class MagicListView;
 class TerrainInfoView;
 class UnitListView;
 class UnitActionView;
+class ItemDetailView;
 
 class UIViews;
 
@@ -75,6 +76,7 @@ class GameView : public View {
   void CenterCamera(Vec2D);
 
  public:
+  DeployView* deploy_view() { return ui_views_->deploy_view(); }
   TerrainInfoView* terrain_info_view() { return ui_views_->terrain_info_view(); }
   UnitListView* unit_list_view() { return ui_views_->unit_list_view(); }
   UnitDialogView* unit_dialog_view() { return ui_views_->unit_dialog_view(); }
@@ -85,6 +87,7 @@ class GameView : public View {
   ModalDialogView* dialog_view() { return ui_views_->dialog_view(); }
   MagicListView* magic_list_view() { return ui_views_->magic_list_view(); }
   UnitActionView* unit_action_view() { return ui_views_->unit_action_view(); }
+  ItemDetailView* item_detail_tooltip_view() { return ui_views_->item_detail_tooltip_view(); }
 
  public:
   Vec2D GetMouseCoords() { return mouse_coords_; }
