@@ -18,7 +18,7 @@ namespace app {
 
 class ItemDetailView : public CompositeView {
  public:
-  ItemDetailView(const Rect&, const core::Equipment*);
+  ItemDetailView(const Rect&, const core::Equipment* = NULL);
 
  public:
   void SetItem(const core::Equipment*);

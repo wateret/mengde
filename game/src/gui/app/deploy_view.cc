@@ -113,7 +113,7 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
 
   Rect equipment_select_frame = GetActualFrame();
   equipment_select_frame.w(4 * 96);
-  equipment_select_view_ = new EquipmentSelectView(equipment_select_frame, equipment_set_view);
+  equipment_select_view_ = new EquipmentSelectView(gv, equipment_select_frame, equipment_set_view);
   equipment_select_view_->visible(false);
 
   {  // Initialize equipment_set_view
