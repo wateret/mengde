@@ -22,7 +22,7 @@ namespace app {
 // EquipmentIconView
 //
 
-ItemIconView::ItemIconView(GameView* gv, const Rect& frame, const core::EquipmentWithAmount& equipment)
+ItemIconView::ItemIconView(const Rect& frame, GameView* gv, const core::EquipmentWithAmount& equipment)
     : CallbackView(frame), gv_(gv) {
   const string& equipment_id = equipment.object->GetId();
   uint32_t amount = equipment.amount;
@@ -64,7 +64,7 @@ ItemIconView::ItemIconView(GameView* gv, const Rect& frame, const core::Equipmen
 // EquipmentSelectView
 //
 
-EquipmentSelectView::EquipmentSelectView(GameView* gv, const Rect& frame, EquipmentSetView* equipment_set_view)
+EquipmentSelectView::EquipmentSelectView(const Rect& frame, GameView* gv, EquipmentSetView* equipment_set_view)
     : CompositeView(frame),
       gv_(gv),
       hero_(nullptr),
@@ -82,7 +82,7 @@ void EquipmentSelectView::SetEquipments(const vector<core::EquipmentWithAmount>&
   auto hero = assets->LookupHero(hero_->id());  // For non-const core::Hero and capture
   auto equipment_set_view = equipment_set_view_;
   for (auto equipment : equipments) {
-    ItemIconView* item_icon_view = new ItemIconView(gv_, Rect(0, 0, kItemSize, kItemSize), equipment);
+    ItemIconView* item_icon_view = new ItemIconView(Rect(0, 0, kItemSize, kItemSize), gv_, equipment);
     item_icon_view->SetMouseButtonHandler(
         [this, assets, hero, equipment, equipment_set_view](const foundation::MouseButtonEvent& e) {
           if (e.IsLeftButtonUp()) {

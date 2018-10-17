@@ -23,7 +23,7 @@ class GameView;
 
 class ItemIconView : public CallbackView {
  public:
-  ItemIconView(GameView*, const Rect&, const core::EquipmentWithAmount&);
+  ItemIconView(const Rect&, GameView*, const core::EquipmentWithAmount&);
 
  private:
   GameView* gv_;
@@ -31,7 +31,7 @@ class ItemIconView : public CallbackView {
 
 class EquipmentSelectView : public CompositeView {
  public:
-  EquipmentSelectView(GameView*, const Rect&, EquipmentSetView*);
+  EquipmentSelectView(const Rect&, GameView*, EquipmentSetView*);
   void SetHero(const core::Hero* hero) { hero_ = hero; }
   void SetEquipments(const vector<core::EquipmentWithAmount>&, core::Assets*);
 
