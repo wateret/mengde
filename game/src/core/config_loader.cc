@@ -123,6 +123,14 @@ uint16_t ConfigLoader::StatStrToIdx(const string& s) {
   return -1;
 }
 
+Condition ConfigLoader::StringToCondition(const string& s) {
+  if (s == "stunned") return Condition::kStunned;
+  if (s == "poisoned") return Condition::kPoisoned;
+  if (s == "rooted") return Condition::kRooted;
+  UNREACHABLE("Invalid Condition string");
+  return Condition::kNone;
+}
+
 void ConfigLoader::ParseUnitClassesAndTerrains() {
   rc_.unit_class_manager = new UnitClassManager();
   int class_idx = 0;
@@ -199,40 +207,53 @@ void ConfigLoader::ParseMagics() {
     string id = l->Get<string>("id");
     string range_s = l->Get<string>("range");
     string target_s = l->Get<string>("target");
-    string type_s = l->Get<string>("type");
-    int mp = l->Get<int>("mp");
+    auto mp = l->Get<uint16_t>("mp");
 
     Range::Type range = Range::StringToRange(range_s);
     bool target = (target_s == "enemy");
-    Magic::MagicType type = [](const string& s) -> Magic::MagicType {
-      if (s == "deal") return Magic::MagicType::kMagicDeal;
-      if (s == "heal") return Magic::MagicType::kMagicHeal;
-      if (s == "stat_mod") return Magic::MagicType::kMagicStatMod;
-      UNREACHABLE("Invalid magic type");
-      return Magic::MagicType::kMagicNone;
-    }(type_s);
 
-    Magic* magic = nullptr;
+    auto magic = new Magic{id, range, target, mp};
 
-    switch (type) {
-      case Magic::MagicType::kMagicDeal:
-      case Magic::MagicType::kMagicHeal: {
-        int power = l->Get<int>("power");
-        magic = new Magic(id, type, range, target, mp, power, 0, 0, 0);
-        break;
-      }
-      case Magic::MagicType::kMagicStatMod: {
-        string stat_s = l->Get<string>("stat");
-        int amount = l->Get<int>("amount");
-        int turns = l->Get<int>("turns");
-        uint16_t stat = StatStrToIdx(stat_s);
-        magic = new Magic(id, type, range, target, mp, 0, stat, amount, turns);
-        break;
-      }
-      default:
-        UNREACHABLE("Unknown type of magic");
-        break;
-    };
+    l->ForEachTableEntry("effects", [&](luab::Lua* l, const string&) {
+      auto effect = l->Get<luab::Table>();
+
+      auto type_str = effect.Get<std::string>("type");
+
+      MagicEffectType type = [](const string& s) {
+        if (s == "hp") return MagicEffectType::kHP;
+        if (s == "stat") return MagicEffectType::kStat;
+        if (s == "condition") return MagicEffectType::kCondition;
+        UNREACHABLE("Invalid magic type");
+        return MagicEffectType::kNone;
+      }(type_str);
+
+      switch (type) {
+        case MagicEffectType::kHP: {
+          auto power = effect.Get<int32_t>("power");
+          magic->AddEffect(std::make_unique<MagicEffectHP>(power));
+          break;
+        }
+        case MagicEffectType::kStat: {
+          string stat_s = l->Get<string>("stat");
+          auto amount = effect.Get<int32_t>("amount");
+          auto turns = TurnBased{static_cast<uint16_t>(effect.Get<int32_t>("turns"))};
+          auto stat_id = StatStrToIdx(stat_s);
+          StatMod stat_mod{0, static_cast<int16_t>(amount)};
+          magic->AddEffect(std::make_unique<MagicEffectStat>(stat_id, stat_mod, turns));
+          break;
+        }
+        case MagicEffectType::kCondition: {
+          auto condition = StringToCondition(effect.Get<string>("condition"));
+          auto turns = TurnBased{static_cast<uint16_t>(effect.Get<int32_t>("turns"))};
+          magic->AddEffect(std::make_unique<MagicEffectCondition>(condition, turns));
+          break;
+        }
+        case MagicEffectType::kNone:
+        default:
+          UNREACHABLE("Unknown type of magic");
+          break;
+      };
+    });
 
     l->ForEachTableEntry("learnat", [=, &magic](luab::Lua* l, const string&) {
       string uclass = l->Get<string>("class");

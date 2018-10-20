@@ -1,6 +1,7 @@
 #ifndef MENGDE_CORE_CONFIG_LOADER_H_
 #define MENGDE_CORE_CONFIG_LOADER_H_
 
+#include "condition.h"
 #include "resource_manager.h"
 #include "util/common.h"
 #include "util/game_env.h"
@@ -52,6 +53,7 @@ class ConfigLoader {
   void ParseHeroTemplates();
   void ParseStages();
   uint16_t StatStrToIdx(const string&);
+  Condition StringToCondition(const string& s);
 
  private:
   ::luab::Lua* lua_config_;

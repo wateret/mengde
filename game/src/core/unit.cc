@@ -13,6 +13,7 @@ Unit::Unit(Hero* hero, Force force)
       current_attr_(hero->GetOriginalAttr()),
       current_hpmp_(hero->GetOriginalHpMp()),
       volatile_attribute_{},
+      condition_set_{},
       position_(0, 0),
       direction_(kDirDown),
       force_(force),
@@ -66,7 +67,10 @@ void Unit::UpdateStat() {
   }
 }
 
-void Unit::NextTurn() { volatile_attribute_.NextTurn(); }
+void Unit::NextTurn() {
+  volatile_attribute_.NextTurn();
+  condition_set_.NextTurn();
+}
 
 void Unit::AddStatModifier(StatModifier* sm) {
   volatile_attribute_.stat_modifier_list().AddModifier(sm);
