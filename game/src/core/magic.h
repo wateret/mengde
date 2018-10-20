@@ -21,6 +21,25 @@ enum class MagicEffectType {
   kCondition = 0x04,  //< Release Unit Condition
 };
 
+}  // namespace core
+}  // namespace mengde
+
+#include <functional>
+#include <type_traits>
+
+namespace std {
+template <>
+struct hash<::mengde::core::MagicEffectType> {
+  size_t operator()(::mengde::core::MagicEffectType arg) const {
+    using type = std::underlying_type<::mengde::core::MagicEffectType>::type;
+    return std::hash<type>{}(static_cast<type>(arg));
+  }
+};
+}  // namespace std
+
+namespace mengde {
+namespace core {
+
 class MagicEffect {
  public:
   MagicEffect(MagicEffectType type);

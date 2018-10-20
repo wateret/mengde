@@ -75,7 +75,9 @@ bool Magic::TryPerform(Unit* unit_atk, Unit* unit_def) { return GenRandom(100) <
 
 void Magic::AddLearnInfo(uint16_t class_id, uint16_t level) { learn_info_list_.push_back({class_id, level}); }
 
-void Magic::AddEffect(std::unique_ptr<MagicEffect>&& effect) { effects_.insert({effect->type(), std::move(effect)}); }
+void Magic::AddEffect(std::unique_ptr<MagicEffect>&& effect) {
+  effects_.insert(std::make_pair(effect->type(), std::move(effect)));
+}
 
 bool Magic::IsAvailible(const Unit* unit) {
   for (auto e : learn_info_list_) {
