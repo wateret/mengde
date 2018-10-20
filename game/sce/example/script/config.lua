@@ -154,8 +154,9 @@ gconfig = {
                 { class = "Lord-1",       level = 10 },
                 { class = "Strategist-1", level = 5 }
             },
-            type  = "deal",
-            power = 70
+            effects = {
+                {type  = "hp", power = -70}
+            }
         },
         {   id       = "heal_0",
             target   = "ally",
@@ -166,8 +167,9 @@ gconfig = {
                 { class = "Support-1",    level = 5 },
                 { class = "Strategist-1", level = 15 }
             },
-            type  = "heal",
-            power = 50
+            effects = {
+                { type = "hp", power = 50 }
+            }
         },
         {   id       = "buff_dex",
             target   = "ally",
@@ -177,11 +179,23 @@ gconfig = {
             learnat  = {
                 { class = "Support-1", level = 5 }
             },
-            type   = "stat_mod",
-            stat   = "dex",
-            amount = 20,
-            turns  = 3
-        }
+            effects = {
+                { type = "stat", stat = "dex", amount = 20, turns = 3 }
+            }
+        },
+        {   id       = "stun",
+            target   = "enemy",
+            accuracy = "always",
+            range    = "Distance4_Incl",
+            mp       = 8,
+            learnat  = {
+                { class = "Strategist-1", level = 10 }
+            },
+            effects = {
+                { type = "hp", power = -20 },
+                { type = "condition", condition = "stunned", turns = 3 }
+            }
+        },
     },
     heroes = {
         {   id    = "CaoCao",

@@ -3,6 +3,7 @@
 
 #include <boost/optional.hpp>
 
+#include "condition_set.h"
 #include "equipment_set.h"
 #include "force.h"
 #include "hero.h"
@@ -58,6 +59,8 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   int class_index() const;
   Force force() const { return force_; }
   const VolatileAttribute& volatile_attribute() const { return volatile_attribute_; }
+  const ConditionSet& condition_set() const { return condition_set_; }
+  ConditionSet& condition_set() { return condition_set_; }
 
  public:
   void AddStatModifier(StatModifier*);
@@ -87,6 +90,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   Attribute current_attr_;
   HpMp current_hpmp_;
   VolatileAttribute volatile_attribute_;
+  ConditionSet condition_set_;
 
   // TODO Consider below variables to move (to gui or another core module)
   Vec2D position_;       // Position on the map

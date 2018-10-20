@@ -413,8 +413,7 @@ void StateUIMagic::Render(Drawer* drawer) {
 
   drawer->CopySprite(gv_->GetModelId(unit_id_atk_), kSpriteAttack, dir, 0, {kEffectNone, 0}, unit_pos);
 
-  const SpriteType target_sprite_hit =
-      magic_->IsTypeDeal() ? kSpriteDamaged : kSpriteBuff;  // This condition may not be accurate
+  const SpriteType target_sprite_hit = magic_->IsGood() ? kSpriteBuff : kSpriteDamaged;
   const SpriteType target_sprite = hit_ ? target_sprite_hit : kSpriteBlocked;
 
   drawer->CopySprite(gv_->GetModelId(unit_id_def_), target_sprite, OppositeDirection(dir), 0, {kEffectNone, 0},

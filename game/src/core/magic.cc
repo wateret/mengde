@@ -8,48 +8,63 @@
 namespace mengde {
 namespace core {
 
-Magic::Magic(const std::string& id, MagicType type, Range::Type range, bool is_target_enemy, uint16_t mp_cost,
-             uint16_t power, uint16_t stat_id, int16_t amount, uint16_t turns)
-    : id_(id),
-      type_(type),
-      range_(range),
-      learn_info_list_(),
-      is_target_enemy_(is_target_enemy),
-      mp_cost_(mp_cost),
-      power_(power),
-      stat_id_(stat_id),
-      amount_{amount},
-      turns_(turns) {
+//
+// MagicEffect
+//
+MagicEffect::MagicEffect(MagicEffectType type) : type_{type} {}
+
+//
+// MagicEffectDeal
+//
+MagicEffectHP::MagicEffectHP(int32_t power) : MagicEffect{MagicEffectType::kHP}, power_{power} {}
+
+void MagicEffectHP::Perform(Unit* atk, Unit* def) {
+  if (power_ < 0) {
+    auto damage = Formulae::ComputeMagicDamage(nullptr, atk, def, power_);
+    def->DoDamage(damage);
+    LOG_INFO("Magic does damage by %d", damage);
+  } else {
+    auto amount = Formulae::ComputeMagicDamage(nullptr, atk, def, -power_);  // TODO Fix it with proper calculation
+    def->Heal(amount);
+    LOG_INFO("Magic heals HP by %d", amount);
+  }
+}
+
+//
+// MagicEffectStat
+//
+MagicEffectStat::MagicEffectStat(uint16_t stat_id, StatMod stat_mod, TurnBased turns)
+    : MagicEffect{MagicEffectType::kStat}, stat_id_{stat_id}, stat_mod_{stat_mod}, turns_{turns} {}
+
+void MagicEffectStat::Perform(Unit* atk, Unit* def) {
+  UNUSED(atk);
+  def->AddStatModifier(new StatModifier("magic", stat_id_, stat_mod_, turns_));
+  LOG_INFO("Magic changes stat id %u by {%d+, %d%}", stat_id_, stat_mod_.addend, stat_mod_.multiplier);
+}
+
+//
+// MagicEffectCondition
+//
+
+MagicEffectCondition::MagicEffectCondition(Condition condition, TurnBased turns)
+    : MagicEffect{MagicEffectType::kCondition}, condition_{condition}, turns_{turns} {}
+
+void MagicEffectCondition::Perform(Unit* atk, Unit* def) {
+  UNUSED(atk);
+  def->condition_set().Set(condition_, turns_);
+  LOG_INFO("Magic changes condition");
+}
+
+Magic::Magic(const std::string& id, Range::Type range, bool is_target_enemy, uint16_t mp_cost)
+    : id_(id), range_(range), learn_info_list_(), is_target_enemy_(is_target_enemy), mp_cost_(mp_cost) {
   // TODO Make use of these
   UNUSED(mp_cost_);
-  UNUSED(power_);
 }
 
 void Magic::Perform(Unit* unit_atk, Unit* unit_def) {
-  /*
-   */
-  //  if (TryPerform(unit_atk, unit_def)) {
-  LOG_INFO("Magic hits!");
-
-  if (type_ & kMagicDeal) {
-    int damage = CalcDamage(unit_atk, unit_def);
-    unit_def->DoDamage(damage);
-    LOG_INFO("Magic does damage by %d", damage);
+  for (auto&& effect : effects_) {
+    effect.second->Perform(unit_atk, unit_def);
   }
-
-  if (type_ & kMagicHeal) {
-    int amount = CalcDamage(unit_atk, unit_def);  // FIXME change formula
-    unit_def->Heal(amount);
-    LOG_INFO("Magic heals HP by %d", amount);
-  }
-
-  if (type_ & kMagicStatMod) {
-    unit_def->AddStatModifier(new StatModifier("magic", stat_id_, {0, amount_}, turns_));
-  }
-}
-
-int Magic::CalcDamage(Unit* unit_atk, Unit* unit_def) {
-  return Formulae::ComputeMagicDamage(nullptr, unit_atk, unit_def, 100 /* force */);
 }
 
 int Magic::CalcAccuracy(Unit* unit_atk, Unit* unit_def) {
@@ -59,6 +74,8 @@ int Magic::CalcAccuracy(Unit* unit_atk, Unit* unit_def) {
 bool Magic::TryPerform(Unit* unit_atk, Unit* unit_def) { return GenRandom(100) < CalcAccuracy(unit_atk, unit_def); }
 
 void Magic::AddLearnInfo(uint16_t class_id, uint16_t level) { learn_info_list_.push_back({class_id, level}); }
+
+void Magic::AddEffect(std::unique_ptr<MagicEffect>&& effect) { effects_.insert({effect->type(), std::move(effect)}); }
 
 bool Magic::IsAvailible(const Unit* unit) {
   for (auto e : learn_info_list_) {
@@ -70,6 +87,8 @@ bool Magic::IsAvailible(const Unit* unit) {
 }
 
 const AttackRange& Magic::GetRange() const { return AttackRangeManager::GetInstance().Get(range_); }
+
+bool Magic::IsGood() const { return true; }
 
 }  // namespace core
 }  // namespace mengde
