@@ -66,9 +66,21 @@ void UnitTooltipView::SetUnitTerrainInfo(const core::Cell* cell, const core::Uni
   tv_rgtbot_->SetText(terrain_effect);
 }
 
-void UnitTooltipView::SetUnitAttackInfo(const core::Unit* unit, int accuracy, int expected_damage) {
+void UnitTooltipView::SetUnitActionInfo(const core::Unit* unit, int accuracy, int hp_diff) {
   SetUnit(unit);
-  gv_hp_->SetExtVal(expected_damage);
+
+  const core::HpMp& cur_xtat = unit_->GetCurrentHpMp();
+
+  if (hp_diff < 0) {
+    gv_hp_->SetCurVal(cur_xtat.hp);
+    gv_hp_->SetExtVal(-hp_diff);
+    gv_hp_->SetExtColor(COLOR("gauge_hp_damage"));
+  } else {
+    gv_hp_->SetCurVal(cur_xtat.hp + hp_diff);
+    gv_hp_->SetExtVal(hp_diff);
+    gv_hp_->SetExtColor(COLOR("gauge_hp_heal"));
+  }
+
   tv_rgtbot_->SetText("Accuracy : " + std::to_string(accuracy) + "%");
 }
 

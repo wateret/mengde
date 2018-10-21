@@ -97,12 +97,12 @@ bool Magic::IsAvailible(const Unit* unit) const {
 
 const AttackRange& Magic::GetRange() const { return AttackRangeManager::GetInstance().Get(range_); }
 
-bool Magic::HasHP() const {
-  return effects_.find(MagicEffectType::kHP) != effects_.end();
-}
+bool Magic::HasHP() const { return effects_.find(MagicEffectType::kHP) != effects_.end(); }
 
 int Magic::HPDiff(const Unit* atk, const Unit* def) const {
-  auto effect_hp = dynamic_cast<MagicEffectHP*>(effects_.find(MagicEffectType::kHP)->second.get());
+  auto effect = effects_.find(MagicEffectType::kHP);
+  if (effect == effects_.end()) return 0;
+  auto effect_hp = dynamic_cast<MagicEffectHP*>(effect->second.get());
   return (effect_hp != nullptr) ? effect_hp->Diff(atk, def) : 0;
 }
 

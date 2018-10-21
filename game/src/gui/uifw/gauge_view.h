@@ -31,6 +31,7 @@ class GaugeView : public View {
   void SetExtVal(int v) { ext_val_ = v; }
   void SetHelpTextType(HelpTextType v) { help_text_type_ = v; }
   void SetHelpTextAlign(LayoutHelper::Align v) { help_text_align_ = v; }
+  void SetExtColor(Color color) { ext_color_ = color; }
   virtual void Render(Drawer*) override;
 
  private:

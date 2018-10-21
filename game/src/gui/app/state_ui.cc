@@ -372,8 +372,8 @@ void StateUIMoving::Render(Drawer* drawer) {
 
 // StateUIMagic
 
-StateUIMagic::StateUIMagic(StateUI::Base base, const core::UId& atk_id, const core::UId& def_id, const core::Magic* magic,
-                           bool hit, int hp_diff)
+StateUIMagic::StateUIMagic(StateUI::Base base, const core::UId& atk_id, const core::UId& def_id,
+                           const core::Magic* magic, bool hit, int hp_diff)
     : StateUI(base),
       unit_id_atk_(atk_id),
       unit_id_def_(def_id),
@@ -413,7 +413,7 @@ void StateUIMagic::Render(Drawer* drawer) {
 
   drawer->CopySprite(gv_->GetModelId(unit_id_atk_), kSpriteAttack, dir, 0, {kEffectNone, 0}, unit_pos);
 
-  const SpriteType target_sprite_hit = magic_->is_target_enemy() ? kSpriteDamaged : kSpriteBuff ;
+  const SpriteType target_sprite_hit = magic_->is_target_enemy() ? kSpriteDamaged : kSpriteBuff;
   const SpriteType target_sprite = hit_ ? target_sprite_hit : kSpriteBlocked;
 
   drawer->CopySprite(gv_->GetModelId(unit_id_def_), target_sprite, OppositeDirection(dir), 0, {kEffectNone, 0},
@@ -810,9 +810,10 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
   if (unit_target) {
     bool hostile = unit->IsHostile(unit_target);
-    if (hostile) {
-      int hp_diff = 0;
-      int accuracy = 0;
+    int hp_diff = 0;
+    int accuracy = 0;
+    if ((is_basic_attack_ && hostile) ||
+        (!is_basic_attack_ && (gi_->GetMagic(magic_id_)->is_target_enemy() == hostile))) {
       if (is_basic_attack_) {
         hp_diff = -core::Formulae::ComputeBasicAttackDamage(map, unit, unit_target);
         accuracy = core::Formulae::ComputeBasicAttackAccuracy(unit, unit_target);
@@ -822,7 +823,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
         accuracy = magic->CalcAccuracy(unit, unit_target);
       }
 
-      unit_tooltip_view->SetUnitAttackInfo(unit_target, accuracy, -hp_diff);
+      unit_tooltip_view->SetUnitActionInfo(unit_target, accuracy, hp_diff);
     } else {
       unit_tooltip_view->SetUnitTerrainInfo(map->GetCell(cursor_cell), unit_target);
     }

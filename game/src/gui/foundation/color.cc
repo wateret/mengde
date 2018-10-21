@@ -25,6 +25,7 @@ ColorGen::ColorGen() {
   colors_.insert(std::make_pair("gauge_mp", Color(48, 160, 192)));
   colors_.insert(std::make_pair("gauge_exp", Color(199, 146, 234)));
   colors_.insert(std::make_pair("gauge_hp_damage", Color(192, 64, 64)));
+  colors_.insert(std::make_pair("gauge_hp_heal", Color(64, 192, 64)));
 }
 
 ColorGen* ColorGen::GetInstance() {
