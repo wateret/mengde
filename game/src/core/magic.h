@@ -54,6 +54,7 @@ class MagicEffect {
 class MagicEffectHP : public MagicEffect {
  public:
   MagicEffectHP(int32_t power);
+  int Diff(const Unit* atk, const Unit* def);
 
  public:
   virtual void Perform(Unit* atk, Unit* def) override;
@@ -98,22 +99,21 @@ class Magic {
  public:
   Magic(const std::string&, Range::Type, bool target, uint16_t mp);
   const string& GetId() const { return id_; }
-  bool GetIsTargetEnemy() { return is_target_enemy_; }
+  bool is_target_enemy() const { return is_target_enemy_; }
   void Perform(Unit*, Unit*);
   void AddLearnInfo(uint16_t, uint16_t);
   void AddEffect(std::unique_ptr<MagicEffect>&& effect);
   const AttackRange& GetRange() const;
 
  public:
-  int CalcDamage(Unit*, Unit*);
-  int CalcAccuracy(Unit*, Unit*);
+  int CalcAccuracy(const Unit*, const Unit*) const;
   bool TryPerform(Unit*, Unit*);
-  bool IsAvailible(const Unit*);
-  bool IsGood() const;
+  bool IsAvailible(const Unit*) const;
+  bool HasHP() const;
+  int HPDiff(const Unit* atk, const Unit* def) const;
 
  private:
   string id_;
-  MagicEffectType type_;
   Range::Type range_;
   vector<LearnInfo> learn_info_list_;
   bool is_target_enemy_;

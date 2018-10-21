@@ -205,7 +205,7 @@ class StateUIMoving : public StateUI {
 
 class StateUIMagic : public StateUI {
  public:
-  StateUIMagic(StateUI::Base, const core::UId&, const core::UId&, core::Magic*, bool, int);
+  StateUIMagic(StateUI::Base, const core::UId&, const core::UId&, const core::Magic*, bool, int);
   virtual ~StateUIMagic();
   virtual void Enter() override;
   virtual void Exit() override;
@@ -224,9 +224,9 @@ class StateUIMagic : public StateUI {
   core::UId unit_id_def_;
   const core::Unit* atk_;
   const core::Unit* def_;
-  core::Magic* magic_;
+  const core::Magic* magic_;
   bool hit_;
-  int damage_;
+  int hp_diff_;
   TextureAnimator* animator_;
 };
 

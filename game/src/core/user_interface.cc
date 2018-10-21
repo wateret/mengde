@@ -102,7 +102,7 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
             [&](Vec2D pos) {
               if (!stage->IsValidCoords(pos)) return;
               const Unit* def = stage->GetUnitInCell(pos);
-              if (def != nullptr && atk->IsHostile(def) == magic->GetIsTargetEnemy()) {
+              if (def != nullptr && atk->IsHostile(def) == magic->is_target_enemy()) {
                 acts_.push_back(std::make_unique<CmdMagic>(atk_id, def->uid(), magic));
               }
             },

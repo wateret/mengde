@@ -18,15 +18,22 @@ MagicEffect::MagicEffect(MagicEffectType type) : type_{type} {}
 //
 MagicEffectHP::MagicEffectHP(int32_t power) : MagicEffect{MagicEffectType::kHP}, power_{power} {}
 
-void MagicEffectHP::Perform(Unit* atk, Unit* def) {
+int MagicEffectHP::Diff(const Unit* atk, const Unit* def) {
   if (power_ < 0) {
-    auto damage = Formulae::ComputeMagicDamage(nullptr, atk, def, power_);
-    def->DoDamage(damage);
-    LOG_INFO("Magic does damage by %d", damage);
+    return -Formulae::ComputeMagicDamage(nullptr, atk, def, -power_);
   } else {
-    auto amount = Formulae::ComputeMagicDamage(nullptr, atk, def, -power_);  // TODO Fix it with proper calculation
-    def->Heal(amount);
-    LOG_INFO("Magic heals HP by %d", amount);
+    return Formulae::ComputeMagicDamage(nullptr, atk, def, power_);  // TODO Fix it with proper calculation
+  }
+}
+
+void MagicEffectHP::Perform(Unit* atk, Unit* def) {
+  auto diff = Diff(atk, def);
+  if (power_ < 0) {
+    def->DoDamage(-diff);
+    LOG_INFO("Magic does damage by %d", -diff);
+  } else {
+    def->Heal(diff);
+    LOG_INFO("Magic heals HP by %d", diff);
   }
 }
 
@@ -67,7 +74,7 @@ void Magic::Perform(Unit* unit_atk, Unit* unit_def) {
   }
 }
 
-int Magic::CalcAccuracy(Unit* unit_atk, Unit* unit_def) {
+int Magic::CalcAccuracy(const Unit* unit_atk, const Unit* unit_def) const {
   return Formulae::ComputeMagicAccuracy(unit_atk, unit_def, 100 /* force */);
 }
 
@@ -79,7 +86,7 @@ void Magic::AddEffect(std::unique_ptr<MagicEffect>&& effect) {
   effects_.insert(std::make_pair(effect->type(), std::move(effect)));
 }
 
-bool Magic::IsAvailible(const Unit* unit) {
+bool Magic::IsAvailible(const Unit* unit) const {
   for (auto e : learn_info_list_) {
     if (unit->class_index() == e.id && unit->GetLevel() >= e.lv) {
       return true;
@@ -90,7 +97,14 @@ bool Magic::IsAvailible(const Unit* unit) {
 
 const AttackRange& Magic::GetRange() const { return AttackRangeManager::GetInstance().Get(range_); }
 
-bool Magic::IsGood() const { return true; }
+bool Magic::HasHP() const {
+  return effects_.find(MagicEffectType::kHP) != effects_.end();
+}
+
+int Magic::HPDiff(const Unit* atk, const Unit* def) const {
+  auto effect_hp = dynamic_cast<MagicEffectHP*>(effects_.find(MagicEffectType::kHP)->second.get());
+  return (effect_hp != nullptr) ? effect_hp->Diff(atk, def) : 0;
+}
 
 }  // namespace core
 }  // namespace mengde

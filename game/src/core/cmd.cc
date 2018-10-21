@@ -290,18 +290,18 @@ unique_ptr<Cmd> CmdMagic::Do(Stage* stage) {
   bool hit = magic_->TryPerform(atk, def);
   Cmd* ret = nullptr;
   if (hit) {
-    int damage = ComputeDamage(stage->GetMap(), atk, def);
-    ret = new CmdHit(atk_, def_, CmdActResult::Type::kMagic, CmdHit::HitType::kNormal, magic_, damage);
+    int hp_diff = 0;
+    if (magic_->HasHP()) {
+      const auto atk = stage->LookupUnit(atk_);
+      const auto def = stage->LookupUnit(def_);
+      hp_diff = magic_->HPDiff(atk, def);
+    }
+    ret = new CmdHit(atk_, def_, CmdActResult::Type::kMagic, CmdHit::HitType::kNormal, magic_, hp_diff);
   } else {
     ret = new CmdMiss(atk_, def_, CmdActResult::Type::kMagic, magic_);
   }
 
   return unique_ptr<Cmd>(ret);
-}
-
-int CmdMagic::ComputeDamage(Map* map, const Unit* atk, const Unit* def) {
-  int damage = Formulae::ComputeMagicDamage(map, atk, def);
-  return damage;
 }
 
 // CmdActResult
