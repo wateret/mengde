@@ -11,6 +11,8 @@ namespace gui {
 namespace app {
 
 UnitView::UnitView(const Rect& frame) : TabView(frame), unit_(NULL) {
+  bg_color(COLOR("darkgray", 192));
+
   Vec2D size = frame.size();
   size -= {0, -28};
   Rect subframe({0, 28}, size);

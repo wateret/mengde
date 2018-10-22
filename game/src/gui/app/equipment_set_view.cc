@@ -17,9 +17,9 @@ namespace app {
 EquipmentView::EquipmentView(const Rect& frame, const core::Equipment* equipment) : CallbackView(frame) {
   Rect iv_frame = LayoutHelper::CalcPosition(GetActualFrame().size(), {32, 32}, LayoutHelper::kAlignLftMid);
   iv_image_ = new ImageView(iv_frame, rcpath::EquipmentModelPath("60-1").ToString());  // FIXME hardcoded
-  Rect tv_name_frame = {32 + 8, 0, 164, 16};
+  Rect tv_name_frame = {32 + 8, 4, 164, 16};
   tv_name_ = new TextView(tv_name_frame, "");
-  Rect tv_desc_frame = {32 + 8, 16, 164, 52};
+  Rect tv_desc_frame = {32 + 8, 20, 164, 52};
   tv_desc_ = new TextView(tv_desc_frame, "");
   AddChild(iv_image_);
   AddChild(tv_name_);
@@ -89,7 +89,7 @@ EquipmentSetView::EquipmentSetView(const Rect& frame) : CompositeView(frame), eq
 
     eqv->SetMouseMotionHandler([eqv](const foundation::MouseMotionEvent& e) {
       if (e.IsMotionOver()) {
-        eqv->bg_color(COLOR("darkgray"));
+        eqv->bg_color(COLOR("gray"));
       } else {
         ASSERT(e.IsMotionOut());
         eqv->bg_color(COLOR("transparent"));

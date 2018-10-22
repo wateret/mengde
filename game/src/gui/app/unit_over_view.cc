@@ -11,8 +11,6 @@ namespace gui {
 namespace app {
 
 UnitOverView::UnitOverView(const Rect& frame) : CompositeView(frame), unit_(NULL) {
-  bg_color(COLOR("darkgray"));
-
   Rect portrait_frame = {0, 0, 64, 80};
   iv_portrait_ = new ImageView(portrait_frame);
   Rect top_frame = {64 + LayoutHelper::kDefaultSpace, 0, 200, 16};
