@@ -166,7 +166,7 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
   AddChild(equipment_select_view_);
   AddChild(btn_ok);
 
-  director_->Init(hero_model_list_view, unit_view->unit_over_view(), equipment_set_view, equipment_select_view_);
+  director_->Init(hero_model_list_view, unit_view, equipment_select_view_);
 }
 
 }  // namespace app

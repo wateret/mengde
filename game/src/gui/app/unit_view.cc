@@ -24,6 +24,8 @@ UnitView::UnitView(const Rect& frame) : TabView(frame), unit_(NULL) {
   AddTab("Stat", unit_over_view_);
   AddTab("Equip", equipment_set_view_);
   AddTab("Status", unit_status_view_);
+
+  visible(false);
 }
 
 void UnitView::SetUnit(const core::IUnitBase* unit) {
@@ -37,6 +39,8 @@ void UnitView::SetUnit(const core::IUnitBase* unit) {
     if (unit != nullptr) {
       unit_status_view_->SetUnit(unit);
     }
+
+    visible(true);
   }
 }
 

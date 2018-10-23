@@ -91,9 +91,7 @@ StateUIOperable::StateUIOperable(Base base) : StateUI(base), cursor_cell_(0, 0) 
 
 void StateUIOperable::Enter() {}
 
-void StateUIOperable::Exit() {
-  gv_->unit_tooltip_view()->visible(false);
-}
+void StateUIOperable::Exit() { gv_->unit_tooltip_view()->visible(false); }
 
 void StateUIOperable::Update() {
   // Update camera coords
