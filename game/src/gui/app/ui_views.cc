@@ -26,15 +26,6 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
     : CompositeView(rect) {
   core::Stage* stage = scenario->current_stage();
 
-  {  // Initialize deploy_view_
-    auto assets = stage->assets();
-    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
-
-    deploy_view_ = new DeployView(frame, assets, stage, game_view, base_path);
-    deploy_view_->visible(true);
-    AddChild(deploy_view_);
-  }
-
   {  // Initialize item_detail_tooltip_view_
     Rect item_detail_tooltip_frame =
         LayoutHelper::CalcPosition(GetFrameSize(), {220, 80}, LayoutHelper::kAlignLftTop, LayoutHelper::kDefaultSpace);
@@ -116,6 +107,15 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
     unit_action_view_ = new UnitActionView(frame, stage->user_interface(), game_view);
     unit_action_view_->visible(false);
     AddChild(unit_action_view_);
+  }
+
+  {  // Initialize deploy_view_
+    auto assets = stage->assets();
+    Rect frame = LayoutHelper::CalcPosition(GetFrameSize(), {680, 480}, LayoutHelper::kAlignCenter);
+
+    deploy_view_ = new DeployView(frame, assets, stage, game_view, base_path);
+    deploy_view_->visible(true);
+    AddChild(deploy_view_);
   }
 }
 

@@ -93,7 +93,6 @@ void StateUIOperable::Enter() {}
 
 void StateUIOperable::Exit() {
   gv_->unit_tooltip_view()->visible(false);
-  gv_->unit_view()->visible(false);
 }
 
 void StateUIOperable::Update() {
@@ -169,7 +168,6 @@ void StateUIView::Update() {
     unit_tooltip_view->visible(true);
   } else {
     unit_tooltip_view->visible(false);
-    unit_view->visible(false);
   }
 
   if (gi_->IsAITurn()) {
