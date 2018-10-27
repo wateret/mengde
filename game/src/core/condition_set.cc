@@ -20,5 +20,11 @@ void ConditionSet::NextTurn() {
   }
 }
 
+void ConditionSet::Iterate(const std::function<void(Condition, TurnBased)>& fn) const {
+  for (auto& e : set_) {
+    fn(e.first, e.second);
+  }
+}
+
 }  // namespace core
 }  // namespace mengde
