@@ -47,7 +47,12 @@ UnitKey AvailableUnits::FindByPos(Vec2D pos) {
 AvailableMoves::AvailableMoves(Stage* stage, const UnitKey& ukey) {
   auto uid = AvailableUnits(stage).Get(ukey);
   Unit* unit = stage->LookupUnit(uid);
-  moves_ = stage->FindMovablePos(unit);
+
+  if (unit->condition_set().Has(Condition::kStunned) || unit->condition_set().Has(Condition::kRooted)) {
+    moves_.push_back(unit->position());
+  } else {
+    moves_ = stage->FindMovablePos(unit);
+  }
 }
 
 Vec2D AvailableMoves::Get(const MoveKey& mkey) {
@@ -79,34 +84,40 @@ AvailableActs::AvailableActs(Stage* stage, const UnitKey& ukey, const MoveKey& m
     case ActionType::kBasicAttack: {
       auto atk_id = uid;
       Unit* atk = stage_->LookupUnit(uid);
-      atk->attack_range().ForEach(
-          [&](Vec2D pos) {
-            if (!stage->IsValidCoords(pos)) return;
-            auto def = stage->GetUnitInCell(pos);
-            if (def != nullptr && atk->IsHostile(def)) {
-              acts_.push_back(std::make_unique<CmdBasicAttack>(atk_id, def->uid(), CmdBasicAttack::Type::kActive));
-            }
-          },
-          move_pos);
+
+      if (!atk->condition_set().Has(Condition::kStunned)) {
+        atk->attack_range().ForEach(
+            [&](Vec2D pos) {
+              if (!stage->IsValidCoords(pos)) return;
+              auto def = stage->GetUnitInCell(pos);
+              if (def != nullptr && atk->IsHostile(def)) {
+                acts_.push_back(std::make_unique<CmdBasicAttack>(atk_id, def->uid(), CmdBasicAttack::Type::kActive));
+              }
+            },
+            move_pos);
+      }
       break;
     }
 
     case ActionType::kMagic: {
       auto atk_id = uid;
       Unit* atk = stage_->LookupUnit(uid);
-      MagicList magic_list(stage->magic_manager(), atk);
 
-      for (int i = 0; i < magic_list.NumMagics(); i++) {
-        Magic* magic = magic_list.GetMagic(i);
-        magic->GetRange().ForEach(
-            [&](Vec2D pos) {
-              if (!stage->IsValidCoords(pos)) return;
-              const Unit* def = stage->GetUnitInCell(pos);
-              if (def != nullptr && atk->IsHostile(def) == magic->is_target_enemy()) {
-                acts_.push_back(std::make_unique<CmdMagic>(atk_id, def->uid(), magic));
-              }
-            },
-            move_pos);
+      if (!atk->condition_set().Has(Condition::kStunned)) {
+        MagicList magic_list(stage->magic_manager(), atk);
+
+        for (int i = 0; i < magic_list.NumMagics(); i++) {
+          Magic* magic = magic_list.GetMagic(i);
+          magic->GetRange().ForEach(
+              [&](Vec2D pos) {
+                if (!stage->IsValidCoords(pos)) return;
+                const Unit* def = stage->GetUnitInCell(pos);
+                if (def != nullptr && atk->IsHostile(def) == magic->is_target_enemy()) {
+                  acts_.push_back(std::make_unique<CmdMagic>(atk_id, def->uid(), magic));
+                }
+              },
+              move_pos);
+        }
       }
       break;
     }

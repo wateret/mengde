@@ -14,7 +14,7 @@ class ConditionSet {
   ConditionSet() = default;
 
  public:
-  bool Exist(Condition condition) const;
+  bool Has(Condition condition) const;
   TurnBased Get(Condition condition) const;
   void Set(Condition condition, const TurnBased& turn_based);
   void NextTurn();
