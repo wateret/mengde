@@ -232,7 +232,8 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
 
   // Counter attack
   bool is_last_attack = (reserve_second_attack == IsSecond());
-  if (is_last_attack && !IsCounter() && def->IsInRange(atk->position())) {
+  if (is_last_attack && !IsCounter() && def->IsInRange(atk->position()) &&
+      !def->condition_set().Has(Condition::kStunned)) {
     LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def->id().c_str(), atk->id().c_str());
     ret->Append(std::make_unique<CmdBasicAttack>(def_, atk_, CmdBasicAttack::Type::kCounter));
   }

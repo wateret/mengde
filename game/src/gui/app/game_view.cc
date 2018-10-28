@@ -65,7 +65,15 @@ void GameView::Render(Drawer* drawer) {
   // Render units
   gi_->ForEachUnit([this, drawer](const core::Unit* unit) {
     if (this->SkipRender(unit->uid()) || unit->IsDead()) return;
+
     RenderUnit(drawer, unit, unit->position());
+
+    if (unit->condition_set().Has(core::Condition::kStunned)) {
+      drawer->SetDrawColor(COLOR("yellow"));
+      // FIXME Do not calculate the position here
+      auto draw_coords = unit->position() * config::kBlockSize + 4;
+      drawer->FillRect(Rect{draw_coords, {8, 8}});
+    }
   });
 
   drawer->SetOffset({0, 0});
