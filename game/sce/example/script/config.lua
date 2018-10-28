@@ -196,6 +196,19 @@ gconfig = {
                 { type = "condition", condition = "stunned", turns = 3 }
             }
         },
+        {   id       = "root",
+            target   = "enemy",
+            accuracy = "always",
+            range    = "Distance4_Incl",
+            mp       = 8,
+            learnat  = {
+                { class = "Strategist-1", level = 10 }
+            },
+            effects = {
+                { type = "hp", power = -30 },
+                { type = "condition", condition = "rooted", turns = 3 }
+            }
+        },
     },
     heroes = {
         {   id    = "CaoCao",

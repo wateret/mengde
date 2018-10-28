@@ -68,11 +68,20 @@ void GameView::Render(Drawer* drawer) {
 
     RenderUnit(drawer, unit, unit->position());
 
-    if (unit->condition_set().Has(core::Condition::kStunned)) {
-      drawer->SetDrawColor(COLOR("yellow"));
-      // FIXME Do not calculate the position here
-      auto draw_coords = unit->position() * config::kBlockSize + 4;
-      drawer->FillRect(Rect{draw_coords, {8, 8}});
+    {
+      int status_height = 0;
+      auto show_status = [&](core::Condition condition, const std::string& color) {
+        if (unit->condition_set().Has(condition)) {
+          drawer->SetDrawColor(COLOR(color));
+          // FIXME Do not calculate the position here
+          auto draw_coords = unit->position() * config::kBlockSize + 4;
+          draw_coords.y += status_height;
+          drawer->FillRect(Rect{draw_coords, {8, 8}});
+          status_height += 8;
+        }
+      };
+      show_status(core::Condition::kStunned, "yellow");
+      show_status(core::Condition::kRooted, "darkgray");
     }
   });
 
