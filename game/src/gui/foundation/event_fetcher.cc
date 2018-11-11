@@ -67,8 +67,10 @@ bool EventFetcher::Poll() {
                           ((e.key.keysym.mod & KMOD_SHIFT) ? KeyEvent::Mod::kShift : KeyEvent::Mod::kNone) |
                           ((e.key.keysym.mod & KMOD_ALT) ? KeyEvent::Mod::kAlt : KeyEvent::Mod::kNone);
       event_.key = KeyEvent(e.key.keysym.sym, mod, state, e.key.repeat, e.key.timestamp);
-      LOG_DEBUG("KeyEvent: 0x%02x 0x%02x 0x%02x %u %u", e.key.keysym.sym, static_cast<uint16_t>(mod),
-                static_cast<uint16_t>(state), e.key.repeat, e.key.timestamp);
+      LOG_DEBUG("[Key] Window(%u) ScanCode(%s|0x%02x) Key(%s|0x%02x) Mod(0x%02x) %s %s", e.key.windowID,
+                SDL_GetScancodeName(e.key.keysym.scancode), e.key.keysym.scancode, SDL_GetKeyName(e.key.keysym.sym),
+                e.key.keysym.sym, static_cast<uint16_t>(mod), state == KeyEvent::State::kUp ? "UP" : "DOWN",
+                e.key.repeat ? "REPEAT" : "");
       break;
     }
     default:
