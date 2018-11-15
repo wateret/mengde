@@ -2,7 +2,7 @@
 #define MENGDE_GUI_APP_UNIT_STATUS_VIEW_H_
 
 #include "common.h"
-#include "gui/uifw/vertical_list_view.h"
+#include "gui/uifw/table_view.h"
 
 namespace mengde {
 namespace core {
@@ -14,7 +14,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-class UnitStatusView : public uifw::VerticalListView {
+class UnitStatusView : public uifw::TableView {
  public:
   UnitStatusView(const Rect& frame);
 
