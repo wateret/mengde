@@ -27,10 +27,10 @@ void UnitStatusView::OnUnitUpdate() {
   auto armor = unit_->GetEquipmentSet()->GetArmor();
   auto aid = unit_->GetEquipmentSet()->GetAid();
 
-  AddCol("name");
-  AddCol("turn");
-  AddCol("addend");
-  AddCol("mul");
+  AddCol("Type");
+  AddCol("Turn");
+  AddCol("+");
+  AddCol("%");
   {
     auto sm_handler = [&](const core::StatModifier& mod) {
       auto id = string(core::Attribute::kToString[mod.stat_id()]);
@@ -38,8 +38,8 @@ void UnitStatusView::OnUnitUpdate() {
       auto addend = std::to_string(mod.addend());
       auto mul = std::to_string(mod.multiplier());
 
-      AddRow({new TextView{element_rect, id}, new TextView{element_rect, turns_left + "T"},
-              new TextView{element_rect, addend + "+"}, new TextView{element_rect, mul + "%"}});
+      AddRow({new TextView{element_rect, id}, new TextView{element_rect, turns_left},
+              new TextView{element_rect, addend}, new TextView{element_rect, mul}});
     };
 
     unit_->volatile_attribute().stat_modifier_list().iterate(sm_handler);
@@ -50,7 +50,7 @@ void UnitStatusView::OnUnitUpdate() {
 
   {
     auto ee_handler = [&](const core::EventEffectBase& eff) {
-      auto turns_left = std::to_string(eff.turn().left()) + "T";
+      auto turns_left = std::to_string(eff.turn().left());
       AddRow({new TextView{element_rect, "[some_effect] "}, new TextView{element_rect, turns_left}});
     };
 
@@ -68,7 +68,7 @@ void UnitStatusView::OnUnitUpdate() {
         if (c == core::Condition::kPoisoned) return "poisoned";
         return "";
       }(condition);
-      auto turns_left = std::to_string(turns.left()) + "T";
+      auto turns_left = std::to_string(turns.left());
       AddRow({new TextView{element_rect, cond_name}, new TextView{element_rect, turns_left}});
     };
 
