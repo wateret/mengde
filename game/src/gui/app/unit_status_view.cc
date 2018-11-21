@@ -33,7 +33,6 @@ void UnitStatusView::OnUnitUpdate() {
   AddCol("mul");
   {
     auto sm_handler = [&](const core::StatModifier& mod) {
-  
       auto id = string(core::Attribute::kToString[mod.stat_id()]);
       auto turns_left = std::to_string(mod.turn().left());
       auto addend = std::to_string(mod.addend());
