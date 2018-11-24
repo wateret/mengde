@@ -9,7 +9,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-UnitStatusView::UnitStatusView(const Rect& frame) : VerticalListView{frame}, unit_{NULL} {}
+UnitStatusView::UnitStatusView(const Rect& frame) : TableView{frame}, unit_{NULL} {}
 
 void UnitStatusView::SetUnit(const core::Unit* unit) {
   unit_ = unit;
@@ -27,8 +27,20 @@ void UnitStatusView::OnUnitUpdate() {
   auto armor = unit_->GetEquipmentSet()->GetArmor();
   auto aid = unit_->GetEquipmentSet()->GetAid();
 
+  AddCol("Type");
+  AddCol("Turn");
+  AddCol("+");
+  AddCol("%");
   {
-    auto sm_handler = [&](const core::StatModifier& mod) { AddElement(new TextView{element_rect, mod.ToString()}); };
+    auto sm_handler = [&](const core::StatModifier& mod) {
+      auto id = string(core::Attribute::kToString[mod.stat_id()]);
+      auto turns_left = std::to_string(mod.turn().left());
+      auto addend = std::to_string(mod.addend());
+      auto mul = std::to_string(mod.multiplier());
+
+      AddRow({new TextView{element_rect, id}, new TextView{element_rect, turns_left},
+              new TextView{element_rect, addend}, new TextView{element_rect, mul}});
+    };
 
     unit_->volatile_attribute().stat_modifier_list().iterate(sm_handler);
     if (weapon) weapon->volatile_attribute().stat_modifier_list().iterate(sm_handler);
@@ -38,8 +50,8 @@ void UnitStatusView::OnUnitUpdate() {
 
   {
     auto ee_handler = [&](const core::EventEffectBase& eff) {
-      auto turns_left = std::to_string(eff.turn().left()) + "T";
-      AddElement(new TextView{element_rect, "[some_effect] " + turns_left});
+      auto turns_left = std::to_string(eff.turn().left());
+      AddRow({new TextView{element_rect, "[some_effect] "}, new TextView{element_rect, turns_left}});
     };
 
     unit_->volatile_attribute().event_effect_list().iterate(ee_handler);
@@ -56,8 +68,8 @@ void UnitStatusView::OnUnitUpdate() {
         if (c == core::Condition::kPoisoned) return "poisoned";
         return "";
       }(condition);
-      auto turns_left = std::to_string(turns.left()) + "T";
-      AddElement(new TextView{element_rect, cond_name + " " + turns_left});
+      auto turns_left = std::to_string(turns.left());
+      AddRow({new TextView{element_rect, cond_name}, new TextView{element_rect, turns_left}});
     };
 
     unit_->condition_set().Iterate(cond_handler);
