@@ -4,6 +4,7 @@
 #include "core/user_interface.h"
 #include "gui/foundation/texture_animator.h"
 #include "gui/uifw/i_view.h"
+#include "key_mapper.h"
 #include "util/state.h"
 
 #include "common.h"
@@ -56,6 +57,7 @@ class StateUI : public State, public IView {
  protected:
   core::UserInterface* gi_;
   GameView* gv_;
+  KeyMapper key_mapper_;
 };
 
 // StateUIMain

@@ -226,6 +226,8 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, const core::UnitKey& unit_key)
     : StateUIOperable(base), unit_key_(unit_key), moves_(gi_->QueryMoves(unit_key_)) {
+  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+
   const core::Unit* unit = gi_->GetUnit(unit_key_);
   origin_coords_ = unit->position();
 }
@@ -279,10 +281,9 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
 }
 
 bool StateUIUnitSelected::OnKeyEvent(const foundation::KeyEvent& e) {
-  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
-    switch (e.GetCode()) {
-      case foundation::KeyEvent::Code::kEsc:
+    switch (key_mapper_.Get(e.GetCode())) {
+      case KeyCmd::kBack:
         gv_->PopUIState();
         break;
       default:
@@ -712,6 +713,8 @@ StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit
       range_(GetRange()),
       acts_(gi_->QueryActs(unit_key_, move_key_,
                            is_basic_attack_ ? core::ActionType::kBasicAttack : core::ActionType::kMagic)) {
+  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+
   Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
   frame.Move(frame.w() + LayoutHelper::kDefaultSpace, 0);
@@ -782,10 +785,9 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
 }
 
 bool StateUITargeting::OnKeyEvent(const foundation::KeyEvent& e) {
-  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
-    switch (e.GetCode()) {
-      case foundation::KeyEvent::Code::kEsc:
+    switch (key_mapper_.Get(e.GetCode())) {
+      case KeyCmd::kBack:
         gv_->PopUIState();
         break;
       default:
@@ -833,6 +835,8 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
 StateUIAction::StateUIAction(StateUI::Base base, const core::UnitKey& unit_key, const core::MoveKey& move_id)
     : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key)), move_id_(move_id) {
+  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+
   pos_ = gi_->QueryMoves(unit_key_).Get(move_id_);
 }
 
@@ -865,10 +869,9 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
 }
 
 bool StateUIAction::OnKeyEvent(const foundation::KeyEvent& e) {
-  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
-    switch (e.GetCode()) {
-      case foundation::KeyEvent::Code::kEsc:
+    switch (key_mapper_.Get(e.GetCode())) {
+      case KeyCmd::kBack:
         gv_->PopUIState();
         break;
       default:
@@ -883,6 +886,8 @@ bool StateUIAction::OnKeyEvent(const foundation::KeyEvent& e) {
 StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, const core::UnitKey& unit_key,
                                              const core::MoveKey& move_id)
     : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key_)), move_id_(move_id) {
+  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+
   pos_ = gi_->QueryMoves(unit_key).Get(move_id_);
 }
 
@@ -914,10 +919,9 @@ bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEven
 }
 
 bool StateUIMagicSelection::OnKeyEvent(const foundation::KeyEvent& e) {
-  // TODO Design a way to remap the key
   if (e.IsKeyUp()) {
-    switch (e.GetCode()) {
-      case foundation::KeyEvent::Code::kEsc:
+    switch (key_mapper_.Get(e.GetCode())) {
+      case KeyCmd::kBack:
         gv_->PopUIState();
         break;
       default:
