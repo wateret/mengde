@@ -4,7 +4,7 @@
 #include "core/user_interface.h"
 #include "gui/foundation/texture_animator.h"
 #include "gui/uifw/i_view.h"
-#include "key_mapper.h"
+#include "key_handler.h"
 #include "util/state.h"
 
 #include "common.h"
@@ -47,7 +47,7 @@ class StateUI : public State, public IView {
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override { return false; }
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override { return true; }
   virtual bool OnMouseWheelEvent(const foundation::MouseWheelEvent&) override { return false; }
-  virtual bool OnKeyEvent(const foundation::KeyEvent&) override { return false; }
+  virtual bool OnKeyEvent(const foundation::KeyEvent&) override final;
   Base WrapBase() { return {gi_, gv_}; }
 
 #ifdef DEBUG
@@ -57,7 +57,7 @@ class StateUI : public State, public IView {
  protected:
   core::UserInterface* gi_;
   GameView* gv_;
-  KeyMapper key_mapper_;
+  KeyHandler key_handler_;
 };
 
 // StateUIMain
@@ -156,7 +156,6 @@ class StateUIUnitSelected : public StateUIOperable {
   virtual void Render(Drawer*) override;
   virtual void Update() override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
-  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIUnitSelected"; }
@@ -334,7 +333,6 @@ class StateUIAction : public StateUI {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
-  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIAction"; }
 #endif
@@ -355,7 +353,6 @@ class StateUIMagicSelection : public StateUI {
   virtual void Exit() override;
   virtual void Render(Drawer*) override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
-  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUIMagicSelection"; }
 #endif
@@ -379,7 +376,6 @@ class StateUITargeting : public StateUIOperable {
   virtual void Update() override;
   virtual bool OnMouseButtonEvent(const foundation::MouseButtonEvent&) override;
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
-  virtual bool OnKeyEvent(const foundation::KeyEvent&) override;
 #ifdef DEBUG
   virtual string GetStateID() const override { return "StateUITargeting"; }
 #endif

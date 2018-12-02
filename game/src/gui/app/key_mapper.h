@@ -9,7 +9,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-enum class KeyCmd {
+enum class KeyCmdCode {
   kNone,
   kBack,
   kCameraLeft,
@@ -21,11 +21,11 @@ enum class KeyCmd {
 class KeyMapper {
  public:
   KeyMapper() = default;
-  void Set(SDL_Keycode keycode, KeyCmd cmd);
-  KeyCmd Get(SDL_Keycode keycode);
+  void Set(SDL_Keycode keycode, KeyCmdCode cmd);
+  KeyCmdCode Get(SDL_Keycode keycode);
 
  private:
-  std::unordered_map<SDL_Keycode, KeyCmd> keys_;
+  std::unordered_map<SDL_Keycode, KeyCmdCode> keys_;
 };
 
 }  // namespace app

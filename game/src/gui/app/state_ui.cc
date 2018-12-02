@@ -21,6 +21,7 @@
 #include "gui/uifw/drawer.h"
 #include "gui/uifw/modal_dialog_view.h"
 #include "gui/uifw/modal_view.h"
+#include "key_mapper.h"
 #include "layout_helper.h"
 #include "magic_list_view.h"
 #include "resource_path.h"
@@ -39,6 +40,18 @@ namespace app {
 // StateUI
 
 StateUI::StateUI(Base base) : gi_(base.gi), gv_(base.gv) {}
+
+bool StateUI::OnKeyEvent(const foundation::KeyEvent& e) {
+  if (e.IsKeyUp()) {
+    // FIXME Do not generate KeyMapper every time
+    KeyMapper key_mapper;
+    key_mapper.Set(SDLK_ESCAPE, KeyCmdCode::kBack);
+
+    auto cmd_code = key_mapper.Get(e.GetCode());
+    key_handler_.Run(cmd_code);
+  }
+  return true;
+}
 
 // StateUIMain
 
@@ -226,7 +239,8 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, const core::UnitKey& unit_key)
     : StateUIOperable(base), unit_key_(unit_key), moves_(gi_->QueryMoves(unit_key_)) {
-  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+  key_handler_.Register(KeyCmdCode::kBack,
+                        std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   const core::Unit* unit = gi_->GetUnit(unit_key_);
   origin_coords_ = unit->position();
@@ -276,19 +290,6 @@ bool StateUIUnitSelected::OnMouseButtonEvent(const foundation::MouseButtonEvent&
     }
   } else if (e.IsRightButtonUp()) {
     gv_->PopUIState();
-  }
-  return true;
-}
-
-bool StateUIUnitSelected::OnKeyEvent(const foundation::KeyEvent& e) {
-  if (e.IsKeyUp()) {
-    switch (key_mapper_.Get(e.GetCode())) {
-      case KeyCmd::kBack:
-        gv_->PopUIState();
-        break;
-      default:
-        break;
-    }
   }
   return true;
 }
@@ -713,7 +714,8 @@ StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit
       range_(GetRange()),
       acts_(gi_->QueryActs(unit_key_, move_key_,
                            is_basic_attack_ ? core::ActionType::kBasicAttack : core::ActionType::kMagic)) {
-  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+  key_handler_.Register(KeyCmdCode::kBack,
+                        std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
                                           LayoutHelper::kDefaultSpace);
@@ -784,19 +786,6 @@ bool StateUITargeting::OnMouseButtonEvent(const foundation::MouseButtonEvent& e)
   return true;
 }
 
-bool StateUITargeting::OnKeyEvent(const foundation::KeyEvent& e) {
-  if (e.IsKeyUp()) {
-    switch (key_mapper_.Get(e.GetCode())) {
-      case KeyCmd::kBack:
-        gv_->PopUIState();
-        break;
-      default:
-        break;
-    }
-  }
-  return true;
-}
-
 bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
   StateUIOperable::OnMouseMotionEvent(e);
 
@@ -835,7 +824,8 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
 StateUIAction::StateUIAction(StateUI::Base base, const core::UnitKey& unit_key, const core::MoveKey& move_id)
     : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key)), move_id_(move_id) {
-  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+  key_handler_.Register(KeyCmdCode::kBack,
+                        std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   pos_ = gi_->QueryMoves(unit_key_).Get(move_id_);
 }
@@ -868,25 +858,13 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   return true;
 }
 
-bool StateUIAction::OnKeyEvent(const foundation::KeyEvent& e) {
-  if (e.IsKeyUp()) {
-    switch (key_mapper_.Get(e.GetCode())) {
-      case KeyCmd::kBack:
-        gv_->PopUIState();
-        break;
-      default:
-        break;
-    }
-  }
-  return true;
-}
-
 // StateUIMagicSelection
 
 StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, const core::UnitKey& unit_key,
                                              const core::MoveKey& move_id)
     : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key_)), move_id_(move_id) {
-  key_mapper_.Set(SDLK_ESCAPE, KeyCmd::kBack);
+  key_handler_.Register(KeyCmdCode::kBack,
+                        std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   pos_ = gi_->QueryMoves(unit_key).Get(move_id_);
 }
@@ -914,19 +892,6 @@ void StateUIMagicSelection::Render(Drawer* drawer) {
 bool StateUIMagicSelection::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
   if (e.IsRightButtonUp()) {
     gv_->PopUIState();
-  }
-  return true;
-}
-
-bool StateUIMagicSelection::OnKeyEvent(const foundation::KeyEvent& e) {
-  if (e.IsKeyUp()) {
-    switch (key_mapper_.Get(e.GetCode())) {
-      case KeyCmd::kBack:
-        gv_->PopUIState();
-        break;
-      default:
-        break;
-    }
   }
   return true;
 }
