@@ -110,10 +110,10 @@ class StateUIOperable : public StateUI {
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
   Vec2D GetCursorCell() { return cursor_cell_; }
   void ClearScrolls();
-  void SetScrollLeft();
-  void SetScrollRight();
-  void SetScrollUp();
-  void SetScrollDown();
+  void SetScrollLeft(bool b);
+  void SetScrollRight(bool b);
+  void SetScrollUp(bool b);
+  void SetScrollDown(bool b);
   bool IsScrollLeft();
   bool IsScrollRight();
   bool IsScrollUp();

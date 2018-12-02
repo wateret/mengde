@@ -42,14 +42,18 @@ namespace app {
 StateUI::StateUI(Base base) : gi_(base.gi), gv_(base.gv) {}
 
 bool StateUI::OnKeyEvent(const foundation::KeyEvent& e) {
-  if (e.IsKeyUp()) {
-    // FIXME Do not generate KeyMapper every time
-    KeyMapper key_mapper;
-    key_mapper.Set(SDLK_ESCAPE, KeyCmdCode::kBack);
+  // FIXME Do not generate KeyMapper every time
+  KeyMapper key_mapper;
+  key_mapper.Set(SDLK_ESCAPE, KeyCmdCode::kBack);
+  key_mapper.Set(SDLK_LEFT, KeyCmdCode::kCameraLeft);
+  key_mapper.Set(SDLK_RIGHT, KeyCmdCode::kCameraRight);
+  key_mapper.Set(SDLK_UP, KeyCmdCode::kCameraUp);
+  key_mapper.Set(SDLK_DOWN, KeyCmdCode::kCameraDown);
 
-    auto cmd_code = key_mapper.Get(e.GetCode());
-    key_handler_.Run(cmd_code);
-  }
+  auto cmd_code = key_mapper.Get(e.GetCode());
+  auto type = e.IsKeyUp() ? KeyHandler::kUp : KeyHandler::kDown;
+  key_handler_.Run({cmd_code, type});
+
   return true;
 }
 
@@ -100,7 +104,26 @@ bool StateUIDoCmd::OnMouseMotionEvent(const foundation::MouseMotionEvent&) { ret
 
 // StateUIOperable
 
-StateUIOperable::StateUIOperable(Base base) : StateUI(base), cursor_cell_(0, 0) { ClearScrolls(); }
+StateUIOperable::StateUIOperable(Base base) : StateUI(base), cursor_cell_(0, 0) {
+  ClearScrolls();
+
+  key_handler_.Register({KeyCmdCode::kCameraLeft, KeyHandler::kDown},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollLeft(true); }));
+  key_handler_.Register({KeyCmdCode::kCameraLeft, KeyHandler::kUp},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollLeft(false); }));
+  key_handler_.Register({KeyCmdCode::kCameraRight, KeyHandler::kDown},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollRight(true); }));
+  key_handler_.Register({KeyCmdCode::kCameraRight, KeyHandler::kUp},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollRight(false); }));
+  key_handler_.Register({KeyCmdCode::kCameraUp, KeyHandler::kDown},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollUp(true); }));
+  key_handler_.Register({KeyCmdCode::kCameraUp, KeyHandler::kUp},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollUp(false); }));
+  key_handler_.Register({KeyCmdCode::kCameraDown, KeyHandler::kDown},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollDown(true); }));
+  key_handler_.Register({KeyCmdCode::kCameraDown, KeyHandler::kUp},
+                        std::make_unique<KeyHandler::KeyCallback>([&]() { SetScrollDown(false); }));
+}
 
 void StateUIOperable::Enter() {}
 
@@ -134,23 +157,23 @@ bool StateUIOperable::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) 
 
     ClearScrolls();
     Vec2D mouse_coords = gv_->GetMouseCoords();
-    if (mouse_coords.x < kLeftScroll) SetScrollLeft();
-    if (mouse_coords.x > kRightScroll) SetScrollRight();
-    if (mouse_coords.y < kUpScroll) SetScrollUp();
-    if (mouse_coords.y > kDownScroll) SetScrollDown();
+    if (mouse_coords.x < kLeftScroll) SetScrollLeft(true);
+    if (mouse_coords.x > kRightScroll) SetScrollRight(true);
+    if (mouse_coords.y < kUpScroll) SetScrollUp(true);
+    if (mouse_coords.y > kDownScroll) SetScrollDown(true);
   }
   return true;
 }
 
 void StateUIOperable::ClearScrolls() { scroll_left_ = scroll_right_ = scroll_up_ = scroll_down_ = false; }
 
-void StateUIOperable::SetScrollLeft() { scroll_left_ = true; }
+void StateUIOperable::SetScrollLeft(bool b) { scroll_left_ = b; }
 
-void StateUIOperable::SetScrollRight() { scroll_right_ = true; }
+void StateUIOperable::SetScrollRight(bool b) { scroll_right_ = b; }
 
-void StateUIOperable::SetScrollUp() { scroll_up_ = true; }
+void StateUIOperable::SetScrollUp(bool b) { scroll_up_ = b; }
 
-void StateUIOperable::SetScrollDown() { scroll_down_ = true; }
+void StateUIOperable::SetScrollDown(bool b) { scroll_down_ = b; }
 
 bool StateUIOperable::IsScrollLeft() { return scroll_left_; }
 
@@ -239,7 +262,7 @@ bool StateUIView::OnMouseMotionEvent(const foundation::MouseMotionEvent& e) {
 
 StateUIUnitSelected::StateUIUnitSelected(StateUI::Base base, const core::UnitKey& unit_key)
     : StateUIOperable(base), unit_key_(unit_key), moves_(gi_->QueryMoves(unit_key_)) {
-  key_handler_.Register(KeyCmdCode::kBack,
+  key_handler_.Register({KeyCmdCode::kBack, KeyHandler::kUp},
                         std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   const core::Unit* unit = gi_->GetUnit(unit_key_);
@@ -714,7 +737,7 @@ StateUITargeting::StateUITargeting(StateUI::Base base, const core::UnitKey& unit
       range_(GetRange()),
       acts_(gi_->QueryActs(unit_key_, move_key_,
                            is_basic_attack_ ? core::ActionType::kBasicAttack : core::ActionType::kMagic)) {
-  key_handler_.Register(KeyCmdCode::kBack,
+  key_handler_.Register({KeyCmdCode::kBack, KeyHandler::kUp},
                         std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   Rect frame = LayoutHelper::CalcPosition(gv_->GetFrameSize(), {200, 100}, LayoutHelper::kAlignLftBot,
@@ -824,7 +847,7 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
 
 StateUIAction::StateUIAction(StateUI::Base base, const core::UnitKey& unit_key, const core::MoveKey& move_id)
     : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key)), move_id_(move_id) {
-  key_handler_.Register(KeyCmdCode::kBack,
+  key_handler_.Register({KeyCmdCode::kBack, KeyHandler::kUp},
                         std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   pos_ = gi_->QueryMoves(unit_key_).Get(move_id_);
@@ -863,7 +886,7 @@ bool StateUIAction::OnMouseButtonEvent(const foundation::MouseButtonEvent& e) {
 StateUIMagicSelection::StateUIMagicSelection(StateUI::Base base, const core::UnitKey& unit_key,
                                              const core::MoveKey& move_id)
     : StateUI(base), unit_key_(unit_key), unit_id_(gi_->QueryUnits().Get(unit_key_)), move_id_(move_id) {
-  key_handler_.Register(KeyCmdCode::kBack,
+  key_handler_.Register({KeyCmdCode::kBack, KeyHandler::kUp},
                         std::make_unique<KeyHandler::KeyCallback>([& gv = gv_]() { gv->PopUIState(); }));
 
   pos_ = gi_->QueryMoves(unit_key).Get(move_id_);
