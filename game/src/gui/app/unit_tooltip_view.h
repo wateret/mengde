@@ -26,10 +26,13 @@ class UnitTooltipView : public CompositeView {
   void SetUnitActionInfo(const core::Unit*, int, int);
   void SetUnit(const core::Unit*);
   void SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur, const core::HpMp& hpmp_max,
-                   const core::HpMp& hpmp_ext);
+                   const core::HpMp& hpmp_ext, bool hp_mode, bool mp_mode);
   void SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame);
 
   virtual bool OnMouseMotionEvent(const foundation::MouseMotionEvent&) override;
+
+ private:
+  void SetMode(bool hp_mode, bool mp_mode);
 
  private:
   const core::Unit* unit_;

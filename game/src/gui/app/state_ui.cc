@@ -718,7 +718,8 @@ void StateUIUnitTooltipAnim::Update() {
   }
 
   // TODO Update only HP and MP
-  gv_->unit_tooltip_view()->SetContents(unit->id(), unit->GetLevel(), hpmp_mod, unit->GetOriginalHpMp(), hpmp_rem);
+  gv_->unit_tooltip_view()->SetContents(unit->id(), unit->GetLevel(), hpmp_mod, unit->GetOriginalHpMp(), hpmp_rem,
+                                        hp_ < 0, mp_ < 0);
 }
 
 void StateUIUnitTooltipAnim::Render(Drawer*) {}

@@ -74,11 +74,11 @@ void UnitTooltipView::SetUnitActionInfo(const core::Unit* unit, int accuracy, in
   if (hp_diff < 0) {
     gv_hp_->SetCurVal(cur_xtat.hp);
     gv_hp_->SetExtVal(-hp_diff);
-    gv_hp_->SetExtColor(COLOR("gauge_hp_damage"));
+    SetMode(true, false /* MP - Dummy value */);
   } else {
     gv_hp_->SetCurVal(cur_xtat.hp + hp_diff);
     gv_hp_->SetExtVal(hp_diff);
-    gv_hp_->SetExtColor(COLOR("gauge_hp_heal"));
+    SetMode(false, false /* MP - Dummy value */);
   }
 
   tv_rgtbot_->SetText("Accuracy : " + std::to_string(accuracy) + "%");
@@ -99,7 +99,7 @@ void UnitTooltipView::SetUnit(const core::Unit* unit) {
 }
 
 void UnitTooltipView::SetContents(const std::string& name, int lv, const core::HpMp& hpmp_cur,
-                                  const core::HpMp& hpmp_max, const core::HpMp& hpmp_ext) {
+                                  const core::HpMp& hpmp_max, const core::HpMp& hpmp_ext, bool hp_mode, bool mp_mode) {
   unit_ = nullptr;  // Reset cache
   gv_hp_->SetCurVal(hpmp_cur.hp);
   gv_hp_->SetMaxVal(hpmp_max.hp);
@@ -111,6 +111,7 @@ void UnitTooltipView::SetContents(const std::string& name, int lv, const core::H
   tv_lv_->SetText("Lv " + std::to_string(lv));
   tv_lftbot_->SetText("");
   tv_rgtbot_->SetText("");
+  SetMode(hp_mode, mp_mode);
 }
 
 void UnitTooltipView::SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game_frame) {
@@ -118,6 +119,13 @@ void UnitTooltipView::SetCoordsByUnitCoords(Vec2D unit, Vec2D camera, Vec2D game
 }
 
 bool UnitTooltipView::OnMouseMotionEvent(const foundation::MouseMotionEvent&) { return false; }
+
+void UnitTooltipView::SetMode(bool hp_mode, bool mp_mode) {
+  auto hp_color = hp_mode ? COLOR("gauge_hp_damage") : COLOR("gauge_hp_heal");
+  auto mp_color = mp_mode ? COLOR("gauge_hp_damage") : COLOR("gauge_hp_heal");
+  gv_hp_->SetExtColor(hp_color);
+  gv_mp_->SetExtColor(mp_color);
+}
 
 }  // namespace app
 }  // namespace gui
