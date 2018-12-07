@@ -3,6 +3,7 @@
 
 #include <functional>
 #include <memory>
+#include <type_traits>
 
 #include "key_mapper.h"
 
@@ -22,12 +23,12 @@ class KeyHandler {
     KeyType type;
 
     bool operator==(const Event& o) const { return code == o.code && type == o.type; }
-    //    Event() : code{KeyCmdCode::kNone}, type{KeyType::kNone} {}
   };
 
   struct EventHasher {
-    std::size_t operator()(const Event&) const {
-      return 0;  // std::hash<KeyCmdCode>(e.code);
+    std::size_t operator()(const Event& e) const {
+      using KeyCmdCodeUnderlying = std::underlying_type<KeyCmdCode>::type;
+      return std::hash<KeyCmdCodeUnderlying>()(static_cast<KeyCmdCodeUnderlying>(e.code));
     }
   };
 
