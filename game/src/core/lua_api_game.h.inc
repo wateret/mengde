@@ -25,3 +25,6 @@ MACRO_LUA_GAME(SetOnDefeat,         set_on_defeat)
 MACRO_LUA_GAME(SetEndCondition,     set_end_condition)
 MACRO_LUA_GAME(RegisterEvent,       register_event)
 MACRO_LUA_GAME(UnregisterEvent,     unregister_event)
+
+// AI
+MACRO_LUA_GAME(SetAIMode,           set_ai_mode)

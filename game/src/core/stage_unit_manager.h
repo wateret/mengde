@@ -23,6 +23,7 @@ class StageUnitManager {
   UId Deploy(Unit*);
   void Kill(Unit*);
   Unit* Get(const UId& id);
+  void SetAIMode(const UId& id, AIMode mode);
   void ForEach(function<void(Unit*)>);
   void ForEachConst(function<void(const Unit*)> fn) const;
 

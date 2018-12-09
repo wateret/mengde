@@ -74,6 +74,10 @@ end
 function on_begin(game)
     -- Enemies
     enemies.lubu = game:generate_unit("LuBu", 12, Enum.force.enemy, {9, 6})
+
+    -- Set AI mode
+    game:set_ai_mode(enemies.lubu, "unit_in_range_random")
+
 --    game:generate_unit("Cavalry", 18, Enum.force.enemy, {10, 7})
 
     game:cmd_gain_exp(owns.zhangliao, 199)

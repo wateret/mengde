@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "ai_mode.h"
 #include "i_deploy_helper.h"
 #include "lua_callbacks.h"
 #include "luab/lua.h"
@@ -104,6 +105,8 @@ class Stage : public IDeployHelper {
   void SetOnVictory(const luab::Ref& ref);
   void SetOnDefeat(const luab::Ref& ref);
   void SetEndCondition(const luab::Ref& ref);
+  void SetAIMode(const UId& uid, AIMode ai_mode);
+
   uint32_t RegisterEvent(const luab::Ref& condition, const luab::Ref& handler);
   void UnregisterEvent(uint32_t id);
   void RunEvents();
