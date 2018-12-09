@@ -1,6 +1,9 @@
 #ifndef MENGDE_CORE_STAGE_UNIT_MANAGER_H_
 #define MENGDE_CORE_STAGE_UNIT_MANAGER_H_
 
+#include <unordered_map>
+
+#include "ai_mode.h"
 #include "id.h"
 #include "util/common.h"
 
@@ -25,7 +28,7 @@ class StageUnitManager {
 
  private:
   vector<Unit*> units_;
-  //  vector<bool>  units_status_;
+  std::unordered_map<UId, AIMode> ai_modes_;
 };
 
 }  // namespace core
