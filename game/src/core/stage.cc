@@ -331,6 +331,8 @@ uint32_t Stage::RegisterEvent(const luab::Ref& condition, const luab::Ref& handl
 
 void Stage::UnregisterEvent(uint32_t id) { return lua_callbacks_->UnregisterEvent(id); }
 
+void Stage::SetAIMode(const UId& uid, AIMode ai_mode) { stage_unit_manager_->SetAIMode(uid, ai_mode); }
+
 void Stage::RunEvents() { return lua_callbacks_->RunEvents(lua_this()); }
 
 bool Stage::SubmitDeploy() {

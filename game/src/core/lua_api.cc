@@ -222,4 +222,20 @@ LUA_IMPL(UnregisterEvent) {
   return 0;
 }
 
+LUA_IMPL(SetAIMode) {
+  luab::Lua lua{L};
+  auto ai_mode = StringToAIMode(lua.Pop<string>());
+  auto uid = mengde::core::UId{lua.Pop<uint32_t>()};
+  auto stage = lua.Pop<Stage*>();
+
+  if (ai_mode == mengde::core::AIMode::kNone) {
+    // TODO Handle error in a better way
+    throw "Unknown AI Mode";
+  }
+
+  stage->SetAIMode(uid, ai_mode);
+
+  return 0;
+}
+
 #undef LUA_IMPL
