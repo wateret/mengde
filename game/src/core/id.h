@@ -60,4 +60,19 @@ using ActKey = Id<uint32_t, struct Tag_ActKey>;
 }  // namespace core
 }  // namespace mengde
 
+// Specialization of std::hash for class Id
+
+namespace std {
+
+template <typename T, typename Tag>
+struct hash<::mengde::core::Id<T, Tag>> {
+  typedef ::mengde::core::Id<T, Tag> ArgType;
+  size_t operator()(const ArgType& arg) const {
+    // If the value is None return 0, otherwise return the hash value of the underlying value
+    return arg ? std::hash<T>{}(arg.Value()) : 0u;
+  }
+};
+
+}  // namespace std
+
 #endif  // MENGDE_CORE_ID_H_
