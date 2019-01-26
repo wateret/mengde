@@ -9,6 +9,7 @@
 #include "magic.h"
 #include "stage.h"
 #include "user_interface.h"
+#include "ai_executor.h"
 
 namespace mengde {
 namespace core {
@@ -475,37 +476,9 @@ CmdPlayAI::CmdPlayAI() : Cmd() {}
 
 unique_ptr<Cmd> CmdPlayAI::Do(Stage* game) {
   UserInterface* ui = game->user_interface();
-  AvailableUnits units = ui->QueryUnits();
+  AIExecutor ai_executor{ui};
 
-  // XXX create an AI handler module and delegate to it.
-  // Currently a simple rushing AI is implemented here.
-
-  // No more unit waiting for command
-  if (units.Count() == 0) {
-    return unique_ptr<Cmd>(new CmdEndTurn());
-  }
-
-  const UnitKey ukey{0u};
-
-  AvailableMoves moves = ui->QueryMoves(ukey);
-
-  bool found_target = false;
-  MoveKey mkey = 0;
-  moves.ForEach([&](const MoveKey& mk, Vec2D) {
-    AvailableActs acts = ui->QueryActs(ukey, mk, ActionType::kBasicAttack);
-    if (acts.Count() > 0 && !found_target) {
-      found_target = true;
-      mkey = mk;
-    }
-  });
-
-  if (found_target) {
-    ui->PushAction(ukey, mkey, ActionType::kBasicAttack, 0 /* Simply choose first one */);
-  } else {
-    ui->PushAction(ukey, GenRandom(moves.Count()), ActionType::kStay, 0);
-  }
-
-  return nullptr;
+  return ai_executor.Step();
 }
 
 // CmdGameVictory
