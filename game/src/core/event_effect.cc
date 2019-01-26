@@ -1,6 +1,6 @@
 #include "event_effect.h"
 
-#include "cmd.h"
+#include "cmds.h"
 #include "unit.h"
 
 namespace mengde {

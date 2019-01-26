@@ -5,7 +5,7 @@
 
 #include <utility>
 
-#include "cmd.h"
+#include "cmds.h"
 #include "id.h"
 #include "util/common.h"
 

@@ -1,6 +1,6 @@
 #include "event_effect_list.h"
 
-#include "cmd.h"  // TODO Only for CmdQueue
+#include "cmd_queue.h"
 #include "event_effect.h"
 #include "util/common.h"
 #include "util/std/util.h"

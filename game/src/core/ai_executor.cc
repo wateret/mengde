@@ -5,8 +5,7 @@
 namespace mengde {
 namespace core {
 
-AIExecutor::AIExecutor(UserInterface* ui) : ui_{ui} {
-}
+AIExecutor::AIExecutor(UserInterface* ui) : ui_{ui} {}
 
 unique_ptr<Cmd> AIExecutor::Step() {
   AvailableUnits units = ui_->QueryUnits();
@@ -43,4 +42,3 @@ unique_ptr<Cmd> AIExecutor::Step() {
 
 }  // namespace core
 }  // namespace mengde
-

@@ -1,7 +1,8 @@
 #ifndef MENGDE_CORE_CMD_VISITOR_H_
 #define MENGDE_CORE_CMD_VISITOR_H_
 
-#include "cmd.h"
+#include "cmd_queue.h"
+#include "cmds.h"
 
 namespace mengde {
 namespace core {

@@ -1,6 +1,6 @@
 #include "equipment_set.h"
 
-#include "cmd.h"  // TODO included for CmdQueue only
+#include "cmd_queue.h"
 #include "i_equipper.h"
 
 namespace mengde {
