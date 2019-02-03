@@ -188,6 +188,11 @@ vector<Vec2D> UserInterface::GetPath(const UId& unit_id, Vec2D pos) const {
   return map->FindPathTo(unit_id, pos);
 }
 
+const IAIUnit* UserInterface::GetAIUnit(const UnitKey& unit_key) const {
+  auto uid = AvailableUnits(stage_).Get(unit_key);
+  return stage_->GetAIUnit(uid);
+}
+
 Vec2D UserInterface::GetMapSize() const { return stage_->GetMapSize(); }
 
 string UserInterface::GetMapId() const { return stage_->GetMapId(); }

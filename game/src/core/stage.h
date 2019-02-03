@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "ai_mode.h"
+#include "ai_unit_manager.h"
 #include "i_deploy_helper.h"
 #include "lua_callbacks.h"
 #include "luab/lua.h"
@@ -86,6 +87,7 @@ class Stage : public IDeployHelper {
   Status GetStatus() { return status_; }
   Assets* assets() { return assets_.get(); }
   unique_ptr<Assets>&& ReturnAssets() { return std::move(assets_); }
+  const IAIUnit* GetAIUnit(const UId& uid) const;
 
   // IDeployHelper interfaces
   bool SubmitDeploy() override;
