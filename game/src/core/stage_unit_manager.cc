@@ -22,7 +22,9 @@ Unit* StageUnitManager::Get(const UId& id) {
   return units_[id.Value()];
 }
 
-void StageUnitManager::SetAIMode(const UId& id, AIMode mode) { ai_modes_[id] = mode; }
+void StageUnitManager::SetAIMode(const UId& id, AIMode mode) { ai_unit_manager_.Set(id, mode); }
+
+const IAIUnit* StageUnitManager::GetAIUnit(const UId& id) { return ai_unit_manager_.Get(id); }
 
 void StageUnitManager::ForEach(function<void(Unit*)> fn) { std::for_each(units_.begin(), units_.end(), fn); }
 

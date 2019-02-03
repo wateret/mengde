@@ -358,5 +358,7 @@ uint32_t Stage::UnassignDeploy(const Hero* hero) { return deployer_->Unassign(he
 
 uint32_t Stage::FindDeploy(const Hero* hero) { return deployer_->Find(hero); }
 
+const IAIUnit* Stage::GetAIUnit(const UId& uid) const { return stage_unit_manager_->GetAIUnit(uid); }
+
 }  // namespace core
 }  // namespace mengde

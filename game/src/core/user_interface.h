@@ -19,6 +19,7 @@ class Scenario;
 class Unit;
 class Turn;
 class MagicList;
+class IAIUnit;
 
 class AvailableUnits {
  public:
@@ -74,6 +75,7 @@ class UserInterface {
   const Unit* GetUnit(Vec2D pos) const;
   const Cell* GetCell(Vec2D pos) const;
   vector<Vec2D> GetPath(const UId& unit_id, Vec2D pos) const;
+  const IAIUnit* GetAIUnit(const UnitKey& unit_key) const;
 
   std::shared_ptr<core::MagicList> GetMagicList(const UId& uid) const;
   const Magic* GetMagic(const string& id) const;

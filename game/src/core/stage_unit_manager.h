@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "ai_mode.h"
+#include "ai_unit_manager.h"
 #include "id.h"
 #include "util/common.h"
 
@@ -24,12 +25,13 @@ class StageUnitManager {
   void Kill(Unit*);
   Unit* Get(const UId& id);
   void SetAIMode(const UId& id, AIMode mode);
+  const IAIUnit* GetAIUnit(const UId& id);
   void ForEach(function<void(Unit*)>);
   void ForEachConst(function<void(const Unit*)> fn) const;
 
  private:
   vector<Unit*> units_;
-  std::unordered_map<UId, AIMode> ai_modes_;
+  AIUnitManager ai_unit_manager_;
 };
 
 }  // namespace core
