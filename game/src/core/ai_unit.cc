@@ -9,6 +9,21 @@ namespace core {
 
 void AIUnitNone::play(const UnitKey&, UserInterface*) const { throw std::runtime_error("Unreachable"); }
 
+// AIUnitRandom
+
+void AIUnitRandom::play(const UnitKey& ukey, UserInterface* ui) const {
+  AvailableMoves moves = ui->QueryMoves(ukey);
+
+  MoveKey mkey = GenRandom(moves.Count());
+
+  AvailableActs acts = ui->QueryActs(ukey, mkey, ActionType::kBasicAttack);
+  if (acts.Count() > 0) {
+    ui->PushAction(ukey, mkey, ActionType::kBasicAttack, 0 /* Simply choose first one */);
+  } else {
+    ui->PushAction(ukey, GenRandom(moves.Count()), ActionType::kStay, 0);
+  }
+}
+
 // AIUnitDoNothing
 
 void AIUnitDoNothing::play(const UnitKey& ukey, UserInterface* ui) const {
@@ -34,6 +49,19 @@ void AIUnitUnitInRangeRandom::play(const UnitKey& ukey, UserInterface* ui) const
     ui->PushAction(ukey, mkey, ActionType::kBasicAttack, 0 /* Simply choose first one */);
   } else {
     ui->PushAction(ukey, GenRandom(moves.Count()), ActionType::kStay, 0);
+  }
+}
+
+// AIUnitHoldPosition
+
+void AIUnitHoldPosition::play(const UnitKey& ukey, UserInterface* ui) const {
+  AvailableMoves moves = ui->QueryMoves(ukey);
+  MoveKey mkey = 0;
+  AvailableActs acts = ui->QueryActs(ukey, mkey, ActionType::kBasicAttack);
+  if (acts.Count() > 0) {
+    ui->PushAction(ukey, mkey, ActionType::kBasicAttack, 0 /* Simply choose first one */);
+  } else {
+    ui->PushAction(ukey, mkey, ActionType::kStay, 0);
   }
 }
 

@@ -2,6 +2,7 @@
 #include <sstream>
 #include "stdlib.h"
 
+// return an integer between [0, end)
 int GenRandom(int v) { return rand() % v; }
 
 // return an integer between [begin, end)
