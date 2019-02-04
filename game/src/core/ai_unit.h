@@ -17,12 +17,22 @@ class AIUnitNone : public IAIUnit {
   virtual void play(const UnitKey& unit_key, UserInterface* ui) const override;
 };
 
+class AIUnitRandom : public IAIUnit {
+ public:
+  virtual void play(const UnitKey& unit_key, UserInterface* ui) const override;
+};
+
 class AIUnitDoNothing : public IAIUnit {
  public:
   virtual void play(const UnitKey& unit_key, UserInterface* ui) const override;
 };
 
 class AIUnitUnitInRangeRandom : public IAIUnit {
+ public:
+  virtual void play(const UnitKey& unit_key, UserInterface* ui) const override;
+};
+
+class AIUnitHoldPosition : public IAIUnit {
  public:
   virtual void play(const UnitKey& unit_key, UserInterface* ui) const override;
 };
