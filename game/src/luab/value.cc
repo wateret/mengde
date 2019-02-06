@@ -34,6 +34,12 @@ using Userdata = void*;
 template Value::Value(const double& value);
 
 template <>
+Value::Value(const uint16_t& value) : Value{static_cast<double>(value)} {}
+
+template <>
+Value::Value(const int16_t& value) : Value{static_cast<double>(value)} {}
+
+template <>
 Value::Value(const uint32_t& value) : Value{static_cast<double>(value)} {}
 
 template <>
@@ -46,6 +52,18 @@ template Value::Value(const Table& value);
 template Value::Value(const Userdata& value);
 
 template double Value::Get<double>() const;
+
+template <>
+uint16_t Value::Get() const {
+  // TODO Check if in valid range
+  return static_cast<uint16_t>(Get<double>());
+}
+
+template <>
+int16_t Value::Get() const {
+  // TODO Check if in valid range
+  return static_cast<int16_t>(Get<double>());
+}
 
 template <>
 uint32_t Value::Get() const {
