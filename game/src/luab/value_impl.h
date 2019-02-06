@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "value_type.h"
+
 namespace luab {
 
 //
@@ -14,12 +16,20 @@ class ValueImpl {
   static std::shared_ptr<ValueImpl> New(const std::shared_ptr<ValueImpl>& value);
 
  public:
+  ValueImpl(ValueType type = ValueType::kNone) : type_{type} {}
+
+ public:
   virtual ~ValueImpl() = default;
   virtual ValueImpl* New() = 0;
 
  public:
   template <typename T>
   T Get() const;
+
+  ValueType type() const { return type_; }
+
+ private:
+  ValueType type_;
 };
 
 }  // namespace luab

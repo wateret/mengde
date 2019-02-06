@@ -27,20 +27,7 @@ T Value::Get() const {
   return value_->Get<T>();
 }
 
-Value::Type Value::type() const {
-  auto ptr = value_.get();
-  if (dynamic_cast<ValueImpls<double>*>(ptr)) {
-    return Type::kNumber;
-  } else if (dynamic_cast<ValueImpls<std::string>*>(ptr)) {
-    return Type::kString;
-  } else if (dynamic_cast<ValueImpls<Table>*>(ptr)) {
-    return Type::kTable;
-  } else if (dynamic_cast<ValueImpls<void*>*>(ptr)) {
-    return Type::kUserdata;
-  }
-  assert(!"Unknown type of value");
-  return Type::kNone;
-}
+ValueType Value::type() const { return value_->type(); }
 
 using Userdata = void*;
 

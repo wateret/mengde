@@ -1,5 +1,6 @@
 #include "value_impl.h"
 
+#include "exceptions.h"
 #include "value_impls.h"
 
 namespace luab {
@@ -22,6 +23,9 @@ template <typename T>
 T ValueImpl::Get() const {
   auto actual_this = dynamic_cast<const ValueImpls<T>*>(this);
   assert(actual_this != nullptr);
+  if (actual_this == nullptr) {
+    throw WrongTypeException{"?", "?"};  // TODO Replace question marks with real type names
+  }
   return actual_this->GetValue();
 }
 
