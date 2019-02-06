@@ -8,6 +8,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "value_type.h"
+
 namespace luab {
 
 //
@@ -17,15 +19,6 @@ namespace luab {
 class ValueImpl;
 
 class Value {
- public:
-  enum class Type {
-    kNone,
-    kNumber,
-    kString,
-    kTable,
-    kUserdata,
-  };
-
  public:
   Value() = delete;
 
@@ -42,7 +35,7 @@ class Value {
   ValueImpl& operator*() noexcept;
 
  public:
-  Type type() const;
+  ValueType type() const;
 
  public:
   template <typename T>
