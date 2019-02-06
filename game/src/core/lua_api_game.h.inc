@@ -11,6 +11,7 @@ MACRO_LUA_GAME(ObtainEquipment,     obtain_equipment)
 MACRO_LUA_GAME(GetNumEnemiesAlive,  get_num_enemies_alive)
 MACRO_LUA_GAME(GetNumOwnsAlive,     get_num_owns_alive)
 MACRO_LUA_GAME(GetUnitInfo,         get_unit_info)
+MACRO_LUA_GAME(GetUnitOnPosition,   get_unit_on_position)
 
 // Pushing commands
 MACRO_LUA_GAME(CmdMove,             cmd_move)

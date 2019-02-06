@@ -212,7 +212,7 @@ class Lua {
 
   template <typename T>
   void PushToStack(T val) {
-    lua_pushnumber(L, (double)val);
+    lua_pushnumber(L, static_cast<double>(val));
   }
 
   template <typename T>
@@ -251,6 +251,8 @@ class Lua {
       lua_settable(L, -3);
     });
   }
+
+  void PushNilToStack() { lua_pushnil(L); }
 
   // OO-style registering class and method
 

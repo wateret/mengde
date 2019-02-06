@@ -108,6 +108,21 @@ LUA_IMPL(GetUnitInfo) {
   return 1;
 }
 
+LUA_IMPL(GetUnitOnPosition) {
+  luab::Lua lua{L};
+  Vec2D pos = GetVec2DFromLua(&lua);
+  Stage* stage = lua.Pop<Stage*>();
+
+  auto unit = stage->GetUnitInCell(pos);
+  if (unit) {
+    lua.PushToStack(unit->uid().Value());
+  } else {
+    lua.PushNilToStack();
+  }
+
+  return 1;
+}
+
 LUA_IMPL(CmdMove) {
   luab::Lua lua(L);
   Vec2D pos = GetVec2DFromLua(&lua);
