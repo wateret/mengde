@@ -23,11 +23,7 @@ void TableImpl::Dump() {
     auto value = e.second;
     printf("  %s: ", key.c_str());
     switch (value.type()) {
-      case Value::Type::kInt32:
-        printf("%d", value.Get<int32_t>());
-        break;
-
-      case Value::Type::kDouble:
+      case Value::Type::kNumber:
         printf("%f", value.Get<double>());
         break;
 

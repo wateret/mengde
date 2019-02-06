@@ -29,10 +29,8 @@ T Value::Get() const {
 
 Value::Type Value::type() const {
   auto ptr = value_.get();
-  if (dynamic_cast<ValueImpls<int32_t>*>(ptr)) {
-    return Type::kInt32;
-  } else if (dynamic_cast<ValueImpls<double>*>(ptr)) {
-    return Type::kDouble;
+  if (dynamic_cast<ValueImpls<double>*>(ptr)) {
+    return Type::kNumber;
   } else if (dynamic_cast<ValueImpls<std::string>*>(ptr)) {
     return Type::kString;
   } else if (dynamic_cast<ValueImpls<Table>*>(ptr)) {
@@ -46,9 +44,10 @@ Value::Type Value::type() const {
 
 using Userdata = void*;
 
-template Value::Value(const int32_t& value);
-
 template Value::Value(const double& value);
+
+template <>
+Value::Value(const int32_t& value) : Value{static_cast<double>(value)} {}
 
 template Value::Value(const std::string& value);
 
@@ -56,9 +55,13 @@ template Value::Value(const Table& value);
 
 template Value::Value(const Userdata& value);
 
-template int32_t Value::Get<int32_t>() const;
-
 template double Value::Get<double>() const;
+
+template <>
+int32_t Value::Get() const {
+  // TODO Check if in valid range
+  return static_cast<int32_t>(Get<double>());
+}
 
 template std::string Value::Get<std::string>() const;
 
