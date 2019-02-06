@@ -20,8 +20,7 @@ class Value {
  public:
   enum class Type {
     kNone,
-    kInt32,
-    kDouble,
+    kNumber,
     kString,
     kTable,
     kUserdata,

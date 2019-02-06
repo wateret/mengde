@@ -11,7 +11,6 @@ ValueImpl* ValueImpls<Table>::New() {
   return this;
 }
 
-template class ValueImpls<int32_t>;
 template class ValueImpls<double>;
 template class ValueImpls<std::string>;
 template class ValueImpls<Table>;

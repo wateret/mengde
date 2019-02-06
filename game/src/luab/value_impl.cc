@@ -25,7 +25,6 @@ T ValueImpl::Get() const {
   return actual_this->GetValue();
 }
 
-template int32_t ValueImpl::Get<int32_t>() const;
 template double ValueImpl::Get<double>() const;
 template std::string ValueImpl::Get<std::string>() const;
 template Table ValueImpl::Get<Table>() const;

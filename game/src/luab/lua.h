@@ -229,10 +229,7 @@ class Lua {
     table.ForEachNonArray([this](const std::string& key, const luab::Value& val) {
       lua_pushstring(L, key.c_str());
       switch (val.type()) {
-        case luab::Value::Type::kInt32:
-          lua_pushnumber(L, val.Get<int32_t>());
-          break;
-        case luab::Value::Type::kDouble:
+        case luab::Value::Type::kNumber:
           lua_pushnumber(L, val.Get<double>());
           break;
         case luab::Value::Type::kString:
