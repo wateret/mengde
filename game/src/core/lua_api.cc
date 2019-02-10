@@ -96,6 +96,7 @@ LUA_IMPL(GetUnitInfo) {
 
   table.Set("id", unit->id());
   table.Set("uid", unit->uid().Value());
+  table.Set("level", unit->GetLevel());
   {
     luab::Table pos;
     pos.Set("x", unit->position().x);
