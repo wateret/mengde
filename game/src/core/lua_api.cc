@@ -3,6 +3,7 @@
 #include "cmd.h"
 #include "luab/lua.h"
 #include "stage.h"
+#include "cell.h"
 
 using namespace mengde::core;
 
@@ -148,6 +149,16 @@ LUA_IMPL(GetUnitOnPosition) {
   } else {
     lua.PushNilToStack();
   }
+
+  return 1;
+}
+
+LUA_IMPL(GetTerrainOnPosition) {
+  luab::Lua lua{L};
+  Vec2D pos = GetVec2DFromLua(&lua);
+  Stage* stage = lua.Pop<Stage*>();
+
+  lua.PushToStack(stage->GetCell(pos)->GetTerrainId());
 
   return 1;
 }

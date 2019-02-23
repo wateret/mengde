@@ -84,11 +84,15 @@ function on_begin(game)
 
     game:cmd_gain_exp(owns.zhangliao, 199)
 
-    -- Test unit iinfo
+    -- Test unit info
     info = game:get_unit_info(owns.caocao)
     -- print(info.hero_class)
     -- print(info.unit_attr.base.atk, info.unit_attr.base.def)
     -- print(info.cur_hp, info.max_hp)
+
+    -- Test terrain
+    terrain = game:get_terrain_on_position({0, 0})
+    -- print(terrain)
 end
 
 

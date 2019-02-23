@@ -13,7 +13,7 @@ int Cell::GetTerrainEffect(int class_idx) const { return terrain_->GetEffect(cla
 
 int Cell::ApplyTerrainEffect(int class_idx, int value) { return value * terrain_->GetEffect(class_idx) / 100; }
 
-std::string Cell::GetTerrainName() const { return terrain_->GetName(); }
+std::string Cell::GetTerrainId() const { return terrain_->id(); }
 
 }  // namespace core
 }  // namespace mengde

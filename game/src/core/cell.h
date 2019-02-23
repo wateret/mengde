@@ -17,8 +17,8 @@ class Cell {
   int GetMoveCost(int);
   int GetTerrainEffect(int) const;
   int ApplyTerrainEffect(int, int);
-  std::string GetTerrainName() const;
-  bool IsUnitPlaced() const { return !uid_.IsNone(); }  // FIXME Why `return uid_` not work?
+  std::string GetTerrainId() const;
+  bool IsUnitPlaced() const { return !uid_.IsNone(); }
   UId GetUnit() const { return uid_; }
   void SetUnit(const UId& uid) { uid_ = uid; }
   void Empty() { uid_.SetNone(); }

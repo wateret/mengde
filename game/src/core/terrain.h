@@ -12,13 +12,13 @@ class Terrain {
   Terrain(const std::string&, const std::vector<int>&, const std::vector<int>&);
   int GetIndex();
   void SetIndex(int);
-  const std::string& GetName() const { return name_; }
+  const std::string& id() const { return id_; }
   int GetMoveCost(int);
   int GetEffect(int);
 
  private:
   int index_;
-  std::string name_;
+  std::string id_;
   std::vector<int> move_costs_;
   std::vector<int> effects_;
 };
