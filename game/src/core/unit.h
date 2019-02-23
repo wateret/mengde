@@ -49,6 +49,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   virtual void UpdateStat() override;
 
  public:
+  const Hero& hero() { return *hero_; }
   void uid(const UId& uid) { uid_ = uid; }
   UId uid() const { return uid_; }
   uint16_t max_exp() { return Level::kExpLimit; }
@@ -85,7 +86,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
 
  private:
   UId uid_;
-  Hero* hero_;
+  Hero* const hero_;
   EquipmentSet* equipment_set_;
   Attribute current_attr_;
   HpMp current_hpmp_;
