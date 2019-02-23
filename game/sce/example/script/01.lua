@@ -83,6 +83,12 @@ function on_begin(game)
 --    game:generate_unit("Cavalry", 18, Enum.force.enemy, {10, 7})
 
     game:cmd_gain_exp(owns.zhangliao, 199)
+
+    -- Test unit iinfo
+    info = game:get_unit_info(owns.caocao)
+    -- print(info.hero_class)
+    -- print(info.unit_attr.base.atk, info.unit_attr.base.def)
+    -- print(info.cur_hp, info.max_hp)
 end
 
 

@@ -97,11 +97,39 @@ LUA_IMPL(GetUnitInfo) {
   table.Set("id", unit->id());
   table.Set("uid", unit->uid().Value());
   table.Set("level", unit->GetLevel());
+  table.Set("hero_class", unit->unit_class()->id());
   {
     luab::Table pos;
     pos.Set("x", unit->position().x);
     pos.Set("y", unit->position().y);
     table.Set("position", pos);
+  }
+
+  auto build_attr_table = [](const Attribute& obj) {
+    luab::Table attr_table;
+    attr_table.Set("atk", obj.atk);
+    attr_table.Set("def", obj.def);
+    attr_table.Set("dex", obj.dex);
+    attr_table.Set("itl", obj.itl);
+    attr_table.Set("mor", obj.mor);
+    return attr_table;
+  };
+
+  // TODO insert hero_attr
+  // table.Set("hero_attr", build_attr_table(unit->???));
+
+  {
+    luab::Table unit_attr;
+    unit_attr.Set("base", build_attr_table(unit->GetOriginalAttr()));
+    unit_attr.Set("current", build_attr_table(unit->GetCurrentAttr()));
+    table.Set("unit_attr", unit_attr);
+  }
+
+  {
+    table.Set("cur_hp", unit->GetCurrentHpMp().hp);
+    table.Set("cur_mp", unit->GetCurrentHpMp().mp);
+    table.Set("max_hp", unit->GetOriginalHpMp().hp);
+    table.Set("max_mp", unit->GetOriginalHpMp().mp);
   }
 
   lua.PushToStack(table);
