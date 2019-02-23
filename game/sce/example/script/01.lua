@@ -87,8 +87,10 @@ function on_begin(game)
     -- Test unit info
     info = game:get_unit_info(owns.caocao)
     -- print(info.hero_class)
+    -- print(info.hero_attr.atk, info.hero_attr.def)
     -- print(info.unit_attr.base.atk, info.unit_attr.base.def)
     -- print(info.cur_hp, info.max_hp)
+    -- print(info.attack_range["0"].x, info.attack_range["0"].y)
 
     -- Test terrain
     terrain = game:get_terrain_on_position({0, 0})

@@ -1,9 +1,9 @@
 #include "lua_api.h"
 
+#include "cell.h"
 #include "cmd.h"
 #include "luab/lua.h"
 #include "stage.h"
-#include "cell.h"
 
 using namespace mengde::core;
 
@@ -116,8 +116,7 @@ LUA_IMPL(GetUnitInfo) {
     return attr_table;
   };
 
-  // TODO insert hero_attr
-  // table.Set("hero_attr", build_attr_table(unit->???));
+  table.Set("hero_attr", build_attr_table(unit->hero().GetHeroStatBase()));
 
   {
     luab::Table unit_attr;
@@ -131,6 +130,19 @@ LUA_IMPL(GetUnitInfo) {
     table.Set("cur_mp", unit->GetCurrentHpMp().mp);
     table.Set("max_hp", unit->GetOriginalHpMp().hp);
     table.Set("max_mp", unit->GetOriginalHpMp().mp);
+  }
+
+  {
+    luab::Table attack_range;
+    uint32_t idx = 0;
+    unit->attack_range().ForEach([&](const Vec2D& pos) {
+      luab::Table element;
+      element.Set("x", pos.x);
+      element.Set("y", pos.y);
+      attack_range.Set(std::to_string(idx), element);  // TODO support array table(key with int(or any) value type)
+      idx++;
+    });
+    table.Set("attack_range", attack_range);
   }
 
   lua.PushToStack(table);
