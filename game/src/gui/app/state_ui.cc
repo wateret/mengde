@@ -497,8 +497,8 @@ StateUIEmptySelected::StateUIEmptySelected(Base base, Vec2D coords) : StateUI(ba
 
 void StateUIEmptySelected::Enter() {
   const core::Map* map = gi_->GetMap();
-  std::string name = map->GetTerrain(coords_)->GetName();
-  gv_->terrain_info_view()->SetText(name);
+  std::string id = map->GetTerrain(coords_)->id();
+  gv_->terrain_info_view()->SetText(id);
   gv_->terrain_info_view()->visible(true);
 }
 

@@ -55,13 +55,13 @@ void UnitTooltipView::SetUnitTerrainInfo(const core::Cell* cell, const core::Uni
   if (unit_ == unit) return;
   SetUnit(unit);
 
-  string name = cell->GetTerrainName();
+  string id = cell->GetTerrainId();
 
   // TODO cell->GetTerrainEffectThisCell() is unavailable. Need another interface for this.
   // int effect = cell->GetTerrainEffectThisCell();
   int effect = 0;  // FIXME delete this
 
-  string terrain_effect = name + " " + std::to_string(effect) + "%";
+  string terrain_effect = id + " " + std::to_string(effect) + "%";
 
   tv_rgtbot_->SetText(terrain_effect);
 }

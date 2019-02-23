@@ -5,8 +5,8 @@
 namespace mengde {
 namespace core {
 
-Terrain::Terrain(const std::string& name, const std::vector<int>& move_costs, const std::vector<int>& effects)
-    : index_(-1), name_(name), move_costs_(move_costs), effects_(effects) {}
+Terrain::Terrain(const std::string& id, const std::vector<int>& move_costs, const std::vector<int>& effects)
+    : index_(-1), id_(id), move_costs_(move_costs), effects_(effects) {}
 
 int Terrain::GetIndex() {
   ASSERT(index_ != -1);
