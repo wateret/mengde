@@ -209,6 +209,17 @@ LUA_IMPL(CmdGainExp) {
   return 0;
 }
 
+LUA_IMPL(CmdKill) {
+  luab::Lua lua(L);
+
+  UId uid{lua.Pop<uint32_t>()};
+  Stage* stage = lua.Pop<Stage*>();
+
+  stage->Push(std::make_unique<CmdKilled>(uid));
+
+  return 0;
+}
+
 LUA_IMPL(SetOnDeploy) {
   luab::Lua lua(L);
 

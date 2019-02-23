@@ -18,6 +18,7 @@ MACRO_LUA_GAME(GetTerrainOnPosition, get_terrain_on_position)
 MACRO_LUA_GAME(CmdMove,              cmd_move)
 MACRO_LUA_GAME(CmdSpeak,             cmd_speak)
 MACRO_LUA_GAME(CmdGainExp,           cmd_gain_exp)
+MACRO_LUA_GAME(CmdKill,              cmd_kill)
 
 // Callback registration
 MACRO_LUA_GAME(SetOnDeploy,          set_on_deploy)

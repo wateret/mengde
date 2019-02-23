@@ -95,6 +95,8 @@ function on_begin(game)
     -- Test terrain
     terrain = game:get_terrain_on_position({0, 0})
     -- print(terrain)
+
+    -- game:cmd_kill(owns.zhangliao)
 end
 
 
