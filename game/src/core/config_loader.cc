@@ -79,12 +79,15 @@ const EventEffectLoader& EventEffectLoader::instance() {
   return inst;
 }
 
-ConfigLoader::ConfigLoader(const Path& filename) : lua_config_(nullptr), rc_() {
+ConfigLoader::ConfigLoader(const Path& filename) : lua_{}, lua_config_{nullptr}, rc_() {
+  lua_.open_libraries(sol::lib::base/*, sol::lib::coroutine, sol::lib::string, sol::lib::io*/);
+
   Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
   lua_config_ = new ::luab::Lua();
 
   try {
     lua_config_->RunFile(path.ToString());
+    lua_.script_file(path.ToString());
     ParseUnitClassesAndTerrains();
     ParseMagics();
     ParseEquipments();
@@ -132,64 +135,85 @@ Condition ConfigLoader::StringToCondition(const string& s) {
 }
 
 void ConfigLoader::ParseUnitClassesAndTerrains() {
+  auto grade_char_to_int = [](const char grade) -> int {
+    if (grade == 'S') return 5;
+    if (grade == 'A') return 4;
+    if (grade == 'B') return 3;
+    if (grade == 'C') return 2;
+    if (grade == 'D') return 1;
+    return 0;
+  };
+
   rc_.unit_class_manager = new UnitClassManager();
-  int class_idx = 0;
-  lua_config_->ForEachTableEntry("gconfig.unit_classes", [&](luab::Lua* l, const string&) {
-    string id = l->Get<string>("id");
-    string grades = l->Get<string>("stat_grades");
-    string range_s = l->Get<string>("attack_range");
-    int move = l->Get<int>("move");
-    auto promotion_info_table = l->GetOpt<luab::Table>("promotion");
-    vector<int> hp = l->Get<vector<int>>("hp");
-    vector<int> mp = l->Get<vector<int>>("mp");
+  sol::table unit_classes = lua_["gconfig"]["unit_classes"];
+  for (uint32_t i = 1, size = unit_classes.size(); i <= size; i++)
+  {
+    auto unit_class = unit_classes[i];
+    string id = unit_class["id"];
+    string grades = unit_class["stat_grades"];
+    string range_s = unit_class["attack_range"];
+    int move = unit_class["move"];
+    auto promotion_info_table = unit_class["promotion"]; // optional
+    int hp_base = unit_class["hp"][1];
+    int hp_incr = unit_class["hp"][2];
+    int mp_base = unit_class["mp"][1];
+    int mp_incr = unit_class["mp"][2];
 
     Range::Type range = Range::StringToRange(range_s);
-    auto GradeCharToInt = [](const char grade) -> int {
-      if (grade == 'S') return 5;
-      if (grade == 'A') return 4;
-      if (grade == 'B') return 3;
-      if (grade == 'C') return 2;
-      if (grade == 'D') return 1;
-      return 0;
-    };
-
     boost::optional<PromotionInfo> promotion_info;
-    if (!promotion_info_table.empty()) {
-      auto id = promotion_info_table->Get<string>("id");
-      auto level = promotion_info_table->Get<int>("level");
+    if (promotion_info_table.valid()) {
+      string id = promotion_info_table["id"];
+      int level = promotion_info_table["level"];
       promotion_info = PromotionInfo{id, level};
     }
 
-    Attribute stat_grades = {GradeCharToInt(grades[0]), GradeCharToInt(grades[1]), GradeCharToInt(grades[2]),
-                             GradeCharToInt(grades[3]), GradeCharToInt(grades[4])};
-    HeroClass* cla = new HeroClass(id, class_idx++, stat_grades, (Range::Type)range, move, {hp[0], hp[1]},
-                                   {mp[0], mp[1]}, promotion_info);
+    Attribute stat_grades = {grade_char_to_int(grades[0]), grade_char_to_int(grades[1]), grade_char_to_int(grades[2]),
+                             grade_char_to_int(grades[3]), grade_char_to_int(grades[4])};
+    HeroClass* cla = new HeroClass(id, i-1, stat_grades, range, move, {hp_base, hp_incr}, {mp_base, mp_incr}, promotion_info);
     this->rc_.unit_class_manager->Add(id, cla);
-  });
+  }
+
   uint32_t class_count = rc_.unit_class_manager->GetNumElements();
 
   rc_.terrain_manager = new TerrainManager();
   vector<string> ids;
   vector<char> cmaps;
-  lua_config_->ForEachTableEntry("gconfig.terrains", [=, &ids, &cmaps](luab::Lua* l, const string&) mutable {
-    string id = l->Get<string>("id");
-    char cmap = l->Get<string>("char")[0];
+  sol::table terrains = lua_["gconfig"]["terrains"];
+  for (uint32_t i = 1, size = terrains.size(); i <= size; i++) {
+    auto terrain = terrains[i];
+    string id = terrain["id"];
+    string cmap = terrain["char"];
     ids.push_back(id);
-    cmaps.push_back(cmap);
-  });
+    cmaps.push_back(cmap[0]);
+  }
+
   uint32_t terrain_count = ids.size();
 
-  vector<vector<int>> cost_list = lua_config_->Get<vector<vector<int>>>("gconfig.terrain_movecost");
-
-  // Check row and column size
+  sol::table terrain_movecost = lua_["gconfig"]["terrain_movecost"];
+  vector<vector<int>> cost_list(terrain_movecost.size());
+  for (uint32_t i = 1, size = terrain_movecost.size(); i <= size; i++) {
+    sol::table row = terrain_movecost[i];
+    for (uint32_t j = 1, size = row.size(); j <= size; j++) {
+      int elem = row[j];
+      cost_list[i-1].push_back(elem);
+    }
+  }
+  // Verify row and column size
   if (cost_list.size() != terrain_count) throw DataFormatException("Incorrect size of terrain_movecost");
   for (auto e : cost_list) {
     if (e.size() != class_count) throw DataFormatException("Incorrect size of terrain_movecost");
   }
 
-  vector<vector<int>> effect_list = lua_config_->Get<vector<vector<int>>>("gconfig.terrain_effect");
-
-  // Check row and column size
+  sol::table terrain_effect = lua_["gconfig"]["terrain_effect"];
+  vector<vector<int>> effect_list(terrain_effect.size());
+  for (uint32_t i = 1, size = terrain_effect.size(); i <= size; i++) {
+    sol::table row = terrain_effect[i];
+    for (uint32_t j = 1, size = row.size(); j <= size; j++) {
+      int elem = row[j];
+      effect_list[i-1].push_back(elem);
+    }
+  }
+  // Verify row and column size
   if (effect_list.size() != terrain_count) throw DataFormatException("Incorrect size of terrain_effect");
   for (auto e : effect_list) {
     if (e.size() != class_count) throw DataFormatException("Incorrect size of terrain_effect");
