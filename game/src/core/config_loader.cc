@@ -79,7 +79,7 @@ const EventEffectLoader& EventEffectLoader::instance() {
 }
 
 ConfigLoader::ConfigLoader(const Path& filename) : lua_{}, rc_() {
-  lua_.open_libraries(sol::lib::base/*, sol::lib::coroutine, sol::lib::string, sol::lib::io*/);
+  lua_.open_libraries(sol::lib::base /*, sol::lib::coroutine, sol::lib::string, sol::lib::io*/);
 
   Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
 
@@ -128,14 +128,13 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
   rc_.unit_class_manager = new UnitClassManager();
   sol::table unit_classes = lua_["gconfig"]["unit_classes"];
-  for (uint32_t i = 1, size = unit_classes.size(); i <= size; i++)
-  {
+  for (uint32_t i = 1, size = unit_classes.size(); i <= size; i++) {
     auto unit_class = unit_classes[i];
     string id = unit_class["id"];
     string grades = unit_class["attr_grades"];
     string range_s = unit_class["attack_range"];
     int move = unit_class["move"];
-    auto promotion_info_table = unit_class["promotion"]; // optional
+    auto promotion_info_table = unit_class["promotion"];  // optional
     int hp_base = unit_class["hp"][1];
     int hp_incr = unit_class["hp"][2];
     int mp_base = unit_class["mp"][1];
@@ -151,7 +150,8 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
     Attribute stat_grades = {grade_char_to_int(grades[0]), grade_char_to_int(grades[1]), grade_char_to_int(grades[2]),
                              grade_char_to_int(grades[3]), grade_char_to_int(grades[4])};
-    HeroClass* cla = new HeroClass(id, i-1, stat_grades, range, move, {hp_base, hp_incr}, {mp_base, mp_incr}, promotion_info);
+    HeroClass* cla =
+        new HeroClass(id, i - 1, stat_grades, range, move, {hp_base, hp_incr}, {mp_base, mp_incr}, promotion_info);
     this->rc_.unit_class_manager->Add(id, cla);
   }
 
@@ -177,7 +177,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
     sol::table row = terrain_movecost[i];
     for (uint32_t j = 1, size = row.size(); j <= size; j++) {
       int elem = row[j];
-      cost_list[i-1].push_back(elem);
+      cost_list[i - 1].push_back(elem);
     }
   }
   // Verify row and column size
@@ -192,7 +192,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
     sol::table row = terrain_effect[i];
     for (uint32_t j = 1, size = row.size(); j <= size; j++) {
       int elem = row[j];
-      effect_list[i-1].push_back(elem);
+      effect_list[i - 1].push_back(elem);
     }
   }
   // Verify row and column size
@@ -212,7 +212,7 @@ void ConfigLoader::ParseMagics() {
 
   sol::table magics = lua_["gconfig"]["magics"];
 
-  for (auto &magics_itr : magics) {
+  for (auto& magics_itr : magics) {
     sol::table magic_l = magics_itr.second;
     string id = magic_l["id"];
     string range_s = magic_l["range"];
@@ -224,7 +224,7 @@ void ConfigLoader::ParseMagics() {
     auto magic = new Magic{id, range, target, mp};
 
     sol::table effects = magic_l["effects"];
-    for (auto &effect_itr : effects) {
+    for (auto& effect_itr : effects) {
       sol::table effect = effect_itr.second;
       string type_str = effect["type"];
       MagicEffectType type = [](const string& s) {
@@ -264,7 +264,7 @@ void ConfigLoader::ParseMagics() {
     }
 
     sol::table learnats = magic_l["learnat"];
-    for (auto &learnats_itr : learnats) {
+    for (auto& learnats_itr : learnats) {
       sol::table learnat = learnats_itr.second;
       string uclass = learnat["class"];
       uint16_t level = learnat["level"];
@@ -279,7 +279,7 @@ void ConfigLoader::ParseEquipments() {
   rc_.equipment_manager = new EquipmentManager();
 
   sol::table equipments = lua_["gconfig"]["equipments"];
-  for (auto &itr : equipments) {
+  for (auto& itr : equipments) {
     sol::table equipment_tbl = itr.second;
 
     string id = equipment_tbl["id"];
@@ -297,7 +297,7 @@ void ConfigLoader::ParseEquipments() {
 
     sol::table effects = equipment_tbl["effects"];
     if (effects.valid()) {
-      for (auto &itr : effects) {
+      for (auto& itr : effects) {
         sol::table effect = itr.second;
         string event = effect["event"];
         auto ee_loader = EventEffectLoader::instance();
@@ -313,7 +313,7 @@ void ConfigLoader::ParseEquipments() {
 
     sol::table modifiers = equipment_tbl["modifiers"];
     if (modifiers.valid()) {
-      for (auto &itr : modifiers) {
+      for (auto& itr : modifiers) {
         sol::table modifier_tbl = itr.second;
         string stat_s = modifier_tbl["attr"];
         int16_t addend = modifier_tbl.get_or("addend", 0);
@@ -331,18 +331,17 @@ void ConfigLoader::ParseHeroTemplates() {
   rc_.hero_tpl_manager = new HeroTemplateManager();
 
   sol::table heroes = lua_["gconfig"]["heroes"];
-  for (auto &itr : heroes) {
+  for (auto& itr : heroes) {
     sol::table hero_tbl = itr.second;
 
     string id = hero_tbl["id"];
     string uclass = hero_tbl["class"];
     sol::table attr_tbl = hero_tbl["attr"];
     const uint32_t num_attr = 5;
-    if (attr_tbl.size() != num_attr)
-      throw DataFormatException("Hero must have exactly 5 attribute members.");
+    if (attr_tbl.size() != num_attr) throw DataFormatException("Hero must have exactly 5 attribute members.");
     Attribute attr;
     for (uint32_t i = 1; i <= num_attr; i++) {
-      attr[i-1] = attr_tbl[i];
+      attr[i - 1] = attr_tbl[i];
     }
 
     HeroTemplate* hero_tpl = new HeroTemplate(id, rc_.unit_class_manager->Get(uclass), attr);
