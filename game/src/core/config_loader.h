@@ -28,8 +28,8 @@ class EventEffectLoader {
  public:
   ~EventEffectLoader() = default;
 
-  GeneralEventEffect* CreateGeneralEventEffect(const luab::Table&) const;
-  OnCmdEventEffect* CreateOnCmdEventEffect(const luab::Table&) const;
+  GeneralEventEffect* CreateGeneralEventEffect(const sol::table&) const;
+  OnCmdEventEffect* CreateOnCmdEventEffect(const sol::table&) const;
   bool IsGeneralEventEffect(const std::string& key) const;
   bool IsOnCmdEventEffect(const std::string& key) const;
 
