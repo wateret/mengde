@@ -6,7 +6,6 @@
 #include "exceptions.h"
 #include "hero.h"
 #include "hero_class.h"
-#include "luab/lua.h"
 #include "magic.h"
 #include "stat.h"
 #include "stat_modifier.h"
@@ -79,40 +78,23 @@ const EventEffectLoader& EventEffectLoader::instance() {
   return inst;
 }
 
-ConfigLoader::ConfigLoader(const Path& filename) : lua_{}, lua_config_{nullptr}, rc_() {
+ConfigLoader::ConfigLoader(const Path& filename) : lua_{}, rc_() {
   lua_.open_libraries(sol::lib::base/*, sol::lib::coroutine, sol::lib::string, sol::lib::io*/);
 
   Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
-  lua_config_ = new ::luab::Lua();
 
   try {
-    lua_config_->RunFile(path.ToString());
     lua_.script_file(path.ToString());
     ParseUnitClassesAndTerrains();
     ParseMagics();
     ParseEquipments();
     ParseHeroTemplates();
     ParseStages();
-  } catch (const luab::UndeclaredVariableException& e) {
-    LOG_ERROR("%s", e.what());
-    throw ConfigLoadException(e.what());
-  } catch (const luab::WrongTypeException& e) {
-    LOG_ERROR("%s", e.what());
-    throw ConfigLoadException(e.what());
-  } catch (const luab::ScriptRuntimeException& e) {
-    LOG_ERROR("%s", e.what());
-    throw ConfigLoadException(e.what());
   } catch (const DataFormatException& e) {
     LOG_ERROR("%s", e.what());
     throw ConfigLoadException(e.what());
   }
-}
-
-ConfigLoader::~ConfigLoader() {
-  // We do not delete data created by this class,
-  // we assume that corresponding Stage object will do that.
-
-  delete lua_config_;
+  // TODO Handle sol2 execptions
 }
 
 uint16_t ConfigLoader::StatStrToIdx(const string& s) {

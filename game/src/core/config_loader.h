@@ -10,11 +10,6 @@
 
 class Path;
 
-namespace luab {
-class Lua;
-class Table;
-}  // namespace luab
-
 namespace mengde {
 namespace core {
 
@@ -44,7 +39,6 @@ class EventEffectLoader {
 class ConfigLoader {
  public:
   ConfigLoader(const Path&);
-  ~ConfigLoader();
   const ResourceManagers& GetResources() const { return rc_; }
   const vector<string>& GetStages() const { return stages_; }
 
@@ -59,7 +53,6 @@ class ConfigLoader {
 
  private:
   sol::state lua_;
-  ::luab::Lua* lua_config_;
   ResourceManagers rc_;
   vector<string> stages_;
 };
