@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.1)
 project(MENGDE CXX)
 
-# Use our modified FindSDL2* modules
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${MENGDE_SOURCE_DIR}/cmake")
 
 include(CTest)
 include(BoostTestHelpers)
+include(BuildSol2)
 
 # Set an output directory for our binaries
 set(BIN_DIR ${MENGDE_SOURCE_DIR}/bin)
@@ -49,6 +49,7 @@ else()
         include("cmake/armv7l_settings.cmake")
     endif()
 endif()
+
 include_directories(${Boost_INCLUDE_DIR})
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_TTF_INCLUDE_DIR})

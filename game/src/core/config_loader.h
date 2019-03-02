@@ -1,6 +1,8 @@
 #ifndef MENGDE_CORE_CONFIG_LOADER_H_
 #define MENGDE_CORE_CONFIG_LOADER_H_
 
+#include <sol.hpp>
+
 #include "condition.h"
 #include "resource_manager.h"
 #include "util/common.h"
@@ -56,6 +58,7 @@ class ConfigLoader {
   Condition StringToCondition(const string& s);
 
  private:
+  sol::state lua_;
   ::luab::Lua* lua_config_;
   ResourceManagers rc_;
   vector<string> stages_;
