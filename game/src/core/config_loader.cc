@@ -24,9 +24,9 @@ EventEffectLoader::EventEffectLoader() {
   ocee_map_.insert({"on_normal_attacked", event::OnCmdEvent::kNormalAttacked});
 }
 
-GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const luab::Table& table) const {
-  auto str_effect = table.Get<std::string>("effect");
-  auto str_event = table.Get<std::string>("event");
+GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const sol::table& table) const {
+  string str_effect = table["effect"];
+  string str_event = table["event"];
 
   // Find Event Type
   auto found = gee_map_.find(str_event);
@@ -36,17 +36,17 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const luab::Tabl
 
   // Find Effect Type
   if (str_effect == "restore_hp") {
-    auto mult = table.Get<int>("multiplier", 0);
-    auto add = table.Get<int>("addend", 0);
+    auto mult = table.get_or("multiplier", 0);
+    auto add = table.get_or("addend", 0);
     return new GEERestoreHp(event, mult, add);
   }
 
   throw DataFormatException("Such GeneralEventEffect '" + str_effect + "' does not exist");
 }
 
-OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const luab::Table& table) const {
-  auto str_effect = table.Get<std::string>("effect");
-  auto str_event = table.Get<std::string>("event");
+OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& table) const {
+  string str_effect = table["effect"];
+  string str_event = table["event"];
 
   // Find Event Type
   auto found = ocee_map_.find(str_event);
@@ -58,8 +58,8 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const luab::Table& t
   if (str_effect == "preemptive_attack") {
     return new OCEEPreemptiveAttack(event);
   } else if (str_effect == "enhance_basic_attack") {
-    auto mult = table.Get<int>("multiplier", 0);
-    auto add = table.Get<int>("addend", 0);
+    auto mult = table.get_or("multiplier", 0);
+    auto add = table.get_or("addend", 0);
     return new OCEEEnhanceBasicAttack(event, mult, add);
   }
 
@@ -150,7 +150,7 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   {
     auto unit_class = unit_classes[i];
     string id = unit_class["id"];
-    string grades = unit_class["stat_grades"];
+    string grades = unit_class["attr_grades"];
     string range_s = unit_class["attack_range"];
     int move = unit_class["move"];
     auto promotion_info_table = unit_class["promotion"]; // optional
@@ -227,25 +227,27 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
 void ConfigLoader::ParseMagics() {
   rc_.magic_manager = new MagicManager();
-  lua_config_->ForEachTableEntry("gconfig.magics", [this](luab::Lua* l, const string&) {
-    string id = l->Get<string>("id");
-    string range_s = l->Get<string>("range");
-    string target_s = l->Get<string>("target");
-    auto mp = l->Get<uint16_t>("mp");
 
+  sol::table magics = lua_["gconfig"]["magics"];
+
+  for (auto &magics_itr : magics) {
+    sol::table magic_l = magics_itr.second;
+    string id = magic_l["id"];
+    string range_s = magic_l["range"];
+    string target_s = magic_l["target"];
+    auto mp = magic_l["mp"];
     Range::Type range = Range::StringToRange(range_s);
     bool target = (target_s == "enemy");
 
     auto magic = new Magic{id, range, target, mp};
 
-    l->ForEachTableEntry("effects", [&](luab::Lua* l, const string&) {
-      auto effect = l->Get<luab::Table>();
-
-      auto type_str = effect.Get<std::string>("type");
-
+    sol::table effects = magic_l["effects"];
+    for (auto &effect_itr : effects) {
+      sol::table effect = effect_itr.second;
+      string type_str = effect["type"];
       MagicEffectType type = [](const string& s) {
         if (s == "hp") return MagicEffectType::kHP;
-        if (s == "stat") return MagicEffectType::kStat;
+        if (s == "attr") return MagicEffectType::kStat;
         if (s == "condition") return MagicEffectType::kCondition;
         UNREACHABLE("Invalid magic type");
         return MagicEffectType::kNone;
@@ -253,22 +255,22 @@ void ConfigLoader::ParseMagics() {
 
       switch (type) {
         case MagicEffectType::kHP: {
-          auto power = effect.Get<int32_t>("power");
+          int32_t power = effect["power"];
           magic->AddEffect(std::make_unique<MagicEffectHP>(power));
           break;
         }
         case MagicEffectType::kStat: {
-          string stat_s = l->Get<string>("stat");
-          auto amount = effect.Get<int32_t>("amount");
-          auto turns = TurnBased{static_cast<uint16_t>(effect.Get<int32_t>("turns"))};
+          string stat_s = effect["attr"];
+          int16_t amount = effect["amount"];
+          auto turns = TurnBased{static_cast<uint16_t>(effect["turns"])};
           auto stat_id = StatStrToIdx(stat_s);
-          StatMod stat_mod{0, static_cast<int16_t>(amount)};
+          StatMod stat_mod{0, amount};
           magic->AddEffect(std::make_unique<MagicEffectStat>(stat_id, stat_mod, turns));
           break;
         }
         case MagicEffectType::kCondition: {
-          auto condition = StringToCondition(effect.Get<string>("condition"));
-          auto turns = TurnBased{static_cast<uint16_t>(effect.Get<int32_t>("turns"))};
+          auto condition = StringToCondition(effect["condition"]);
+          auto turns = TurnBased{static_cast<uint16_t>(effect["turns"])};
           magic->AddEffect(std::make_unique<MagicEffectCondition>(condition, turns));
           break;
         }
@@ -277,24 +279,31 @@ void ConfigLoader::ParseMagics() {
           UNREACHABLE("Unknown type of magic");
           break;
       };
-    });
+    }
 
-    l->ForEachTableEntry("learnat", [=, &magic](luab::Lua* l, const string&) {
-      string uclass = l->Get<string>("class");
-      uint16_t level = (uint16_t)l->Get<int>("level");
-      magic->AddLearnInfo(rc_.unit_class_manager->Get(uclass)->index(), level);  // FIXME
-    });
+    sol::table learnats = magic_l["learnat"];
+    for (auto &learnats_itr : learnats) {
+      sol::table learnat = learnats_itr.second;
+      string uclass = learnat["class"];
+      uint16_t level = learnat["level"];
+      magic->AddLearnInfo(rc_.unit_class_manager->Get(uclass)->index(), level);
+    }
+
     rc_.magic_manager->Add(id, magic);
-  });
+  }
 }
 
 void ConfigLoader::ParseEquipments() {
   rc_.equipment_manager = new EquipmentManager();
-  lua_config_->ForEachTableEntry("gconfig.equipments", [this](luab::Lua* l, const string&) {
-    string id = l->Get<string>("id");
-    string type_s = l->Get<string>("type");
-    string equipable = l->Get<string>("equipable");
-    string desc = l->Get<string>("description");
+
+  sol::table equipments = lua_["gconfig"]["equipments"];
+  for (auto &itr : equipments) {
+    sol::table equipment_tbl = itr.second;
+
+    string id = equipment_tbl["id"];
+    string type_s = equipment_tbl["type"];
+    string equipable = equipment_tbl["equipable"];
+    string desc = equipment_tbl["description"];
     Equipment::Type type = [](const string& type) {
       if (type == "weapon") return Equipment::Type::kWeapon;
       if (type == "armor") return Equipment::Type::kArmor;
@@ -304,42 +313,68 @@ void ConfigLoader::ParseEquipments() {
 
     Equipment* equipment = new Equipment(id, type);
 
-    l->ForEachTableEntry("effects", [=, &equipment](luab::Lua* l, const string&) {
-      auto table = l->Get<luab::Table>();
-      auto event = table.Get<std::string>("event");
-      auto ee_loader = EventEffectLoader::instance();
-      if (ee_loader.IsGeneralEventEffect(event)) {
-        equipment->AddGeneralEffect(ee_loader.CreateGeneralEventEffect(table));
-      } else if (ee_loader.IsOnCmdEventEffect(event)) {
-        equipment->AddOnCmdEffect(ee_loader.CreateOnCmdEventEffect(table));
-      } else {
-        throw DataFormatException("Such event '" + event + "' does not exist.");
+    sol::table effects = equipment_tbl["effects"];
+    if (effects.valid()) {
+      for (auto &itr : effects) {
+        sol::table effect = itr.second;
+        string event = effect["event"];
+        auto ee_loader = EventEffectLoader::instance();
+        if (ee_loader.IsGeneralEventEffect(event)) {
+          equipment->AddGeneralEffect(ee_loader.CreateGeneralEventEffect(effect));
+        } else if (ee_loader.IsOnCmdEventEffect(event)) {
+          equipment->AddOnCmdEffect(ee_loader.CreateOnCmdEventEffect(effect));
+        } else {
+          throw DataFormatException("Such event '" + event + "' does not exist.");
+        }
       }
-    });
-    l->ForEachTableEntry("modifiers", [=, &equipment](luab::Lua* l, const string&) {
-      string stat_s = l->Get<string>("stat");
-      auto addend = l->GetOpt<int16_t>("addend");
-      auto multiplier = l->GetOpt<int16_t>("multiplier");
-      StatModifier* mod = new StatModifier{id, StatStrToIdx(stat_s), {addend, multiplier}};
-      equipment->AddModifier(mod);
-    });
+    }
+
+    sol::table modifiers = equipment_tbl["modifiers"];
+    if (modifiers.valid()) {
+      for (auto &itr : modifiers) {
+        sol::table modifier_tbl = itr.second;
+        string stat_s = modifier_tbl["attr"];
+        int16_t addend = modifier_tbl.get_or("addend", 0);
+        int16_t multiplier = modifier_tbl.get_or("multiplier", 0);
+        StatModifier* mod = new StatModifier{id, StatStrToIdx(stat_s), {addend, multiplier}};
+        equipment->AddModifier(mod);
+      }
+    }
+
     this->rc_.equipment_manager->Add(id, equipment);
-  });
+  }
 }
 
 void ConfigLoader::ParseHeroTemplates() {
   rc_.hero_tpl_manager = new HeroTemplateManager();
-  lua_config_->ForEachTableEntry("gconfig.heroes", [this](luab::Lua* l, const string&) {
-    string id = l->Get<string>("id");
-    string uclass = l->Get<string>("class");
-    vector<int> statr = l->Get<vector<int>>("stat");
-    Attribute stat = {statr[0], statr[1], statr[2], statr[3], statr[4]};
-    HeroTemplate* hero_tpl = new HeroTemplate(id, rc_.unit_class_manager->Get(uclass), stat);
+
+  sol::table heroes = lua_["gconfig"]["heroes"];
+  for (auto &itr : heroes) {
+    sol::table hero_tbl = itr.second;
+
+    string id = hero_tbl["id"];
+    string uclass = hero_tbl["class"];
+    sol::table attr_tbl = hero_tbl["attr"];
+    const uint32_t num_attr = 5;
+    if (attr_tbl.size() != num_attr)
+      throw DataFormatException("Hero must have exactly 5 attribute members.");
+    Attribute attr;
+    for (uint32_t i = 1; i <= num_attr; i++) {
+      attr[i-1] = attr_tbl[i];
+    }
+
+    HeroTemplate* hero_tpl = new HeroTemplate(id, rc_.unit_class_manager->Get(uclass), attr);
     rc_.hero_tpl_manager->Add(id, hero_tpl);
-  });
+  }
 }
 
-void ConfigLoader::ParseStages() { stages_ = lua_config_->Get<vector<string>>("gconfig.stages"); }
+void ConfigLoader::ParseStages() {
+  sol::table stages_tbl = lua_["gconfig"]["stages"];
+  for (uint32_t i = 1, size = stages_tbl.size(); i <= size; i++) {
+    string stage = stages_tbl[i];
+    stages_.push_back(stage);
+  }
+}
 
 }  // namespace core
 }  // namespace mengde

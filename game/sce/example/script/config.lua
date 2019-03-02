@@ -2,21 +2,21 @@ gconfig = {
     id = "CaoCao",
     unit_classes = {
         {   id           = "Lord-1",
-            stat_grades  = "AAAAA",
+            attr_grades  = "AAAAA",
             attack_range = "Adjacent4",
             move         = 6,
             hp           = {100, 5},
             mp           = {30, 1}
         },
         {   id           = "Infantry-1",
-            stat_grades  = "BASBB",
+            attr_grades  = "BASBB",
             attack_range = "Adjacent8",
             move         = 5,
             hp           = {110, 6},
             mp           = {10, 1}
         },
         {   id           = "Cavalry-1",
-            stat_grades  = "SBABB",
+            attr_grades  = "SBABB",
             attack_range = "Adjacent4",
             move         = 6,
             hp           = {100, 5},
@@ -24,77 +24,77 @@ gconfig = {
             promotion    = { id = "Cavalry-2", level = 20 }
         },
         {   id           = "Cavalry-2",
-            stat_grades  = "SBABB",
+            attr_grades  = "SBABB",
             attack_range = "Adjacent8",
             move         = 7,
             hp           = {150, 5},
             mp           = {20, 1}
         },
         {   id           = "Archer-1",
-            stat_grades  = "ABBBS",
+            attr_grades  = "ABBBS",
             attack_range = "Distance2_8",
             move         = 5,
             hp           = {90, 4},
             mp           = {10, 1}
         },
         {   id           = "HorseArcher-1",
-            stat_grades  = "SBBBA",
+            attr_grades  = "SBBBA",
             attack_range = "Distance2_4",
             move         = 6,
             hp           = {100, 5},
             mp           = {10, 1}
         },
         {   id           = "Carriage-1",
-            stat_grades  = "SBACA",
+            attr_grades  = "SBACA",
             attack_range = "Distance4",
             move         = 4,
             hp           = {90, 4},
             mp           = {10, 1}
         },
         {   id           = "Fighter-1",
-            stat_grades  = "ACASB",
+            attr_grades  = "ACASB",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {90, 4},
             mp           = {20, 1}
         },
         {   id           = "Bandit-1",
-            stat_grades  = "SCBBS",
+            attr_grades  = "SCBBS",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {100, 5},
             mp           = {20, 1}
         },
         {   id           = "Strategist-1",
-            stat_grades  = "BSBBB",
+            attr_grades  = "BSBBB",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {90, 4},
             mp           = {40, 2}
         },
         {   id           = "Support-1",
-            stat_grades  = "CSCAA",
+            attr_grades  = "CSCAA",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {80, 3},
             mp           = {50, 2}
         },
         {   id           = "Guru-1",
-            stat_grades  = "CSBAB",
+            attr_grades  = "CSBAB",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {80, 3},
             mp           = {40, 2}
         },
         {   id           = "HorseStrategist-1",
-            stat_grades  = "ASBBC",
+            attr_grades  = "ASBBC",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {100, 5},
             mp           = {50, 2}
         },
         {   id           = "Dancer-1",
-            stat_grades  = "ABBSB",
+            attr_grades  = "ABBSB",
             attack_range = "Adjacent4",
             move         = 5,
             hp           = {90, 3},
@@ -180,7 +180,7 @@ gconfig = {
                 { class = "Support-1", level = 5 }
             },
             effects = {
-                { type = "stat", stat = "dex", amount = 20, turns = 3 }
+                { type = "attr", attr = "dex", amount = 20, turns = 3 }
             }
         },
         {   id       = "stun",
@@ -213,40 +213,40 @@ gconfig = {
     heroes = {
         {   id    = "CaoCao",
             class = "Lord-1",
-            stat  = {82, 99, 80, 90, 95},
+            attr  = {82, 99, 80, 90, 95},
         },
         {   id    = "DianWei",
             class = "Fighter-1",
-            stat  = {97, 60, 99, 50, 90},
+            attr  = {97, 60, 99, 50, 90},
         },
         {   id    = "ZhangLiao",
             class = "Cavalry-1",
-            stat  = {90, 92, 64, 80, 75},
+            attr  = {90, 92, 64, 80, 75},
         },
         {   id    = "ManChong",
             class = "Support-1",
-            stat  = {20, 60, 50, 90, 50},
+            attr  = {20, 60, 50, 90, 50},
         },
         {   id    = "XiahouDun",
             class = "Cavalry-1",
-            stat  = {94, 84, 72, 48, 95},
+            attr  = {94, 84, 72, 48, 95},
         },
         {   id    = "XunYu",
             class = "Strategist-1",
-            stat  = {34, 75, 77, 98, 64},
+            attr  = {34, 75, 77, 98, 64},
             model = "Strategist-1-red"
         },
         {   id    = "Bandit",
             class = "Bandit-1",
-            stat  = {70, 70, 50, 30, 60},
+            attr  = {70, 70, 50, 30, 60},
         },
         {   id    = "Cavalry",
             class = "Cavalry-1",
-            stat  = {70, 70, 55, 30, 50},
+            attr  = {70, 70, 55, 30, 50},
         },
         {   id    = "LuBu",
             class = "Cavalry-1",
-            stat  = {100, 98, 90, 15, 99},
+            attr  = {100, 98, 90, 15, 99},
         }
     },
     equipments = {
@@ -258,8 +258,8 @@ gconfig = {
                 { event = "action_done", effect = "restore_hp", multiplier = 15 }
             },
             modifiers   = {
-                { stat = "atk", addend = 20 },
-                { stat = "def", addend =  5 }
+                { attr = "atk", addend = 20 },
+                { attr = "def", addend =  5 }
             }
         },
         {   id          = "heaven_sword",
@@ -272,7 +272,7 @@ gconfig = {
                 { event = "on_normal_attack",   effect = "enhance_basic_attack", multiplier = 25 }
             },
             modifiers   = {
-                { stat = "atk", addend = 40 }
+                { attr = "atk", addend = 40 }
             }
         }
     },
@@ -283,8 +283,8 @@ gconfig = {
                 { event = "action_done", effect = "restore_hp", multiplier = 15 }
             },
             modifiers   = {
-                { stat = "atk", addend = 20, turn = 3 },
-                { stat = "def", addend =  5, turn = 3 }
+                { attr = "atk", addend = 20, turn = 3 },
+                { attr = "def", addend =  5, turn = 3 }
             }
         }
     },
