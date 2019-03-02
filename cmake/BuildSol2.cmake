@@ -1,16 +1,35 @@
-# Needed for ExternalProject_Add()
+# Configuration
+
+set(SOL2_TAG v2.20.6)
+set(SOL2_INSTALL_DIR "${CMAKE_BINARY_DIR}/include")
+set(SOL2_REPO_URL "https://github.com/ThePhD/sol2/releases/download")
+
+function(download_and_install FILENAME MD5)
+    message("Installing '${FILENAME}' (${SOL2_TAG}) from '${SOL2_REPO_URL}'")
+    file(DOWNLOAD "${SOL2_REPO_URL}/${SOL2_TAG}/${FILENAME}" "${SOL2_INSTALL_DIR}/${FILENAME}"
+         EXPECTED_MD5 "${MD5}"
+         SHOW_PROGRESS)
+endfunction()
+
+# Download header files
+
+set(SOL2_HPP "sol.hpp")
+set(SOL2_HPP_MD5 "8bae033629d61dea6c5060e205bbc89b")
+download_and_install(${SOL2_HPP} ${SOL2_HPP_MD5})
+
+set(SOL2_FORWARD_HPP "sol_forward.hpp")
+set(SOL2_FORWARD_HPP_MD5 "00e4f2c0d46d70302c00eeb3b9bb37ee")
+download_and_install(${SOL2_FORWARD_HPP} ${SOL2_FORWARD_HPP_MD5})
+
+#[[
+# Download Repo and generate the single header
 include(ExternalProject)
 
 # Needed for building single header for sol2
 find_package(PythonInterp 3 REQUIRED)
 
-# Configuration data for What sol2 version to use and where to put it
-set(SOL2_TAG v2.20.6)
-set(SOL2_HPP "${CMAKE_BINARY_DIR}/include/sol.hpp")
-
 set(VENDOR_PATH "${CMAKE_BINARY_DIR}/sol2/")
 
-# Download and "install" sol2
 ExternalProject_add(
     sol2
     PREFIX ${VENDOR_PATH}
@@ -39,6 +58,7 @@ if (CMAKE_BUILD_TYPE MATCHES "[Dd]ebug")
     endif()
     add_definitions(-DSOL_CHECK_ARGUMENTS)
 endif()
+]]
 
 # Make sure sol2 is found as a system directory
 include_directories(SYSTEM ${CMAKE_BINARY_DIR}/include)
