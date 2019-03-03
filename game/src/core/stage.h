@@ -10,7 +10,6 @@
 #include "ai_unit_manager.h"
 #include "i_deploy_helper.h"
 #include "lua_callbacks.h"
-#include "luab/lua.h"
 #include "map.h"
 #include "resource_manager.h"
 #include "turn.h"
@@ -19,11 +18,6 @@
 
 class Path;
 
-namespace luab {
-class Lua;
-class Ref;
-}  // namespace luab
-
 namespace mengde {
 namespace core {
 
@@ -31,6 +25,7 @@ class Assets;
 class Cmd;
 class Commander;
 class LuaCallbacks;
+class LuaGame;
 class Magic;
 class Deployer;
 class StageUnitManager;
@@ -103,14 +98,14 @@ class Stage : public IDeployHelper {
   uint32_t GenerateUnit(const string&, uint16_t, Force, Vec2D);
   void ObtainEquipment(const string&, uint32_t);
   //  bool UnitPutWeaponOn(uint32_t, const string&);
-  void SetOnDeploy(const luab::Ref& ref);
-  void SetOnBegin(const luab::Ref& ref);
-  void SetOnVictory(const luab::Ref& ref);
-  void SetOnDefeat(const luab::Ref& ref);
-  void SetEndCondition(const luab::Ref& ref);
+  void SetOnDeploy(const sol::function& fn);
+  void SetOnBegin(const sol::function& fn);
+  void SetOnVictory(const sol::function& fn);
+  void SetOnDefeat(const sol::function& fn);
+  void SetEndCondition(const sol::function& fn);
   void SetAIMode(const UId& uid, AIMode ai_mode);
 
-  uint32_t RegisterEvent(const luab::Ref& condition, const luab::Ref& handler);
+  uint32_t RegisterEvent(const sol::function& predicate, const sol::function& handler);
   void UnregisterEvent(uint32_t id);
   void RunEvents();
 
@@ -119,14 +114,13 @@ class Stage : public IDeployHelper {
   PathTree* FindMovablePath(Unit*);
 
  public:
-  luab::Lua* lua_script() { return lua_.get(); }
-  const luab::LuaClass& lua_this() { return lua_this_; }
   UserInterface* user_interface() { return user_interface_.get(); }
   const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }
+  const LuaGame* lua_game() { return lua_game_.get(); }
+  sol::state& lua() { return lua_; }
 
  private:
   void SetupLua(const Path&);
-  luab::Lua* CreateLua(const Path&);
   Map* CreateMap();
   Deployer* CreateDeployer();
   uint16_t GetTurnLimit();
@@ -138,10 +132,9 @@ class Stage : public IDeployHelper {
  private:
   ResourceManagers rc_;
   std::unique_ptr<Assets> assets_;
-  luab::LuaClass lua_this_;  // LuaClass of this object
-  std::unique_ptr<luab::Lua> lua_;
-  sol::state sol_;
+  sol::state lua_;
   sol::table lua_config_;
+  std::unique_ptr<LuaGame> lua_game_;
   std::unique_ptr<LuaCallbacks> lua_callbacks_;
   std::unique_ptr<UserInterface> user_interface_;
   std::unique_ptr<Commander> commander_;
