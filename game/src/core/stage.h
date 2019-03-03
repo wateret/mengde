@@ -117,7 +117,6 @@ class Stage : public IDeployHelper {
   UserInterface* user_interface() { return user_interface_.get(); }
   const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }
   const LuaGame* lua_game() { return lua_game_.get(); }
-  sol::state& lua() { return lua_; }
 
  private:
   void SetupLua(const Path&);

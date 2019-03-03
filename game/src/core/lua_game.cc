@@ -8,15 +8,13 @@
 namespace mengde {
 namespace core {
 
-sol::table LuaGame::NewTable() { return stage_->lua().create_table(); }
-
 Vec2D LuaGame::TableToVec2D(const sol::table& table) {
   Vec2D vec2d{table[1], table[2]};
   return vec2d;
 }
 
-sol::table LuaGame::Vec2DToTable(Vec2D vec) {
-  auto table = NewTable();
+sol::table LuaGame::Vec2DToTable(Vec2D vec, sol::state_view& lua) {
+  auto table = lua.create_table();
   table[1] = vec.x;
   table[2] = vec.y;
   return table;
@@ -40,8 +38,10 @@ uint32_t LuaGame::GetNumEnemiesAlive() { return stage_->GetNumEnemiesAlive(); }
 
 uint32_t LuaGame::GetNumOwnsAlive() { return stage_->GetNumOwnsAlive(); }
 
-sol::table LuaGame::GetUnitInfo(uint32_t uid) {
-  auto table = NewTable();
+sol::table LuaGame::GetUnitInfo(uint32_t uid, sol::this_state ts) {
+  sol::state_view lua{ts};
+
+  auto table = lua.create_table();
 
   auto unit = stage_->LookupUnit(UId{uid});
 
@@ -49,10 +49,10 @@ sol::table LuaGame::GetUnitInfo(uint32_t uid) {
   table["uid"] = unit->uid().Value();
   table["level"] = unit->GetLevel();
   table["hero_class"] = unit->unit_class()->id();
-  table["position"] = Vec2DToTable(unit->position());
+  table["position"] = Vec2DToTable(unit->position(), lua);
 
   auto build_attr_table = [&](const Attribute& obj) {
-    auto attr_table = NewTable();
+    auto attr_table = lua.create_table();
     attr_table["atk"] = obj.atk;
     attr_table["def"] = obj.def;
     attr_table["dex"] = obj.dex;
@@ -64,7 +64,7 @@ sol::table LuaGame::GetUnitInfo(uint32_t uid) {
   table["hero_attr"] = build_attr_table(unit->hero().GetHeroStatBase());
 
   {
-    auto unit_attr = NewTable();
+    auto unit_attr = lua.create_table();
     unit_attr["base"] = build_attr_table(unit->GetOriginalAttr());
     unit_attr["current"] = build_attr_table(unit->GetCurrentAttr());
     table["unit_attr"] = unit_attr;
@@ -78,10 +78,10 @@ sol::table LuaGame::GetUnitInfo(uint32_t uid) {
   }
 
   {
-    auto attack_range = NewTable();
+    auto attack_range = lua.create_table();
     uint32_t idx = 1;
     unit->attack_range().ForEach([&](const Vec2D& pos) {
-      attack_range[idx] = Vec2DToTable(pos);
+      attack_range[idx] = Vec2DToTable(pos, lua);
       idx++;
     });
     table["attack_range"] = attack_range;
@@ -89,19 +89,19 @@ sol::table LuaGame::GetUnitInfo(uint32_t uid) {
   return table;
 }
 
-sol::object LuaGame::GetUnitOnPosition(const sol::table& pos) {
+sol::object LuaGame::GetUnitOnPosition(const sol::table& pos, sol::this_state ts) {
   auto unit = stage_->GetUnitInCell(TableToVec2D(pos));
   if (unit) {
-    return sol::make_object(stage_->lua(), unit->uid().Value());
+    return sol::make_object(ts, unit->uid().Value());
   } else {
     return sol::nil;
   }
 }
 
-sol::object LuaGame::GetTerrainOnPosition(const sol::table& pos) {
+sol::object LuaGame::GetTerrainOnPosition(const sol::table& pos, sol::this_state ts) {
   auto cell = stage_->GetCell(TableToVec2D(pos));
   if (cell) {
-    return sol::make_object(stage_->lua(), cell->GetTerrainId());
+    return sol::make_object(ts, cell->GetTerrainId());
   } else {
     return sol::nil;
   }

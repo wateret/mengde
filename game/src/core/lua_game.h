@@ -14,9 +14,8 @@ class Stage;
 // Used as sol usertype
 class LuaGame {
  private:
-  sol::table NewTable();
   Vec2D TableToVec2D(const sol::table& table);
-  sol::table Vec2DToTable(Vec2D vec);
+  sol::table Vec2DToTable(Vec2D vec, sol::state_view& lua);
 
  public:
   LuaGame(Stage* stage);
@@ -30,9 +29,9 @@ class LuaGame {
 
   uint32_t GetNumEnemiesAlive();
   uint32_t GetNumOwnsAlive();
-  sol::table GetUnitInfo(uint32_t uid);
-  sol::object GetUnitOnPosition(const sol::table& pos);
-  sol::object GetTerrainOnPosition(const sol::table& pos);
+  sol::table GetUnitInfo(uint32_t uid, sol::this_state ts);
+  sol::object GetUnitOnPosition(const sol::table& pos, sol::this_state ts);
+  sol::object GetTerrainOnPosition(const sol::table& pos, sol::this_state ts);
 
   void SetOnDeploy(const sol::function& fn);
   void SetOnBegin(const sol::function& fn);
