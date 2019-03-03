@@ -2,6 +2,7 @@
 #define MENGDE_CORE_GAME_H_
 
 #include <functional>
+#include <sol.hpp>
 #include <string>
 #include <vector>
 
@@ -124,6 +125,7 @@ class Stage : public IDeployHelper {
   const LuaCallbacks* lua_callbacks() { return lua_callbacks_.get(); }
 
  private:
+  void SetupLua(const Path&);
   luab::Lua* CreateLua(const Path&);
   Map* CreateMap();
   Deployer* CreateDeployer();
@@ -138,6 +140,8 @@ class Stage : public IDeployHelper {
   std::unique_ptr<Assets> assets_;
   luab::LuaClass lua_this_;  // LuaClass of this object
   std::unique_ptr<luab::Lua> lua_;
+  sol::state sol_;
+  sol::table lua_config_;
   std::unique_ptr<LuaCallbacks> lua_callbacks_;
   std::unique_ptr<UserInterface> user_interface_;
   std::unique_ptr<Commander> commander_;
