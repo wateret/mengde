@@ -9,15 +9,12 @@
 #include "event_effect.h"
 #include "formulae.h"
 #include "lua_callbacks.h"
-#include "luab/ref.h"
+#include "lua_game.h"
 #include "magic.h"
 #include "stage_unit_manager.h"
 #include "user_interface.h"
 #include "util/game_env.h"
 #include "util/path.h"
-
-// XXX temporary include
-#include "lua_api.h"
 
 namespace mengde {
 namespace core {
@@ -25,10 +22,10 @@ namespace core {
 Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage_script_path)
     : rc_(rc),
       assets_{std::make_unique<Assets>(*assets)},
-      lua_this_(this, "Game"),
-      lua_{CreateLua(stage_script_path)},
-      sol_{},
-      lua_callbacks_{new LuaCallbacks{lua_.get()}},
+      lua_{},
+      lua_config_{},
+      lua_game_{new LuaGame{this}},
+      lua_callbacks_{new LuaCallbacks},
       user_interface_{new UserInterface{this}},
       commander_{new Commander},
       deployer_{nullptr},
@@ -43,9 +40,11 @@ Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage
   map_ = std::unique_ptr<Map>(CreateMap());
 
   // Run main function
-  lua_->Call<void>(string{"main"}, lua_this_);
+  lua_["main"](*lua_game_);
 
-  lua_->Call<void>(lua_callbacks_->on_deploy(), lua_this_);
+  // Begin with on_deploy
+  lua_callbacks_->on_deploy()(*lua_game_);
+
   deployer_ = std::unique_ptr<Deployer>(CreateDeployer());
 }
 
@@ -55,55 +54,59 @@ Stage::~Stage() {
 
 void Stage::SetupLua(const Path& stage_script_path) {
   // Run the user's script file
-  sol_.open_libraries(sol::lib::base);
-  sol_.script_file(stage_script_path.ToString());
-  lua_config_ = sol_["gstage"];
-}
+  lua_.open_libraries(sol::lib::base);
+  lua_.script_file(stage_script_path.ToString());
+  lua_config_ = lua_["gstage"];
 
-luab::Lua* Stage::CreateLua(const Path& stage_script_path) {
-  luab::Lua* lua = new luab::Lua();
+  // clang-format off
 
-#define GAME_PREFIX "Game_"
+  // Register game object
+  lua_.new_usertype<LuaGame>("mengde",
+      // NOTE no constructors since we do not want to create game object in Lua
+      "appoint_hero", &LuaGame::AppointHero,
+      "generate_own_unit", &LuaGame::GenerateOwnUnit,
+      "generate_unit", &LuaGame::GenerateUnit,
+      "obtain_equipment", &LuaGame::ObtainEquipment,
+      "set_ai_mode", &LuaGame::SetAIMode,
+      "get_num_enemies_alive", &LuaGame::GetNumEnemiesAlive,
+      "get_num_owns_alive", &LuaGame::GetNumOwnsAlive,
+      "get_unit_info", &LuaGame::GetUnitInfo,
+      "get_unit_on_position", &LuaGame::GetUnitOnPosition,
+      "get_terrain_on_position", &LuaGame::GetTerrainOnPosition,
+      "set_on_deploy", &LuaGame::SetOnDeploy,
+      "set_on_begin", &LuaGame::SetOnBegin,
+      "set_on_victory", &LuaGame::SetOnVictory,
+      "set_on_defeat", &LuaGame::SetOnDefeat,
+      "set_end_condition", &LuaGame::SetEndCondition,
+      "register_event", &LuaGame::RegisterEvent,
+      "unregister_event", &LuaGame::UnregisterEvent,
+      "cmd_move", &LuaGame::PushCmdMove,
+      "cmd_speak", &LuaGame::PushCmdSpeak,
+      "cmd_gain_exp", &LuaGame::PushCmdGainExp,
+      "cmd_kill", &LuaGame::PushCmdKill
+      );
 
-  // Register API functions
-  {
-#define MACRO_LUA_GAME(cname, luaname) lua->Register(GAME_PREFIX #luaname, Game_##cname);
-#include "lua_api_game.h.inc"
-#undef MACRO_LUA_GAME
-  }
-
-  // Register OO-style pseudo class for Lua
-  {
-    lua->RegisterClass(lua_this_.name());
-
-#define MACRO_LUA_GAME(cname, luaname) lua->RegisterMethod(lua_this_.name(), string{#luaname});
-#include "lua_api_game.h.inc"
-#undef MACRO_LUA_GAME
-  }
-
-#undef GAME_PREFIX
+  // clang-format on
 
   // Register enum values
   {
-#define ENUM_PREFIX "Enum."
-    lua->Set(ENUM_PREFIX "force.own", (int)Force::kOwn);
-    lua->Set(ENUM_PREFIX "force.ally", (int)Force::kAlly);
-    lua->Set(ENUM_PREFIX "force.enemy", (int)Force::kEnemy);
-    lua->Set(ENUM_PREFIX "status.undecided", (int)Status::kUndecided);
-    lua->Set(ENUM_PREFIX "status.defeat", (int)Status::kDefeat);
-    lua->Set(ENUM_PREFIX "status.victory", (int)Status::kVictory);
-#undef GAME_PREFIX
+    auto enum_tbl = lua_["Enum"].get_or_create<sol::table>();
+    {
+      auto force_tbl = enum_tbl["force"].get_or_create<sol::table>();
+      force_tbl["own"] = static_cast<int>(Force::kOwn);
+      force_tbl["ally"] = static_cast<int>(Force::kAlly);
+      force_tbl["enemy"] = static_cast<int>(Force::kEnemy);
+    }
+    {
+      auto status_tbl = enum_tbl["status"].get_or_create<sol::table>();
+      status_tbl["undecided"] = static_cast<int>(Status::kUndecided);
+      status_tbl["defeat"] = static_cast<int>(Status::kDefeat);
+      status_tbl["victory"] = static_cast<int>(Status::kVictory);
+    }
   }
-
-  // Run the main script
-  lua->RunFile(stage_script_path.ToString());
-
-  return lua;
 }
 
 Map* Stage::CreateMap() {
-  ASSERT(lua_ != nullptr);
-
   sol::table map_tbl = lua_config_["map"];
   auto size = map_tbl["size"];
   uint32_t cols = size[1];
@@ -281,7 +284,7 @@ void Stage::Push(unique_ptr<Cmd> cmd) {
 
 bool Stage::CheckStatus() {
   if (status_ != Status::kUndecided) return false;
-  uint32_t res = lua_->Call<uint32_t>(lua_callbacks_->end_condition(), lua_this_);
+  uint32_t res = lua_callbacks_->end_condition()(*lua_game_);
   status_ = static_cast<Status>(res);
   return (status_ != Status::kUndecided);
 }
@@ -341,25 +344,25 @@ void Stage::ObtainEquipment(const string& id, uint32_t amount) {
   assets_->AddEquipment(eq, amount);
 }
 
-void Stage::SetOnDeploy(const luab::Ref& ref) { lua_callbacks_->on_deploy(ref); }
+void Stage::SetOnDeploy(const sol::function& fn) { lua_callbacks_->on_deploy(fn); }
 
-void Stage::SetOnBegin(const luab::Ref& ref) { lua_callbacks_->on_begin(ref); }
+void Stage::SetOnBegin(const sol::function& fn) { lua_callbacks_->on_begin(fn); }
 
-void Stage::SetOnVictory(const luab::Ref& ref) { lua_callbacks_->on_victory(ref); }
+void Stage::SetOnVictory(const sol::function& fn) { lua_callbacks_->on_victory(fn); }
 
-void Stage::SetOnDefeat(const luab::Ref& ref) { lua_callbacks_->on_defeat(ref); }
+void Stage::SetOnDefeat(const sol::function& fn) { lua_callbacks_->on_defeat(fn); }
 
-void Stage::SetEndCondition(const luab::Ref& ref) { lua_callbacks_->end_condition(ref); }
+void Stage::SetEndCondition(const sol::function& fn) { lua_callbacks_->end_condition(fn); }
 
-uint32_t Stage::RegisterEvent(const luab::Ref& condition, const luab::Ref& handler) {
-  return lua_callbacks_->RegisterEvent(condition, handler);
+uint32_t Stage::RegisterEvent(const sol::function& predicate, const sol::function& handler) {
+  return lua_callbacks_->RegisterEvent(predicate, handler);
 }
 
 void Stage::UnregisterEvent(uint32_t id) { return lua_callbacks_->UnregisterEvent(id); }
 
 void Stage::SetAIMode(const UId& uid, AIMode ai_mode) { stage_unit_manager_->SetAIMode(uid, ai_mode); }
 
-void Stage::RunEvents() { return lua_callbacks_->RunEvents(lua_this()); }
+void Stage::RunEvents() { return lua_callbacks_->RunEvents(*lua_game_); }
 
 bool Stage::SubmitDeploy() {
   ASSERT(status_ == Status::kDeploying);
@@ -374,7 +377,7 @@ bool Stage::SubmitDeploy() {
   });
 
   status_ = Status::kUndecided;
-  lua_->Call<void>(lua_callbacks_->on_begin(), lua_this_);
+  lua_callbacks_->on_begin()(*lua_game_);
   return true;
 }
 

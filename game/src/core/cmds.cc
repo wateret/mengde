@@ -6,7 +6,7 @@
 #include "cmd_visitor.h"
 #include "core/path_tree.h"
 #include "formulae.h"
-#include "luab/lua.h"
+#include "lua_game.h"
 #include "magic.h"
 #include "stage.h"
 #include "user_interface.h"
@@ -378,8 +378,8 @@ unique_ptr<Cmd> CmdPlayAI::Do(Stage* game) {
 CmdGameVictory::CmdGameVictory() : Cmd() {}
 
 unique_ptr<Cmd> CmdGameVictory::Do(Stage* game) {
-  auto lua = game->lua_script();
-  lua->Call<void>(game->lua_callbacks()->on_victory(), game->lua_this());
+  auto& on_victory = game->lua_callbacks()->on_victory();
+  on_victory(*game->lua_game());
 
   // Push a new CmdScenarioEnd just in case when user script does not specifiy the next scenario
   game->Push(unique_ptr<Cmd>(new CmdGameEnd(true)));

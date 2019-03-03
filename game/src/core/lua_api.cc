@@ -1,3 +1,4 @@
+#if 0
 #include "lua_api.h"
 
 #include "cell.h"
@@ -317,3 +318,4 @@ LUA_IMPL(SetAIMode) {
 }
 
 #undef LUA_IMPL
+#endif

@@ -1,22 +1,17 @@
 #include "lua_callbacks.h"
 
-#include "stage.h"
+#include "lua_game.h"
 #include "util/logger.h"
 
 namespace mengde {
 namespace core {
 
-void LuaCallbacks::SetRef(luab::Ref& ref, const luab::Ref& new_ref) {
-  if (!ref.nil()) {
-    lua_->UnRef(ref.value());
-  }
-  ref = new_ref;
-}
+void LuaCallbacks::SetFn(sol::function& fn, const sol::function& new_fn) { fn = new_fn; }
 
-uint32_t LuaCallbacks::RegisterEvent(const luab::Ref& condition, const luab::Ref& handler) {
+uint32_t LuaCallbacks::RegisterEvent(const sol::function& predicate, const sol::function& handler) {
   auto id = next_event_id_++;
   assert(events_.find(id) == events_.end());
-  events_.insert({id, {condition, handler}});
+  events_[id] = {predicate, handler};
   return id;
 }
 
@@ -29,13 +24,13 @@ void LuaCallbacks::UnregisterEvent(uint32_t id) {
   }
 }
 
-void LuaCallbacks::RunEvents(const luab::LuaClass& stage) {
+void LuaCallbacks::RunEvents(LuaGame& lua_game) {
   for (const auto& e : events_) {
     auto id = e.first;
     auto cb = e.second;
-    auto matched = lua_->Call<bool>(cb.condition, stage);
+    auto matched = cb.predicate(lua_game);
     if (matched) {
-      lua_->Call<void>(cb.handler, stage, id);
+      cb.handler(lua_game, id);
     }
   }
 }
