@@ -13,7 +13,7 @@ file(GLOB SOURCES src/main.cc)
 
 include_directories(src)
 
-add_subdirectory(src/luab)
+#add_subdirectory(src/luab)
 add_subdirectory(src/util)
 add_subdirectory(src/core)
 add_subdirectory(src/gui)
@@ -21,7 +21,7 @@ add_subdirectory(src/gui)
 add_executable(game ${SOURCES})
 
 # Project Libraries
-target_link_libraries(game lua util core gui)
+target_link_libraries(game util core gui)
 
 install(TARGETS game DESTINATION ${INSTALL_FOLDER})
 
