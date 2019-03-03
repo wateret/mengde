@@ -27,14 +27,19 @@ Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage
       assets_{std::make_unique<Assets>(*assets)},
       lua_this_(this, "Game"),
       lua_{CreateLua(stage_script_path)},
+      sol_{},
       lua_callbacks_{new LuaCallbacks{lua_.get()}},
       user_interface_{new UserInterface{this}},
       commander_{new Commander},
       deployer_{nullptr},
       map_{nullptr},
       stage_unit_manager_{new StageUnitManager},
-      turn_{GetTurnLimit()},
+      turn_{0},  // FIXME Currently intialization must be done after SetupLua
       status_(Status::kDeploying) {
+  SetupLua(stage_script_path);
+
+  turn_ = Turn{GetTurnLimit()};
+
   map_ = std::unique_ptr<Map>(CreateMap());
 
   // Run main function
@@ -46,6 +51,13 @@ Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage
 
 Stage::~Stage() {
   // NOTE rc_ and assets_ are not deleted here
+}
+
+void Stage::SetupLua(const Path& stage_script_path) {
+  // Run the user's script file
+  sol_.open_libraries(sol::lib::base);
+  sol_.script_file(stage_script_path.ToString());
+  lua_config_ = sol_["gstage"];
 }
 
 luab::Lua* Stage::CreateLua(const Path& stage_script_path) {
@@ -92,11 +104,17 @@ luab::Lua* Stage::CreateLua(const Path& stage_script_path) {
 Map* Stage::CreateMap() {
   ASSERT(lua_ != nullptr);
 
-  auto size = lua_->Get<vector<uint32_t>>("gstage.map.size");
-  uint32_t cols = size[0];
-  uint32_t rows = size[1];
-  auto terrain = lua_->Get<vector<string>>("gstage.map.terrain");
-  string file = lua_->Get<string>("gstage.map.file");  // FIXME filename should be same as stage id + .bmp
+  sol::table map_tbl = lua_config_["map"];
+  auto size = map_tbl["size"];
+  uint32_t cols = size[1];
+  uint32_t rows = size[2];
+  sol::table terrain_tbl = map_tbl["terrain"];
+  std::vector<string> terrain;
+  for (uint32_t i = 1, size = terrain_tbl.size(); i <= size; i++) {
+    string row = terrain_tbl[i];
+    terrain.push_back(row);
+  }
+  string file = map_tbl["file"];  // FIXME filename should be same as stage id + .bmp
   ASSERT(rows == terrain.size());
   for (auto e : terrain) {
     ASSERT(cols == e.size());
@@ -105,27 +123,35 @@ Map* Stage::CreateMap() {
 }
 
 Deployer* Stage::CreateDeployer() {
-  ASSERT(lua_ != nullptr);
+  sol::table deploy_tbl = lua_config_["deploy"];
 
   vector<DeployInfoUnselectable> unselectable_info_list;
-  lua_->ForEachTableEntry("gstage.deploy.unselectables", [=, &unselectable_info_list](luab::Lua* l, const string&) {
-    vector<int> pos_vec = l->Get<vector<int>>("position");
-    string hero_id = l->Get<string>("hero");
-    Vec2D position(pos_vec[0], pos_vec[1]);
+  sol::table unselectables = deploy_tbl["unselectables"];
+  for (uint32_t i = 1, size = unselectables.size(); i <= size; i++) {
+    sol::table e = unselectables[i];
+    string hero_id = e["hero"];
+    int pos_x = e["position"][1];
+    int pos_y = e["position"][2];
+    Vec2D position(pos_x, pos_y);
     Hero* hero = assets_->LookupHero(hero_id);  // TODO Check if Hero exists in our assets
     unselectable_info_list.push_back({position, hero});
-  });
-  uint32_t num_required = lua_->Get<uint32_t>("gstage.deploy.num_required_selectables");
+  }
+
+  uint32_t num_required = deploy_tbl["num_required_selectables"];
+
   vector<DeployInfoSelectable> selectable_info_list;
-  lua_->ForEachTableEntry("gstage.deploy.selectables", [=, &selectable_info_list](luab::Lua* l, const string&) mutable {
-    vector<int> pos_vec = l->Get<vector<int>>("position");
-    Vec2D position(pos_vec[0], pos_vec[1]);
+  sol::table selectables = deploy_tbl["selectables"];
+  for (uint32_t i = 1, size = selectables.size(); i <= size; i++) {
+    sol::table e = selectables[i];
+    int pos_x = e["position"][1];
+    int pos_y = e["position"][2];
+    Vec2D position(pos_x, pos_y);
     selectable_info_list.push_back({position});
-  });
+  }
   return new Deployer(unselectable_info_list, selectable_info_list, num_required);
 }
 
-uint16_t Stage::GetTurnLimit() { return lua_->Get<uint16_t>("gstage.turn_limit"); }
+uint16_t Stage::GetTurnLimit() { return lua_config_["turn_limit"]; }
 
 void Stage::ForEachUnit(std::function<void(Unit*)> fn) { stage_unit_manager_->ForEach(fn); }
 
