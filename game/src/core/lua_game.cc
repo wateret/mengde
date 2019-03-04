@@ -13,12 +13,7 @@ Vec2D LuaGame::TableToVec2D(const sol::table& table) {
   return vec2d;
 }
 
-sol::table LuaGame::Vec2DToTable(Vec2D vec, sol::state_view& lua) {
-  auto table = lua.create_table();
-  table[1] = vec.x;
-  table[2] = vec.y;
-  return table;
-}
+sol::table LuaGame::Vec2DToTable(Vec2D vec, sol::state_view& lua) { return lua.create_table_with(1, vec.x, 2, vec.y); }
 
 LuaGame::LuaGame(Stage* stage) : stage_{stage} {}
 
@@ -52,21 +47,14 @@ sol::table LuaGame::GetUnitInfo(uint32_t uid, sol::this_state ts) {
   table["position"] = Vec2DToTable(unit->position(), lua);
 
   auto build_attr_table = [&](const Attribute& obj) {
-    auto attr_table = lua.create_table();
-    attr_table["atk"] = obj.atk;
-    attr_table["def"] = obj.def;
-    attr_table["dex"] = obj.dex;
-    attr_table["itl"] = obj.itl;
-    attr_table["mor"] = obj.mor;
-    return attr_table;
+    return lua.create_table_with("atk", obj.atk, "def", obj.def, "dex", obj.dex, "itl", obj.itl, "mor", obj.mor);
   };
 
   table["hero_attr"] = build_attr_table(unit->hero().GetHeroStatBase());
 
   {
-    auto unit_attr = lua.create_table();
-    unit_attr["base"] = build_attr_table(unit->GetOriginalAttr());
-    unit_attr["current"] = build_attr_table(unit->GetCurrentAttr());
+    auto unit_attr = lua.create_table_with("base", build_attr_table(unit->GetOriginalAttr()), "current",
+                                           build_attr_table(unit->GetCurrentAttr()));
     table["unit_attr"] = unit_attr;
   }
 
