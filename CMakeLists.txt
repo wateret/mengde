@@ -51,9 +51,6 @@ else()
 endif()
 
 include_directories(${Boost_INCLUDE_DIR})
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${SDL2_TTF_INCLUDE_DIR})
-include_directories(${LUA_INCLUDE_DIR})
 
 # Look in the game subdirectory to find its CMakeLists.txt so we can build the executable
 add_subdirectory(game)

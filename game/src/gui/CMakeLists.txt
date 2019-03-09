@@ -9,6 +9,8 @@ file(GLOB HEADERS app/*.h
 
 add_library(gui SHARED ${SOURCES} ${HEADERS})
 
+target_include_directories(gui PUBLIC ${SDL2_INCLUDE_DIR})
+target_include_directories(gui PUBLIC ${SDL2_TTF_INCLUDE_DIR})
 target_link_libraries(gui core util)
 target_link_libraries(gui ${SDL2_LIBRARY})
 target_link_libraries(gui ${SDL2_TTF_LIBRARIES})

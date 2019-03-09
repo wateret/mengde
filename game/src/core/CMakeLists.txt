@@ -5,6 +5,7 @@ file(GLOB HEADERS *.h)
 
 add_library(core SHARED ${SOURCES} ${HEADERS})
 
+target_include_directories(core PRIVATE ${LUA_INCLUDE_DIR})
 target_link_libraries(core util)
 target_link_libraries(core ${LUA_LIBRARIES})
 
