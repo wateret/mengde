@@ -8,7 +8,11 @@ CLANG_FORMAT="clang-format"
 
 echo "[clang-format] Format check begins."
 
-find "$SOURCE_PATH" -type f \( -name "*.h" -o -name "*.cc" \) -print0 | xargs -0 "$CLANG_FORMAT" -i -style=file
+# For all headers and sources except Flatbuffers generated headers.
+find "$SOURCE_PATH" -type f \( -name "*.h" -o -name "*.cc" \) \
+     -and ! -name "*_generated.h" \
+     -print0 \
+     | xargs -0 "$CLANG_FORMAT" -i -style=file
 
 set +e
 

@@ -1,0 +1,7 @@
+namespace mengde.save;
+
+table Scenario {
+  test_value: int;
+}
+
+root_type Scenario;

@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${MENGDE_SOURCE_DIR}/cmake")
 include(CTest)
 include(BoostTestHelpers)
 include(BuildSol2)
+include(FetchFlatbuffers)
 
 # Set an output directory for our binaries
 set(BIN_DIR ${MENGDE_SOURCE_DIR}/bin)
