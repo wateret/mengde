@@ -59,19 +59,19 @@ class ResourceManager {
 
 using MagicManager = ResourceManager<Magic>;
 using EquipmentManager = ResourceManager<Equipment>;
-using UnitClassManager = ResourceManager<HeroClass>;
+using HeroClassManager = ResourceManager<HeroClass>;
 using TerrainManager = ResourceManager<Terrain>;
 using HeroTemplateManager = ResourceManager<HeroTemplate>;
 
 struct ResourceManagers {
-  UnitClassManager* unit_class_manager;
+  HeroClassManager* hero_class_manager;
   TerrainManager* terrain_manager;
   MagicManager* magic_manager;
   EquipmentManager* equipment_manager;
   HeroTemplateManager* hero_tpl_manager;
 
   ResourceManagers()
-      : unit_class_manager(nullptr),
+      : hero_class_manager(nullptr),
         terrain_manager(nullptr),
         magic_manager(nullptr),
         equipment_manager(nullptr),

@@ -21,7 +21,7 @@ class IUnitBase {
   virtual ~IUnitBase() = default;
 
   virtual string id() const = 0;
-  virtual const HeroClass* unit_class() const = 0;
+  virtual const HeroClass* hero_class() const = 0;
   virtual int move() const = 0;
   virtual const AttackRange& attack_range() const = 0;
   virtual uint16_t GetLevel() const = 0;

@@ -66,7 +66,7 @@ class Stage : public IDeployHelper {
   Magic* LookupMagic(const std::string&);
   Equipment* LookupEquipment(const std::string&);
   MagicManager* magic_manager() { return rc_.magic_manager; }
-  const UnitClassManager* unit_class_manager() { return rc_.unit_class_manager; }
+  const HeroClassManager* hero_class_manager() { return rc_.hero_class_manager; }
   bool IsValidCoords(Vec2D) const;
   Force GetCurrentForce() const;
   bool EndForceTurn();

@@ -83,7 +83,7 @@ bool Unit::IsDead() const { return GetCurrentHpMp().hp <= 0; }
 
 void Unit::Kill() { current_hpmp_.hp = 0; }
 
-const HeroClass* Unit::unit_class() const { return hero_->unit_class(); }
+const HeroClass* Unit::hero_class() const { return hero_->hero_class(); }
 
 int Unit::class_index() const { return hero_->class_index(); }
 
@@ -115,8 +115,8 @@ void Unit::LevelUp() {
 
 bool Unit::ReadyPromotion() const { return hero_->ReadyPromotion(); }
 
-void Unit::Promote(const UnitClassManager* ucm) {
-  hero_->Promote(ucm);
+void Unit::Promote(const HeroClassManager* hcm) {
+  hero_->Promote(hcm);
   UpdateStat();
 }
 

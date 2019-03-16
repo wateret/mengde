@@ -126,19 +126,19 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
     return 0;
   };
 
-  rc_.unit_class_manager = new UnitClassManager();
-  sol::table unit_classes = lua_["gconfig"]["unit_classes"];
-  for (uint32_t i = 1, size = unit_classes.size(); i <= size; i++) {
-    auto unit_class = unit_classes[i];
-    string id = unit_class["id"];
-    string grades = unit_class["attr_grades"];
-    string range_s = unit_class["attack_range"];
-    int move = unit_class["move"];
-    auto promotion_info_table = unit_class["promotion"];  // optional
-    int hp_base = unit_class["hp"][1];
-    int hp_incr = unit_class["hp"][2];
-    int mp_base = unit_class["mp"][1];
-    int mp_incr = unit_class["mp"][2];
+  rc_.hero_class_manager = new HeroClassManager();
+  sol::table hero_classes = lua_["gconfig"]["hero_classes"];
+  for (uint32_t i = 1, size = hero_classes.size(); i <= size; i++) {
+    auto hero_class = hero_classes[i];
+    string id = hero_class["id"];
+    string grades = hero_class["attr_grades"];
+    string range_s = hero_class["attack_range"];
+    int move = hero_class["move"];
+    auto promotion_info_table = hero_class["promotion"];  // optional
+    int hp_base = hero_class["hp"][1];
+    int hp_incr = hero_class["hp"][2];
+    int mp_base = hero_class["mp"][1];
+    int mp_incr = hero_class["mp"][2];
 
     Range::Type range = Range::StringToRange(range_s);
     boost::optional<PromotionInfo> promotion_info;
@@ -152,10 +152,10 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
                              grade_char_to_int(grades[3]), grade_char_to_int(grades[4])};
     HeroClass* cla =
         new HeroClass(id, i - 1, stat_grades, range, move, {hp_base, hp_incr}, {mp_base, mp_incr}, promotion_info);
-    this->rc_.unit_class_manager->Add(id, cla);
+    this->rc_.hero_class_manager->Add(id, cla);
   }
 
-  uint32_t class_count = rc_.unit_class_manager->GetNumElements();
+  uint32_t class_count = rc_.hero_class_manager->GetNumElements();
 
   rc_.terrain_manager = new TerrainManager();
   vector<string> ids;
@@ -268,7 +268,7 @@ void ConfigLoader::ParseMagics() {
       sol::table learnat = learnats_itr.second;
       string uclass = learnat["class"];
       uint16_t level = learnat["level"];
-      magic->AddLearnInfo(rc_.unit_class_manager->Get(uclass)->index(), level);
+      magic->AddLearnInfo(rc_.hero_class_manager->Get(uclass)->index(), level);
     }
 
     rc_.magic_manager->Add(id, magic);
@@ -344,7 +344,7 @@ void ConfigLoader::ParseHeroTemplates() {
       attr[i - 1] = attr_tbl[i];
     }
 
-    HeroTemplate* hero_tpl = new HeroTemplate(id, rc_.unit_class_manager->Get(uclass), attr);
+    HeroTemplate* hero_tpl = new HeroTemplate(id, rc_.hero_class_manager->Get(uclass), attr);
     rc_.hero_tpl_manager->Add(id, hero_tpl);
   }
 }

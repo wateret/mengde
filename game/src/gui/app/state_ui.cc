@@ -1010,7 +1010,7 @@ void StateUIPromote::Enter() {
   ModalDialogView* modal_dialog_view = gv_->dialog_view();
 
   const auto unit = gi_->GetUnit(uid_);
-  const auto class_id = unit->unit_class()->promotion_info()->id;
+  const auto class_id = unit->hero_class()->promotion_info()->id;
   modal_dialog_view->SetText(boost::str(boost::format("%s has been promoted to %s") % unit->id() % class_id));
   modal_dialog_view->visible(true);
 }

@@ -1,6 +1,6 @@
 gconfig = {
     id = "CaoCao",
-    unit_classes = {
+    hero_classes = {
         {   id           = "Lord-1",
             attr_grades  = "AAAAA",
             attack_range = "Adjacent4",
