@@ -7,7 +7,7 @@
 
 namespace mengde {
 namespace core {
-class Stage;
+class Scenario;
 }
 }  // namespace mengde
 
@@ -19,14 +19,15 @@ class GameView;
 
 class ControlView : public CompositeView {
  public:
-  ControlView(const Rect&, core::Stage*, GameView*);
+  ControlView(const Rect&, core::Scenario*, GameView*);
   void SetTurnText(int cur_turn, int max_turn);
   void SetEndTurnVisible(bool);
 
  private:
-  core::Stage* stage_;
+  core::Scenario* sce_;
   TextView* tv_turn_;
   ButtonView* btn_end_turn_;
+  ButtonView* btn_save_;
 };
 
 }  // namespace app
