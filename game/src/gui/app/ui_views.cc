@@ -36,7 +36,7 @@ UIViews::UIViews(const Rect& rect, core::Scenario* scenario, GameView* game_view
   {  // Initialize control_view_
     Rect control_frame =
         LayoutHelper::CalcPosition(GetFrameSize(), {300, 136}, LayoutHelper::kAlignRgtBot, LayoutHelper::kDefaultSpace);
-    control_view_ = new ControlView(control_frame, stage, game_view);
+    control_view_ = new ControlView(control_frame, scenario, game_view);
     AddChild(control_view_);
   }
 
