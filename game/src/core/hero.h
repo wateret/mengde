@@ -24,7 +24,7 @@ class Hero : public IUnitBase, IEquipper {
  public:
   // IUnitBase interfaces
   virtual string id() const override;
-  virtual const HeroClass* unit_class() const override { return unit_class_; }
+  virtual const HeroClass* hero_class() const override { return hero_class_; }
   virtual int move() const override;
   virtual const AttackRange& attack_range() const override;
   virtual uint16_t GetLevel() const override { return level_.level; }
@@ -43,7 +43,7 @@ class Hero : public IUnitBase, IEquipper {
   const Attribute& GetUnitPureStat() const { return unit_pure_attr_; }
   void LevelUp();
   bool ReadyPromotion() const;
-  void Promote(const UnitClassManager* ucm);
+  void Promote(const HeroClassManager* hcm);
   void PutOn(const Equipment*);
   int class_index() const;
 
@@ -53,7 +53,7 @@ class Hero : public IUnitBase, IEquipper {
 
  private:
   const HeroTemplate* hero_tpl_;
-  const HeroClass* unit_class_;
+  const HeroClass* hero_class_;
   unique_ptr<EquipmentSet> equipment_set_;
   Level level_;
   Attribute hero_attr_;

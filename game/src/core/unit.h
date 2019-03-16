@@ -36,7 +36,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
  public:
   // IUnitBase interfaces
   virtual string id() const override;
-  virtual const HeroClass* unit_class() const override;
+  virtual const HeroClass* hero_class() const override;
   virtual int move() const override;
   virtual const AttackRange& attack_range() const override;
   virtual uint16_t GetLevel() const override;
@@ -79,7 +79,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   bool GainExp(uint16_t exp);
   void LevelUp();
   bool ReadyPromotion() const;
-  void Promote(const UnitClassManager* ucm);
+  void Promote(const HeroClassManager* hcm);
   void EndAction();
   void ResetAction();
   void NextTurn();

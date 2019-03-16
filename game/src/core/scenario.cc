@@ -43,7 +43,7 @@ bool Scenario::NextStage() {
 }
 
 Scenario::~Scenario() {
-  delete rc_.unit_class_manager;
+  delete rc_.hero_class_manager;
   delete rc_.terrain_manager;
   delete rc_.magic_manager;
   delete rc_.equipment_manager;

@@ -460,7 +460,7 @@ CmdPromote::CmdPromote(const UId& unit) : CmdUnit(unit) {}
 unique_ptr<Cmd> CmdPromote::Do(Stage* game) {
   auto unit = game->LookupUnit(unit_);
   ASSERT(unit->ReadyPromotion());
-  unit->Promote(game->unit_class_manager());
+  unit->Promote(game->hero_class_manager());
   return nullptr;
 }
 

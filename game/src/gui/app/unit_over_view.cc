@@ -69,7 +69,7 @@ void UnitOverView::OnUnitUpdate() {
 
   std::string str_name = unit_->id();
   std::string str_lv = "Lv " + std::to_string(unit_->GetLevel());
-  std::string str_class = unit_->unit_class()->id();
+  std::string str_class = unit_->hero_class()->id();
   tv_name_->SetText(str_name);
   tv_lv_->SetText(str_lv);
   tv_class_->SetText(str_class);

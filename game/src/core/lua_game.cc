@@ -43,7 +43,7 @@ sol::table LuaGame::GetUnitInfo(uint32_t uid, sol::this_state ts) {
   table["id"] = unit->id();
   table["uid"] = unit->uid().Value();
   table["level"] = unit->GetLevel();
-  table["hero_class"] = unit->unit_class()->id();
+  table["hero_class"] = unit->hero_class()->id();
   table["position"] = Vec2DToTable(unit->position(), lua);
 
   auto build_attr_table = [&](const Attribute& obj) {

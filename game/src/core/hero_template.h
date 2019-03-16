@@ -10,9 +10,9 @@ namespace core {
 
 class HeroTemplate {
  public:
-  HeroTemplate(const string& id, const HeroClass* unit_class, const Attribute& hero_attr);
+  HeroTemplate(const string& id, const HeroClass* hero_class, const Attribute& hero_attr);
   string id() const { return id_; }
-  const HeroClass* unit_class() const { return unit_class_; }
+  const HeroClass* hero_class() const { return hero_class_; }
   int class_index() const;
   int move() const;
   const Attribute& GetHeroStat() const { return hero_attr_; }
@@ -20,7 +20,7 @@ class HeroTemplate {
 
  private:
   string id_;
-  const HeroClass* unit_class_;
+  const HeroClass* hero_class_;
   Attribute hero_attr_;
 };
 
