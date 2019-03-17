@@ -3,8 +3,13 @@ namespace mengde.save;
 table Scenario {
   id: string;
   stage_id_list: [string];
-  stage_no: int;
-//  resource_managers: ResourceManagers;
+  stage_no: uint;
+  resource_managers: ResourceManagers;
+}
+
+table Position {
+  x: int;
+  y: int;
 }
 
 table ResourceManagers {
@@ -25,10 +30,10 @@ table TerrainRecord {
 }
 
 table Terrain {
-  index: int;
+//  index: int;
   id: string;
   move_costs: [int];
-  class_relations: [int];
+  class_effects: [int];
 }
 
 root_type Scenario;

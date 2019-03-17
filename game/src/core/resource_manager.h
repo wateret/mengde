@@ -53,6 +53,12 @@ class ResourceManager {
     }
   }
 
+  void ForEach(const function<void(const string&, const T&)>& f) const {
+    for (const auto& e : container_) {
+      f(e.first, *e.second);
+    }
+  }
+
  private:
   std::unordered_map<string, T*> container_;
 };

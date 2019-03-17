@@ -9,45 +9,56 @@ namespace core {
 
 SaveFile::SaveFile(const Path& path) : path_{path} {}
 
-void SaveFile::Serialize(const Scenario* scenario) {
-  flatbuffers::FlatBufferBuilder builder(1024);
+void SaveFile::Serialize(const Scenario& scenario) {
+  builder_ = flatbuffers::FlatBufferBuilder{1024};
 
-  auto sce = Build(builder, scenario);
+  auto sce = Build(scenario);
 
-  builder.Finish(sce);
+  builder_.Finish(sce);
 
-  uint8_t* buffer = builder.GetBufferPointer();
-  uint32_t size = builder.GetSize();
+  uint8_t* buffer = builder_.GetBufferPointer();
+  uint32_t size = builder_.GetSize();
 
   std::ofstream file(path_.ToString(), std::ios::binary);
   file.write(reinterpret_cast<const char*>(buffer), size);
 }
 
-flatbuffers::Offset<save::Scenario> SaveFile::Build(flatbuffers::FlatBufferBuilder& builder, const Scenario* scenario) {
-  auto id_off = builder.CreateString(scenario->id());
+flatbuffers::Offset<save::Scenario> SaveFile::Build(const Scenario& scenario) {
+  auto id_off = builder_.CreateString(scenario.id());
+  auto string_offset_vec = builder_.CreateVectorOfStrings(scenario.stage_id_list());
+  auto resource_managers_off = Build(scenario.GetResourceManagers());
 
-  const auto& stage_id_list = scenario->stage_id_list();
-  std::vector<flatbuffers::Offset<flatbuffers::String>> string_offsets;
-  std::transform(stage_id_list.begin(), stage_id_list.end(),
-                 std::back_inserter(string_offsets), [&](const std::string& s) {
-        return builder.CreateString(s.c_str());
-      });
-  auto string_offset_vec = builder.CreateVector(string_offsets);
+  save::ScenarioBuilder sce_builder(builder_);
 
-  save::ScenarioBuilder sce_builder(builder);
   sce_builder.add_id(id_off);
   sce_builder.add_stage_id_list(string_offset_vec);
-  sce_builder.add_stage_no(scenario->stage_no());
+  sce_builder.add_stage_no(scenario.stage_no());
+  sce_builder.add_resource_managers(resource_managers_off);
 
   return sce_builder.Finish();
 }
 
-//void SaveFile::Build(const ResourceManagers* rm) {
-//  Serialize(rm->terrain_manager);
-//}
-//
-//void SaveFile::Build(const TerrainManager* tm) {
-//}
+flatbuffers::Offset<save::ResourceManagers> SaveFile::Build(const ResourceManagers& rm) {
+  auto terrain_manager = Build(*rm.terrain_manager);
+  return save::CreateResourceManagers(builder_, terrain_manager);
+}
+
+flatbuffers::Offset<save::TerrainManager> SaveFile::Build(const TerrainManager& tm) {
+  std::vector<flatbuffers::Offset<save::TerrainRecord>> terrain_records;
+  tm.ForEach([&](const string& id, const Terrain& terrain) { terrain_records.push_back(Build(id, terrain)); });
+  auto terrain_records_off = builder_.CreateVector(terrain_records);
+  return save::CreateTerrainManager(builder_, terrain_records_off);
+}
+
+flatbuffers::Offset<save::TerrainRecord> SaveFile::Build(const string& id, const Terrain& terrain) {
+  auto id_off = builder_.CreateString(id);
+  auto terrain_off = Build(terrain);
+  return save::CreateTerrainRecord(builder_, id_off, terrain_off);
+}
+
+flatbuffers::Offset<save::Terrain> SaveFile::Build(const Terrain& terrain) {
+  return save::CreateTerrainDirect(builder_, terrain.id().c_str(), &terrain.move_costs(), &terrain.class_effects());
+}
 
 void SaveFile::Deserialize() {
   std::ifstream file(path_.ToString(), std::ios::binary | std::ios::ate);
