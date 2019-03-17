@@ -17,18 +17,21 @@ class SaveFile {
   SaveFile(const Path& path);
 
  public:
-  void Serialize(const Scenario* scenario);
+  void Serialize(const Scenario& scenario);
 
  private:
-  flatbuffers::Offset<save::Scenario> Build(flatbuffers::FlatBufferBuilder& builder, const Scenario* scenario);
-//  void Build(const ResourceManagers* rm);
-//  void Build(const TerrainManager* tm);
+  flatbuffers::Offset<save::Scenario> Build(const Scenario& scenario);
+  flatbuffers::Offset<save::ResourceManagers> Build(const ResourceManagers& rm);
+  flatbuffers::Offset<save::TerrainManager> Build(const TerrainManager& tm);
+  flatbuffers::Offset<save::TerrainRecord> Build(const string& id, const Terrain& terrain);
+  flatbuffers::Offset<save::Terrain> Build(const Terrain& terrain);
 
  public:
   void Deserialize();
 
  private:
   Path path_;
+  flatbuffers::FlatBufferBuilder builder_;
 };
 
 }  // namespace core

@@ -16,7 +16,7 @@ class Scenario {
  public:
   Scenario(const string&);
   ~Scenario();
-  const ResourceManagers& GetResourceManagers() { return rc_; }
+  const ResourceManagers& GetResourceManagers() const { return rc_; }
   Assets* GetAssets() { return assets_.get(); }
   Stage* current_stage() { return current_stage_.get(); }
 

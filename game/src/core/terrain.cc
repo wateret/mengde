@@ -8,7 +8,7 @@ namespace core {
 Terrain::Terrain(const std::string& id, const std::vector<int>& move_costs, const std::vector<int>& effects)
     : index_(-1), id_(id), move_costs_(move_costs), effects_(effects) {}
 
-int Terrain::GetIndex() {
+int Terrain::GetIndex() const {
   ASSERT(index_ != -1);
   return index_;
 }
@@ -18,12 +18,12 @@ void Terrain::SetIndex(int i) {
   index_ = i;
 }
 
-int Terrain::GetMoveCost(int class_idx) {
+int Terrain::GetMoveCost(int class_idx) const {
   ASSERT(class_idx < (int)move_costs_.size());
   return move_costs_[class_idx];
 }
 
-int Terrain::GetEffect(int class_idx) {
+int Terrain::GetEffect(int class_idx) const {
   ASSERT(class_idx < (int)move_costs_.size());
   return effects_[class_idx];
 }

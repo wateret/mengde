@@ -10,11 +10,13 @@ namespace core {
 class Terrain {
  public:
   Terrain(const std::string&, const std::vector<int>&, const std::vector<int>&);
-  int GetIndex();
+  int GetIndex() const;
   void SetIndex(int);
   const std::string& id() const { return id_; }
-  int GetMoveCost(int);
-  int GetEffect(int);
+  int GetMoveCost(int) const;
+  int GetEffect(int) const;
+  const std::vector<int>& move_costs() const { return move_costs_; }
+  const std::vector<int>& class_effects() const { return effects_; }
 
  private:
   int index_;
