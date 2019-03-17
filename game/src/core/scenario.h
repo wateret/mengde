@@ -22,6 +22,8 @@ class Scenario {
 
  public:
   const string& id() const { return scenario_id_; }
+  const vector<string>& stage_id_list() const { return stage_ids_; }
+  uint32_t stage_no() const { return stage_no_; }
   bool NextStage();
 
  private:

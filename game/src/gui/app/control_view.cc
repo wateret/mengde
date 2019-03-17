@@ -40,14 +40,11 @@ ControlView::ControlView(const Rect& rect, core::Scenario* sce, GameView* gv) : 
 
   button_coords.Move(0, 28);
   btn_save_ = new ButtonView(&button_coords, "Save");
-  btn_save_->SetMouseButtonHandler([](const foundation::MouseButtonEvent& e) {
+  btn_save_->SetMouseButtonHandler([this](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
       core::SaveFile save{Path{"save.mengde"}};
-      int testval = 999;
-      save.Serialize(&testval);
-      auto loaded_sce = save.Deserialize();
-      LOG_INFO("LOADED VALUE : %d", *loaded_sce);
-      delete loaded_sce;
+      save.Serialize(sce_);
+      LOG_INFO("File saved");
       return true;
     }
     return true;

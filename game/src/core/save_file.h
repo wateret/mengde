@@ -10,11 +10,22 @@
 namespace mengde {
 namespace core {
 
+class Scenario;
+
 class SaveFile {
  public:
   SaveFile(const Path& path);
-  void Serialize(const int* scenario);
-  int* Deserialize();
+
+ public:
+  void Serialize(const Scenario* scenario);
+
+ private:
+  flatbuffers::Offset<save::Scenario> Build(flatbuffers::FlatBufferBuilder& builder, const Scenario* scenario);
+//  void Build(const ResourceManagers* rm);
+//  void Build(const TerrainManager* tm);
+
+ public:
+  void Deserialize();
 
  private:
   Path path_;

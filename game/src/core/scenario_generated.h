@@ -11,16 +11,37 @@ namespace save {
 
 struct Scenario;
 
+struct ResourceManagers;
+
+struct TerrainManager;
+
+struct TerrainRecord;
+
+struct Terrain;
+
 struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_TEST_VALUE = 4
+    VT_ID = 4,
+    VT_STAGE_ID_LIST = 6,
+    VT_STAGE_NO = 8
   };
-  int32_t test_value() const {
-    return GetField<int32_t>(VT_TEST_VALUE, 0);
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>> *stage_id_list() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>> *>(VT_STAGE_ID_LIST);
+  }
+  int32_t stage_no() const {
+    return GetField<int32_t>(VT_STAGE_NO, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_TEST_VALUE) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyOffset(verifier, VT_STAGE_ID_LIST) &&
+           verifier.VerifyVector(stage_id_list()) &&
+           verifier.VerifyVectorOfStrings(stage_id_list()) &&
+           VerifyField<int32_t>(verifier, VT_STAGE_NO) &&
            verifier.EndTable();
   }
 };
@@ -28,8 +49,14 @@ struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct ScenarioBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_test_value(int32_t test_value) {
-    fbb_.AddElement<int32_t>(Scenario::VT_TEST_VALUE, test_value, 0);
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(Scenario::VT_ID, id);
+  }
+  void add_stage_id_list(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> stage_id_list) {
+    fbb_.AddOffset(Scenario::VT_STAGE_ID_LIST, stage_id_list);
+  }
+  void add_stage_no(int32_t stage_no) {
+    fbb_.AddElement<int32_t>(Scenario::VT_STAGE_NO, stage_no, 0);
   }
   explicit ScenarioBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -45,10 +72,266 @@ struct ScenarioBuilder {
 
 inline flatbuffers::Offset<Scenario> CreateScenario(
     flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t test_value = 0) {
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> stage_id_list = 0,
+    int32_t stage_no = 0) {
   ScenarioBuilder builder_(_fbb);
-  builder_.add_test_value(test_value);
+  builder_.add_stage_no(stage_no);
+  builder_.add_stage_id_list(stage_id_list);
+  builder_.add_id(id);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Scenario> CreateScenarioDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    const std::vector<flatbuffers::Offset<flatbuffers::String>> *stage_id_list = nullptr,
+    int32_t stage_no = 0) {
+  return mengde::save::CreateScenario(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      stage_id_list ? _fbb.CreateVector<flatbuffers::Offset<flatbuffers::String>>(*stage_id_list) : 0,
+      stage_no);
+}
+
+struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_TERRAIN_MANAGER = 4
+  };
+  const TerrainManager *terrain_manager() const {
+    return GetPointer<const TerrainManager *>(VT_TERRAIN_MANAGER);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_TERRAIN_MANAGER) &&
+           verifier.VerifyTable(terrain_manager()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ResourceManagersBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_terrain_manager(flatbuffers::Offset<TerrainManager> terrain_manager) {
+    fbb_.AddOffset(ResourceManagers::VT_TERRAIN_MANAGER, terrain_manager);
+  }
+  explicit ResourceManagersBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ResourceManagersBuilder &operator=(const ResourceManagersBuilder &);
+  flatbuffers::Offset<ResourceManagers> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ResourceManagers>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<ResourceManagers> CreateResourceManagers(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<TerrainManager> terrain_manager = 0) {
+  ResourceManagersBuilder builder_(_fbb);
+  builder_.add_terrain_manager(terrain_manager);
+  return builder_.Finish();
+}
+
+struct TerrainManager FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_RECORDS = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<TerrainRecord>> *records() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<TerrainRecord>> *>(VT_RECORDS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(records()) &&
+           verifier.VerifyVectorOfTables(records()) &&
+           verifier.EndTable();
+  }
+};
+
+struct TerrainManagerBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_records(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<TerrainRecord>>> records) {
+    fbb_.AddOffset(TerrainManager::VT_RECORDS, records);
+  }
+  explicit TerrainManagerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  TerrainManagerBuilder &operator=(const TerrainManagerBuilder &);
+  flatbuffers::Offset<TerrainManager> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<TerrainManager>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<TerrainManager> CreateTerrainManager(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<TerrainRecord>>> records = 0) {
+  TerrainManagerBuilder builder_(_fbb);
+  builder_.add_records(records);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<TerrainManager> CreateTerrainManagerDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<TerrainRecord>> *records = nullptr) {
+  return mengde::save::CreateTerrainManager(
+      _fbb,
+      records ? _fbb.CreateVector<flatbuffers::Offset<TerrainRecord>>(*records) : 0);
+}
+
+struct TerrainRecord FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_TERRAIN = 6
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  const Terrain *terrain() const {
+    return GetPointer<const Terrain *>(VT_TERRAIN);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyOffset(verifier, VT_TERRAIN) &&
+           verifier.VerifyTable(terrain()) &&
+           verifier.EndTable();
+  }
+};
+
+struct TerrainRecordBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(TerrainRecord::VT_ID, id);
+  }
+  void add_terrain(flatbuffers::Offset<Terrain> terrain) {
+    fbb_.AddOffset(TerrainRecord::VT_TERRAIN, terrain);
+  }
+  explicit TerrainRecordBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  TerrainRecordBuilder &operator=(const TerrainRecordBuilder &);
+  flatbuffers::Offset<TerrainRecord> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<TerrainRecord>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<TerrainRecord> CreateTerrainRecord(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    flatbuffers::Offset<Terrain> terrain = 0) {
+  TerrainRecordBuilder builder_(_fbb);
+  builder_.add_terrain(terrain);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<TerrainRecord> CreateTerrainRecordDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    flatbuffers::Offset<Terrain> terrain = 0) {
+  return mengde::save::CreateTerrainRecord(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      terrain);
+}
+
+struct Terrain FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_INDEX = 4,
+    VT_ID = 6,
+    VT_MOVE_COSTS = 8,
+    VT_CLASS_RELATIONS = 10
+  };
+  int32_t index() const {
+    return GetField<int32_t>(VT_INDEX, 0);
+  }
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  const flatbuffers::Vector<int32_t> *move_costs() const {
+    return GetPointer<const flatbuffers::Vector<int32_t> *>(VT_MOVE_COSTS);
+  }
+  const flatbuffers::Vector<int32_t> *class_relations() const {
+    return GetPointer<const flatbuffers::Vector<int32_t> *>(VT_CLASS_RELATIONS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_INDEX) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyOffset(verifier, VT_MOVE_COSTS) &&
+           verifier.VerifyVector(move_costs()) &&
+           VerifyOffset(verifier, VT_CLASS_RELATIONS) &&
+           verifier.VerifyVector(class_relations()) &&
+           verifier.EndTable();
+  }
+};
+
+struct TerrainBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_index(int32_t index) {
+    fbb_.AddElement<int32_t>(Terrain::VT_INDEX, index, 0);
+  }
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(Terrain::VT_ID, id);
+  }
+  void add_move_costs(flatbuffers::Offset<flatbuffers::Vector<int32_t>> move_costs) {
+    fbb_.AddOffset(Terrain::VT_MOVE_COSTS, move_costs);
+  }
+  void add_class_relations(flatbuffers::Offset<flatbuffers::Vector<int32_t>> class_relations) {
+    fbb_.AddOffset(Terrain::VT_CLASS_RELATIONS, class_relations);
+  }
+  explicit TerrainBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  TerrainBuilder &operator=(const TerrainBuilder &);
+  flatbuffers::Offset<Terrain> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Terrain>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Terrain> CreateTerrain(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t index = 0,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    flatbuffers::Offset<flatbuffers::Vector<int32_t>> move_costs = 0,
+    flatbuffers::Offset<flatbuffers::Vector<int32_t>> class_relations = 0) {
+  TerrainBuilder builder_(_fbb);
+  builder_.add_class_relations(class_relations);
+  builder_.add_move_costs(move_costs);
+  builder_.add_id(id);
+  builder_.add_index(index);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Terrain> CreateTerrainDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t index = 0,
+    const char *id = nullptr,
+    const std::vector<int32_t> *move_costs = nullptr,
+    const std::vector<int32_t> *class_relations = nullptr) {
+  return mengde::save::CreateTerrain(
+      _fbb,
+      index,
+      id ? _fbb.CreateString(id) : 0,
+      move_costs ? _fbb.CreateVector<int32_t>(*move_costs) : 0,
+      class_relations ? _fbb.CreateVector<int32_t>(*class_relations) : 0);
 }
 
 inline const mengde::save::Scenario *GetScenario(const void *buf) {
