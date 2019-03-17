@@ -1,7 +1,34 @@
 namespace mengde.save;
 
 table Scenario {
-  test_value: int;
+  id: string;
+  stage_id_list: [string];
+  stage_no: int;
+//  resource_managers: ResourceManagers;
+}
+
+table ResourceManagers {
+//  hero_class_manager: HeroClassManager;
+  terrain_manager: TerrainManager;
+//  magic_manager: MagicManager;
+//  equipment_manager: EquipmentManager;
+//  hero_tpl_manager: HeroTemplateManager;
+}
+
+table TerrainManager {
+  records: [TerrainRecord];
+}
+
+table TerrainRecord {
+  id: string;
+  terrain: Terrain;
+}
+
+table Terrain {
+  index: int;
+  id: string;
+  move_costs: [int];
+  class_relations: [int];
 }
 
 root_type Scenario;
