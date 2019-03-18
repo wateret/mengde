@@ -29,9 +29,9 @@ class SaveFile {
   flatbuffers::Offset<save::TerrainRecord> Build(const string& id, const Terrain& terrain);
   flatbuffers::Offset<save::Terrain> Build(const Terrain& terrain);
 
-  flatbuffers::Offset<save::BaseIncr> Build(const BaseAndIncr& bni);
   flatbuffers::Offset<save::PromotionInfo> Build(const PromotionInfo& promotion_info);
-  flatbuffers::Offset<save::Attribute> Build(const Attribute& attr);
+  const save::BaseIncr* Build(const BaseAndIncr& bni);
+  const save::Attribute* Build(const Attribute& attr);
 
  public:
   void Deserialize();

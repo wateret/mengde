@@ -11,8 +11,6 @@ namespace save {
 
 struct Scenario;
 
-struct Position;
-
 struct ResourceManagers;
 
 struct TerrainManager;
@@ -32,6 +30,89 @@ struct BaseIncr;
 struct PromotionInfo;
 
 struct Attribute;
+
+struct Position;
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) BaseIncr FLATBUFFERS_FINAL_CLASS {
+ private:
+  int32_t base_;
+  int32_t incr_;
+
+ public:
+  BaseIncr() {
+    memset(this, 0, sizeof(BaseIncr));
+  }
+  BaseIncr(int32_t _base, int32_t _incr)
+      : base_(flatbuffers::EndianScalar(_base)),
+        incr_(flatbuffers::EndianScalar(_incr)) {
+  }
+  int32_t base() const {
+    return flatbuffers::EndianScalar(base_);
+  }
+  int32_t incr() const {
+    return flatbuffers::EndianScalar(incr_);
+  }
+};
+FLATBUFFERS_STRUCT_END(BaseIncr, 8);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Attribute FLATBUFFERS_FINAL_CLASS {
+ private:
+  int32_t atk_;
+  int32_t def_;
+  int32_t dex_;
+  int32_t itl_;
+  int32_t mor_;
+
+ public:
+  Attribute() {
+    memset(this, 0, sizeof(Attribute));
+  }
+  Attribute(int32_t _atk, int32_t _def, int32_t _dex, int32_t _itl, int32_t _mor)
+      : atk_(flatbuffers::EndianScalar(_atk)),
+        def_(flatbuffers::EndianScalar(_def)),
+        dex_(flatbuffers::EndianScalar(_dex)),
+        itl_(flatbuffers::EndianScalar(_itl)),
+        mor_(flatbuffers::EndianScalar(_mor)) {
+  }
+  int32_t atk() const {
+    return flatbuffers::EndianScalar(atk_);
+  }
+  int32_t def() const {
+    return flatbuffers::EndianScalar(def_);
+  }
+  int32_t dex() const {
+    return flatbuffers::EndianScalar(dex_);
+  }
+  int32_t itl() const {
+    return flatbuffers::EndianScalar(itl_);
+  }
+  int32_t mor() const {
+    return flatbuffers::EndianScalar(mor_);
+  }
+};
+FLATBUFFERS_STRUCT_END(Attribute, 20);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Position FLATBUFFERS_FINAL_CLASS {
+ private:
+  int32_t x_;
+  int32_t y_;
+
+ public:
+  Position() {
+    memset(this, 0, sizeof(Position));
+  }
+  Position(int32_t _x, int32_t _y)
+      : x_(flatbuffers::EndianScalar(_x)),
+        y_(flatbuffers::EndianScalar(_y)) {
+  }
+  int32_t x() const {
+    return flatbuffers::EndianScalar(x_);
+  }
+  int32_t y() const {
+    return flatbuffers::EndianScalar(y_);
+  }
+};
+FLATBUFFERS_STRUCT_END(Position, 8);
 
 struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
@@ -119,56 +200,6 @@ inline flatbuffers::Offset<Scenario> CreateScenarioDirect(
       stage_id_list ? _fbb.CreateVector<flatbuffers::Offset<flatbuffers::String>>(*stage_id_list) : 0,
       stage_no,
       resource_managers);
-}
-
-struct Position FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_X = 4,
-    VT_Y = 6
-  };
-  int32_t x() const {
-    return GetField<int32_t>(VT_X, 0);
-  }
-  int32_t y() const {
-    return GetField<int32_t>(VT_Y, 0);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_X) &&
-           VerifyField<int32_t>(verifier, VT_Y) &&
-           verifier.EndTable();
-  }
-};
-
-struct PositionBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_x(int32_t x) {
-    fbb_.AddElement<int32_t>(Position::VT_X, x, 0);
-  }
-  void add_y(int32_t y) {
-    fbb_.AddElement<int32_t>(Position::VT_Y, y, 0);
-  }
-  explicit PositionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  PositionBuilder &operator=(const PositionBuilder &);
-  flatbuffers::Offset<Position> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<Position>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<Position> CreatePosition(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t x = 0,
-    int32_t y = 0) {
-  PositionBuilder builder_(_fbb);
-  builder_.add_y(y);
-  builder_.add_x(x);
-  return builder_.Finish();
 }
 
 struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -524,19 +555,15 @@ inline flatbuffers::Offset<Terrain> CreateTerrainDirect(
 
 struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_ID = 4,
-    VT_ATTR_GRADE = 6,
-    VT_ATTACK_RANGE = 8,
-    VT_MOVE = 10,
-    VT_BI_HP = 12,
-    VT_BI_MP = 14,
-    VT_PROMOTION_INFO = 16
+    VT_ATTR_GRADE = 4,
+    VT_ATTACK_RANGE = 6,
+    VT_MOVE = 8,
+    VT_BI_HP = 10,
+    VT_BI_MP = 12,
+    VT_PROMOTION_INFO = 14
   };
-  const flatbuffers::String *id() const {
-    return GetPointer<const flatbuffers::String *>(VT_ID);
-  }
   const Attribute *attr_grade() const {
-    return GetPointer<const Attribute *>(VT_ATTR_GRADE);
+    return GetStruct<const Attribute *>(VT_ATTR_GRADE);
   }
   int32_t attack_range() const {
     return GetField<int32_t>(VT_ATTACK_RANGE, 0);
@@ -545,26 +572,21 @@ struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return GetField<int32_t>(VT_MOVE, 0);
   }
   const BaseIncr *bi_hp() const {
-    return GetPointer<const BaseIncr *>(VT_BI_HP);
+    return GetStruct<const BaseIncr *>(VT_BI_HP);
   }
   const BaseIncr *bi_mp() const {
-    return GetPointer<const BaseIncr *>(VT_BI_MP);
+    return GetStruct<const BaseIncr *>(VT_BI_MP);
   }
   const PromotionInfo *promotion_info() const {
     return GetPointer<const PromotionInfo *>(VT_PROMOTION_INFO);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_ID) &&
-           verifier.VerifyString(id()) &&
-           VerifyOffset(verifier, VT_ATTR_GRADE) &&
-           verifier.VerifyTable(attr_grade()) &&
+           VerifyField<Attribute>(verifier, VT_ATTR_GRADE) &&
            VerifyField<int32_t>(verifier, VT_ATTACK_RANGE) &&
            VerifyField<int32_t>(verifier, VT_MOVE) &&
-           VerifyOffset(verifier, VT_BI_HP) &&
-           verifier.VerifyTable(bi_hp()) &&
-           VerifyOffset(verifier, VT_BI_MP) &&
-           verifier.VerifyTable(bi_mp()) &&
+           VerifyField<BaseIncr>(verifier, VT_BI_HP) &&
+           VerifyField<BaseIncr>(verifier, VT_BI_MP) &&
            VerifyOffset(verifier, VT_PROMOTION_INFO) &&
            verifier.VerifyTable(promotion_info()) &&
            verifier.EndTable();
@@ -574,11 +596,8 @@ struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct HeroClassBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
-    fbb_.AddOffset(HeroClass::VT_ID, id);
-  }
-  void add_attr_grade(flatbuffers::Offset<Attribute> attr_grade) {
-    fbb_.AddOffset(HeroClass::VT_ATTR_GRADE, attr_grade);
+  void add_attr_grade(const Attribute *attr_grade) {
+    fbb_.AddStruct(HeroClass::VT_ATTR_GRADE, attr_grade);
   }
   void add_attack_range(int32_t attack_range) {
     fbb_.AddElement<int32_t>(HeroClass::VT_ATTACK_RANGE, attack_range, 0);
@@ -586,11 +605,11 @@ struct HeroClassBuilder {
   void add_move(int32_t move) {
     fbb_.AddElement<int32_t>(HeroClass::VT_MOVE, move, 0);
   }
-  void add_bi_hp(flatbuffers::Offset<BaseIncr> bi_hp) {
-    fbb_.AddOffset(HeroClass::VT_BI_HP, bi_hp);
+  void add_bi_hp(const BaseIncr *bi_hp) {
+    fbb_.AddStruct(HeroClass::VT_BI_HP, bi_hp);
   }
-  void add_bi_mp(flatbuffers::Offset<BaseIncr> bi_mp) {
-    fbb_.AddOffset(HeroClass::VT_BI_MP, bi_mp);
+  void add_bi_mp(const BaseIncr *bi_mp) {
+    fbb_.AddStruct(HeroClass::VT_BI_MP, bi_mp);
   }
   void add_promotion_info(flatbuffers::Offset<PromotionInfo> promotion_info) {
     fbb_.AddOffset(HeroClass::VT_PROMOTION_INFO, promotion_info);
@@ -609,12 +628,11 @@ struct HeroClassBuilder {
 
 inline flatbuffers::Offset<HeroClass> CreateHeroClass(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::String> id = 0,
-    flatbuffers::Offset<Attribute> attr_grade = 0,
+    const Attribute *attr_grade = 0,
     int32_t attack_range = 0,
     int32_t move = 0,
-    flatbuffers::Offset<BaseIncr> bi_hp = 0,
-    flatbuffers::Offset<BaseIncr> bi_mp = 0,
+    const BaseIncr *bi_hp = 0,
+    const BaseIncr *bi_mp = 0,
     flatbuffers::Offset<PromotionInfo> promotion_info = 0) {
   HeroClassBuilder builder_(_fbb);
   builder_.add_promotion_info(promotion_info);
@@ -623,77 +641,6 @@ inline flatbuffers::Offset<HeroClass> CreateHeroClass(
   builder_.add_move(move);
   builder_.add_attack_range(attack_range);
   builder_.add_attr_grade(attr_grade);
-  builder_.add_id(id);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<HeroClass> CreateHeroClassDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const char *id = nullptr,
-    flatbuffers::Offset<Attribute> attr_grade = 0,
-    int32_t attack_range = 0,
-    int32_t move = 0,
-    flatbuffers::Offset<BaseIncr> bi_hp = 0,
-    flatbuffers::Offset<BaseIncr> bi_mp = 0,
-    flatbuffers::Offset<PromotionInfo> promotion_info = 0) {
-  return mengde::save::CreateHeroClass(
-      _fbb,
-      id ? _fbb.CreateString(id) : 0,
-      attr_grade,
-      attack_range,
-      move,
-      bi_hp,
-      bi_mp,
-      promotion_info);
-}
-
-struct BaseIncr FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_BASE = 4,
-    VT_INCR = 6
-  };
-  int32_t base() const {
-    return GetField<int32_t>(VT_BASE, 0);
-  }
-  int32_t incr() const {
-    return GetField<int32_t>(VT_INCR, 0);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_BASE) &&
-           VerifyField<int32_t>(verifier, VT_INCR) &&
-           verifier.EndTable();
-  }
-};
-
-struct BaseIncrBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_base(int32_t base) {
-    fbb_.AddElement<int32_t>(BaseIncr::VT_BASE, base, 0);
-  }
-  void add_incr(int32_t incr) {
-    fbb_.AddElement<int32_t>(BaseIncr::VT_INCR, incr, 0);
-  }
-  explicit BaseIncrBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  BaseIncrBuilder &operator=(const BaseIncrBuilder &);
-  flatbuffers::Offset<BaseIncr> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<BaseIncr>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<BaseIncr> CreateBaseIncr(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t base = 0,
-    int32_t incr = 0) {
-  BaseIncrBuilder builder_(_fbb);
-  builder_.add_incr(incr);
-  builder_.add_base(base);
   return builder_.Finish();
 }
 
@@ -756,86 +703,6 @@ inline flatbuffers::Offset<PromotionInfo> CreatePromotionInfoDirect(
       _fbb,
       hero_class_id ? _fbb.CreateString(hero_class_id) : 0,
       level);
-}
-
-struct Attribute FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_ATK = 4,
-    VT_DEF = 6,
-    VT_DEX = 8,
-    VT_ITL = 10,
-    VT_MOR = 12
-  };
-  int32_t atk() const {
-    return GetField<int32_t>(VT_ATK, 0);
-  }
-  int32_t def() const {
-    return GetField<int32_t>(VT_DEF, 0);
-  }
-  int32_t dex() const {
-    return GetField<int32_t>(VT_DEX, 0);
-  }
-  int32_t itl() const {
-    return GetField<int32_t>(VT_ITL, 0);
-  }
-  int32_t mor() const {
-    return GetField<int32_t>(VT_MOR, 0);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<int32_t>(verifier, VT_ATK) &&
-           VerifyField<int32_t>(verifier, VT_DEF) &&
-           VerifyField<int32_t>(verifier, VT_DEX) &&
-           VerifyField<int32_t>(verifier, VT_ITL) &&
-           VerifyField<int32_t>(verifier, VT_MOR) &&
-           verifier.EndTable();
-  }
-};
-
-struct AttributeBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_atk(int32_t atk) {
-    fbb_.AddElement<int32_t>(Attribute::VT_ATK, atk, 0);
-  }
-  void add_def(int32_t def) {
-    fbb_.AddElement<int32_t>(Attribute::VT_DEF, def, 0);
-  }
-  void add_dex(int32_t dex) {
-    fbb_.AddElement<int32_t>(Attribute::VT_DEX, dex, 0);
-  }
-  void add_itl(int32_t itl) {
-    fbb_.AddElement<int32_t>(Attribute::VT_ITL, itl, 0);
-  }
-  void add_mor(int32_t mor) {
-    fbb_.AddElement<int32_t>(Attribute::VT_MOR, mor, 0);
-  }
-  explicit AttributeBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  AttributeBuilder &operator=(const AttributeBuilder &);
-  flatbuffers::Offset<Attribute> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<Attribute>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<Attribute> CreateAttribute(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    int32_t atk = 0,
-    int32_t def = 0,
-    int32_t dex = 0,
-    int32_t itl = 0,
-    int32_t mor = 0) {
-  AttributeBuilder builder_(_fbb);
-  builder_.add_mor(mor);
-  builder_.add_itl(itl);
-  builder_.add_dex(dex);
-  builder_.add_def(def);
-  builder_.add_atk(atk);
-  return builder_.Finish();
 }
 
 inline const mengde::save::Scenario *GetScenario(const void *buf) {
