@@ -57,14 +57,13 @@ flatbuffers::Offset<save::HeroClassRecord> SaveFile::Build(const string& id, con
 }
 
 flatbuffers::Offset<save::HeroClass> SaveFile::Build(const HeroClass& hero_class) {
-  auto id_off = builder_.CreateString(hero_class.id());
-  auto attr_off = Build(hero_class.stat_grade());
+  auto attr_inl = Build(hero_class.stat_grade());
   auto attack_range = static_cast<int>(hero_class.attack_range_enum());
   auto move = hero_class.move();
-  auto hp_off = Build(hero_class.bni_hp());
-  auto mp_off = Build(hero_class.bni_mp());
+  auto hp_inl = Build(hero_class.bni_hp());
+  auto mp_inl = Build(hero_class.bni_mp());
   auto pi_off = hero_class.promotion_info() ? Build(*hero_class.promotion_info()) : 0;
-  return save::CreateHeroClass(builder_, id_off, attr_off, attack_range, move, hp_off, mp_off, pi_off);
+  return save::CreateHeroClass(builder_, attr_inl, attack_range, move, hp_inl, mp_inl, pi_off);
 }
 
 flatbuffers::Offset<save::TerrainManager> SaveFile::Build(const TerrainManager& tm) {
@@ -84,16 +83,25 @@ flatbuffers::Offset<save::Terrain> SaveFile::Build(const Terrain& terrain) {
   return save::CreateTerrainDirect(builder_, terrain.id().c_str(), &terrain.move_costs(), &terrain.class_effects());
 }
 
-flatbuffers::Offset<save::BaseIncr> SaveFile::Build(const BaseAndIncr& bni) {
-  return save::CreateBaseIncr(builder_, bni.base, bni.incr);
-}
-
 flatbuffers::Offset<save::PromotionInfo> SaveFile::Build(const PromotionInfo& promotion_info) {
   return save::CreatePromotionInfoDirect(builder_, promotion_info.id.c_str(), promotion_info.level);
 }
 
-flatbuffers::Offset<save::Attribute> SaveFile::Build(const Attribute& attr) {
-  return save::CreateAttribute(builder_, attr.atk, attr.def, attr.dex, attr.itl, attr.mor);
+const save::BaseIncr* SaveFile::Build(const BaseAndIncr& bni) {
+  static_assert(sizeof(save::BaseIncr) == sizeof(BaseAndIncr), "struct size mismatches");
+  // TODO Maybe add some static_asserts to check the members' offset
+  // NOTE Below is not possible since base_ is a private member
+  // static_assert(offsetof(save::BaseIncr, base_) == offsetof(BaseAndIncr, base), "Struct layout mismatches");
+  // static_assert(offsetof(save::BaseIncr, incr_) == offsetof(BaseAndIncr, incr), "Struct layout mismatches");
+
+  return reinterpret_cast<const save::BaseIncr*>(&bni);
+}
+
+const save::Attribute* SaveFile::Build(const Attribute& attr) {
+  static_assert(sizeof(save::Attribute) == sizeof(Attribute), "struct size mismatches");
+  // TODO Maybe add some static_asserts to check the members' offset
+
+  return reinterpret_cast<const save::Attribute*>(&attr);
 }
 
 void SaveFile::Deserialize() {

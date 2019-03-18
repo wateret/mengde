@@ -7,11 +7,6 @@ table Scenario {
   resource_managers: ResourceManagers;
 }
 
-table Position {
-  x: int;
-  y: int;
-}
-
 table ResourceManagers {
 //  hero_class_manager: HeroClassManager;
   terrain_manager: TerrainManager;
@@ -46,7 +41,6 @@ table Terrain {
 }
 
 table HeroClass {
-  id: string;
 //  index: int;
   attr_grade: Attribute;
   attack_range: int;
@@ -56,7 +50,7 @@ table HeroClass {
   promotion_info: PromotionInfo;
 }
 
-table BaseIncr {
+struct BaseIncr {
   base: int;
   incr: int;
 }
@@ -66,12 +60,17 @@ table PromotionInfo {
   level: int;
 }
 
-table Attribute {
+struct Attribute {
   atk: int;
   def: int;
   dex: int;
   itl: int;
   mor: int;
+}
+
+struct Position {
+  x: int;
+  y: int;
 }
 
 root_type Scenario;
