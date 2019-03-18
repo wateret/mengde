@@ -29,6 +29,7 @@ class HeroClass {
   int index() const { return index_; }
   string id() const { return id_; }
   const AttackRange& attack_range() const { return AttackRangeManager::GetInstance().Get(attack_range_); }
+  Range::Type attack_range_enum() const { return attack_range_; }
   int move() const { return move_; }
   BaseAndIncr bni_hp() const { return bni_hp_; }
   BaseAndIncr bni_mp() const { return bni_mp_; }

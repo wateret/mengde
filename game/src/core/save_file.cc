@@ -39,8 +39,32 @@ flatbuffers::Offset<save::Scenario> SaveFile::Build(const Scenario& scenario) {
 }
 
 flatbuffers::Offset<save::ResourceManagers> SaveFile::Build(const ResourceManagers& rm) {
-  auto terrain_manager = Build(*rm.terrain_manager);
-  return save::CreateResourceManagers(builder_, terrain_manager);
+  auto tm = Build(*rm.terrain_manager);
+  auto hcm = Build(*rm.hero_class_manager);
+  return save::CreateResourceManagers(builder_, tm, hcm);
+}
+
+flatbuffers::Offset<save::HeroClassManager> SaveFile::Build(const HeroClassManager& hcm) {
+  std::vector<flatbuffers::Offset<save::HeroClassRecord>> records;
+  hcm.ForEach([&](const string& id, const HeroClass& hero_class) { records.push_back(Build(id, hero_class)); });
+  return save::CreateHeroClassManager(builder_, builder_.CreateVector(records));
+}
+
+flatbuffers::Offset<save::HeroClassRecord> SaveFile::Build(const string& id, const HeroClass& hero_class) {
+  auto id_off = builder_.CreateString(id);
+  auto obj_off = Build(hero_class);
+  return save::CreateHeroClassRecord(builder_, id_off, obj_off);
+}
+
+flatbuffers::Offset<save::HeroClass> SaveFile::Build(const HeroClass& hero_class) {
+  auto id_off = builder_.CreateString(hero_class.id());
+  auto attr_off = Build(hero_class.stat_grade());
+  auto attack_range = static_cast<int>(hero_class.attack_range_enum());
+  auto move = hero_class.move();
+  auto hp_off = Build(hero_class.bni_hp());
+  auto mp_off = Build(hero_class.bni_mp());
+  auto pi_off = hero_class.promotion_info() ? Build(*hero_class.promotion_info()) : 0;
+  return save::CreateHeroClass(builder_, id_off, attr_off, attack_range, move, hp_off, mp_off, pi_off);
 }
 
 flatbuffers::Offset<save::TerrainManager> SaveFile::Build(const TerrainManager& tm) {
@@ -58,6 +82,18 @@ flatbuffers::Offset<save::TerrainRecord> SaveFile::Build(const string& id, const
 
 flatbuffers::Offset<save::Terrain> SaveFile::Build(const Terrain& terrain) {
   return save::CreateTerrainDirect(builder_, terrain.id().c_str(), &terrain.move_costs(), &terrain.class_effects());
+}
+
+flatbuffers::Offset<save::BaseIncr> SaveFile::Build(const BaseAndIncr& bni) {
+  return save::CreateBaseIncr(builder_, bni.base, bni.incr);
+}
+
+flatbuffers::Offset<save::PromotionInfo> SaveFile::Build(const PromotionInfo& promotion_info) {
+  return save::CreatePromotionInfoDirect(builder_, promotion_info.id.c_str(), promotion_info.level);
+}
+
+flatbuffers::Offset<save::Attribute> SaveFile::Build(const Attribute& attr) {
+  return save::CreateAttribute(builder_, attr.atk, attr.def, attr.dex, attr.itl, attr.mor);
 }
 
 void SaveFile::Deserialize() {
