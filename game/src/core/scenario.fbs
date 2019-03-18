@@ -15,7 +15,7 @@ table Position {
 table ResourceManagers {
 //  hero_class_manager: HeroClassManager;
   terrain_manager: TerrainManager;
-//  magic_manager: MagicManager;
+  hero_class_manager: HeroClassManager;
 //  equipment_manager: EquipmentManager;
 //  hero_tpl_manager: HeroTemplateManager;
 }
@@ -24,9 +24,18 @@ table TerrainManager {
   records: [TerrainRecord];
 }
 
+table HeroClassManager {
+  records: [HeroClassRecord];
+}
+
 table TerrainRecord {
   id: string;
   terrain: Terrain;
+}
+
+table HeroClassRecord {
+  id: string;
+  hero_class: HeroClass;
 }
 
 table Terrain {
@@ -34,6 +43,35 @@ table Terrain {
   id: string;
   move_costs: [int];
   class_effects: [int];
+}
+
+table HeroClass {
+  id: string;
+//  index: int;
+  attr_grade: Attribute;
+  attack_range: int;
+  move: int;
+  bi_hp: BaseIncr;
+  bi_mp: BaseIncr;
+  promotion_info: PromotionInfo;
+}
+
+table BaseIncr {
+  base: int;
+  incr: int;
+}
+
+table PromotionInfo {
+  hero_class_id: string;
+  level: int;
+}
+
+table Attribute {
+  atk: int;
+  def: int;
+  dex: int;
+  itl: int;
+  mor: int;
 }
 
 root_type Scenario;

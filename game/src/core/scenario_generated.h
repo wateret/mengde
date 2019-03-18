@@ -17,9 +17,21 @@ struct ResourceManagers;
 
 struct TerrainManager;
 
+struct HeroClassManager;
+
 struct TerrainRecord;
 
+struct HeroClassRecord;
+
 struct Terrain;
+
+struct HeroClass;
+
+struct BaseIncr;
+
+struct PromotionInfo;
+
+struct Attribute;
 
 struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
@@ -161,15 +173,21 @@ inline flatbuffers::Offset<Position> CreatePosition(
 
 struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_TERRAIN_MANAGER = 4
+    VT_TERRAIN_MANAGER = 4,
+    VT_HERO_CLASS_MANAGER = 6
   };
   const TerrainManager *terrain_manager() const {
     return GetPointer<const TerrainManager *>(VT_TERRAIN_MANAGER);
+  }
+  const HeroClassManager *hero_class_manager() const {
+    return GetPointer<const HeroClassManager *>(VT_HERO_CLASS_MANAGER);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_TERRAIN_MANAGER) &&
            verifier.VerifyTable(terrain_manager()) &&
+           VerifyOffset(verifier, VT_HERO_CLASS_MANAGER) &&
+           verifier.VerifyTable(hero_class_manager()) &&
            verifier.EndTable();
   }
 };
@@ -179,6 +197,9 @@ struct ResourceManagersBuilder {
   flatbuffers::uoffset_t start_;
   void add_terrain_manager(flatbuffers::Offset<TerrainManager> terrain_manager) {
     fbb_.AddOffset(ResourceManagers::VT_TERRAIN_MANAGER, terrain_manager);
+  }
+  void add_hero_class_manager(flatbuffers::Offset<HeroClassManager> hero_class_manager) {
+    fbb_.AddOffset(ResourceManagers::VT_HERO_CLASS_MANAGER, hero_class_manager);
   }
   explicit ResourceManagersBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -194,8 +215,10 @@ struct ResourceManagersBuilder {
 
 inline flatbuffers::Offset<ResourceManagers> CreateResourceManagers(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<TerrainManager> terrain_manager = 0) {
+    flatbuffers::Offset<TerrainManager> terrain_manager = 0,
+    flatbuffers::Offset<HeroClassManager> hero_class_manager = 0) {
   ResourceManagersBuilder builder_(_fbb);
+  builder_.add_hero_class_manager(hero_class_manager);
   builder_.add_terrain_manager(terrain_manager);
   return builder_.Finish();
 }
@@ -248,6 +271,56 @@ inline flatbuffers::Offset<TerrainManager> CreateTerrainManagerDirect(
   return mengde::save::CreateTerrainManager(
       _fbb,
       records ? _fbb.CreateVector<flatbuffers::Offset<TerrainRecord>>(*records) : 0);
+}
+
+struct HeroClassManager FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_RECORDS = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>> *records() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>> *>(VT_RECORDS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(records()) &&
+           verifier.VerifyVectorOfTables(records()) &&
+           verifier.EndTable();
+  }
+};
+
+struct HeroClassManagerBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_records(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>>> records) {
+    fbb_.AddOffset(HeroClassManager::VT_RECORDS, records);
+  }
+  explicit HeroClassManagerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  HeroClassManagerBuilder &operator=(const HeroClassManagerBuilder &);
+  flatbuffers::Offset<HeroClassManager> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<HeroClassManager>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<HeroClassManager> CreateHeroClassManager(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>>> records = 0) {
+  HeroClassManagerBuilder builder_(_fbb);
+  builder_.add_records(records);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<HeroClassManager> CreateHeroClassManagerDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<HeroClassRecord>> *records = nullptr) {
+  return mengde::save::CreateHeroClassManager(
+      _fbb,
+      records ? _fbb.CreateVector<flatbuffers::Offset<HeroClassRecord>>(*records) : 0);
 }
 
 struct TerrainRecord FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -310,6 +383,68 @@ inline flatbuffers::Offset<TerrainRecord> CreateTerrainRecordDirect(
       _fbb,
       id ? _fbb.CreateString(id) : 0,
       terrain);
+}
+
+struct HeroClassRecord FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_HERO_CLASS = 6
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  const HeroClass *hero_class() const {
+    return GetPointer<const HeroClass *>(VT_HERO_CLASS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyOffset(verifier, VT_HERO_CLASS) &&
+           verifier.VerifyTable(hero_class()) &&
+           verifier.EndTable();
+  }
+};
+
+struct HeroClassRecordBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(HeroClassRecord::VT_ID, id);
+  }
+  void add_hero_class(flatbuffers::Offset<HeroClass> hero_class) {
+    fbb_.AddOffset(HeroClassRecord::VT_HERO_CLASS, hero_class);
+  }
+  explicit HeroClassRecordBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  HeroClassRecordBuilder &operator=(const HeroClassRecordBuilder &);
+  flatbuffers::Offset<HeroClassRecord> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<HeroClassRecord>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<HeroClassRecord> CreateHeroClassRecord(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    flatbuffers::Offset<HeroClass> hero_class = 0) {
+  HeroClassRecordBuilder builder_(_fbb);
+  builder_.add_hero_class(hero_class);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<HeroClassRecord> CreateHeroClassRecordDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    flatbuffers::Offset<HeroClass> hero_class = 0) {
+  return mengde::save::CreateHeroClassRecord(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      hero_class);
 }
 
 struct Terrain FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -385,6 +520,322 @@ inline flatbuffers::Offset<Terrain> CreateTerrainDirect(
       id ? _fbb.CreateString(id) : 0,
       move_costs ? _fbb.CreateVector<int32_t>(*move_costs) : 0,
       class_effects ? _fbb.CreateVector<int32_t>(*class_effects) : 0);
+}
+
+struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_ATTR_GRADE = 6,
+    VT_ATTACK_RANGE = 8,
+    VT_MOVE = 10,
+    VT_BI_HP = 12,
+    VT_BI_MP = 14,
+    VT_PROMOTION_INFO = 16
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  const Attribute *attr_grade() const {
+    return GetPointer<const Attribute *>(VT_ATTR_GRADE);
+  }
+  int32_t attack_range() const {
+    return GetField<int32_t>(VT_ATTACK_RANGE, 0);
+  }
+  int32_t move() const {
+    return GetField<int32_t>(VT_MOVE, 0);
+  }
+  const BaseIncr *bi_hp() const {
+    return GetPointer<const BaseIncr *>(VT_BI_HP);
+  }
+  const BaseIncr *bi_mp() const {
+    return GetPointer<const BaseIncr *>(VT_BI_MP);
+  }
+  const PromotionInfo *promotion_info() const {
+    return GetPointer<const PromotionInfo *>(VT_PROMOTION_INFO);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyOffset(verifier, VT_ATTR_GRADE) &&
+           verifier.VerifyTable(attr_grade()) &&
+           VerifyField<int32_t>(verifier, VT_ATTACK_RANGE) &&
+           VerifyField<int32_t>(verifier, VT_MOVE) &&
+           VerifyOffset(verifier, VT_BI_HP) &&
+           verifier.VerifyTable(bi_hp()) &&
+           VerifyOffset(verifier, VT_BI_MP) &&
+           verifier.VerifyTable(bi_mp()) &&
+           VerifyOffset(verifier, VT_PROMOTION_INFO) &&
+           verifier.VerifyTable(promotion_info()) &&
+           verifier.EndTable();
+  }
+};
+
+struct HeroClassBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(HeroClass::VT_ID, id);
+  }
+  void add_attr_grade(flatbuffers::Offset<Attribute> attr_grade) {
+    fbb_.AddOffset(HeroClass::VT_ATTR_GRADE, attr_grade);
+  }
+  void add_attack_range(int32_t attack_range) {
+    fbb_.AddElement<int32_t>(HeroClass::VT_ATTACK_RANGE, attack_range, 0);
+  }
+  void add_move(int32_t move) {
+    fbb_.AddElement<int32_t>(HeroClass::VT_MOVE, move, 0);
+  }
+  void add_bi_hp(flatbuffers::Offset<BaseIncr> bi_hp) {
+    fbb_.AddOffset(HeroClass::VT_BI_HP, bi_hp);
+  }
+  void add_bi_mp(flatbuffers::Offset<BaseIncr> bi_mp) {
+    fbb_.AddOffset(HeroClass::VT_BI_MP, bi_mp);
+  }
+  void add_promotion_info(flatbuffers::Offset<PromotionInfo> promotion_info) {
+    fbb_.AddOffset(HeroClass::VT_PROMOTION_INFO, promotion_info);
+  }
+  explicit HeroClassBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  HeroClassBuilder &operator=(const HeroClassBuilder &);
+  flatbuffers::Offset<HeroClass> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<HeroClass>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<HeroClass> CreateHeroClass(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    flatbuffers::Offset<Attribute> attr_grade = 0,
+    int32_t attack_range = 0,
+    int32_t move = 0,
+    flatbuffers::Offset<BaseIncr> bi_hp = 0,
+    flatbuffers::Offset<BaseIncr> bi_mp = 0,
+    flatbuffers::Offset<PromotionInfo> promotion_info = 0) {
+  HeroClassBuilder builder_(_fbb);
+  builder_.add_promotion_info(promotion_info);
+  builder_.add_bi_mp(bi_mp);
+  builder_.add_bi_hp(bi_hp);
+  builder_.add_move(move);
+  builder_.add_attack_range(attack_range);
+  builder_.add_attr_grade(attr_grade);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<HeroClass> CreateHeroClassDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    flatbuffers::Offset<Attribute> attr_grade = 0,
+    int32_t attack_range = 0,
+    int32_t move = 0,
+    flatbuffers::Offset<BaseIncr> bi_hp = 0,
+    flatbuffers::Offset<BaseIncr> bi_mp = 0,
+    flatbuffers::Offset<PromotionInfo> promotion_info = 0) {
+  return mengde::save::CreateHeroClass(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      attr_grade,
+      attack_range,
+      move,
+      bi_hp,
+      bi_mp,
+      promotion_info);
+}
+
+struct BaseIncr FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_BASE = 4,
+    VT_INCR = 6
+  };
+  int32_t base() const {
+    return GetField<int32_t>(VT_BASE, 0);
+  }
+  int32_t incr() const {
+    return GetField<int32_t>(VT_INCR, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_BASE) &&
+           VerifyField<int32_t>(verifier, VT_INCR) &&
+           verifier.EndTable();
+  }
+};
+
+struct BaseIncrBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_base(int32_t base) {
+    fbb_.AddElement<int32_t>(BaseIncr::VT_BASE, base, 0);
+  }
+  void add_incr(int32_t incr) {
+    fbb_.AddElement<int32_t>(BaseIncr::VT_INCR, incr, 0);
+  }
+  explicit BaseIncrBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  BaseIncrBuilder &operator=(const BaseIncrBuilder &);
+  flatbuffers::Offset<BaseIncr> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<BaseIncr>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<BaseIncr> CreateBaseIncr(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t base = 0,
+    int32_t incr = 0) {
+  BaseIncrBuilder builder_(_fbb);
+  builder_.add_incr(incr);
+  builder_.add_base(base);
+  return builder_.Finish();
+}
+
+struct PromotionInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_HERO_CLASS_ID = 4,
+    VT_LEVEL = 6
+  };
+  const flatbuffers::String *hero_class_id() const {
+    return GetPointer<const flatbuffers::String *>(VT_HERO_CLASS_ID);
+  }
+  int32_t level() const {
+    return GetField<int32_t>(VT_LEVEL, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_HERO_CLASS_ID) &&
+           verifier.VerifyString(hero_class_id()) &&
+           VerifyField<int32_t>(verifier, VT_LEVEL) &&
+           verifier.EndTable();
+  }
+};
+
+struct PromotionInfoBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_hero_class_id(flatbuffers::Offset<flatbuffers::String> hero_class_id) {
+    fbb_.AddOffset(PromotionInfo::VT_HERO_CLASS_ID, hero_class_id);
+  }
+  void add_level(int32_t level) {
+    fbb_.AddElement<int32_t>(PromotionInfo::VT_LEVEL, level, 0);
+  }
+  explicit PromotionInfoBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  PromotionInfoBuilder &operator=(const PromotionInfoBuilder &);
+  flatbuffers::Offset<PromotionInfo> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<PromotionInfo>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<PromotionInfo> CreatePromotionInfo(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> hero_class_id = 0,
+    int32_t level = 0) {
+  PromotionInfoBuilder builder_(_fbb);
+  builder_.add_level(level);
+  builder_.add_hero_class_id(hero_class_id);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<PromotionInfo> CreatePromotionInfoDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *hero_class_id = nullptr,
+    int32_t level = 0) {
+  return mengde::save::CreatePromotionInfo(
+      _fbb,
+      hero_class_id ? _fbb.CreateString(hero_class_id) : 0,
+      level);
+}
+
+struct Attribute FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ATK = 4,
+    VT_DEF = 6,
+    VT_DEX = 8,
+    VT_ITL = 10,
+    VT_MOR = 12
+  };
+  int32_t atk() const {
+    return GetField<int32_t>(VT_ATK, 0);
+  }
+  int32_t def() const {
+    return GetField<int32_t>(VT_DEF, 0);
+  }
+  int32_t dex() const {
+    return GetField<int32_t>(VT_DEX, 0);
+  }
+  int32_t itl() const {
+    return GetField<int32_t>(VT_ITL, 0);
+  }
+  int32_t mor() const {
+    return GetField<int32_t>(VT_MOR, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_ATK) &&
+           VerifyField<int32_t>(verifier, VT_DEF) &&
+           VerifyField<int32_t>(verifier, VT_DEX) &&
+           VerifyField<int32_t>(verifier, VT_ITL) &&
+           VerifyField<int32_t>(verifier, VT_MOR) &&
+           verifier.EndTable();
+  }
+};
+
+struct AttributeBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_atk(int32_t atk) {
+    fbb_.AddElement<int32_t>(Attribute::VT_ATK, atk, 0);
+  }
+  void add_def(int32_t def) {
+    fbb_.AddElement<int32_t>(Attribute::VT_DEF, def, 0);
+  }
+  void add_dex(int32_t dex) {
+    fbb_.AddElement<int32_t>(Attribute::VT_DEX, dex, 0);
+  }
+  void add_itl(int32_t itl) {
+    fbb_.AddElement<int32_t>(Attribute::VT_ITL, itl, 0);
+  }
+  void add_mor(int32_t mor) {
+    fbb_.AddElement<int32_t>(Attribute::VT_MOR, mor, 0);
+  }
+  explicit AttributeBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  AttributeBuilder &operator=(const AttributeBuilder &);
+  flatbuffers::Offset<Attribute> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Attribute>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Attribute> CreateAttribute(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t atk = 0,
+    int32_t def = 0,
+    int32_t dex = 0,
+    int32_t itl = 0,
+    int32_t mor = 0) {
+  AttributeBuilder builder_(_fbb);
+  builder_.add_mor(mor);
+  builder_.add_itl(itl);
+  builder_.add_dex(dex);
+  builder_.add_def(def);
+  builder_.add_atk(atk);
+  return builder_.Finish();
 }
 
 inline const mengde::save::Scenario *GetScenario(const void *buf) {
