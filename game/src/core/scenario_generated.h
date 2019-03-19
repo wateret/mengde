@@ -19,8 +19,6 @@ struct HeroClassManager;
 
 struct TerrainRecord;
 
-struct HeroClassRecord;
-
 struct Terrain;
 
 struct HeroClass;
@@ -308,8 +306,8 @@ struct HeroClassManager FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_RECORDS = 4
   };
-  const flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>> *records() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>> *>(VT_RECORDS);
+  const flatbuffers::Vector<flatbuffers::Offset<HeroClass>> *records() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<HeroClass>> *>(VT_RECORDS);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -323,7 +321,7 @@ struct HeroClassManager FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct HeroClassManagerBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_records(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>>> records) {
+  void add_records(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroClass>>> records) {
     fbb_.AddOffset(HeroClassManager::VT_RECORDS, records);
   }
   explicit HeroClassManagerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
@@ -340,7 +338,7 @@ struct HeroClassManagerBuilder {
 
 inline flatbuffers::Offset<HeroClassManager> CreateHeroClassManager(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroClassRecord>>> records = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroClass>>> records = 0) {
   HeroClassManagerBuilder builder_(_fbb);
   builder_.add_records(records);
   return builder_.Finish();
@@ -348,10 +346,10 @@ inline flatbuffers::Offset<HeroClassManager> CreateHeroClassManager(
 
 inline flatbuffers::Offset<HeroClassManager> CreateHeroClassManagerDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<flatbuffers::Offset<HeroClassRecord>> *records = nullptr) {
+    const std::vector<flatbuffers::Offset<HeroClass>> *records = nullptr) {
   return mengde::save::CreateHeroClassManager(
       _fbb,
-      records ? _fbb.CreateVector<flatbuffers::Offset<HeroClassRecord>>(*records) : 0);
+      records ? _fbb.CreateVector<flatbuffers::Offset<HeroClass>>(*records) : 0);
 }
 
 struct TerrainRecord FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -414,68 +412,6 @@ inline flatbuffers::Offset<TerrainRecord> CreateTerrainRecordDirect(
       _fbb,
       id ? _fbb.CreateString(id) : 0,
       terrain);
-}
-
-struct HeroClassRecord FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_ID = 4,
-    VT_HERO_CLASS = 6
-  };
-  const flatbuffers::String *id() const {
-    return GetPointer<const flatbuffers::String *>(VT_ID);
-  }
-  const HeroClass *hero_class() const {
-    return GetPointer<const HeroClass *>(VT_HERO_CLASS);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_ID) &&
-           verifier.VerifyString(id()) &&
-           VerifyOffset(verifier, VT_HERO_CLASS) &&
-           verifier.VerifyTable(hero_class()) &&
-           verifier.EndTable();
-  }
-};
-
-struct HeroClassRecordBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
-    fbb_.AddOffset(HeroClassRecord::VT_ID, id);
-  }
-  void add_hero_class(flatbuffers::Offset<HeroClass> hero_class) {
-    fbb_.AddOffset(HeroClassRecord::VT_HERO_CLASS, hero_class);
-  }
-  explicit HeroClassRecordBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  HeroClassRecordBuilder &operator=(const HeroClassRecordBuilder &);
-  flatbuffers::Offset<HeroClassRecord> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<HeroClassRecord>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<HeroClassRecord> CreateHeroClassRecord(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::String> id = 0,
-    flatbuffers::Offset<HeroClass> hero_class = 0) {
-  HeroClassRecordBuilder builder_(_fbb);
-  builder_.add_hero_class(hero_class);
-  builder_.add_id(id);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<HeroClassRecord> CreateHeroClassRecordDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const char *id = nullptr,
-    flatbuffers::Offset<HeroClass> hero_class = 0) {
-  return mengde::save::CreateHeroClassRecord(
-      _fbb,
-      id ? _fbb.CreateString(id) : 0,
-      hero_class);
 }
 
 struct Terrain FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -555,13 +491,17 @@ inline flatbuffers::Offset<Terrain> CreateTerrainDirect(
 
 struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_ATTR_GRADE = 4,
-    VT_ATTACK_RANGE = 6,
-    VT_MOVE = 8,
-    VT_BI_HP = 10,
-    VT_BI_MP = 12,
-    VT_PROMOTION_INFO = 14
+    VT_ID = 4,
+    VT_ATTR_GRADE = 6,
+    VT_ATTACK_RANGE = 8,
+    VT_MOVE = 10,
+    VT_BI_HP = 12,
+    VT_BI_MP = 14,
+    VT_PROMOTION_INFO = 16
   };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
   const Attribute *attr_grade() const {
     return GetStruct<const Attribute *>(VT_ATTR_GRADE);
   }
@@ -582,6 +522,8 @@ struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
            VerifyField<Attribute>(verifier, VT_ATTR_GRADE) &&
            VerifyField<int32_t>(verifier, VT_ATTACK_RANGE) &&
            VerifyField<int32_t>(verifier, VT_MOVE) &&
@@ -596,6 +538,9 @@ struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct HeroClassBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(HeroClass::VT_ID, id);
+  }
   void add_attr_grade(const Attribute *attr_grade) {
     fbb_.AddStruct(HeroClass::VT_ATTR_GRADE, attr_grade);
   }
@@ -628,6 +573,7 @@ struct HeroClassBuilder {
 
 inline flatbuffers::Offset<HeroClass> CreateHeroClass(
     flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
     const Attribute *attr_grade = 0,
     int32_t attack_range = 0,
     int32_t move = 0,
@@ -641,7 +587,28 @@ inline flatbuffers::Offset<HeroClass> CreateHeroClass(
   builder_.add_move(move);
   builder_.add_attack_range(attack_range);
   builder_.add_attr_grade(attr_grade);
+  builder_.add_id(id);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<HeroClass> CreateHeroClassDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    const Attribute *attr_grade = 0,
+    int32_t attack_range = 0,
+    int32_t move = 0,
+    const BaseIncr *bi_hp = 0,
+    const BaseIncr *bi_mp = 0,
+    flatbuffers::Offset<PromotionInfo> promotion_info = 0) {
+  return mengde::save::CreateHeroClass(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      attr_grade,
+      attack_range,
+      move,
+      bi_hp,
+      bi_mp,
+      promotion_info);
 }
 
 struct PromotionInfo FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
