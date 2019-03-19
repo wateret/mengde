@@ -41,16 +41,26 @@ flatbuffers::Offset<save::Scenario> SaveFile::Build(const Scenario& scenario) {
 flatbuffers::Offset<save::ResourceManagers> SaveFile::Build(const ResourceManagers& rm) {
   auto tm = Build(*rm.terrain_manager);
   auto hcm = Build(*rm.hero_class_manager);
-  return save::CreateResourceManagers(builder_, tm, hcm);
+  auto htm = Build(*rm.hero_tpl_manager);
+  return save::CreateResourceManagers(builder_, tm, hcm, htm);
 }
 
 flatbuffers::Offset<save::HeroClassManager> SaveFile::Build(const HeroClassManager& hcm) {
   std::vector<flatbuffers::Offset<save::HeroClass>> records;
   hcm.ForEach([&](const string& id, const HeroClass& hero_class) {
-        assert(id == hero_class.id());
-        records.push_back(Build(hero_class));
-      });
+    ASSERT(id == hero_class.id());
+    records.push_back(Build(hero_class));
+  });
   return save::CreateHeroClassManager(builder_, builder_.CreateVector(records));
+}
+
+flatbuffers::Offset<save::HeroTemplateManager> SaveFile::Build(const HeroTemplateManager& htm) {
+  std::vector<flatbuffers::Offset<save::HeroTemplate>> records;
+  htm.ForEach([&](const string& id, const HeroTemplate& hero_tpl) {
+    ASSERT(id == hero_tpl.id());
+    records.push_back(Build(hero_tpl));
+  });
+  return save::CreateHeroTemplateManager(builder_, builder_.CreateVector(records));
 }
 
 flatbuffers::Offset<save::HeroClass> SaveFile::Build(const HeroClass& hero_class) {
@@ -62,6 +72,13 @@ flatbuffers::Offset<save::HeroClass> SaveFile::Build(const HeroClass& hero_class
   auto mp_inl = Build(hero_class.bni_mp());
   auto pi_off = hero_class.promotion_info() ? Build(*hero_class.promotion_info()) : 0;
   return save::CreateHeroClass(builder_, id_off, attr_inl, attack_range, move, hp_inl, mp_inl, pi_off);
+}
+
+flatbuffers::Offset<save::HeroTemplate> SaveFile::Build(const HeroTemplate& hero_tpl) {
+  auto id_off = builder_.CreateString(hero_tpl.id());
+  auto hero_class_off = builder_.CreateString(hero_tpl.hero_class()->id());
+  auto attr_inl = Build(hero_tpl.GetHeroStat());
+  return save::CreateHeroTemplate(builder_, id_off, hero_class_off, attr_inl);
 }
 
 flatbuffers::Offset<save::TerrainManager> SaveFile::Build(const TerrainManager& tm) {

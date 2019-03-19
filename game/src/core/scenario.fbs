@@ -8,11 +8,11 @@ table Scenario {
 }
 
 table ResourceManagers {
-//  hero_class_manager: HeroClassManager;
   terrain_manager: TerrainManager;
   hero_class_manager: HeroClassManager;
+//  magic_manager: MagicManager;
 //  equipment_manager: EquipmentManager;
-//  hero_tpl_manager: HeroTemplateManager;
+  hero_tpl_manager: HeroTemplateManager;
 }
 
 table TerrainManager {
@@ -21,6 +21,10 @@ table TerrainManager {
 
 table HeroClassManager {
   records: [HeroClass];
+}
+
+table HeroTemplateManager {
+  records: [HeroTemplate];
 }
 
 table TerrainRecord {
@@ -33,6 +37,12 @@ table Terrain {
 //  index: int;
   move_costs: [int];
   class_effects: [int];
+}
+
+table HeroTemplate {
+  id: string;
+  hero_class: string;
+  attr: Attribute;
 }
 
 table HeroClass {

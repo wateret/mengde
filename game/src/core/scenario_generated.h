@@ -17,9 +17,13 @@ struct TerrainManager;
 
 struct HeroClassManager;
 
+struct HeroTemplateManager;
+
 struct TerrainRecord;
 
 struct Terrain;
+
+struct HeroTemplate;
 
 struct HeroClass;
 
@@ -203,7 +207,8 @@ inline flatbuffers::Offset<Scenario> CreateScenarioDirect(
 struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_TERRAIN_MANAGER = 4,
-    VT_HERO_CLASS_MANAGER = 6
+    VT_HERO_CLASS_MANAGER = 6,
+    VT_HERO_TPL_MANAGER = 8
   };
   const TerrainManager *terrain_manager() const {
     return GetPointer<const TerrainManager *>(VT_TERRAIN_MANAGER);
@@ -211,12 +216,17 @@ struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const HeroClassManager *hero_class_manager() const {
     return GetPointer<const HeroClassManager *>(VT_HERO_CLASS_MANAGER);
   }
+  const HeroTemplateManager *hero_tpl_manager() const {
+    return GetPointer<const HeroTemplateManager *>(VT_HERO_TPL_MANAGER);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_TERRAIN_MANAGER) &&
            verifier.VerifyTable(terrain_manager()) &&
            VerifyOffset(verifier, VT_HERO_CLASS_MANAGER) &&
            verifier.VerifyTable(hero_class_manager()) &&
+           VerifyOffset(verifier, VT_HERO_TPL_MANAGER) &&
+           verifier.VerifyTable(hero_tpl_manager()) &&
            verifier.EndTable();
   }
 };
@@ -229,6 +239,9 @@ struct ResourceManagersBuilder {
   }
   void add_hero_class_manager(flatbuffers::Offset<HeroClassManager> hero_class_manager) {
     fbb_.AddOffset(ResourceManagers::VT_HERO_CLASS_MANAGER, hero_class_manager);
+  }
+  void add_hero_tpl_manager(flatbuffers::Offset<HeroTemplateManager> hero_tpl_manager) {
+    fbb_.AddOffset(ResourceManagers::VT_HERO_TPL_MANAGER, hero_tpl_manager);
   }
   explicit ResourceManagersBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -245,8 +258,10 @@ struct ResourceManagersBuilder {
 inline flatbuffers::Offset<ResourceManagers> CreateResourceManagers(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<TerrainManager> terrain_manager = 0,
-    flatbuffers::Offset<HeroClassManager> hero_class_manager = 0) {
+    flatbuffers::Offset<HeroClassManager> hero_class_manager = 0,
+    flatbuffers::Offset<HeroTemplateManager> hero_tpl_manager = 0) {
   ResourceManagersBuilder builder_(_fbb);
+  builder_.add_hero_tpl_manager(hero_tpl_manager);
   builder_.add_hero_class_manager(hero_class_manager);
   builder_.add_terrain_manager(terrain_manager);
   return builder_.Finish();
@@ -350,6 +365,56 @@ inline flatbuffers::Offset<HeroClassManager> CreateHeroClassManagerDirect(
   return mengde::save::CreateHeroClassManager(
       _fbb,
       records ? _fbb.CreateVector<flatbuffers::Offset<HeroClass>>(*records) : 0);
+}
+
+struct HeroTemplateManager FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_RECORDS = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<HeroTemplate>> *records() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<HeroTemplate>> *>(VT_RECORDS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(records()) &&
+           verifier.VerifyVectorOfTables(records()) &&
+           verifier.EndTable();
+  }
+};
+
+struct HeroTemplateManagerBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_records(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroTemplate>>> records) {
+    fbb_.AddOffset(HeroTemplateManager::VT_RECORDS, records);
+  }
+  explicit HeroTemplateManagerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  HeroTemplateManagerBuilder &operator=(const HeroTemplateManagerBuilder &);
+  flatbuffers::Offset<HeroTemplateManager> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<HeroTemplateManager>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<HeroTemplateManager> CreateHeroTemplateManager(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<HeroTemplate>>> records = 0) {
+  HeroTemplateManagerBuilder builder_(_fbb);
+  builder_.add_records(records);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<HeroTemplateManager> CreateHeroTemplateManagerDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<HeroTemplate>> *records = nullptr) {
+  return mengde::save::CreateHeroTemplateManager(
+      _fbb,
+      records ? _fbb.CreateVector<flatbuffers::Offset<HeroTemplate>>(*records) : 0);
 }
 
 struct TerrainRecord FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -487,6 +552,80 @@ inline flatbuffers::Offset<Terrain> CreateTerrainDirect(
       id ? _fbb.CreateString(id) : 0,
       move_costs ? _fbb.CreateVector<int32_t>(*move_costs) : 0,
       class_effects ? _fbb.CreateVector<int32_t>(*class_effects) : 0);
+}
+
+struct HeroTemplate FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_HERO_CLASS = 6,
+    VT_ATTR = 8
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  const flatbuffers::String *hero_class() const {
+    return GetPointer<const flatbuffers::String *>(VT_HERO_CLASS);
+  }
+  const Attribute *attr() const {
+    return GetStruct<const Attribute *>(VT_ATTR);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyOffset(verifier, VT_HERO_CLASS) &&
+           verifier.VerifyString(hero_class()) &&
+           VerifyField<Attribute>(verifier, VT_ATTR) &&
+           verifier.EndTable();
+  }
+};
+
+struct HeroTemplateBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(HeroTemplate::VT_ID, id);
+  }
+  void add_hero_class(flatbuffers::Offset<flatbuffers::String> hero_class) {
+    fbb_.AddOffset(HeroTemplate::VT_HERO_CLASS, hero_class);
+  }
+  void add_attr(const Attribute *attr) {
+    fbb_.AddStruct(HeroTemplate::VT_ATTR, attr);
+  }
+  explicit HeroTemplateBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  HeroTemplateBuilder &operator=(const HeroTemplateBuilder &);
+  flatbuffers::Offset<HeroTemplate> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<HeroTemplate>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<HeroTemplate> CreateHeroTemplate(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    flatbuffers::Offset<flatbuffers::String> hero_class = 0,
+    const Attribute *attr = 0) {
+  HeroTemplateBuilder builder_(_fbb);
+  builder_.add_attr(attr);
+  builder_.add_hero_class(hero_class);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<HeroTemplate> CreateHeroTemplateDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    const char *hero_class = nullptr,
+    const Attribute *attr = 0) {
+  return mengde::save::CreateHeroTemplate(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      hero_class ? _fbb.CreateString(hero_class) : 0,
+      attr);
 }
 
 struct HeroClass FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
