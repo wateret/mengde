@@ -23,7 +23,6 @@ class SaveFile {
   flatbuffers::Offset<save::Scenario> Build(const Scenario& scenario);
   flatbuffers::Offset<save::ResourceManagers> Build(const ResourceManagers& rm);
   flatbuffers::Offset<save::HeroClassManager> Build(const HeroClassManager& hcm);
-  flatbuffers::Offset<save::HeroClassRecord> Build(const string& id, const HeroClass& hero_class);
   flatbuffers::Offset<save::HeroClass> Build(const HeroClass& hero_class);
   flatbuffers::Offset<save::TerrainManager> Build(const TerrainManager& tm);
   flatbuffers::Offset<save::TerrainRecord> Build(const string& id, const Terrain& terrain);

@@ -45,25 +45,23 @@ flatbuffers::Offset<save::ResourceManagers> SaveFile::Build(const ResourceManage
 }
 
 flatbuffers::Offset<save::HeroClassManager> SaveFile::Build(const HeroClassManager& hcm) {
-  std::vector<flatbuffers::Offset<save::HeroClassRecord>> records;
-  hcm.ForEach([&](const string& id, const HeroClass& hero_class) { records.push_back(Build(id, hero_class)); });
+  std::vector<flatbuffers::Offset<save::HeroClass>> records;
+  hcm.ForEach([&](const string& id, const HeroClass& hero_class) {
+        assert(id == hero_class.id());
+        records.push_back(Build(hero_class));
+      });
   return save::CreateHeroClassManager(builder_, builder_.CreateVector(records));
 }
 
-flatbuffers::Offset<save::HeroClassRecord> SaveFile::Build(const string& id, const HeroClass& hero_class) {
-  auto id_off = builder_.CreateString(id);
-  auto obj_off = Build(hero_class);
-  return save::CreateHeroClassRecord(builder_, id_off, obj_off);
-}
-
 flatbuffers::Offset<save::HeroClass> SaveFile::Build(const HeroClass& hero_class) {
+  auto id_off = builder_.CreateString(hero_class.id());
   auto attr_inl = Build(hero_class.stat_grade());
   auto attack_range = static_cast<int>(hero_class.attack_range_enum());
   auto move = hero_class.move();
   auto hp_inl = Build(hero_class.bni_hp());
   auto mp_inl = Build(hero_class.bni_mp());
   auto pi_off = hero_class.promotion_info() ? Build(*hero_class.promotion_info()) : 0;
-  return save::CreateHeroClass(builder_, attr_inl, attack_range, move, hp_inl, mp_inl, pi_off);
+  return save::CreateHeroClass(builder_, id_off, attr_inl, attack_range, move, hp_inl, mp_inl, pi_off);
 }
 
 flatbuffers::Offset<save::TerrainManager> SaveFile::Build(const TerrainManager& tm) {

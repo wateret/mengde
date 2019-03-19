@@ -20,7 +20,7 @@ table TerrainManager {
 }
 
 table HeroClassManager {
-  records: [HeroClassRecord];
+  records: [HeroClass];
 }
 
 table TerrainRecord {
@@ -28,19 +28,15 @@ table TerrainRecord {
   terrain: Terrain;
 }
 
-table HeroClassRecord {
-  id: string;
-  hero_class: HeroClass;
-}
-
 table Terrain {
-//  index: int;
   id: string;
+//  index: int;
   move_costs: [int];
   class_effects: [int];
 }
 
 table HeroClass {
+  id: string;
 //  index: int;
   attr_grade: Attribute;
   attack_range: int;
