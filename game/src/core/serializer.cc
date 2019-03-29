@@ -1,4 +1,4 @@
-#include "save_file.h"
+#include "serializer.h"
 
 #include <fstream>
 
@@ -7,9 +7,9 @@
 namespace mengde {
 namespace core {
 
-SaveFile::SaveFile(const Path& path) : path_{path} {}
+Serializer::Serializer(const Path& path) : path_{path} {}
 
-void SaveFile::Serialize(const Scenario& scenario) {
+void Serializer::Serialize(const Scenario& scenario) {
   builder_ = flatbuffers::FlatBufferBuilder{1024};
 
   auto sce = Build(scenario);
@@ -23,7 +23,7 @@ void SaveFile::Serialize(const Scenario& scenario) {
   file.write(reinterpret_cast<const char*>(buffer), size);
 }
 
-flatbuffers::Offset<save::Scenario> SaveFile::Build(const Scenario& scenario) {
+flatbuffers::Offset<save::Scenario> Serializer::Build(const Scenario& scenario) {
   auto id_off = builder_.CreateString(scenario.id());
   auto string_offset_vec = builder_.CreateVectorOfStrings(scenario.stage_id_list());
   auto resource_managers_off = Build(scenario.GetResourceManagers());
@@ -38,7 +38,7 @@ flatbuffers::Offset<save::Scenario> SaveFile::Build(const Scenario& scenario) {
   return sce_builder.Finish();
 }
 
-flatbuffers::Offset<save::ResourceManagers> SaveFile::Build(const ResourceManagers& rm) {
+flatbuffers::Offset<save::ResourceManagers> Serializer::Build(const ResourceManagers& rm) {
   auto tm = Build(*rm.terrain_manager);
   auto hcm = Build(*rm.hero_class_manager);
   auto em = Build(*rm.equipment_manager);
@@ -46,7 +46,7 @@ flatbuffers::Offset<save::ResourceManagers> SaveFile::Build(const ResourceManage
   return save::CreateResourceManagers(builder_, tm, hcm, em, htm);
 }
 
-flatbuffers::Offset<save::HeroClassManager> SaveFile::Build(const HeroClassManager& hcm) {
+flatbuffers::Offset<save::HeroClassManager> Serializer::Build(const HeroClassManager& hcm) {
   std::vector<flatbuffers::Offset<save::HeroClass>> records;
   hcm.ForEach([&](const string& id, const HeroClass& hero_class) {
     ASSERT(id == hero_class.id());
@@ -55,7 +55,7 @@ flatbuffers::Offset<save::HeroClassManager> SaveFile::Build(const HeroClassManag
   return save::CreateHeroClassManager(builder_, builder_.CreateVector(records));
 }
 
-flatbuffers::Offset<save::HeroTemplateManager> SaveFile::Build(const HeroTemplateManager& htm) {
+flatbuffers::Offset<save::HeroTemplateManager> Serializer::Build(const HeroTemplateManager& htm) {
   std::vector<flatbuffers::Offset<save::HeroTemplate>> records;
   htm.ForEach([&](const string& id, const HeroTemplate& hero_tpl) {
     ASSERT(id == hero_tpl.id());
@@ -64,7 +64,7 @@ flatbuffers::Offset<save::HeroTemplateManager> SaveFile::Build(const HeroTemplat
   return save::CreateHeroTemplateManager(builder_, builder_.CreateVector(records));
 }
 
-flatbuffers::Offset<save::HeroClass> SaveFile::Build(const HeroClass& hero_class) {
+flatbuffers::Offset<save::HeroClass> Serializer::Build(const HeroClass& hero_class) {
   auto id_off = builder_.CreateString(hero_class.id());
   auto attr_inl = Build(hero_class.stat_grade());
   auto attack_range = static_cast<int>(hero_class.attack_range_enum());
@@ -75,35 +75,35 @@ flatbuffers::Offset<save::HeroClass> SaveFile::Build(const HeroClass& hero_class
   return save::CreateHeroClass(builder_, id_off, attr_inl, attack_range, move, hp_inl, mp_inl, pi_off);
 }
 
-flatbuffers::Offset<save::HeroTemplate> SaveFile::Build(const HeroTemplate& hero_tpl) {
+flatbuffers::Offset<save::HeroTemplate> Serializer::Build(const HeroTemplate& hero_tpl) {
   auto id_off = builder_.CreateString(hero_tpl.id());
   auto hero_class_off = builder_.CreateString(hero_tpl.hero_class()->id());
   auto attr_inl = Build(hero_tpl.GetHeroStat());
   return save::CreateHeroTemplate(builder_, id_off, hero_class_off, attr_inl);
 }
 
-flatbuffers::Offset<save::TerrainManager> SaveFile::Build(const TerrainManager& tm) {
+flatbuffers::Offset<save::TerrainManager> Serializer::Build(const TerrainManager& tm) {
   std::vector<flatbuffers::Offset<save::TerrainRecord>> terrain_records;
   tm.ForEach([&](const string& id, const Terrain& terrain) { terrain_records.push_back(Build(id, terrain)); });
   auto terrain_records_off = builder_.CreateVector(terrain_records);
   return save::CreateTerrainManager(builder_, terrain_records_off);
 }
 
-flatbuffers::Offset<save::TerrainRecord> SaveFile::Build(const string& id, const Terrain& terrain) {
+flatbuffers::Offset<save::TerrainRecord> Serializer::Build(const string& id, const Terrain& terrain) {
   auto id_off = builder_.CreateString(id);
   auto terrain_off = Build(terrain);
   return save::CreateTerrainRecord(builder_, id_off, terrain_off);
 }
 
-flatbuffers::Offset<save::Terrain> SaveFile::Build(const Terrain& terrain) {
+flatbuffers::Offset<save::Terrain> Serializer::Build(const Terrain& terrain) {
   return save::CreateTerrainDirect(builder_, terrain.id().c_str(), &terrain.move_costs(), &terrain.class_effects());
 }
 
-flatbuffers::Offset<save::PromotionInfo> SaveFile::Build(const PromotionInfo& promotion_info) {
+flatbuffers::Offset<save::PromotionInfo> Serializer::Build(const PromotionInfo& promotion_info) {
   return save::CreatePromotionInfoDirect(builder_, promotion_info.id.c_str(), promotion_info.level);
 }
 
-const save::BaseIncr* SaveFile::Build(const BaseAndIncr& bni) {
+const save::BaseIncr* Serializer::Build(const BaseAndIncr& bni) {
   static_assert(sizeof(save::BaseIncr) == sizeof(BaseAndIncr), "struct size mismatches");
   // TODO Maybe add some static_asserts to check the members' offset
   // NOTE Below is not possible since base_ is a private member
@@ -113,26 +113,26 @@ const save::BaseIncr* SaveFile::Build(const BaseAndIncr& bni) {
   return reinterpret_cast<const save::BaseIncr*>(&bni);
 }
 
-const save::Attribute* SaveFile::Build(const Attribute& attr) {
+const save::Attribute* Serializer::Build(const Attribute& attr) {
   static_assert(sizeof(save::Attribute) == sizeof(Attribute), "struct size mismatches");
   // TODO Maybe add some static_asserts to check the members' offset
 
   return reinterpret_cast<const save::Attribute*>(&attr);
 }
 
-const save::TurnBased* SaveFile::Build(const TurnBased& turn_based) {
+const save::TurnBased* Serializer::Build(const TurnBased& turn_based) {
   static_assert(sizeof(save::TurnBased) == sizeof(TurnBased), "struct size mismatches");
 
   return reinterpret_cast<const save::TurnBased*>(&turn_based);
 }
 
-const save::StatMod* SaveFile::Build(const StatMod& stat_mod) {
+const save::StatMod* Serializer::Build(const StatMod& stat_mod) {
   static_assert(sizeof(save::StatMod) == sizeof(StatMod), "struct size mismatches");
 
   return reinterpret_cast<const save::StatMod*>(&stat_mod);
 }
 
-flatbuffers::Offset<save::EquipmentManager> SaveFile::Build(const EquipmentManager& em) {
+flatbuffers::Offset<save::EquipmentManager> Serializer::Build(const EquipmentManager& em) {
   std::vector<flatbuffers::Offset<save::Equipment>> records;
   em.ForEach([&](const string& id, const Equipment& equipment) {
     ASSERT(id == equipment.GetId());
@@ -141,18 +141,18 @@ flatbuffers::Offset<save::EquipmentManager> SaveFile::Build(const EquipmentManag
   return save::CreateEquipmentManager(builder_, builder_.CreateVector(records));
 }
 
-flatbuffers::Offset<save::Equipment> SaveFile::Build(const Equipment& equipment) {
+flatbuffers::Offset<save::Equipment> Serializer::Build(const Equipment& equipment) {
   auto id_off = builder_.CreateString(equipment.GetId());
   auto type = static_cast<int>(equipment.GetType());
   auto va_off = Build(equipment.volatile_attribute());
   return save::CreateEquipment(builder_, id_off, type, va_off);
 }
 
-flatbuffers::Offset<save::VolatileAttributes> SaveFile::Build(const VolatileAttribute& va) {
+flatbuffers::Offset<save::VolatileAttributes> Serializer::Build(const VolatileAttribute& va) {
   return save::CreateVolatileAttributes(builder_, Build(va.stat_modifier_list()));
 }
 
-flatbuffers::Offset<save::AttributeModifierList> SaveFile::Build(const StatModifierList& aml) {
+flatbuffers::Offset<save::AttributeModifierList> Serializer::Build(const StatModifierList& aml) {
   std::vector<flatbuffers::Offset<save::AttributeModifier>> list;
   aml.iterate([&](const StatModifier& am) {
     list.push_back(Build(am));
@@ -160,11 +160,15 @@ flatbuffers::Offset<save::AttributeModifierList> SaveFile::Build(const StatModif
   return save::CreateAttributeModifierList(builder_, builder_.CreateVector(list));
 }
 
-flatbuffers::Offset<save::AttributeModifier> SaveFile::Build(const StatModifier& am) {
+flatbuffers::Offset<save::AttributeModifier> Serializer::Build(const StatModifier& am) {
   return save::CreateAttributeModifierDirect(builder_, am.id().c_str(), am.stat_id(), Build(am.turn()), Build(am.mod()));
 }
 
-void SaveFile::Deserialize() {
+}  // namespace core
+}  // namespace mengde
+
+#if 0
+void Serializer::Deserialize() {
   std::ifstream file(path_.ToString(), std::ios::binary | std::ios::ate);
   std::streamsize size = file.tellg();
   file.seekg(0, std::ios::beg);
@@ -176,6 +180,5 @@ void SaveFile::Deserialize() {
   auto val = sce->id();
   (void)val;
 }
+#endif
 
-}  // namespace core
-}  // namespace mengde
