@@ -35,6 +35,20 @@ struct Attribute;
 
 struct Position;
 
+struct EquipmentManager;
+
+struct Equipment;
+
+struct VolatileAttributes;
+
+struct AttributeModifierList;
+
+struct AttributeModifier;
+
+struct TurnBased;
+
+struct StatMod;
+
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) BaseIncr FLATBUFFERS_FINAL_CLASS {
  private:
   int32_t base_;
@@ -115,6 +129,45 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) Position FLATBUFFERS_FINAL_CLASS {
   }
 };
 FLATBUFFERS_STRUCT_END(Position, 8);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) TurnBased FLATBUFFERS_FINAL_CLASS {
+ private:
+  uint16_t turns_;
+
+ public:
+  TurnBased() {
+    memset(this, 0, sizeof(TurnBased));
+  }
+  TurnBased(uint16_t _turns)
+      : turns_(flatbuffers::EndianScalar(_turns)) {
+  }
+  uint16_t turns() const {
+    return flatbuffers::EndianScalar(turns_);
+  }
+};
+FLATBUFFERS_STRUCT_END(TurnBased, 2);
+
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) StatMod FLATBUFFERS_FINAL_CLASS {
+ private:
+  int16_t addend_;
+  int16_t multiplier_;
+
+ public:
+  StatMod() {
+    memset(this, 0, sizeof(StatMod));
+  }
+  StatMod(int16_t _addend, int16_t _multiplier)
+      : addend_(flatbuffers::EndianScalar(_addend)),
+        multiplier_(flatbuffers::EndianScalar(_multiplier)) {
+  }
+  int16_t addend() const {
+    return flatbuffers::EndianScalar(addend_);
+  }
+  int16_t multiplier() const {
+    return flatbuffers::EndianScalar(multiplier_);
+  }
+};
+FLATBUFFERS_STRUCT_END(StatMod, 4);
 
 struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
@@ -208,13 +261,17 @@ struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_TERRAIN_MANAGER = 4,
     VT_HERO_CLASS_MANAGER = 6,
-    VT_HERO_TPL_MANAGER = 8
+    VT_EQUIPMENT_MANAGER = 8,
+    VT_HERO_TPL_MANAGER = 10
   };
   const TerrainManager *terrain_manager() const {
     return GetPointer<const TerrainManager *>(VT_TERRAIN_MANAGER);
   }
   const HeroClassManager *hero_class_manager() const {
     return GetPointer<const HeroClassManager *>(VT_HERO_CLASS_MANAGER);
+  }
+  const EquipmentManager *equipment_manager() const {
+    return GetPointer<const EquipmentManager *>(VT_EQUIPMENT_MANAGER);
   }
   const HeroTemplateManager *hero_tpl_manager() const {
     return GetPointer<const HeroTemplateManager *>(VT_HERO_TPL_MANAGER);
@@ -225,6 +282,8 @@ struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyTable(terrain_manager()) &&
            VerifyOffset(verifier, VT_HERO_CLASS_MANAGER) &&
            verifier.VerifyTable(hero_class_manager()) &&
+           VerifyOffset(verifier, VT_EQUIPMENT_MANAGER) &&
+           verifier.VerifyTable(equipment_manager()) &&
            VerifyOffset(verifier, VT_HERO_TPL_MANAGER) &&
            verifier.VerifyTable(hero_tpl_manager()) &&
            verifier.EndTable();
@@ -239,6 +298,9 @@ struct ResourceManagersBuilder {
   }
   void add_hero_class_manager(flatbuffers::Offset<HeroClassManager> hero_class_manager) {
     fbb_.AddOffset(ResourceManagers::VT_HERO_CLASS_MANAGER, hero_class_manager);
+  }
+  void add_equipment_manager(flatbuffers::Offset<EquipmentManager> equipment_manager) {
+    fbb_.AddOffset(ResourceManagers::VT_EQUIPMENT_MANAGER, equipment_manager);
   }
   void add_hero_tpl_manager(flatbuffers::Offset<HeroTemplateManager> hero_tpl_manager) {
     fbb_.AddOffset(ResourceManagers::VT_HERO_TPL_MANAGER, hero_tpl_manager);
@@ -259,9 +321,11 @@ inline flatbuffers::Offset<ResourceManagers> CreateResourceManagers(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<TerrainManager> terrain_manager = 0,
     flatbuffers::Offset<HeroClassManager> hero_class_manager = 0,
+    flatbuffers::Offset<EquipmentManager> equipment_manager = 0,
     flatbuffers::Offset<HeroTemplateManager> hero_tpl_manager = 0) {
   ResourceManagersBuilder builder_(_fbb);
   builder_.add_hero_tpl_manager(hero_tpl_manager);
+  builder_.add_equipment_manager(equipment_manager);
   builder_.add_hero_class_manager(hero_class_manager);
   builder_.add_terrain_manager(terrain_manager);
   return builder_.Finish();
@@ -809,6 +873,306 @@ inline flatbuffers::Offset<PromotionInfo> CreatePromotionInfoDirect(
       _fbb,
       hero_class_id ? _fbb.CreateString(hero_class_id) : 0,
       level);
+}
+
+struct EquipmentManager FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_RECORDS = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<Equipment>> *records() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<Equipment>> *>(VT_RECORDS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(records()) &&
+           verifier.VerifyVectorOfTables(records()) &&
+           verifier.EndTable();
+  }
+};
+
+struct EquipmentManagerBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_records(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Equipment>>> records) {
+    fbb_.AddOffset(EquipmentManager::VT_RECORDS, records);
+  }
+  explicit EquipmentManagerBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  EquipmentManagerBuilder &operator=(const EquipmentManagerBuilder &);
+  flatbuffers::Offset<EquipmentManager> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<EquipmentManager>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<EquipmentManager> CreateEquipmentManager(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Equipment>>> records = 0) {
+  EquipmentManagerBuilder builder_(_fbb);
+  builder_.add_records(records);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<EquipmentManager> CreateEquipmentManagerDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<Equipment>> *records = nullptr) {
+  return mengde::save::CreateEquipmentManager(
+      _fbb,
+      records ? _fbb.CreateVector<flatbuffers::Offset<Equipment>>(*records) : 0);
+}
+
+struct Equipment FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_TYPE = 6,
+    VT_VOLATILE_ATTRIBUTES = 8
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  int32_t type() const {
+    return GetField<int32_t>(VT_TYPE, 0);
+  }
+  const VolatileAttributes *volatile_attributes() const {
+    return GetPointer<const VolatileAttributes *>(VT_VOLATILE_ATTRIBUTES);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyField<int32_t>(verifier, VT_TYPE) &&
+           VerifyOffset(verifier, VT_VOLATILE_ATTRIBUTES) &&
+           verifier.VerifyTable(volatile_attributes()) &&
+           verifier.EndTable();
+  }
+};
+
+struct EquipmentBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(Equipment::VT_ID, id);
+  }
+  void add_type(int32_t type) {
+    fbb_.AddElement<int32_t>(Equipment::VT_TYPE, type, 0);
+  }
+  void add_volatile_attributes(flatbuffers::Offset<VolatileAttributes> volatile_attributes) {
+    fbb_.AddOffset(Equipment::VT_VOLATILE_ATTRIBUTES, volatile_attributes);
+  }
+  explicit EquipmentBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  EquipmentBuilder &operator=(const EquipmentBuilder &);
+  flatbuffers::Offset<Equipment> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Equipment>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Equipment> CreateEquipment(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    int32_t type = 0,
+    flatbuffers::Offset<VolatileAttributes> volatile_attributes = 0) {
+  EquipmentBuilder builder_(_fbb);
+  builder_.add_volatile_attributes(volatile_attributes);
+  builder_.add_type(type);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Equipment> CreateEquipmentDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    int32_t type = 0,
+    flatbuffers::Offset<VolatileAttributes> volatile_attributes = 0) {
+  return mengde::save::CreateEquipment(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      type,
+      volatile_attributes);
+}
+
+struct VolatileAttributes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ATTRIBUTE_MODIFIER_LIST = 4
+  };
+  const AttributeModifierList *attribute_modifier_list() const {
+    return GetPointer<const AttributeModifierList *>(VT_ATTRIBUTE_MODIFIER_LIST);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ATTRIBUTE_MODIFIER_LIST) &&
+           verifier.VerifyTable(attribute_modifier_list()) &&
+           verifier.EndTable();
+  }
+};
+
+struct VolatileAttributesBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_attribute_modifier_list(flatbuffers::Offset<AttributeModifierList> attribute_modifier_list) {
+    fbb_.AddOffset(VolatileAttributes::VT_ATTRIBUTE_MODIFIER_LIST, attribute_modifier_list);
+  }
+  explicit VolatileAttributesBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  VolatileAttributesBuilder &operator=(const VolatileAttributesBuilder &);
+  flatbuffers::Offset<VolatileAttributes> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<VolatileAttributes>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<VolatileAttributes> CreateVolatileAttributes(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<AttributeModifierList> attribute_modifier_list = 0) {
+  VolatileAttributesBuilder builder_(_fbb);
+  builder_.add_attribute_modifier_list(attribute_modifier_list);
+  return builder_.Finish();
+}
+
+struct AttributeModifierList FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ENTRIES = 4
+  };
+  const flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>> *entries() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>> *>(VT_ENTRIES);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ENTRIES) &&
+           verifier.VerifyVector(entries()) &&
+           verifier.VerifyVectorOfTables(entries()) &&
+           verifier.EndTable();
+  }
+};
+
+struct AttributeModifierListBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_entries(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>>> entries) {
+    fbb_.AddOffset(AttributeModifierList::VT_ENTRIES, entries);
+  }
+  explicit AttributeModifierListBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  AttributeModifierListBuilder &operator=(const AttributeModifierListBuilder &);
+  flatbuffers::Offset<AttributeModifierList> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<AttributeModifierList>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<AttributeModifierList> CreateAttributeModifierList(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>>> entries = 0) {
+  AttributeModifierListBuilder builder_(_fbb);
+  builder_.add_entries(entries);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<AttributeModifierList> CreateAttributeModifierListDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<flatbuffers::Offset<AttributeModifier>> *entries = nullptr) {
+  return mengde::save::CreateAttributeModifierList(
+      _fbb,
+      entries ? _fbb.CreateVector<flatbuffers::Offset<AttributeModifier>>(*entries) : 0);
+}
+
+struct AttributeModifier FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_STAT_IDX = 6,
+    VT_TURN = 8,
+    VT_MOD = 10
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  int16_t stat_idx() const {
+    return GetField<int16_t>(VT_STAT_IDX, 0);
+  }
+  const TurnBased *turn() const {
+    return GetStruct<const TurnBased *>(VT_TURN);
+  }
+  const StatMod *mod() const {
+    return GetStruct<const StatMod *>(VT_MOD);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyField<int16_t>(verifier, VT_STAT_IDX) &&
+           VerifyField<TurnBased>(verifier, VT_TURN) &&
+           VerifyField<StatMod>(verifier, VT_MOD) &&
+           verifier.EndTable();
+  }
+};
+
+struct AttributeModifierBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(AttributeModifier::VT_ID, id);
+  }
+  void add_stat_idx(int16_t stat_idx) {
+    fbb_.AddElement<int16_t>(AttributeModifier::VT_STAT_IDX, stat_idx, 0);
+  }
+  void add_turn(const TurnBased *turn) {
+    fbb_.AddStruct(AttributeModifier::VT_TURN, turn);
+  }
+  void add_mod(const StatMod *mod) {
+    fbb_.AddStruct(AttributeModifier::VT_MOD, mod);
+  }
+  explicit AttributeModifierBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  AttributeModifierBuilder &operator=(const AttributeModifierBuilder &);
+  flatbuffers::Offset<AttributeModifier> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<AttributeModifier>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifier(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    int16_t stat_idx = 0,
+    const TurnBased *turn = 0,
+    const StatMod *mod = 0) {
+  AttributeModifierBuilder builder_(_fbb);
+  builder_.add_mod(mod);
+  builder_.add_turn(turn);
+  builder_.add_id(id);
+  builder_.add_stat_idx(stat_idx);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifierDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    int16_t stat_idx = 0,
+    const TurnBased *turn = 0,
+    const StatMod *mod = 0) {
+  return mengde::save::CreateAttributeModifier(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      stat_idx,
+      turn,
+      mod);
 }
 
 inline const mengde::save::Scenario *GetScenario(const void *buf) {
