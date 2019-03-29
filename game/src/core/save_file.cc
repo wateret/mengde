@@ -41,8 +41,9 @@ flatbuffers::Offset<save::Scenario> SaveFile::Build(const Scenario& scenario) {
 flatbuffers::Offset<save::ResourceManagers> SaveFile::Build(const ResourceManagers& rm) {
   auto tm = Build(*rm.terrain_manager);
   auto hcm = Build(*rm.hero_class_manager);
+  auto em = Build(*rm.equipment_manager);
   auto htm = Build(*rm.hero_tpl_manager);
-  return save::CreateResourceManagers(builder_, tm, hcm, htm);
+  return save::CreateResourceManagers(builder_, tm, hcm, em, htm);
 }
 
 flatbuffers::Offset<save::HeroClassManager> SaveFile::Build(const HeroClassManager& hcm) {
@@ -117,6 +118,50 @@ const save::Attribute* SaveFile::Build(const Attribute& attr) {
   // TODO Maybe add some static_asserts to check the members' offset
 
   return reinterpret_cast<const save::Attribute*>(&attr);
+}
+
+const save::TurnBased* SaveFile::Build(const TurnBased& turn_based) {
+  static_assert(sizeof(save::TurnBased) == sizeof(TurnBased), "struct size mismatches");
+
+  return reinterpret_cast<const save::TurnBased*>(&turn_based);
+}
+
+const save::StatMod* SaveFile::Build(const StatMod& stat_mod) {
+  static_assert(sizeof(save::StatMod) == sizeof(StatMod), "struct size mismatches");
+
+  return reinterpret_cast<const save::StatMod*>(&stat_mod);
+}
+
+flatbuffers::Offset<save::EquipmentManager> SaveFile::Build(const EquipmentManager& em) {
+  std::vector<flatbuffers::Offset<save::Equipment>> records;
+  em.ForEach([&](const string& id, const Equipment& equipment) {
+    ASSERT(id == equipment.GetId());
+    records.push_back(Build(equipment));
+  });
+  return save::CreateEquipmentManager(builder_, builder_.CreateVector(records));
+}
+
+flatbuffers::Offset<save::Equipment> SaveFile::Build(const Equipment& equipment) {
+  auto id_off = builder_.CreateString(equipment.GetId());
+  auto type = static_cast<int>(equipment.GetType());
+  auto va_off = Build(equipment.volatile_attribute());
+  return save::CreateEquipment(builder_, id_off, type, va_off);
+}
+
+flatbuffers::Offset<save::VolatileAttributes> SaveFile::Build(const VolatileAttribute& va) {
+  return save::CreateVolatileAttributes(builder_, Build(va.stat_modifier_list()));
+}
+
+flatbuffers::Offset<save::AttributeModifierList> SaveFile::Build(const StatModifierList& aml) {
+  std::vector<flatbuffers::Offset<save::AttributeModifier>> list;
+  aml.iterate([&](const StatModifier& am) {
+    list.push_back(Build(am));
+  });
+  return save::CreateAttributeModifierList(builder_, builder_.CreateVector(list));
+}
+
+flatbuffers::Offset<save::AttributeModifier> SaveFile::Build(const StatModifier& am) {
+  return save::CreateAttributeModifierDirect(builder_, am.id().c_str(), am.stat_id(), Build(am.turn()), Build(am.mod()));
 }
 
 void SaveFile::Deserialize() {

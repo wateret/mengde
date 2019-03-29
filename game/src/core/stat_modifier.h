@@ -20,6 +20,7 @@ class StatModifier {
   uint16_t stat_id() const { return stat_id_; }
   int16_t addend() const { return mod_.addend; }
   uint16_t multiplier() const { return mod_.multiplier; }
+  const StatMod& mod() const { return mod_; }
   const TurnBased& turn() const { return turn_; }
   void NextTurn();
 

@@ -11,7 +11,7 @@ table ResourceManagers {
   terrain_manager: TerrainManager;
   hero_class_manager: HeroClassManager;
 //  magic_manager: MagicManager;
-//  equipment_manager: EquipmentManager;
+  equipment_manager: EquipmentManager;
   hero_tpl_manager: HeroTemplateManager;
 }
 
@@ -77,6 +77,41 @@ struct Attribute {
 struct Position {
   x: int;
   y: int;
+}
+
+table EquipmentManager {
+  records: [Equipment];
+}
+
+table Equipment {
+  id: string;
+  type: int; // Actually enum
+  volatile_attributes: VolatileAttributes;
+}
+
+table VolatileAttributes {
+  attribute_modifier_list: AttributeModifierList;
+//  event_effect_list: EventEffectList;
+}
+
+table AttributeModifierList {
+  entries: [AttributeModifier];
+}
+
+table AttributeModifier {
+  id: string;
+  stat_idx: short;
+  turn: TurnBased;
+  mod: StatMod;
+}
+
+struct TurnBased {
+  turns: ushort;
+}
+
+struct StatMod {
+  addend: short;
+  multiplier: short;
 }
 
 root_type Scenario;
