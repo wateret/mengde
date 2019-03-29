@@ -2,7 +2,7 @@
 
 #include "config.h"
 #include "core/cmd.h"
-#include "core/save_file.h"
+#include "core/serializer.h"
 #include "core/scenario.h"
 #include "core/stage.h"
 #include "game_view.h"
@@ -42,7 +42,7 @@ ControlView::ControlView(const Rect& rect, core::Scenario* sce, GameView* gv) : 
   btn_save_ = new ButtonView(&button_coords, "Save");
   btn_save_->SetMouseButtonHandler([this](const foundation::MouseButtonEvent& e) {
     if (e.IsLeftButtonUp()) {
-      core::SaveFile save{Path{"save.mengde"}};
+      core::Serializer save{Path{"save.mengde"}};
       save.Serialize(*sce_);
       LOG_INFO("File saved");
       return true;

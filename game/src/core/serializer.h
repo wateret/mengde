@@ -1,5 +1,5 @@
-#ifndef MENGDE_CORE_SAVE_FILE_H_
-#define MENGDE_CORE_SAVE_FILE_H_
+#ifndef MENGDE_CORE_SERIALIZER_H_
+#define MENGDE_CORE_SERIALIZER_H_
 
 #include <memory>
 
@@ -12,9 +12,9 @@ namespace core {
 
 class Scenario;
 
-class SaveFile {
+class Serializer {
  public:
-  SaveFile(const Path& path);
+  Serializer(const Path& path);
 
  public:
   void Serialize(const Scenario& scenario);
@@ -41,9 +41,6 @@ class SaveFile {
   const save::TurnBased* Build(const TurnBased& turn_based);
   const save::StatMod* Build(const StatMod& stat_mod);
 
- public:
-  void Deserialize();
-
  private:
   Path path_;
   flatbuffers::FlatBufferBuilder builder_;
@@ -52,4 +49,4 @@ class SaveFile {
 }  // namespace core
 }  // namespace mengde
 
-#endif  // MENGDE_CORE_SAVE_FILE_H_
+#endif  // MENGDE_CORE_SERIALIZER_H_
