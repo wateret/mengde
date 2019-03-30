@@ -66,11 +66,11 @@ flatbuffers::Offset<save::HeroTemplateManager> Serializer::Build(const HeroTempl
 
 flatbuffers::Offset<save::HeroClass> Serializer::Build(const HeroClass& hero_class) {
   auto id_off = builder_.CreateString(hero_class.id());
-  auto attr_inl = Build(hero_class.stat_grade());
+  auto attr_inl = BuildStruct<save::Attribute>(hero_class.stat_grade());
   auto attack_range = static_cast<int>(hero_class.attack_range_enum());
   auto move = hero_class.move();
-  auto hp_inl = Build(hero_class.bni_hp());
-  auto mp_inl = Build(hero_class.bni_mp());
+  auto hp_inl = BuildStruct<save::BaseIncr>(hero_class.bni_hp());
+  auto mp_inl = BuildStruct<save::BaseIncr>(hero_class.bni_mp());
   auto pi_off = hero_class.promotion_info() ? Build(*hero_class.promotion_info()) : 0;
   return save::CreateHeroClass(builder_, id_off, attr_inl, attack_range, move, hp_inl, mp_inl, pi_off);
 }
@@ -78,7 +78,7 @@ flatbuffers::Offset<save::HeroClass> Serializer::Build(const HeroClass& hero_cla
 flatbuffers::Offset<save::HeroTemplate> Serializer::Build(const HeroTemplate& hero_tpl) {
   auto id_off = builder_.CreateString(hero_tpl.id());
   auto hero_class_off = builder_.CreateString(hero_tpl.hero_class()->id());
-  auto attr_inl = Build(hero_tpl.GetHeroStat());
+  auto attr_inl = BuildStruct<save::Attribute>(hero_tpl.GetHeroStat());
   return save::CreateHeroTemplate(builder_, id_off, hero_class_off, attr_inl);
 }
 
@@ -103,35 +103,6 @@ flatbuffers::Offset<save::PromotionInfo> Serializer::Build(const PromotionInfo& 
   return save::CreatePromotionInfoDirect(builder_, promotion_info.id.c_str(), promotion_info.level);
 }
 
-const save::BaseIncr* Serializer::Build(const BaseAndIncr& bni) {
-  static_assert(sizeof(save::BaseIncr) == sizeof(BaseAndIncr), "struct size mismatches");
-  // TODO Maybe add some static_asserts to check the members' offset
-  // NOTE Below is not possible since base_ is a private member
-  // static_assert(offsetof(save::BaseIncr, base_) == offsetof(BaseAndIncr, base), "Struct layout mismatches");
-  // static_assert(offsetof(save::BaseIncr, incr_) == offsetof(BaseAndIncr, incr), "Struct layout mismatches");
-
-  return reinterpret_cast<const save::BaseIncr*>(&bni);
-}
-
-const save::Attribute* Serializer::Build(const Attribute& attr) {
-  static_assert(sizeof(save::Attribute) == sizeof(Attribute), "struct size mismatches");
-  // TODO Maybe add some static_asserts to check the members' offset
-
-  return reinterpret_cast<const save::Attribute*>(&attr);
-}
-
-const save::TurnBased* Serializer::Build(const TurnBased& turn_based) {
-  static_assert(sizeof(save::TurnBased) == sizeof(TurnBased), "struct size mismatches");
-
-  return reinterpret_cast<const save::TurnBased*>(&turn_based);
-}
-
-const save::StatMod* Serializer::Build(const StatMod& stat_mod) {
-  static_assert(sizeof(save::StatMod) == sizeof(StatMod), "struct size mismatches");
-
-  return reinterpret_cast<const save::StatMod*>(&stat_mod);
-}
-
 flatbuffers::Offset<save::EquipmentManager> Serializer::Build(const EquipmentManager& em) {
   std::vector<flatbuffers::Offset<save::Equipment>> records;
   em.ForEach([&](const string& id, const Equipment& equipment) {
@@ -154,14 +125,14 @@ flatbuffers::Offset<save::VolatileAttributes> Serializer::Build(const VolatileAt
 
 flatbuffers::Offset<save::AttributeModifierList> Serializer::Build(const StatModifierList& aml) {
   std::vector<flatbuffers::Offset<save::AttributeModifier>> list;
-  aml.iterate([&](const StatModifier& am) {
-    list.push_back(Build(am));
-  });
+  aml.iterate([&](const StatModifier& am) { list.push_back(Build(am)); });
   return save::CreateAttributeModifierList(builder_, builder_.CreateVector(list));
 }
 
 flatbuffers::Offset<save::AttributeModifier> Serializer::Build(const StatModifier& am) {
-  return save::CreateAttributeModifierDirect(builder_, am.id().c_str(), am.stat_id(), Build(am.turn()), Build(am.mod()));
+  return save::CreateAttributeModifierDirect(builder_, am.id().c_str(), am.stat_id(),
+                                             BuildStruct<save::TurnBased>(am.turn()),
+                                             BuildStruct<save::StatMod>(am.mod()));
 }
 
 }  // namespace core
@@ -181,4 +152,3 @@ void Serializer::Deserialize() {
   (void)val;
 }
 #endif
-

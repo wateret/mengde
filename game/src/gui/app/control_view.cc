@@ -2,8 +2,8 @@
 
 #include "config.h"
 #include "core/cmd.h"
-#include "core/serializer.h"
 #include "core/scenario.h"
+#include "core/serializer.h"
 #include "core/stage.h"
 #include "game_view.h"
 #include "gui/uifw/button_view.h"
