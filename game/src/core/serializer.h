@@ -34,12 +34,13 @@ class Serializer {
   flatbuffers::Offset<save::VolatileAttributes> Build(const VolatileAttribute& va);
   flatbuffers::Offset<save::AttributeModifierList> Build(const StatModifierList& aml);
   flatbuffers::Offset<save::AttributeModifier> Build(const StatModifier& am);
-
   flatbuffers::Offset<save::PromotionInfo> Build(const PromotionInfo& promotion_info);
-  const save::BaseIncr* Build(const BaseAndIncr& bni);
-  const save::Attribute* Build(const Attribute& attr);
-  const save::TurnBased* Build(const TurnBased& turn_based);
-  const save::StatMod* Build(const StatMod& stat_mod);
+
+  template <typename FbsStruct, typename CoreStruct>
+  const FbsStruct* BuildStruct(const CoreStruct& cs) {
+    static_assert(sizeof(FbsStruct) == sizeof(CoreStruct), "struct size mismatches");
+    return reinterpret_cast<const FbsStruct*>(&cs);
+  }
 
  private:
   Path path_;
