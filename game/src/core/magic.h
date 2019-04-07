@@ -65,15 +65,13 @@ class MagicEffectHP : public MagicEffect {
 
 class MagicEffectStat : public MagicEffect {
  public:
-  MagicEffectStat(uint16_t stat_id, StatMod stat_mod, TurnBased turns);
+  MagicEffectStat(const StatModifier& attribute_modifier);
 
  public:
   virtual void Perform(Unit* atk, Unit* def) override;
 
  private:
-  uint16_t stat_id_;
-  StatMod stat_mod_;
-  TurnBased turns_;
+  StatModifier attribute_modifier_;
 };
 
 class MagicEffectCondition : public MagicEffect {
