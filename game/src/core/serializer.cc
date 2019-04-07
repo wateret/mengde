@@ -2,8 +2,6 @@
 
 #include <fstream>
 
-#include "scenario.h"
-
 namespace mengde {
 namespace core {
 
@@ -120,7 +118,11 @@ flatbuffers::Offset<save::Equipment> Serializer::Build(const Equipment& equipmen
 }
 
 flatbuffers::Offset<save::VolatileAttributes> Serializer::Build(const VolatileAttribute& va) {
-  return save::CreateVolatileAttributes(builder_, Build(va.stat_modifier_list()));
+  std::vector<flatbuffers::Offset<save::EventEffect>> list;
+  va.event_effect_list().iterate([&](const EventEffectBase& ee) { list.push_back(Build(ee)); });
+  auto eel = builder_.CreateVector(list);
+
+  return save::CreateVolatileAttributes(builder_, Build(va.stat_modifier_list()), eel);
 }
 
 flatbuffers::Offset<save::AttributeModifierList> Serializer::Build(const StatModifierList& aml) {
@@ -133,6 +135,68 @@ flatbuffers::Offset<save::AttributeModifier> Serializer::Build(const StatModifie
   return save::CreateAttributeModifierDirect(builder_, am.id().c_str(), am.stat_id(),
                                              BuildStruct<save::TurnBased>(am.turn()),
                                              BuildStruct<save::StatMod>(am.mod()));
+}
+
+flatbuffers::Offset<save::EventEffect> Serializer::Build(const EventEffectBase& event_effect) {
+  save::EventEffectImpl ee_type = save::EventEffectImpl_NONE;
+  flatbuffers::Offset<void> ee_inst = 0;
+  auto gee = dynamic_cast<const GeneralEventEffect*>(&event_effect);
+  auto ocee = dynamic_cast<const OnCmdEventEffect*>(&event_effect);
+  if (gee) {
+    ee_type = save::EventEffectImpl_GeneralEventEffect;
+    ee_inst = Build(*gee).Union();
+  } else {
+    assert(ocee);
+    ee_type = save::EventEffectImpl_OnCmdEventEffect;
+    ee_inst = Build(*ocee).Union();
+  }
+
+  auto turn_inl = BuildStruct<save::TurnBased>(event_effect.turn());
+  return save::CreateEventEffect(builder_, turn_inl, ee_type, ee_inst);
+}
+
+flatbuffers::Offset<save::GeneralEventEffect> Serializer::Build(const GeneralEventEffect& gee) {
+  save::GeneralEventEffectImpl gee_type = save::GeneralEventEffectImpl_NONE;
+  flatbuffers::Offset<void> gee_inst = 0;
+  auto restore_hp = dynamic_cast<const GEERestoreHp*>(&gee);
+  if (restore_hp) {
+    gee_type = save::GeneralEventEffectImpl_GEERestoreHp;
+    gee_inst = Build(*restore_hp).Union();
+  }
+
+  auto type = static_cast<int>(gee.type());
+  return save::CreateGeneralEventEffect(builder_, type, gee_type, gee_inst);
+}
+
+flatbuffers::Offset<save::GEERestoreHp> Serializer::Build(const GEERestoreHp& gee_restore_hp) {
+  auto sm = gee_restore_hp.stat_mod();
+  return save::CreateGEERestoreHp(builder_, BuildStruct<save::StatMod>(sm));
+}
+
+flatbuffers::Offset<save::OnCmdEventEffect> Serializer::Build(const OnCmdEventEffect& ocee) {
+  save::OnCmdEventEffectImpl ocee_type = save::OnCmdEventEffectImpl_NONE;
+  flatbuffers::Offset<void> ocee_inst = 0;
+  auto preemptive_attack = dynamic_cast<const OCEEPreemptiveAttack*>(&ocee);
+  auto enhance_basic_attack = dynamic_cast<const OCEEEnhanceBasicAttack*>(&ocee);
+  if (preemptive_attack) {
+    ocee_type = save::OnCmdEventEffectImpl_OCEEPreemptiveAttack;
+    ocee_inst = Build(*preemptive_attack).Union();
+  } else if (enhance_basic_attack) {
+    ocee_type = save::OnCmdEventEffectImpl_OCEEEnhanceBasicAttack;
+    ocee_inst = Build(*enhance_basic_attack).Union();
+  }
+
+  auto type = static_cast<int>(ocee.type());
+  return save::CreateOnCmdEventEffect(builder_, type, ocee_type, ocee_inst);
+}
+
+flatbuffers::Offset<save::OCEEPreemptiveAttack> Serializer::Build(const OCEEPreemptiveAttack&) {
+  return save::CreateOCEEPreemptiveAttack(builder_);
+}
+
+flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Serializer::Build(const OCEEEnhanceBasicAttack& obj) {
+  auto sm = obj.stat_mod();
+  return save::CreateOCEEEnhanceBasicAttack(builder_, BuildStruct<save::StatMod>(sm));
 }
 
 }  // namespace core
