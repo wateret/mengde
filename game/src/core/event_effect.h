@@ -2,6 +2,7 @@
 #define MENGDE_CORE_EVENT_EFFECT_H_
 
 #include "event_types.h"
+#include "stat_modifier.h"
 #include "turn_based.h"
 #include "util/common.h"
 
@@ -34,6 +35,7 @@ class GeneralEventEffect : public EventEffectBase {
   GeneralEventEffect(event::GeneralEvent type, TurnBased turn = TurnBased{});
   virtual unique_ptr<Cmd> OnEvent(Unit* unit) = 0;
   bool type(event::GeneralEvent type) { return type_ == type; }
+  event::GeneralEvent type() const { return type_; }
 
  private:
   event::GeneralEvent type_;
@@ -47,6 +49,7 @@ class OnCmdEventEffect : public EventEffectBase {
   OnCmdEventEffect(event::OnCmdEvent type, TurnBased turn = TurnBased{});
   virtual void OnEvent(Unit* unit, CmdAct* act) = 0;
   bool type(event::OnCmdEvent type) { return type_ == type; }
+  event::OnCmdEvent type() const { return type_; }
 
  private:
   event::OnCmdEvent type_;
@@ -62,6 +65,7 @@ class GEERestoreHp : public GeneralEventEffect {
  public:
   GEERestoreHp(event::GeneralEvent type, int multiplier, int addend, TurnBased turn = TurnBased{});
   virtual unique_ptr<Cmd> OnEvent(Unit* unit) override;
+  StatMod stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
 
  private:
   int multiplier_;
@@ -80,6 +84,7 @@ class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
  public:
   OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multiplier, int addend, TurnBased turn = TurnBased{});
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
+  StatMod stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
 
  private:
   int multiplier_;

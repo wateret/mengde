@@ -49,6 +49,152 @@ struct TurnBased;
 
 struct StatMod;
 
+struct EventEffect;
+
+struct GeneralEventEffect;
+
+struct GEERestoreHp;
+
+struct OnCmdEventEffect;
+
+struct OCEEPreemptiveAttack;
+
+struct OCEEEnhanceBasicAttack;
+
+enum EventEffectImpl {
+  EventEffectImpl_NONE = 0,
+  EventEffectImpl_GeneralEventEffect = 1,
+  EventEffectImpl_OnCmdEventEffect = 2,
+  EventEffectImpl_MIN = EventEffectImpl_NONE,
+  EventEffectImpl_MAX = EventEffectImpl_OnCmdEventEffect
+};
+
+inline const EventEffectImpl (&EnumValuesEventEffectImpl())[3] {
+  static const EventEffectImpl values[] = {
+    EventEffectImpl_NONE,
+    EventEffectImpl_GeneralEventEffect,
+    EventEffectImpl_OnCmdEventEffect
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesEventEffectImpl() {
+  static const char * const names[] = {
+    "NONE",
+    "GeneralEventEffect",
+    "OnCmdEventEffect",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameEventEffectImpl(EventEffectImpl e) {
+  const size_t index = static_cast<int>(e);
+  return EnumNamesEventEffectImpl()[index];
+}
+
+template<typename T> struct EventEffectImplTraits {
+  static const EventEffectImpl enum_value = EventEffectImpl_NONE;
+};
+
+template<> struct EventEffectImplTraits<GeneralEventEffect> {
+  static const EventEffectImpl enum_value = EventEffectImpl_GeneralEventEffect;
+};
+
+template<> struct EventEffectImplTraits<OnCmdEventEffect> {
+  static const EventEffectImpl enum_value = EventEffectImpl_OnCmdEventEffect;
+};
+
+bool VerifyEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, EventEffectImpl type);
+bool VerifyEventEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
+
+enum GeneralEventEffectImpl {
+  GeneralEventEffectImpl_NONE = 0,
+  GeneralEventEffectImpl_GEERestoreHp = 1,
+  GeneralEventEffectImpl_MIN = GeneralEventEffectImpl_NONE,
+  GeneralEventEffectImpl_MAX = GeneralEventEffectImpl_GEERestoreHp
+};
+
+inline const GeneralEventEffectImpl (&EnumValuesGeneralEventEffectImpl())[2] {
+  static const GeneralEventEffectImpl values[] = {
+    GeneralEventEffectImpl_NONE,
+    GeneralEventEffectImpl_GEERestoreHp
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesGeneralEventEffectImpl() {
+  static const char * const names[] = {
+    "NONE",
+    "GEERestoreHp",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameGeneralEventEffectImpl(GeneralEventEffectImpl e) {
+  const size_t index = static_cast<int>(e);
+  return EnumNamesGeneralEventEffectImpl()[index];
+}
+
+template<typename T> struct GeneralEventEffectImplTraits {
+  static const GeneralEventEffectImpl enum_value = GeneralEventEffectImpl_NONE;
+};
+
+template<> struct GeneralEventEffectImplTraits<GEERestoreHp> {
+  static const GeneralEventEffectImpl enum_value = GeneralEventEffectImpl_GEERestoreHp;
+};
+
+bool VerifyGeneralEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, GeneralEventEffectImpl type);
+bool VerifyGeneralEventEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
+
+enum OnCmdEventEffectImpl {
+  OnCmdEventEffectImpl_NONE = 0,
+  OnCmdEventEffectImpl_OCEEPreemptiveAttack = 1,
+  OnCmdEventEffectImpl_OCEEEnhanceBasicAttack = 2,
+  OnCmdEventEffectImpl_MIN = OnCmdEventEffectImpl_NONE,
+  OnCmdEventEffectImpl_MAX = OnCmdEventEffectImpl_OCEEEnhanceBasicAttack
+};
+
+inline const OnCmdEventEffectImpl (&EnumValuesOnCmdEventEffectImpl())[3] {
+  static const OnCmdEventEffectImpl values[] = {
+    OnCmdEventEffectImpl_NONE,
+    OnCmdEventEffectImpl_OCEEPreemptiveAttack,
+    OnCmdEventEffectImpl_OCEEEnhanceBasicAttack
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesOnCmdEventEffectImpl() {
+  static const char * const names[] = {
+    "NONE",
+    "OCEEPreemptiveAttack",
+    "OCEEEnhanceBasicAttack",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameOnCmdEventEffectImpl(OnCmdEventEffectImpl e) {
+  const size_t index = static_cast<int>(e);
+  return EnumNamesOnCmdEventEffectImpl()[index];
+}
+
+template<typename T> struct OnCmdEventEffectImplTraits {
+  static const OnCmdEventEffectImpl enum_value = OnCmdEventEffectImpl_NONE;
+};
+
+template<> struct OnCmdEventEffectImplTraits<OCEEPreemptiveAttack> {
+  static const OnCmdEventEffectImpl enum_value = OnCmdEventEffectImpl_OCEEPreemptiveAttack;
+};
+
+template<> struct OnCmdEventEffectImplTraits<OCEEEnhanceBasicAttack> {
+  static const OnCmdEventEffectImpl enum_value = OnCmdEventEffectImpl_OCEEEnhanceBasicAttack;
+};
+
+bool VerifyOnCmdEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, OnCmdEventEffectImpl type);
+bool VerifyOnCmdEventEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
+
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) BaseIncr FLATBUFFERS_FINAL_CLASS {
  private:
   int32_t base_;
@@ -1001,15 +1147,22 @@ inline flatbuffers::Offset<Equipment> CreateEquipmentDirect(
 
 struct VolatileAttributes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_ATTRIBUTE_MODIFIER_LIST = 4
+    VT_ATTRIBUTE_MODIFIER_LIST = 4,
+    VT_EVENT_EFFECT_LIST = 6
   };
   const AttributeModifierList *attribute_modifier_list() const {
     return GetPointer<const AttributeModifierList *>(VT_ATTRIBUTE_MODIFIER_LIST);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<EventEffect>> *event_effect_list() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<EventEffect>> *>(VT_EVENT_EFFECT_LIST);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ATTRIBUTE_MODIFIER_LIST) &&
            verifier.VerifyTable(attribute_modifier_list()) &&
+           VerifyOffset(verifier, VT_EVENT_EFFECT_LIST) &&
+           verifier.VerifyVector(event_effect_list()) &&
+           verifier.VerifyVectorOfTables(event_effect_list()) &&
            verifier.EndTable();
   }
 };
@@ -1019,6 +1172,9 @@ struct VolatileAttributesBuilder {
   flatbuffers::uoffset_t start_;
   void add_attribute_modifier_list(flatbuffers::Offset<AttributeModifierList> attribute_modifier_list) {
     fbb_.AddOffset(VolatileAttributes::VT_ATTRIBUTE_MODIFIER_LIST, attribute_modifier_list);
+  }
+  void add_event_effect_list(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<EventEffect>>> event_effect_list) {
+    fbb_.AddOffset(VolatileAttributes::VT_EVENT_EFFECT_LIST, event_effect_list);
   }
   explicit VolatileAttributesBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1034,10 +1190,22 @@ struct VolatileAttributesBuilder {
 
 inline flatbuffers::Offset<VolatileAttributes> CreateVolatileAttributes(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<AttributeModifierList> attribute_modifier_list = 0) {
+    flatbuffers::Offset<AttributeModifierList> attribute_modifier_list = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<EventEffect>>> event_effect_list = 0) {
   VolatileAttributesBuilder builder_(_fbb);
+  builder_.add_event_effect_list(event_effect_list);
   builder_.add_attribute_modifier_list(attribute_modifier_list);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<VolatileAttributes> CreateVolatileAttributesDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<AttributeModifierList> attribute_modifier_list = 0,
+    const std::vector<flatbuffers::Offset<EventEffect>> *event_effect_list = nullptr) {
+  return mengde::save::CreateVolatileAttributes(
+      _fbb,
+      attribute_modifier_list,
+      event_effect_list ? _fbb.CreateVector<flatbuffers::Offset<EventEffect>>(*event_effect_list) : 0);
 }
 
 struct AttributeModifierList FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -1173,6 +1341,418 @@ inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifierDirect(
       stat_idx,
       turn,
       mod);
+}
+
+struct EventEffect FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_TURN = 4,
+    VT_INSTANCE_TYPE = 6,
+    VT_INSTANCE = 8
+  };
+  const TurnBased *turn() const {
+    return GetStruct<const TurnBased *>(VT_TURN);
+  }
+  EventEffectImpl instance_type() const {
+    return static_cast<EventEffectImpl>(GetField<uint8_t>(VT_INSTANCE_TYPE, 0));
+  }
+  const void *instance() const {
+    return GetPointer<const void *>(VT_INSTANCE);
+  }
+  template<typename T> const T *instance_as() const;
+  const GeneralEventEffect *instance_as_GeneralEventEffect() const {
+    return instance_type() == EventEffectImpl_GeneralEventEffect ? static_cast<const GeneralEventEffect *>(instance()) : nullptr;
+  }
+  const OnCmdEventEffect *instance_as_OnCmdEventEffect() const {
+    return instance_type() == EventEffectImpl_OnCmdEventEffect ? static_cast<const OnCmdEventEffect *>(instance()) : nullptr;
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<TurnBased>(verifier, VT_TURN) &&
+           VerifyField<uint8_t>(verifier, VT_INSTANCE_TYPE) &&
+           VerifyOffset(verifier, VT_INSTANCE) &&
+           VerifyEventEffectImpl(verifier, instance(), instance_type()) &&
+           verifier.EndTable();
+  }
+};
+
+template<> inline const GeneralEventEffect *EventEffect::instance_as<GeneralEventEffect>() const {
+  return instance_as_GeneralEventEffect();
+}
+
+template<> inline const OnCmdEventEffect *EventEffect::instance_as<OnCmdEventEffect>() const {
+  return instance_as_OnCmdEventEffect();
+}
+
+struct EventEffectBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_turn(const TurnBased *turn) {
+    fbb_.AddStruct(EventEffect::VT_TURN, turn);
+  }
+  void add_instance_type(EventEffectImpl instance_type) {
+    fbb_.AddElement<uint8_t>(EventEffect::VT_INSTANCE_TYPE, static_cast<uint8_t>(instance_type), 0);
+  }
+  void add_instance(flatbuffers::Offset<void> instance) {
+    fbb_.AddOffset(EventEffect::VT_INSTANCE, instance);
+  }
+  explicit EventEffectBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  EventEffectBuilder &operator=(const EventEffectBuilder &);
+  flatbuffers::Offset<EventEffect> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<EventEffect>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<EventEffect> CreateEventEffect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const TurnBased *turn = 0,
+    EventEffectImpl instance_type = EventEffectImpl_NONE,
+    flatbuffers::Offset<void> instance = 0) {
+  EventEffectBuilder builder_(_fbb);
+  builder_.add_instance(instance);
+  builder_.add_turn(turn);
+  builder_.add_instance_type(instance_type);
+  return builder_.Finish();
+}
+
+struct GeneralEventEffect FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_TYPE = 4,
+    VT_INSTANCE_TYPE = 6,
+    VT_INSTANCE = 8
+  };
+  int32_t type() const {
+    return GetField<int32_t>(VT_TYPE, 0);
+  }
+  GeneralEventEffectImpl instance_type() const {
+    return static_cast<GeneralEventEffectImpl>(GetField<uint8_t>(VT_INSTANCE_TYPE, 0));
+  }
+  const void *instance() const {
+    return GetPointer<const void *>(VT_INSTANCE);
+  }
+  template<typename T> const T *instance_as() const;
+  const GEERestoreHp *instance_as_GEERestoreHp() const {
+    return instance_type() == GeneralEventEffectImpl_GEERestoreHp ? static_cast<const GEERestoreHp *>(instance()) : nullptr;
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_TYPE) &&
+           VerifyField<uint8_t>(verifier, VT_INSTANCE_TYPE) &&
+           VerifyOffset(verifier, VT_INSTANCE) &&
+           VerifyGeneralEventEffectImpl(verifier, instance(), instance_type()) &&
+           verifier.EndTable();
+  }
+};
+
+template<> inline const GEERestoreHp *GeneralEventEffect::instance_as<GEERestoreHp>() const {
+  return instance_as_GEERestoreHp();
+}
+
+struct GeneralEventEffectBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_type(int32_t type) {
+    fbb_.AddElement<int32_t>(GeneralEventEffect::VT_TYPE, type, 0);
+  }
+  void add_instance_type(GeneralEventEffectImpl instance_type) {
+    fbb_.AddElement<uint8_t>(GeneralEventEffect::VT_INSTANCE_TYPE, static_cast<uint8_t>(instance_type), 0);
+  }
+  void add_instance(flatbuffers::Offset<void> instance) {
+    fbb_.AddOffset(GeneralEventEffect::VT_INSTANCE, instance);
+  }
+  explicit GeneralEventEffectBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GeneralEventEffectBuilder &operator=(const GeneralEventEffectBuilder &);
+  flatbuffers::Offset<GeneralEventEffect> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GeneralEventEffect>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GeneralEventEffect> CreateGeneralEventEffect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t type = 0,
+    GeneralEventEffectImpl instance_type = GeneralEventEffectImpl_NONE,
+    flatbuffers::Offset<void> instance = 0) {
+  GeneralEventEffectBuilder builder_(_fbb);
+  builder_.add_instance(instance);
+  builder_.add_type(type);
+  builder_.add_instance_type(instance_type);
+  return builder_.Finish();
+}
+
+struct GEERestoreHp FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_MOD = 4
+  };
+  const StatMod *mod() const {
+    return GetStruct<const StatMod *>(VT_MOD);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<StatMod>(verifier, VT_MOD) &&
+           verifier.EndTable();
+  }
+};
+
+struct GEERestoreHpBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_mod(const StatMod *mod) {
+    fbb_.AddStruct(GEERestoreHp::VT_MOD, mod);
+  }
+  explicit GEERestoreHpBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  GEERestoreHpBuilder &operator=(const GEERestoreHpBuilder &);
+  flatbuffers::Offset<GEERestoreHp> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<GEERestoreHp>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<GEERestoreHp> CreateGEERestoreHp(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const StatMod *mod = 0) {
+  GEERestoreHpBuilder builder_(_fbb);
+  builder_.add_mod(mod);
+  return builder_.Finish();
+}
+
+struct OnCmdEventEffect FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_TYPE = 4,
+    VT_INSTANCE_TYPE = 6,
+    VT_INSTANCE = 8
+  };
+  int32_t type() const {
+    return GetField<int32_t>(VT_TYPE, 0);
+  }
+  OnCmdEventEffectImpl instance_type() const {
+    return static_cast<OnCmdEventEffectImpl>(GetField<uint8_t>(VT_INSTANCE_TYPE, 0));
+  }
+  const void *instance() const {
+    return GetPointer<const void *>(VT_INSTANCE);
+  }
+  template<typename T> const T *instance_as() const;
+  const OCEEPreemptiveAttack *instance_as_OCEEPreemptiveAttack() const {
+    return instance_type() == OnCmdEventEffectImpl_OCEEPreemptiveAttack ? static_cast<const OCEEPreemptiveAttack *>(instance()) : nullptr;
+  }
+  const OCEEEnhanceBasicAttack *instance_as_OCEEEnhanceBasicAttack() const {
+    return instance_type() == OnCmdEventEffectImpl_OCEEEnhanceBasicAttack ? static_cast<const OCEEEnhanceBasicAttack *>(instance()) : nullptr;
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_TYPE) &&
+           VerifyField<uint8_t>(verifier, VT_INSTANCE_TYPE) &&
+           VerifyOffset(verifier, VT_INSTANCE) &&
+           VerifyOnCmdEventEffectImpl(verifier, instance(), instance_type()) &&
+           verifier.EndTable();
+  }
+};
+
+template<> inline const OCEEPreemptiveAttack *OnCmdEventEffect::instance_as<OCEEPreemptiveAttack>() const {
+  return instance_as_OCEEPreemptiveAttack();
+}
+
+template<> inline const OCEEEnhanceBasicAttack *OnCmdEventEffect::instance_as<OCEEEnhanceBasicAttack>() const {
+  return instance_as_OCEEEnhanceBasicAttack();
+}
+
+struct OnCmdEventEffectBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_type(int32_t type) {
+    fbb_.AddElement<int32_t>(OnCmdEventEffect::VT_TYPE, type, 0);
+  }
+  void add_instance_type(OnCmdEventEffectImpl instance_type) {
+    fbb_.AddElement<uint8_t>(OnCmdEventEffect::VT_INSTANCE_TYPE, static_cast<uint8_t>(instance_type), 0);
+  }
+  void add_instance(flatbuffers::Offset<void> instance) {
+    fbb_.AddOffset(OnCmdEventEffect::VT_INSTANCE, instance);
+  }
+  explicit OnCmdEventEffectBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  OnCmdEventEffectBuilder &operator=(const OnCmdEventEffectBuilder &);
+  flatbuffers::Offset<OnCmdEventEffect> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<OnCmdEventEffect>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<OnCmdEventEffect> CreateOnCmdEventEffect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t type = 0,
+    OnCmdEventEffectImpl instance_type = OnCmdEventEffectImpl_NONE,
+    flatbuffers::Offset<void> instance = 0) {
+  OnCmdEventEffectBuilder builder_(_fbb);
+  builder_.add_instance(instance);
+  builder_.add_type(type);
+  builder_.add_instance_type(instance_type);
+  return builder_.Finish();
+}
+
+struct OCEEPreemptiveAttack FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           verifier.EndTable();
+  }
+};
+
+struct OCEEPreemptiveAttackBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  explicit OCEEPreemptiveAttackBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  OCEEPreemptiveAttackBuilder &operator=(const OCEEPreemptiveAttackBuilder &);
+  flatbuffers::Offset<OCEEPreemptiveAttack> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<OCEEPreemptiveAttack>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<OCEEPreemptiveAttack> CreateOCEEPreemptiveAttack(
+    flatbuffers::FlatBufferBuilder &_fbb) {
+  OCEEPreemptiveAttackBuilder builder_(_fbb);
+  return builder_.Finish();
+}
+
+struct OCEEEnhanceBasicAttack FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_MOD = 4
+  };
+  const StatMod *mod() const {
+    return GetStruct<const StatMod *>(VT_MOD);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<StatMod>(verifier, VT_MOD) &&
+           verifier.EndTable();
+  }
+};
+
+struct OCEEEnhanceBasicAttackBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_mod(const StatMod *mod) {
+    fbb_.AddStruct(OCEEEnhanceBasicAttack::VT_MOD, mod);
+  }
+  explicit OCEEEnhanceBasicAttackBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  OCEEEnhanceBasicAttackBuilder &operator=(const OCEEEnhanceBasicAttackBuilder &);
+  flatbuffers::Offset<OCEEEnhanceBasicAttack> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<OCEEEnhanceBasicAttack>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<OCEEEnhanceBasicAttack> CreateOCEEEnhanceBasicAttack(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const StatMod *mod = 0) {
+  OCEEEnhanceBasicAttackBuilder builder_(_fbb);
+  builder_.add_mod(mod);
+  return builder_.Finish();
+}
+
+inline bool VerifyEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, EventEffectImpl type) {
+  switch (type) {
+    case EventEffectImpl_NONE: {
+      return true;
+    }
+    case EventEffectImpl_GeneralEventEffect: {
+      auto ptr = reinterpret_cast<const GeneralEventEffect *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case EventEffectImpl_OnCmdEventEffect: {
+      auto ptr = reinterpret_cast<const OnCmdEventEffect *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    default: return false;
+  }
+}
+
+inline bool VerifyEventEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types) {
+  if (!values || !types) return !values && !types;
+  if (values->size() != types->size()) return false;
+  for (flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
+    if (!VerifyEventEffectImpl(
+        verifier,  values->Get(i), types->GetEnum<EventEffectImpl>(i))) {
+      return false;
+    }
+  }
+  return true;
+}
+
+inline bool VerifyGeneralEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, GeneralEventEffectImpl type) {
+  switch (type) {
+    case GeneralEventEffectImpl_NONE: {
+      return true;
+    }
+    case GeneralEventEffectImpl_GEERestoreHp: {
+      auto ptr = reinterpret_cast<const GEERestoreHp *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    default: return false;
+  }
+}
+
+inline bool VerifyGeneralEventEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types) {
+  if (!values || !types) return !values && !types;
+  if (values->size() != types->size()) return false;
+  for (flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
+    if (!VerifyGeneralEventEffectImpl(
+        verifier,  values->Get(i), types->GetEnum<GeneralEventEffectImpl>(i))) {
+      return false;
+    }
+  }
+  return true;
+}
+
+inline bool VerifyOnCmdEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, OnCmdEventEffectImpl type) {
+  switch (type) {
+    case OnCmdEventEffectImpl_NONE: {
+      return true;
+    }
+    case OnCmdEventEffectImpl_OCEEPreemptiveAttack: {
+      auto ptr = reinterpret_cast<const OCEEPreemptiveAttack *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case OnCmdEventEffectImpl_OCEEEnhanceBasicAttack: {
+      auto ptr = reinterpret_cast<const OCEEEnhanceBasicAttack *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    default: return false;
+  }
+}
+
+inline bool VerifyOnCmdEventEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types) {
+  if (!values || !types) return !values && !types;
+  if (values->size() != types->size()) return false;
+  for (flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
+    if (!VerifyOnCmdEventEffectImpl(
+        verifier,  values->Get(i), types->GetEnum<OnCmdEventEffectImpl>(i))) {
+      return false;
+    }
+  }
+  return true;
 }
 
 inline const mengde::save::Scenario *GetScenario(const void *buf) {

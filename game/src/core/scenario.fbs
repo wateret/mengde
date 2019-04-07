@@ -91,7 +91,7 @@ table Equipment {
 
 table VolatileAttributes {
   attribute_modifier_list: AttributeModifierList;
-//  event_effect_list: EventEffectList;
+  event_effect_list: [EventEffect];
 }
 
 table AttributeModifierList {
@@ -112,6 +112,46 @@ struct TurnBased {
 struct StatMod {
   addend: short;
   multiplier: short;
+}
+
+union EventEffectImpl {
+  GeneralEventEffect,
+  OnCmdEventEffect
+}
+
+union GeneralEventEffectImpl {
+  GEERestoreHp
+}
+
+union OnCmdEventEffectImpl {
+  OCEEPreemptiveAttack,
+  OCEEEnhanceBasicAttack
+}
+
+table EventEffect {
+  turn: TurnBased;
+  instance: EventEffectImpl;
+}
+
+table GeneralEventEffect {
+  type: int; // GeneralEventType;
+  instance: GeneralEventEffectImpl;
+}
+
+table GEERestoreHp {
+  mod: StatMod;
+}
+
+table OnCmdEventEffect {
+  type: int; // OnCmdEventType;
+  instance: OnCmdEventEffectImpl;
+}
+
+table OCEEPreemptiveAttack {
+}
+
+table OCEEEnhanceBasicAttack {
+  mod: StatMod;
 }
 
 root_type Scenario;

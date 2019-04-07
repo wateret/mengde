@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "event_effect_list.h"
 #include "scenario.h"
 #include "scenario_generated.h"
 #include "util/path.h"
@@ -35,6 +36,12 @@ class Serializer {
   flatbuffers::Offset<save::AttributeModifierList> Build(const StatModifierList& aml);
   flatbuffers::Offset<save::AttributeModifier> Build(const StatModifier& am);
   flatbuffers::Offset<save::PromotionInfo> Build(const PromotionInfo& promotion_info);
+  flatbuffers::Offset<save::EventEffect> Build(const EventEffectBase& event_effect);
+  flatbuffers::Offset<save::GeneralEventEffect> Build(const GeneralEventEffect& gee);
+  flatbuffers::Offset<save::GEERestoreHp> Build(const GEERestoreHp& gee_restore_hp);
+  flatbuffers::Offset<save::OnCmdEventEffect> Build(const OnCmdEventEffect& ocee);
+  flatbuffers::Offset<save::OCEEPreemptiveAttack> Build(const OCEEPreemptiveAttack& ocee);
+  flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Build(const OCEEEnhanceBasicAttack& ocee);
 
   template <typename FbsStruct, typename CoreStruct>
   const FbsStruct* BuildStruct(const CoreStruct& cs) {
