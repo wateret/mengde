@@ -40,13 +40,14 @@ void MagicEffectHP::Perform(Unit* atk, Unit* def) {
 //
 // MagicEffectStat
 //
-MagicEffectStat::MagicEffectStat(uint16_t stat_id, StatMod stat_mod, TurnBased turns)
-    : MagicEffect{MagicEffectType::kStat}, stat_id_{stat_id}, stat_mod_{stat_mod}, turns_{turns} {}
+MagicEffectStat::MagicEffectStat(const StatModifier& attribute_modifier)
+    : MagicEffect{MagicEffectType::kStat}, attribute_modifier_{attribute_modifier} {}
 
 void MagicEffectStat::Perform(Unit* atk, Unit* def) {
   UNUSED(atk);
-  def->AddStatModifier(new StatModifier("magic", stat_id_, stat_mod_, turns_));
-  LOG_INFO("Magic changes stat id %u by {%d+, %d%}", stat_id_, stat_mod_.addend, stat_mod_.multiplier);
+  def->AddStatModifier(new StatModifier(attribute_modifier_));
+  LOG_INFO("Magic changes stat id %u by {%d+, %d%}", attribute_modifier_.stat_id(), attribute_modifier_.addend(),
+           attribute_modifier_.multiplier());
 }
 
 //
