@@ -138,16 +138,16 @@ flatbuffers::Offset<save::AttributeModifier> Serializer::Build(const StatModifie
 }
 
 flatbuffers::Offset<save::EventEffect> Serializer::Build(const EventEffectBase& event_effect) {
-  save::EventEffectImpl ee_type = save::EventEffectImpl_NONE;
+  save::EventEffectImpl ee_type = save::EventEffectImpl::NONE;
   flatbuffers::Offset<void> ee_inst = 0;
   auto gee = dynamic_cast<const GeneralEventEffect*>(&event_effect);
   auto ocee = dynamic_cast<const OnCmdEventEffect*>(&event_effect);
   if (gee) {
-    ee_type = save::EventEffectImpl_GeneralEventEffect;
+    ee_type = save::EventEffectImpl::GeneralEventEffect;
     ee_inst = Build(*gee).Union();
   } else {
     assert(ocee);
-    ee_type = save::EventEffectImpl_OnCmdEventEffect;
+    ee_type = save::EventEffectImpl::OnCmdEventEffect;
     ee_inst = Build(*ocee).Union();
   }
 
@@ -156,11 +156,11 @@ flatbuffers::Offset<save::EventEffect> Serializer::Build(const EventEffectBase& 
 }
 
 flatbuffers::Offset<save::GeneralEventEffect> Serializer::Build(const GeneralEventEffect& gee) {
-  save::GeneralEventEffectImpl gee_type = save::GeneralEventEffectImpl_NONE;
+  save::GeneralEventEffectImpl gee_type = save::GeneralEventEffectImpl::NONE;
   flatbuffers::Offset<void> gee_inst = 0;
   auto restore_hp = dynamic_cast<const GEERestoreHp*>(&gee);
   if (restore_hp) {
-    gee_type = save::GeneralEventEffectImpl_GEERestoreHp;
+    gee_type = save::GeneralEventEffectImpl::GEERestoreHp;
     gee_inst = Build(*restore_hp).Union();
   }
 
@@ -174,15 +174,15 @@ flatbuffers::Offset<save::GEERestoreHp> Serializer::Build(const GEERestoreHp& ge
 }
 
 flatbuffers::Offset<save::OnCmdEventEffect> Serializer::Build(const OnCmdEventEffect& ocee) {
-  save::OnCmdEventEffectImpl ocee_type = save::OnCmdEventEffectImpl_NONE;
+  save::OnCmdEventEffectImpl ocee_type = save::OnCmdEventEffectImpl::NONE;
   flatbuffers::Offset<void> ocee_inst = 0;
   auto preemptive_attack = dynamic_cast<const OCEEPreemptiveAttack*>(&ocee);
   auto enhance_basic_attack = dynamic_cast<const OCEEEnhanceBasicAttack*>(&ocee);
   if (preemptive_attack) {
-    ocee_type = save::OnCmdEventEffectImpl_OCEEPreemptiveAttack;
+    ocee_type = save::OnCmdEventEffectImpl::OCEEPreemptiveAttack;
     ocee_inst = Build(*preemptive_attack).Union();
   } else if (enhance_basic_attack) {
-    ocee_type = save::OnCmdEventEffectImpl_OCEEEnhanceBasicAttack;
+    ocee_type = save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack;
     ocee_inst = Build(*enhance_basic_attack).Union();
   }
 
