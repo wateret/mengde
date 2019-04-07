@@ -33,7 +33,6 @@ class Serializer {
   flatbuffers::Offset<save::Terrain> Build(const Terrain& terrain);
   flatbuffers::Offset<save::Equipment> Build(const Equipment& equipment);
   flatbuffers::Offset<save::VolatileAttributes> Build(const VolatileAttribute& va);
-  flatbuffers::Offset<save::AttributeModifierList> Build(const StatModifierList& aml);
   flatbuffers::Offset<save::AttributeModifier> Build(const StatModifier& am);
   flatbuffers::Offset<save::PromotionInfo> Build(const PromotionInfo& promotion_info);
   flatbuffers::Offset<save::EventEffect> Build(const EventEffectBase& event_effect);

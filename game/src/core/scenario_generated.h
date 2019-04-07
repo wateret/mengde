@@ -41,8 +41,6 @@ struct Equipment;
 
 struct VolatileAttributes;
 
-struct AttributeModifierList;
-
 struct AttributeModifier;
 
 struct TurnBased;
@@ -1150,8 +1148,8 @@ struct VolatileAttributes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_ATTRIBUTE_MODIFIER_LIST = 4,
     VT_EVENT_EFFECT_LIST = 6
   };
-  const AttributeModifierList *attribute_modifier_list() const {
-    return GetPointer<const AttributeModifierList *>(VT_ATTRIBUTE_MODIFIER_LIST);
+  const flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>> *attribute_modifier_list() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>> *>(VT_ATTRIBUTE_MODIFIER_LIST);
   }
   const flatbuffers::Vector<flatbuffers::Offset<EventEffect>> *event_effect_list() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<EventEffect>> *>(VT_EVENT_EFFECT_LIST);
@@ -1159,7 +1157,8 @@ struct VolatileAttributes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ATTRIBUTE_MODIFIER_LIST) &&
-           verifier.VerifyTable(attribute_modifier_list()) &&
+           verifier.VerifyVector(attribute_modifier_list()) &&
+           verifier.VerifyVectorOfTables(attribute_modifier_list()) &&
            VerifyOffset(verifier, VT_EVENT_EFFECT_LIST) &&
            verifier.VerifyVector(event_effect_list()) &&
            verifier.VerifyVectorOfTables(event_effect_list()) &&
@@ -1170,7 +1169,7 @@ struct VolatileAttributes FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct VolatileAttributesBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_attribute_modifier_list(flatbuffers::Offset<AttributeModifierList> attribute_modifier_list) {
+  void add_attribute_modifier_list(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>>> attribute_modifier_list) {
     fbb_.AddOffset(VolatileAttributes::VT_ATTRIBUTE_MODIFIER_LIST, attribute_modifier_list);
   }
   void add_event_effect_list(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<EventEffect>>> event_effect_list) {
@@ -1190,7 +1189,7 @@ struct VolatileAttributesBuilder {
 
 inline flatbuffers::Offset<VolatileAttributes> CreateVolatileAttributes(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<AttributeModifierList> attribute_modifier_list = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>>> attribute_modifier_list = 0,
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<EventEffect>>> event_effect_list = 0) {
   VolatileAttributesBuilder builder_(_fbb);
   builder_.add_event_effect_list(event_effect_list);
@@ -1200,62 +1199,12 @@ inline flatbuffers::Offset<VolatileAttributes> CreateVolatileAttributes(
 
 inline flatbuffers::Offset<VolatileAttributes> CreateVolatileAttributesDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<AttributeModifierList> attribute_modifier_list = 0,
+    const std::vector<flatbuffers::Offset<AttributeModifier>> *attribute_modifier_list = nullptr,
     const std::vector<flatbuffers::Offset<EventEffect>> *event_effect_list = nullptr) {
   return mengde::save::CreateVolatileAttributes(
       _fbb,
-      attribute_modifier_list,
+      attribute_modifier_list ? _fbb.CreateVector<flatbuffers::Offset<AttributeModifier>>(*attribute_modifier_list) : 0,
       event_effect_list ? _fbb.CreateVector<flatbuffers::Offset<EventEffect>>(*event_effect_list) : 0);
-}
-
-struct AttributeModifierList FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_ENTRIES = 4
-  };
-  const flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>> *entries() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>> *>(VT_ENTRIES);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_ENTRIES) &&
-           verifier.VerifyVector(entries()) &&
-           verifier.VerifyVectorOfTables(entries()) &&
-           verifier.EndTable();
-  }
-};
-
-struct AttributeModifierListBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_entries(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>>> entries) {
-    fbb_.AddOffset(AttributeModifierList::VT_ENTRIES, entries);
-  }
-  explicit AttributeModifierListBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  AttributeModifierListBuilder &operator=(const AttributeModifierListBuilder &);
-  flatbuffers::Offset<AttributeModifierList> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = flatbuffers::Offset<AttributeModifierList>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<AttributeModifierList> CreateAttributeModifierList(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<AttributeModifier>>> entries = 0) {
-  AttributeModifierListBuilder builder_(_fbb);
-  builder_.add_entries(entries);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<AttributeModifierList> CreateAttributeModifierListDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<flatbuffers::Offset<AttributeModifier>> *entries = nullptr) {
-  return mengde::save::CreateAttributeModifierList(
-      _fbb,
-      entries ? _fbb.CreateVector<flatbuffers::Offset<AttributeModifier>>(*entries) : 0);
 }
 
 struct AttributeModifier FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {

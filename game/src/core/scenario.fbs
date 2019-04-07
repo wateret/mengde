@@ -90,12 +90,8 @@ table Equipment {
 }
 
 table VolatileAttributes {
-  attribute_modifier_list: AttributeModifierList;
+  attribute_modifier_list: [AttributeModifier];
   event_effect_list: [EventEffect];
-}
-
-table AttributeModifierList {
-  entries: [AttributeModifier];
 }
 
 table AttributeModifier {
