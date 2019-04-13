@@ -59,6 +59,18 @@ struct OCEEPreemptiveAttack;
 
 struct OCEEEnhanceBasicAttack;
 
+struct Magic;
+
+struct LearnInfo;
+
+struct MagicEffect;
+
+struct MagicEffectHp;
+
+struct MagicEffectAttribute;
+
+struct MagicEffectCondition;
+
 enum class EventEffectImpl : uint8_t {
   NONE = 0,
   GeneralEventEffect = 1,
@@ -193,6 +205,60 @@ template<> struct OnCmdEventEffectImplTraits<OCEEEnhanceBasicAttack> {
 bool VerifyOnCmdEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, OnCmdEventEffectImpl type);
 bool VerifyOnCmdEventEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
 
+enum class MagicEffectImpl : uint8_t {
+  NONE = 0,
+  MagicEffectHp = 1,
+  MagicEffectAttribute = 2,
+  MagicEffectCondition = 3,
+  MIN = NONE,
+  MAX = MagicEffectCondition
+};
+
+inline const MagicEffectImpl (&EnumValuesMagicEffectImpl())[4] {
+  static const MagicEffectImpl values[] = {
+    MagicEffectImpl::NONE,
+    MagicEffectImpl::MagicEffectHp,
+    MagicEffectImpl::MagicEffectAttribute,
+    MagicEffectImpl::MagicEffectCondition
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesMagicEffectImpl() {
+  static const char * const names[] = {
+    "NONE",
+    "MagicEffectHp",
+    "MagicEffectAttribute",
+    "MagicEffectCondition",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameMagicEffectImpl(MagicEffectImpl e) {
+  const size_t index = static_cast<int>(e);
+  return EnumNamesMagicEffectImpl()[index];
+}
+
+template<typename T> struct MagicEffectImplTraits {
+  static const MagicEffectImpl enum_value = MagicEffectImpl::NONE;
+};
+
+template<> struct MagicEffectImplTraits<MagicEffectHp> {
+  static const MagicEffectImpl enum_value = MagicEffectImpl::MagicEffectHp;
+};
+
+template<> struct MagicEffectImplTraits<MagicEffectAttribute> {
+  static const MagicEffectImpl enum_value = MagicEffectImpl::MagicEffectAttribute;
+};
+
+template<> struct MagicEffectImplTraits<MagicEffectCondition> {
+  static const MagicEffectImpl enum_value = MagicEffectImpl::MagicEffectCondition;
+};
+
+bool VerifyMagicEffectImpl(flatbuffers::Verifier &verifier, const void *obj, MagicEffectImpl type);
+bool VerifyMagicEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
+
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(4) BaseIncr FLATBUFFERS_FINAL_CLASS {
  private:
   int32_t base_;
@@ -313,6 +379,28 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) StatMod FLATBUFFERS_FINAL_CLASS {
 };
 FLATBUFFERS_STRUCT_END(StatMod, 4);
 
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) LearnInfo FLATBUFFERS_FINAL_CLASS {
+ private:
+  uint16_t id_;
+  uint16_t lv_;
+
+ public:
+  LearnInfo() {
+    memset(this, 0, sizeof(LearnInfo));
+  }
+  LearnInfo(uint16_t _id, uint16_t _lv)
+      : id_(flatbuffers::EndianScalar(_id)),
+        lv_(flatbuffers::EndianScalar(_lv)) {
+  }
+  uint16_t id() const {
+    return flatbuffers::EndianScalar(id_);
+  }
+  uint16_t lv() const {
+    return flatbuffers::EndianScalar(lv_);
+  }
+};
+FLATBUFFERS_STRUCT_END(LearnInfo, 4);
+
 struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_ID = 4,
@@ -405,14 +493,18 @@ struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_TERRAIN_MANAGER = 4,
     VT_HERO_CLASS_MANAGER = 6,
-    VT_EQUIPMENT_MANAGER = 8,
-    VT_HERO_TPL_MANAGER = 10
+    VT_MAGIC_MANAGER = 8,
+    VT_EQUIPMENT_MANAGER = 10,
+    VT_HERO_TPL_MANAGER = 12
   };
   const TerrainManager *terrain_manager() const {
     return GetPointer<const TerrainManager *>(VT_TERRAIN_MANAGER);
   }
   const HeroClassManager *hero_class_manager() const {
     return GetPointer<const HeroClassManager *>(VT_HERO_CLASS_MANAGER);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<Magic>> *magic_manager() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<Magic>> *>(VT_MAGIC_MANAGER);
   }
   const EquipmentManager *equipment_manager() const {
     return GetPointer<const EquipmentManager *>(VT_EQUIPMENT_MANAGER);
@@ -426,6 +518,9 @@ struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyTable(terrain_manager()) &&
            VerifyOffset(verifier, VT_HERO_CLASS_MANAGER) &&
            verifier.VerifyTable(hero_class_manager()) &&
+           VerifyOffset(verifier, VT_MAGIC_MANAGER) &&
+           verifier.VerifyVector(magic_manager()) &&
+           verifier.VerifyVectorOfTables(magic_manager()) &&
            VerifyOffset(verifier, VT_EQUIPMENT_MANAGER) &&
            verifier.VerifyTable(equipment_manager()) &&
            VerifyOffset(verifier, VT_HERO_TPL_MANAGER) &&
@@ -442,6 +537,9 @@ struct ResourceManagersBuilder {
   }
   void add_hero_class_manager(flatbuffers::Offset<HeroClassManager> hero_class_manager) {
     fbb_.AddOffset(ResourceManagers::VT_HERO_CLASS_MANAGER, hero_class_manager);
+  }
+  void add_magic_manager(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Magic>>> magic_manager) {
+    fbb_.AddOffset(ResourceManagers::VT_MAGIC_MANAGER, magic_manager);
   }
   void add_equipment_manager(flatbuffers::Offset<EquipmentManager> equipment_manager) {
     fbb_.AddOffset(ResourceManagers::VT_EQUIPMENT_MANAGER, equipment_manager);
@@ -465,14 +563,32 @@ inline flatbuffers::Offset<ResourceManagers> CreateResourceManagers(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<TerrainManager> terrain_manager = 0,
     flatbuffers::Offset<HeroClassManager> hero_class_manager = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Magic>>> magic_manager = 0,
     flatbuffers::Offset<EquipmentManager> equipment_manager = 0,
     flatbuffers::Offset<HeroTemplateManager> hero_tpl_manager = 0) {
   ResourceManagersBuilder builder_(_fbb);
   builder_.add_hero_tpl_manager(hero_tpl_manager);
   builder_.add_equipment_manager(equipment_manager);
+  builder_.add_magic_manager(magic_manager);
   builder_.add_hero_class_manager(hero_class_manager);
   builder_.add_terrain_manager(terrain_manager);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ResourceManagers> CreateResourceManagersDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<TerrainManager> terrain_manager = 0,
+    flatbuffers::Offset<HeroClassManager> hero_class_manager = 0,
+    const std::vector<flatbuffers::Offset<Magic>> *magic_manager = nullptr,
+    flatbuffers::Offset<EquipmentManager> equipment_manager = 0,
+    flatbuffers::Offset<HeroTemplateManager> hero_tpl_manager = 0) {
+  return mengde::save::CreateResourceManagers(
+      _fbb,
+      terrain_manager,
+      hero_class_manager,
+      magic_manager ? _fbb.CreateVector<flatbuffers::Offset<Magic>>(*magic_manager) : 0,
+      equipment_manager,
+      hero_tpl_manager);
 }
 
 struct TerrainManager FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -1621,6 +1737,332 @@ inline flatbuffers::Offset<OCEEEnhanceBasicAttack> CreateOCEEEnhanceBasicAttack(
   return builder_.Finish();
 }
 
+struct Magic FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_RANGE = 6,
+    VT_LEARN_INFO_LIST = 8,
+    VT_TARGET_ENEMY = 10,
+    VT_MP_COST = 12,
+    VT_EFFECTS = 14
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  int32_t range() const {
+    return GetField<int32_t>(VT_RANGE, 0);
+  }
+  const flatbuffers::Vector<const LearnInfo *> *learn_info_list() const {
+    return GetPointer<const flatbuffers::Vector<const LearnInfo *> *>(VT_LEARN_INFO_LIST);
+  }
+  bool target_enemy() const {
+    return GetField<uint8_t>(VT_TARGET_ENEMY, 0) != 0;
+  }
+  uint16_t mp_cost() const {
+    return GetField<uint16_t>(VT_MP_COST, 0);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<MagicEffect>> *effects() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<MagicEffect>> *>(VT_EFFECTS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyField<int32_t>(verifier, VT_RANGE) &&
+           VerifyOffset(verifier, VT_LEARN_INFO_LIST) &&
+           verifier.VerifyVector(learn_info_list()) &&
+           VerifyField<uint8_t>(verifier, VT_TARGET_ENEMY) &&
+           VerifyField<uint16_t>(verifier, VT_MP_COST) &&
+           VerifyOffset(verifier, VT_EFFECTS) &&
+           verifier.VerifyVector(effects()) &&
+           verifier.VerifyVectorOfTables(effects()) &&
+           verifier.EndTable();
+  }
+};
+
+struct MagicBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(Magic::VT_ID, id);
+  }
+  void add_range(int32_t range) {
+    fbb_.AddElement<int32_t>(Magic::VT_RANGE, range, 0);
+  }
+  void add_learn_info_list(flatbuffers::Offset<flatbuffers::Vector<const LearnInfo *>> learn_info_list) {
+    fbb_.AddOffset(Magic::VT_LEARN_INFO_LIST, learn_info_list);
+  }
+  void add_target_enemy(bool target_enemy) {
+    fbb_.AddElement<uint8_t>(Magic::VT_TARGET_ENEMY, static_cast<uint8_t>(target_enemy), 0);
+  }
+  void add_mp_cost(uint16_t mp_cost) {
+    fbb_.AddElement<uint16_t>(Magic::VT_MP_COST, mp_cost, 0);
+  }
+  void add_effects(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<MagicEffect>>> effects) {
+    fbb_.AddOffset(Magic::VT_EFFECTS, effects);
+  }
+  explicit MagicBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  MagicBuilder &operator=(const MagicBuilder &);
+  flatbuffers::Offset<Magic> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Magic>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Magic> CreateMagic(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    int32_t range = 0,
+    flatbuffers::Offset<flatbuffers::Vector<const LearnInfo *>> learn_info_list = 0,
+    bool target_enemy = false,
+    uint16_t mp_cost = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<MagicEffect>>> effects = 0) {
+  MagicBuilder builder_(_fbb);
+  builder_.add_effects(effects);
+  builder_.add_learn_info_list(learn_info_list);
+  builder_.add_range(range);
+  builder_.add_id(id);
+  builder_.add_mp_cost(mp_cost);
+  builder_.add_target_enemy(target_enemy);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Magic> CreateMagicDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    int32_t range = 0,
+    const std::vector<LearnInfo> *learn_info_list = nullptr,
+    bool target_enemy = false,
+    uint16_t mp_cost = 0,
+    const std::vector<flatbuffers::Offset<MagicEffect>> *effects = nullptr) {
+  return mengde::save::CreateMagic(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      range,
+      learn_info_list ? _fbb.CreateVectorOfStructs<LearnInfo>(*learn_info_list) : 0,
+      target_enemy,
+      mp_cost,
+      effects ? _fbb.CreateVector<flatbuffers::Offset<MagicEffect>>(*effects) : 0);
+}
+
+struct MagicEffect FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_TYPE = 4,
+    VT_INSTANCE_TYPE = 6,
+    VT_INSTANCE = 8
+  };
+  int32_t type() const {
+    return GetField<int32_t>(VT_TYPE, 0);
+  }
+  MagicEffectImpl instance_type() const {
+    return static_cast<MagicEffectImpl>(GetField<uint8_t>(VT_INSTANCE_TYPE, 0));
+  }
+  const void *instance() const {
+    return GetPointer<const void *>(VT_INSTANCE);
+  }
+  template<typename T> const T *instance_as() const;
+  const MagicEffectHp *instance_as_MagicEffectHp() const {
+    return instance_type() == MagicEffectImpl::MagicEffectHp ? static_cast<const MagicEffectHp *>(instance()) : nullptr;
+  }
+  const MagicEffectAttribute *instance_as_MagicEffectAttribute() const {
+    return instance_type() == MagicEffectImpl::MagicEffectAttribute ? static_cast<const MagicEffectAttribute *>(instance()) : nullptr;
+  }
+  const MagicEffectCondition *instance_as_MagicEffectCondition() const {
+    return instance_type() == MagicEffectImpl::MagicEffectCondition ? static_cast<const MagicEffectCondition *>(instance()) : nullptr;
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_TYPE) &&
+           VerifyField<uint8_t>(verifier, VT_INSTANCE_TYPE) &&
+           VerifyOffset(verifier, VT_INSTANCE) &&
+           VerifyMagicEffectImpl(verifier, instance(), instance_type()) &&
+           verifier.EndTable();
+  }
+};
+
+template<> inline const MagicEffectHp *MagicEffect::instance_as<MagicEffectHp>() const {
+  return instance_as_MagicEffectHp();
+}
+
+template<> inline const MagicEffectAttribute *MagicEffect::instance_as<MagicEffectAttribute>() const {
+  return instance_as_MagicEffectAttribute();
+}
+
+template<> inline const MagicEffectCondition *MagicEffect::instance_as<MagicEffectCondition>() const {
+  return instance_as_MagicEffectCondition();
+}
+
+struct MagicEffectBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_type(int32_t type) {
+    fbb_.AddElement<int32_t>(MagicEffect::VT_TYPE, type, 0);
+  }
+  void add_instance_type(MagicEffectImpl instance_type) {
+    fbb_.AddElement<uint8_t>(MagicEffect::VT_INSTANCE_TYPE, static_cast<uint8_t>(instance_type), 0);
+  }
+  void add_instance(flatbuffers::Offset<void> instance) {
+    fbb_.AddOffset(MagicEffect::VT_INSTANCE, instance);
+  }
+  explicit MagicEffectBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  MagicEffectBuilder &operator=(const MagicEffectBuilder &);
+  flatbuffers::Offset<MagicEffect> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<MagicEffect>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<MagicEffect> CreateMagicEffect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t type = 0,
+    MagicEffectImpl instance_type = MagicEffectImpl::NONE,
+    flatbuffers::Offset<void> instance = 0) {
+  MagicEffectBuilder builder_(_fbb);
+  builder_.add_instance(instance);
+  builder_.add_type(type);
+  builder_.add_instance_type(instance_type);
+  return builder_.Finish();
+}
+
+struct MagicEffectHp FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_POWER = 4
+  };
+  int32_t power() const {
+    return GetField<int32_t>(VT_POWER, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_POWER) &&
+           verifier.EndTable();
+  }
+};
+
+struct MagicEffectHpBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_power(int32_t power) {
+    fbb_.AddElement<int32_t>(MagicEffectHp::VT_POWER, power, 0);
+  }
+  explicit MagicEffectHpBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  MagicEffectHpBuilder &operator=(const MagicEffectHpBuilder &);
+  flatbuffers::Offset<MagicEffectHp> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<MagicEffectHp>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<MagicEffectHp> CreateMagicEffectHp(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t power = 0) {
+  MagicEffectHpBuilder builder_(_fbb);
+  builder_.add_power(power);
+  return builder_.Finish();
+}
+
+struct MagicEffectAttribute FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ATTRIBUTE_MODIFIER = 4
+  };
+  const AttributeModifier *attribute_modifier() const {
+    return GetPointer<const AttributeModifier *>(VT_ATTRIBUTE_MODIFIER);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ATTRIBUTE_MODIFIER) &&
+           verifier.VerifyTable(attribute_modifier()) &&
+           verifier.EndTable();
+  }
+};
+
+struct MagicEffectAttributeBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_attribute_modifier(flatbuffers::Offset<AttributeModifier> attribute_modifier) {
+    fbb_.AddOffset(MagicEffectAttribute::VT_ATTRIBUTE_MODIFIER, attribute_modifier);
+  }
+  explicit MagicEffectAttributeBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  MagicEffectAttributeBuilder &operator=(const MagicEffectAttributeBuilder &);
+  flatbuffers::Offset<MagicEffectAttribute> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<MagicEffectAttribute>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<MagicEffectAttribute> CreateMagicEffectAttribute(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<AttributeModifier> attribute_modifier = 0) {
+  MagicEffectAttributeBuilder builder_(_fbb);
+  builder_.add_attribute_modifier(attribute_modifier);
+  return builder_.Finish();
+}
+
+struct MagicEffectCondition FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_CONDITION = 4,
+    VT_TURN = 6
+  };
+  int32_t condition() const {
+    return GetField<int32_t>(VT_CONDITION, 0);
+  }
+  const TurnBased *turn() const {
+    return GetStruct<const TurnBased *>(VT_TURN);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_CONDITION) &&
+           VerifyField<TurnBased>(verifier, VT_TURN) &&
+           verifier.EndTable();
+  }
+};
+
+struct MagicEffectConditionBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_condition(int32_t condition) {
+    fbb_.AddElement<int32_t>(MagicEffectCondition::VT_CONDITION, condition, 0);
+  }
+  void add_turn(const TurnBased *turn) {
+    fbb_.AddStruct(MagicEffectCondition::VT_TURN, turn);
+  }
+  explicit MagicEffectConditionBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  MagicEffectConditionBuilder &operator=(const MagicEffectConditionBuilder &);
+  flatbuffers::Offset<MagicEffectCondition> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<MagicEffectCondition>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<MagicEffectCondition> CreateMagicEffectCondition(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t condition = 0,
+    const TurnBased *turn = 0) {
+  MagicEffectConditionBuilder builder_(_fbb);
+  builder_.add_turn(turn);
+  builder_.add_condition(condition);
+  return builder_.Finish();
+}
+
 inline bool VerifyEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, EventEffectImpl type) {
   switch (type) {
     case EventEffectImpl::NONE: {
@@ -1698,6 +2140,39 @@ inline bool VerifyOnCmdEventEffectImplVector(flatbuffers::Verifier &verifier, co
   for (flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
     if (!VerifyOnCmdEventEffectImpl(
         verifier,  values->Get(i), types->GetEnum<OnCmdEventEffectImpl>(i))) {
+      return false;
+    }
+  }
+  return true;
+}
+
+inline bool VerifyMagicEffectImpl(flatbuffers::Verifier &verifier, const void *obj, MagicEffectImpl type) {
+  switch (type) {
+    case MagicEffectImpl::NONE: {
+      return true;
+    }
+    case MagicEffectImpl::MagicEffectHp: {
+      auto ptr = reinterpret_cast<const MagicEffectHp *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case MagicEffectImpl::MagicEffectAttribute: {
+      auto ptr = reinterpret_cast<const MagicEffectAttribute *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case MagicEffectImpl::MagicEffectCondition: {
+      auto ptr = reinterpret_cast<const MagicEffectCondition *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    default: return false;
+  }
+}
+
+inline bool VerifyMagicEffectImplVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types) {
+  if (!values || !types) return !values && !types;
+  if (values->size() != types->size()) return false;
+  for (flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {
+    if (!VerifyMagicEffectImpl(
+        verifier,  values->Get(i), types->GetEnum<MagicEffectImpl>(i))) {
       return false;
     }
   }
