@@ -10,7 +10,7 @@ table Scenario {
 table ResourceManagers {
   terrain_manager: TerrainManager;
   hero_class_manager: HeroClassManager;
-//  magic_manager: MagicManager;
+  magic_manager: [Magic];
   equipment_manager: EquipmentManager;
   hero_tpl_manager: HeroTemplateManager;
 }
@@ -148,6 +148,44 @@ table OCEEPreemptiveAttack {
 
 table OCEEEnhanceBasicAttack {
   mod: StatMod;
+}
+
+table Magic {
+  id: string;
+  range: int;
+  learn_info_list: [LearnInfo];
+  target_enemy: bool;
+  mp_cost: uint16;
+  effects: [MagicEffect];
+}
+
+struct LearnInfo {
+  id: uint16; // XXX maybe this should be string?
+  lv: uint16;
+}
+
+union MagicEffectImpl {
+  MagicEffectHp,
+  MagicEffectAttribute,
+  MagicEffectCondition
+}
+
+table MagicEffect {
+  type: int; // enum MagicEffectType
+  instance: MagicEffectImpl;
+}
+
+table MagicEffectHp {
+  power: int;
+}
+
+table MagicEffectAttribute {
+  attribute_modifier: AttributeModifier;
+}
+
+table MagicEffectCondition {
+  condition: int; // enum Condition
+  turn: TurnBased;
 }
 
 root_type Scenario;

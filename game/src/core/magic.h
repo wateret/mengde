@@ -55,6 +55,7 @@ class MagicEffectHP : public MagicEffect {
  public:
   MagicEffectHP(int32_t power);
   int Diff(const Unit* atk, const Unit* def);
+  int32_t power() const { return power_; }
 
  public:
   virtual void Perform(Unit* atk, Unit* def) override;
@@ -66,6 +67,7 @@ class MagicEffectHP : public MagicEffect {
 class MagicEffectStat : public MagicEffect {
  public:
   MagicEffectStat(const StatModifier& attribute_modifier);
+  const StatModifier& attribute_modifier() const { return attribute_modifier_; }
 
  public:
   virtual void Perform(Unit* atk, Unit* def) override;
@@ -77,6 +79,8 @@ class MagicEffectStat : public MagicEffect {
 class MagicEffectCondition : public MagicEffect {
  public:
   MagicEffectCondition(Condition condition, TurnBased turns);
+  const Condition& condition() const { return condition_; }
+  const TurnBased& turn() const { return turns_; }
 
  public:
   virtual void Perform(Unit* atk, Unit* def) override;
@@ -109,6 +113,10 @@ class Magic {
   bool IsAvailible(const Unit*) const;
   bool HasHP() const;
   int HPDiff(const Unit* atk, const Unit* def) const;
+  Range::Type range_enum() const { return range_; }
+  uint16_t mp_cost() const { return mp_cost_; }
+  const vector<LearnInfo>& learn_info_list() const { return learn_info_list_; }
+  const std::unordered_map<MagicEffectType, std::unique_ptr<MagicEffect>>& effects() const { return effects_; }
 
  private:
   string id_;

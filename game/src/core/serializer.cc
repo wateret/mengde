@@ -39,9 +39,15 @@ flatbuffers::Offset<save::Scenario> Serializer::Build(const Scenario& scenario) 
 flatbuffers::Offset<save::ResourceManagers> Serializer::Build(const ResourceManagers& rm) {
   auto tm = Build(*rm.terrain_manager);
   auto hcm = Build(*rm.hero_class_manager);
+
+  std::vector<flatbuffers::Offset<save::Magic>> magic_vec;
+  rm.magic_manager->ForEach([&](const string&, const Magic& magic) { magic_vec.push_back(Build(magic)); });
+  auto mm = builder_.CreateVector(magic_vec);
+
   auto em = Build(*rm.equipment_manager);
   auto htm = Build(*rm.hero_tpl_manager);
-  return save::CreateResourceManagers(builder_, tm, hcm, em, htm);
+
+  return save::CreateResourceManagers(builder_, tm, hcm, mm, em, htm);
 }
 
 flatbuffers::Offset<save::HeroClassManager> Serializer::Build(const HeroClassManager& hcm) {
@@ -195,6 +201,59 @@ flatbuffers::Offset<save::OCEEPreemptiveAttack> Serializer::Build(const OCEEPree
 flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Serializer::Build(const OCEEEnhanceBasicAttack& obj) {
   auto sm = obj.stat_mod();
   return save::CreateOCEEEnhanceBasicAttack(builder_, BuildStruct<save::StatMod>(sm));
+}
+
+flatbuffers::Offset<save::Magic> Serializer::Build(const Magic& magic) {
+  auto id = builder_.CreateString(magic.GetId());
+  auto range = static_cast<int>(magic.range_enum());
+  std::vector<const save::LearnInfo*> li_vec;
+  for (const auto& li : magic.learn_info_list()) {
+    li_vec.push_back(BuildStruct<save::LearnInfo>(li));
+  }
+  auto li_off = builder_.CreateVector(li_vec);
+  auto target_enemy = magic.is_target_enemy();
+  auto mp_cost = magic.mp_cost();
+  std::vector<flatbuffers::Offset<save::MagicEffect>> eff_vec;
+  for (const auto& itr : magic.effects()) {
+    eff_vec.push_back(Build(*itr.second));
+  }
+  auto effects_off = builder_.CreateVector(eff_vec);
+  return save::CreateMagic(builder_, id, range, li_off, target_enemy, mp_cost, effects_off);
+}
+
+flatbuffers::Offset<save::MagicEffect> Serializer::Build(const MagicEffect& magic_effect) {
+  auto core_me_type = static_cast<int>(magic_effect.type());
+  save::MagicEffectImpl me_type = save::MagicEffectImpl::NONE;
+  flatbuffers::Offset<void> me_inst = 0;
+  auto hp = dynamic_cast<const MagicEffectHP*>(&magic_effect);
+  auto attribute = dynamic_cast<const MagicEffectStat*>(&magic_effect);
+  auto condition = dynamic_cast<const MagicEffectCondition*>(&magic_effect);
+  if (hp) {
+    me_type = save::MagicEffectImpl::MagicEffectHp;
+    me_inst = Build(*hp).Union();
+  } else if (attribute) {
+    me_type = save::MagicEffectImpl::MagicEffectAttribute;
+    me_inst = Build(*attribute).Union();
+  } else if (condition) {
+    me_type = save::MagicEffectImpl::MagicEffectCondition;
+    me_inst = Build(*condition).Union();
+  } else {
+    ASSERT("Cannot serialize Unknown MagicEffect");
+  }
+  return save::CreateMagicEffect(builder_, core_me_type, me_type, me_inst);
+}
+
+flatbuffers::Offset<save::MagicEffectHp> Serializer::Build(const MagicEffectHP& me_hp) {
+  return save::CreateMagicEffectHp(builder_, me_hp.power());
+}
+
+flatbuffers::Offset<save::MagicEffectAttribute> Serializer::Build(const MagicEffectStat& me_attr) {
+  return save::CreateMagicEffectAttribute(builder_, Build(me_attr.attribute_modifier()));
+}
+
+flatbuffers::Offset<save::MagicEffectCondition> Serializer::Build(const MagicEffectCondition& me_cond) {
+  return save::CreateMagicEffectCondition(builder_, static_cast<int>(me_cond.condition()),
+                                          BuildStruct<save::TurnBased>(me_cond.turn()));
 }
 
 }  // namespace core

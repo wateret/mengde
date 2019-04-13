@@ -41,6 +41,11 @@ class Serializer {
   flatbuffers::Offset<save::OnCmdEventEffect> Build(const OnCmdEventEffect& ocee);
   flatbuffers::Offset<save::OCEEPreemptiveAttack> Build(const OCEEPreemptiveAttack& ocee);
   flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Build(const OCEEEnhanceBasicAttack& ocee);
+  flatbuffers::Offset<save::Magic> Build(const Magic& magic);
+  flatbuffers::Offset<save::MagicEffect> Build(const MagicEffect& magic_effect);
+  flatbuffers::Offset<save::MagicEffectHp> Build(const MagicEffectHP& me_hp);
+  flatbuffers::Offset<save::MagicEffectAttribute> Build(const MagicEffectStat& me_attr);
+  flatbuffers::Offset<save::MagicEffectCondition> Build(const MagicEffectCondition& me_cond);
 
   template <typename FbsStruct, typename CoreStruct>
   const FbsStruct* BuildStruct(const CoreStruct& cs) {
