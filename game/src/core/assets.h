@@ -18,7 +18,7 @@ class Money {
   bool Affordable(const Money& cost) const { return (amount_ >= cost.amount_); }
   void Pay(const Money& cost);
   void Gain(const Money& money);
-  uint32_t GetAmount() { return amount_; }
+  uint32_t amount() const { return amount_; }
 
  private:
   uint32_t amount_;
@@ -50,6 +50,8 @@ class Assets {
   void AddHero(unique_ptr<Hero>&& hero);
   void RemoveHero(const string& id);
   Hero* LookupHero(const string& id);
+  const std::map<string, unique_ptr<Hero>>& heroes() const { return heroes_; }
+  const std::map<string, EquipmentWithAmount>& equipments() const { return equipments_; }
   vector<const Hero*> GetHeroes();
 
   // Equipment related //
@@ -63,7 +65,7 @@ class Assets {
   // Money related //
   void PayMoney(const Money& cost);
   void GainMoney(const Money& money);
-  uint32_t GetMoneyAmount();
+  uint32_t GetMoneyAmount() const { return money_.amount(); }
 
   // Others //
   void HeroPutEquipmentOn(Hero*, const Equipment*);

@@ -5,6 +5,7 @@ table Scenario {
   stage_id_list: [string];
   stage_no: uint;
   resource_managers: ResourceManagers;
+  assets: Assets;
 }
 
 table ResourceManagers {
@@ -186,6 +187,38 @@ table MagicEffectAttribute {
 table MagicEffectCondition {
   condition: int; // enum Condition
   turn: TurnBased;
+}
+
+table Assets {
+  money: uint32;
+  heroes: [Hero];
+  equipments: [EquipmentWithAmount];
+}
+
+table EquipmentWithAmount {
+  equipment: string;
+  amount: uint32;
+}
+
+table Hero {
+  id: string;
+  hero_class: string;
+  hero_attr: Attribute;
+  equipment_set: EquipmentSet;
+  level: LevelExp;
+  hp: uint32;
+  mp: uint32;
+}
+
+struct LevelExp {
+  level: uint16;
+  exp: uint16;
+}
+
+table EquipmentSet {
+  weapon: string;
+  armor: string;
+  aid: string;
 }
 
 root_type Scenario;

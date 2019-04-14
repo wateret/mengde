@@ -71,6 +71,16 @@ struct MagicEffectAttribute;
 
 struct MagicEffectCondition;
 
+struct Assets;
+
+struct EquipmentWithAmount;
+
+struct Hero;
+
+struct LevelExp;
+
+struct EquipmentSet;
+
 enum class EventEffectImpl : uint8_t {
   NONE = 0,
   GeneralEventEffect = 1,
@@ -401,12 +411,35 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) LearnInfo FLATBUFFERS_FINAL_CLASS {
 };
 FLATBUFFERS_STRUCT_END(LearnInfo, 4);
 
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) LevelExp FLATBUFFERS_FINAL_CLASS {
+ private:
+  uint16_t level_;
+  uint16_t exp_;
+
+ public:
+  LevelExp() {
+    memset(this, 0, sizeof(LevelExp));
+  }
+  LevelExp(uint16_t _level, uint16_t _exp)
+      : level_(flatbuffers::EndianScalar(_level)),
+        exp_(flatbuffers::EndianScalar(_exp)) {
+  }
+  uint16_t level() const {
+    return flatbuffers::EndianScalar(level_);
+  }
+  uint16_t exp() const {
+    return flatbuffers::EndianScalar(exp_);
+  }
+};
+FLATBUFFERS_STRUCT_END(LevelExp, 4);
+
 struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_ID = 4,
     VT_STAGE_ID_LIST = 6,
     VT_STAGE_NO = 8,
-    VT_RESOURCE_MANAGERS = 10
+    VT_RESOURCE_MANAGERS = 10,
+    VT_ASSETS = 12
   };
   const flatbuffers::String *id() const {
     return GetPointer<const flatbuffers::String *>(VT_ID);
@@ -420,6 +453,9 @@ struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const ResourceManagers *resource_managers() const {
     return GetPointer<const ResourceManagers *>(VT_RESOURCE_MANAGERS);
   }
+  const Assets *assets() const {
+    return GetPointer<const Assets *>(VT_ASSETS);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
@@ -430,6 +466,8 @@ struct Scenario FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            VerifyField<uint32_t>(verifier, VT_STAGE_NO) &&
            VerifyOffset(verifier, VT_RESOURCE_MANAGERS) &&
            verifier.VerifyTable(resource_managers()) &&
+           VerifyOffset(verifier, VT_ASSETS) &&
+           verifier.VerifyTable(assets()) &&
            verifier.EndTable();
   }
 };
@@ -449,6 +487,9 @@ struct ScenarioBuilder {
   void add_resource_managers(flatbuffers::Offset<ResourceManagers> resource_managers) {
     fbb_.AddOffset(Scenario::VT_RESOURCE_MANAGERS, resource_managers);
   }
+  void add_assets(flatbuffers::Offset<Assets> assets) {
+    fbb_.AddOffset(Scenario::VT_ASSETS, assets);
+  }
   explicit ScenarioBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -466,8 +507,10 @@ inline flatbuffers::Offset<Scenario> CreateScenario(
     flatbuffers::Offset<flatbuffers::String> id = 0,
     flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> stage_id_list = 0,
     uint32_t stage_no = 0,
-    flatbuffers::Offset<ResourceManagers> resource_managers = 0) {
+    flatbuffers::Offset<ResourceManagers> resource_managers = 0,
+    flatbuffers::Offset<Assets> assets = 0) {
   ScenarioBuilder builder_(_fbb);
+  builder_.add_assets(assets);
   builder_.add_resource_managers(resource_managers);
   builder_.add_stage_no(stage_no);
   builder_.add_stage_id_list(stage_id_list);
@@ -480,13 +523,15 @@ inline flatbuffers::Offset<Scenario> CreateScenarioDirect(
     const char *id = nullptr,
     const std::vector<flatbuffers::Offset<flatbuffers::String>> *stage_id_list = nullptr,
     uint32_t stage_no = 0,
-    flatbuffers::Offset<ResourceManagers> resource_managers = 0) {
+    flatbuffers::Offset<ResourceManagers> resource_managers = 0,
+    flatbuffers::Offset<Assets> assets = 0) {
   return mengde::save::CreateScenario(
       _fbb,
       id ? _fbb.CreateString(id) : 0,
       stage_id_list ? _fbb.CreateVector<flatbuffers::Offset<flatbuffers::String>>(*stage_id_list) : 0,
       stage_no,
-      resource_managers);
+      resource_managers,
+      assets);
 }
 
 struct ResourceManagers FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -2061,6 +2106,341 @@ inline flatbuffers::Offset<MagicEffectCondition> CreateMagicEffectCondition(
   builder_.add_turn(turn);
   builder_.add_condition(condition);
   return builder_.Finish();
+}
+
+struct Assets FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_MONEY = 4,
+    VT_HEROES = 6,
+    VT_EQUIPMENTS = 8
+  };
+  uint32_t money() const {
+    return GetField<uint32_t>(VT_MONEY, 0);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<Hero>> *heroes() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<Hero>> *>(VT_HEROES);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<EquipmentWithAmount>> *equipments() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<EquipmentWithAmount>> *>(VT_EQUIPMENTS);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_MONEY) &&
+           VerifyOffset(verifier, VT_HEROES) &&
+           verifier.VerifyVector(heroes()) &&
+           verifier.VerifyVectorOfTables(heroes()) &&
+           VerifyOffset(verifier, VT_EQUIPMENTS) &&
+           verifier.VerifyVector(equipments()) &&
+           verifier.VerifyVectorOfTables(equipments()) &&
+           verifier.EndTable();
+  }
+};
+
+struct AssetsBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_money(uint32_t money) {
+    fbb_.AddElement<uint32_t>(Assets::VT_MONEY, money, 0);
+  }
+  void add_heroes(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Hero>>> heroes) {
+    fbb_.AddOffset(Assets::VT_HEROES, heroes);
+  }
+  void add_equipments(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<EquipmentWithAmount>>> equipments) {
+    fbb_.AddOffset(Assets::VT_EQUIPMENTS, equipments);
+  }
+  explicit AssetsBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  AssetsBuilder &operator=(const AssetsBuilder &);
+  flatbuffers::Offset<Assets> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Assets>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Assets> CreateAssets(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t money = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<Hero>>> heroes = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<EquipmentWithAmount>>> equipments = 0) {
+  AssetsBuilder builder_(_fbb);
+  builder_.add_equipments(equipments);
+  builder_.add_heroes(heroes);
+  builder_.add_money(money);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Assets> CreateAssetsDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t money = 0,
+    const std::vector<flatbuffers::Offset<Hero>> *heroes = nullptr,
+    const std::vector<flatbuffers::Offset<EquipmentWithAmount>> *equipments = nullptr) {
+  return mengde::save::CreateAssets(
+      _fbb,
+      money,
+      heroes ? _fbb.CreateVector<flatbuffers::Offset<Hero>>(*heroes) : 0,
+      equipments ? _fbb.CreateVector<flatbuffers::Offset<EquipmentWithAmount>>(*equipments) : 0);
+}
+
+struct EquipmentWithAmount FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_EQUIPMENT = 4,
+    VT_AMOUNT = 6
+  };
+  const flatbuffers::String *equipment() const {
+    return GetPointer<const flatbuffers::String *>(VT_EQUIPMENT);
+  }
+  uint32_t amount() const {
+    return GetField<uint32_t>(VT_AMOUNT, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EQUIPMENT) &&
+           verifier.VerifyString(equipment()) &&
+           VerifyField<uint32_t>(verifier, VT_AMOUNT) &&
+           verifier.EndTable();
+  }
+};
+
+struct EquipmentWithAmountBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_equipment(flatbuffers::Offset<flatbuffers::String> equipment) {
+    fbb_.AddOffset(EquipmentWithAmount::VT_EQUIPMENT, equipment);
+  }
+  void add_amount(uint32_t amount) {
+    fbb_.AddElement<uint32_t>(EquipmentWithAmount::VT_AMOUNT, amount, 0);
+  }
+  explicit EquipmentWithAmountBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  EquipmentWithAmountBuilder &operator=(const EquipmentWithAmountBuilder &);
+  flatbuffers::Offset<EquipmentWithAmount> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<EquipmentWithAmount>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<EquipmentWithAmount> CreateEquipmentWithAmount(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> equipment = 0,
+    uint32_t amount = 0) {
+  EquipmentWithAmountBuilder builder_(_fbb);
+  builder_.add_amount(amount);
+  builder_.add_equipment(equipment);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<EquipmentWithAmount> CreateEquipmentWithAmountDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *equipment = nullptr,
+    uint32_t amount = 0) {
+  return mengde::save::CreateEquipmentWithAmount(
+      _fbb,
+      equipment ? _fbb.CreateString(equipment) : 0,
+      amount);
+}
+
+struct Hero FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_ID = 4,
+    VT_HERO_CLASS = 6,
+    VT_HERO_ATTR = 8,
+    VT_EQUIPMENT_SET = 10,
+    VT_LEVEL = 12,
+    VT_HP = 14,
+    VT_MP = 16
+  };
+  const flatbuffers::String *id() const {
+    return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  const flatbuffers::String *hero_class() const {
+    return GetPointer<const flatbuffers::String *>(VT_HERO_CLASS);
+  }
+  const Attribute *hero_attr() const {
+    return GetStruct<const Attribute *>(VT_HERO_ATTR);
+  }
+  const EquipmentSet *equipment_set() const {
+    return GetPointer<const EquipmentSet *>(VT_EQUIPMENT_SET);
+  }
+  const LevelExp *level() const {
+    return GetStruct<const LevelExp *>(VT_LEVEL);
+  }
+  uint32_t hp() const {
+    return GetField<uint32_t>(VT_HP, 0);
+  }
+  uint32_t mp() const {
+    return GetField<uint32_t>(VT_MP, 0);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(id()) &&
+           VerifyOffset(verifier, VT_HERO_CLASS) &&
+           verifier.VerifyString(hero_class()) &&
+           VerifyField<Attribute>(verifier, VT_HERO_ATTR) &&
+           VerifyOffset(verifier, VT_EQUIPMENT_SET) &&
+           verifier.VerifyTable(equipment_set()) &&
+           VerifyField<LevelExp>(verifier, VT_LEVEL) &&
+           VerifyField<uint32_t>(verifier, VT_HP) &&
+           VerifyField<uint32_t>(verifier, VT_MP) &&
+           verifier.EndTable();
+  }
+};
+
+struct HeroBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_id(flatbuffers::Offset<flatbuffers::String> id) {
+    fbb_.AddOffset(Hero::VT_ID, id);
+  }
+  void add_hero_class(flatbuffers::Offset<flatbuffers::String> hero_class) {
+    fbb_.AddOffset(Hero::VT_HERO_CLASS, hero_class);
+  }
+  void add_hero_attr(const Attribute *hero_attr) {
+    fbb_.AddStruct(Hero::VT_HERO_ATTR, hero_attr);
+  }
+  void add_equipment_set(flatbuffers::Offset<EquipmentSet> equipment_set) {
+    fbb_.AddOffset(Hero::VT_EQUIPMENT_SET, equipment_set);
+  }
+  void add_level(const LevelExp *level) {
+    fbb_.AddStruct(Hero::VT_LEVEL, level);
+  }
+  void add_hp(uint32_t hp) {
+    fbb_.AddElement<uint32_t>(Hero::VT_HP, hp, 0);
+  }
+  void add_mp(uint32_t mp) {
+    fbb_.AddElement<uint32_t>(Hero::VT_MP, mp, 0);
+  }
+  explicit HeroBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  HeroBuilder &operator=(const HeroBuilder &);
+  flatbuffers::Offset<Hero> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Hero>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Hero> CreateHero(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> id = 0,
+    flatbuffers::Offset<flatbuffers::String> hero_class = 0,
+    const Attribute *hero_attr = 0,
+    flatbuffers::Offset<EquipmentSet> equipment_set = 0,
+    const LevelExp *level = 0,
+    uint32_t hp = 0,
+    uint32_t mp = 0) {
+  HeroBuilder builder_(_fbb);
+  builder_.add_mp(mp);
+  builder_.add_hp(hp);
+  builder_.add_level(level);
+  builder_.add_equipment_set(equipment_set);
+  builder_.add_hero_attr(hero_attr);
+  builder_.add_hero_class(hero_class);
+  builder_.add_id(id);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Hero> CreateHeroDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *id = nullptr,
+    const char *hero_class = nullptr,
+    const Attribute *hero_attr = 0,
+    flatbuffers::Offset<EquipmentSet> equipment_set = 0,
+    const LevelExp *level = 0,
+    uint32_t hp = 0,
+    uint32_t mp = 0) {
+  return mengde::save::CreateHero(
+      _fbb,
+      id ? _fbb.CreateString(id) : 0,
+      hero_class ? _fbb.CreateString(hero_class) : 0,
+      hero_attr,
+      equipment_set,
+      level,
+      hp,
+      mp);
+}
+
+struct EquipmentSet FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_WEAPON = 4,
+    VT_ARMOR = 6,
+    VT_AID = 8
+  };
+  const flatbuffers::String *weapon() const {
+    return GetPointer<const flatbuffers::String *>(VT_WEAPON);
+  }
+  const flatbuffers::String *armor() const {
+    return GetPointer<const flatbuffers::String *>(VT_ARMOR);
+  }
+  const flatbuffers::String *aid() const {
+    return GetPointer<const flatbuffers::String *>(VT_AID);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_WEAPON) &&
+           verifier.VerifyString(weapon()) &&
+           VerifyOffset(verifier, VT_ARMOR) &&
+           verifier.VerifyString(armor()) &&
+           VerifyOffset(verifier, VT_AID) &&
+           verifier.VerifyString(aid()) &&
+           verifier.EndTable();
+  }
+};
+
+struct EquipmentSetBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_weapon(flatbuffers::Offset<flatbuffers::String> weapon) {
+    fbb_.AddOffset(EquipmentSet::VT_WEAPON, weapon);
+  }
+  void add_armor(flatbuffers::Offset<flatbuffers::String> armor) {
+    fbb_.AddOffset(EquipmentSet::VT_ARMOR, armor);
+  }
+  void add_aid(flatbuffers::Offset<flatbuffers::String> aid) {
+    fbb_.AddOffset(EquipmentSet::VT_AID, aid);
+  }
+  explicit EquipmentSetBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  EquipmentSetBuilder &operator=(const EquipmentSetBuilder &);
+  flatbuffers::Offset<EquipmentSet> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<EquipmentSet>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<EquipmentSet> CreateEquipmentSet(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> weapon = 0,
+    flatbuffers::Offset<flatbuffers::String> armor = 0,
+    flatbuffers::Offset<flatbuffers::String> aid = 0) {
+  EquipmentSetBuilder builder_(_fbb);
+  builder_.add_aid(aid);
+  builder_.add_armor(armor);
+  builder_.add_weapon(weapon);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<EquipmentSet> CreateEquipmentSetDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *weapon = nullptr,
+    const char *armor = nullptr,
+    const char *aid = nullptr) {
+  return mengde::save::CreateEquipmentSet(
+      _fbb,
+      weapon ? _fbb.CreateString(weapon) : 0,
+      armor ? _fbb.CreateString(armor) : 0,
+      aid ? _fbb.CreateString(aid) : 0);
 }
 
 inline bool VerifyEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, EventEffectImpl type) {

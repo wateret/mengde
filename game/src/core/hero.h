@@ -46,6 +46,7 @@ class Hero : public IUnitBase, IEquipper {
   void Promote(const HeroClassManager* hcm);
   void PutOn(const Equipment*);
   int class_index() const;
+  const Level& level_exp() const { return level_; }
 
  private:
   HpMp CalcHpMp() const;
