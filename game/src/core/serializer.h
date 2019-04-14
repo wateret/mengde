@@ -3,7 +3,10 @@
 
 #include <memory>
 
+#include "assets.h"
+#include "equipment_set.h"
 #include "event_effect_list.h"
+#include "hero.h"
 #include "scenario.h"
 #include "scenario_generated.h"
 #include "util/path.h"
@@ -46,6 +49,10 @@ class Serializer {
   flatbuffers::Offset<save::MagicEffectHp> Build(const MagicEffectHP& me_hp);
   flatbuffers::Offset<save::MagicEffectAttribute> Build(const MagicEffectStat& me_attr);
   flatbuffers::Offset<save::MagicEffectCondition> Build(const MagicEffectCondition& me_cond);
+  flatbuffers::Offset<save::Assets> Build(const Assets& hero);
+  flatbuffers::Offset<save::Hero> Build(const Hero& hero);
+  flatbuffers::Offset<save::EquipmentWithAmount> Build(const EquipmentWithAmount& ea);
+  flatbuffers::Offset<save::EquipmentSet> Build(const EquipmentSet& es);
 
   template <typename FbsStruct, typename CoreStruct>
   const FbsStruct* BuildStruct(const CoreStruct& cs) {

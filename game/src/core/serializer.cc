@@ -25,6 +25,7 @@ flatbuffers::Offset<save::Scenario> Serializer::Build(const Scenario& scenario) 
   auto id_off = builder_.CreateString(scenario.id());
   auto string_offset_vec = builder_.CreateVectorOfStrings(scenario.stage_id_list());
   auto resource_managers_off = Build(scenario.GetResourceManagers());
+  auto assets_off = Build(scenario.assets());
 
   save::ScenarioBuilder sce_builder(builder_);
 
@@ -32,6 +33,7 @@ flatbuffers::Offset<save::Scenario> Serializer::Build(const Scenario& scenario) 
   sce_builder.add_stage_id_list(string_offset_vec);
   sce_builder.add_stage_no(scenario.stage_no());
   sce_builder.add_resource_managers(resource_managers_off);
+  sce_builder.add_assets(assets_off);
 
   return sce_builder.Finish();
 }
@@ -254,6 +256,44 @@ flatbuffers::Offset<save::MagicEffectAttribute> Serializer::Build(const MagicEff
 flatbuffers::Offset<save::MagicEffectCondition> Serializer::Build(const MagicEffectCondition& me_cond) {
   return save::CreateMagicEffectCondition(builder_, static_cast<int>(me_cond.condition()),
                                           BuildStruct<save::TurnBased>(me_cond.turn()));
+}
+
+flatbuffers::Offset<save::Assets> Serializer::Build(const Assets& assets) {
+  std::vector<flatbuffers::Offset<save::Hero>> hero_vec;
+  for (const auto& itr : assets.heroes()) {
+    hero_vec.push_back(Build(*itr.second));
+  }
+  auto heroes_off = builder_.CreateVector(hero_vec);
+
+  std::vector<flatbuffers::Offset<save::EquipmentWithAmount>> equip_vec;
+  for (const auto& itr : assets.equipments()) {
+    equip_vec.push_back(Build(itr.second));
+  }
+  auto equip_off = builder_.CreateVector(equip_vec);
+
+  return save::CreateAssets(builder_, assets.GetMoneyAmount(), heroes_off, equip_off);
+}
+
+flatbuffers::Offset<save::Hero> Serializer::Build(const Hero& hero) {
+  auto id = builder_.CreateString(hero.id());
+  auto hero_class = builder_.CreateString(hero.hero_class()->id());
+  auto hero_attr = BuildStruct<save::Attribute>(hero.GetHeroStat());
+  auto equipment_set = Build(*hero.GetEquipmentSet());
+  auto levelexp = BuildStruct<save::LevelExp>(hero.level_exp());
+  auto hp = hero.GetOriginalHpMp().hp;
+  auto mp = hero.GetOriginalHpMp().mp;
+  return save::CreateHero(builder_, id, hero_class, hero_attr, equipment_set, levelexp, hp, mp);
+}
+
+flatbuffers::Offset<save::EquipmentWithAmount> Serializer::Build(const EquipmentWithAmount& eq) {
+  return save::CreateEquipmentWithAmountDirect(builder_, eq.object->GetId().c_str(), eq.amount);
+}
+
+flatbuffers::Offset<save::EquipmentSet> Serializer::Build(const EquipmentSet& es) {
+  auto weapon = es.GetWeapon() ? es.GetWeapon()->GetId().c_str() : "";
+  auto armor = es.GetArmor() ? es.GetArmor()->GetId().c_str() : "";
+  auto aid = es.GetAid() ? es.GetAid()->GetId().c_str() : "";
+  return save::CreateEquipmentSetDirect(builder_, weapon, armor, aid);
 }
 
 }  // namespace core
