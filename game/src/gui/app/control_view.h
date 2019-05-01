@@ -27,7 +27,6 @@ class ControlView : public CompositeView {
   core::Scenario* sce_;
   TextView* tv_turn_;
   ButtonView* btn_end_turn_;
-  ButtonView* btn_save_;
 };
 
 }  // namespace app
