@@ -38,19 +38,6 @@ ControlView::ControlView(const Rect& rect, core::Scenario* sce, GameView* gv) : 
   });
   AddChild(btn_end_turn_);
 
-  button_coords.Move(0, 28);
-  btn_save_ = new ButtonView(&button_coords, "Save");
-  btn_save_->SetMouseButtonHandler([this](const foundation::MouseButtonEvent& e) {
-    if (e.IsLeftButtonUp()) {
-      core::Serializer save{Path{"save.mengde"}};
-      save.Serialize(*sce_);
-      LOG_INFO("File saved");
-      return true;
-    }
-    return true;
-  });
-  AddChild(btn_save_);
-
   const Vec2D map_size = sce_->current_stage()->GetMapSize() * config::kBlockSize;
 
   const Vec2D minimap_max_size(184, 120);
