@@ -13,6 +13,7 @@ namespace core {
 class Hero;
 class Assets;
 class IDeployHelper;
+class Scenario;
 
 }  // namespace core
 }  // namespace mengde
@@ -52,9 +53,10 @@ class HeroModelListView : public CompositeView {
 
 class DeployView : public CompositeView {
  public:
-  DeployView(const Rect&, core::Assets*, core::IDeployHelper*, GameView*, const Path& base_path);
+  DeployView(const Rect&, const core::Scenario*, core::Assets*, core::IDeployHelper*, GameView*, const Path& base_path);
 
  private:
+  const core::Scenario* sce_;
   GameView* gv_;
   EquipmentSelectView* equipment_select_view_;
   DeployDirector* director_;
