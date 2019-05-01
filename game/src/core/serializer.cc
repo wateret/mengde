@@ -298,18 +298,3 @@ flatbuffers::Offset<save::EquipmentSet> Serializer::Build(const EquipmentSet& es
 
 }  // namespace core
 }  // namespace mengde
-
-#if 0
-void Serializer::Deserialize() {
-  std::ifstream file(path_.ToString(), std::ios::binary | std::ios::ate);
-  std::streamsize size = file.tellg();
-  file.seekg(0, std::ios::beg);
-
-  std::vector<char> buffer(size);
-  file.read(buffer.data(), size);
-
-  auto sce = save::GetScenario(buffer.data());
-  auto val = sce->id();
-  (void)val;
-}
-#endif
