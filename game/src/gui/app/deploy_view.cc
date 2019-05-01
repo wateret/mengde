@@ -8,6 +8,7 @@
 #include "core/hero.h"
 #include "core/i_deploy_helper.h"
 #include "core/unit.h"
+#include "core/serializer.h"
 #include "deploy_director.h"
 #include "equipment_select_view.h"
 #include "equipment_set_view.h"
@@ -96,9 +97,9 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
   }
 }
 
-DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHelper* deploy_helper, GameView* gv,
+DeployView::DeployView(const Rect& frame, const core::Scenario* sce, core::Assets* assets, core::IDeployHelper* deploy_helper, GameView* gv,
                        const Path& base_path)
-    : CompositeView(frame), gv_(gv) {
+    : CompositeView(frame), sce_{sce}, gv_(gv) {
   padding(8);
   bg_color(COLOR("darkgray"));
 
@@ -163,8 +164,22 @@ DeployView::DeployView(const Rect& frame, core::Assets* assets, core::IDeployHel
     return true;
   });
 
+  // Insert Save button here
+  btn_ok_frame.Move(-108, 0);
+  ButtonView* btn_save = new ButtonView(&btn_ok_frame, "Save");
+  btn_save->SetMouseButtonHandler([this](const foundation::MouseButtonEvent& e) {
+    if (e.IsLeftButtonUp()) {
+      core::Serializer save{Path{"save.mengde"}};
+      save.Serialize(*sce_);
+      LOG_INFO("File saved");
+      return true;
+    }
+    return true;
+  });
+
   AddChild(equipment_select_view_);
   AddChild(btn_ok);
+  AddChild(btn_save);
 
   director_->Init(hero_model_list_view, unit_view, equipment_select_view_);
 }
