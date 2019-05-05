@@ -14,6 +14,7 @@ class Equipment;
 class Money {
  public:
   Money() : amount_{0u} {}
+  Money(uint32_t amount) : amount_{amount} {}
   Money(const Money&) = default;
   bool Affordable(const Money& cost) const { return (amount_ >= cost.amount_); }
   void Pay(const Money& cost);

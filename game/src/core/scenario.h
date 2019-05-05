@@ -15,6 +15,8 @@ class Stage;
 class Scenario {
  public:
   Scenario(const string&);
+  Scenario(const string& scenario_id, const vector<string>& stage_ids, uint32_t stage_no, const ResourceManagers& rc,
+           unique_ptr<Assets>&& assets, unique_ptr<Stage>&& current_stage_);
   ~Scenario();
   const ResourceManagers& GetResourceManagers() const { return rc_; }
   Assets* GetAssets() { return assets_.get(); }

@@ -24,7 +24,7 @@ struct PromotionInfo {
 
 class HeroClass {
  public:
-  HeroClass(const string&, const int, const Attribute&, const Range::Type, const int, const BaseAndIncr,
+  HeroClass(const string&, const uint32_t, const Attribute&, const Range::Type, const int, const BaseAndIncr,
             const BaseAndIncr, const boost::optional<PromotionInfo>& promotion_info);
   int index() const { return index_; }
   string id() const { return id_; }
@@ -38,7 +38,7 @@ class HeroClass {
 
  private:
   string id_;
-  int index_;
+  uint32_t index_;
   Attribute stat_grade_;
   Range::Type attack_range_;
   int move_;
