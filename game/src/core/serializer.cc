@@ -39,35 +39,13 @@ flatbuffers::Offset<save::Scenario> Serializer::Build(const Scenario& scenario) 
 }
 
 flatbuffers::Offset<save::ResourceManagers> Serializer::Build(const ResourceManagers& rm) {
-  auto tm = Build(*rm.terrain_manager);
-  auto hcm = Build(*rm.hero_class_manager);
-
-  std::vector<flatbuffers::Offset<save::Magic>> magic_vec;
-  rm.magic_manager->ForEach([&](const string&, const Magic& magic) { magic_vec.push_back(Build(magic)); });
-  auto mm = builder_.CreateVector(magic_vec);
-
-  auto em = Build(*rm.equipment_manager);
-  auto htm = Build(*rm.hero_tpl_manager);
+  auto tm = BuildVec<save::Terrain, Terrain>(*rm.terrain_manager);
+  auto hcm = BuildVec<save::HeroClass, HeroClass>(*rm.hero_class_manager);
+  auto mm = BuildVec<save::Magic, Magic>(*rm.magic_manager);
+  auto em = BuildVec<save::Equipment, Equipment>(*rm.equipment_manager);
+  auto htm = BuildVec<save::HeroTemplate, HeroTemplate>(*rm.hero_tpl_manager);
 
   return save::CreateResourceManagers(builder_, tm, hcm, mm, em, htm);
-}
-
-flatbuffers::Offset<save::HeroClassManager> Serializer::Build(const HeroClassManager& hcm) {
-  std::vector<flatbuffers::Offset<save::HeroClass>> records;
-  hcm.ForEach([&](const string& id, const HeroClass& hero_class) {
-    ASSERT(id == hero_class.id());
-    records.push_back(Build(hero_class));
-  });
-  return save::CreateHeroClassManager(builder_, builder_.CreateVector(records));
-}
-
-flatbuffers::Offset<save::HeroTemplateManager> Serializer::Build(const HeroTemplateManager& htm) {
-  std::vector<flatbuffers::Offset<save::HeroTemplate>> records;
-  htm.ForEach([&](const string& id, const HeroTemplate& hero_tpl) {
-    ASSERT(id == hero_tpl.id());
-    records.push_back(Build(hero_tpl));
-  });
-  return save::CreateHeroTemplateManager(builder_, builder_.CreateVector(records));
 }
 
 flatbuffers::Offset<save::HeroClass> Serializer::Build(const HeroClass& hero_class) {
@@ -88,13 +66,6 @@ flatbuffers::Offset<save::HeroTemplate> Serializer::Build(const HeroTemplate& he
   return save::CreateHeroTemplate(builder_, id_off, hero_class_off, attr_inl);
 }
 
-flatbuffers::Offset<save::TerrainManager> Serializer::Build(const TerrainManager& tm) {
-  std::vector<flatbuffers::Offset<save::TerrainRecord>> terrain_records;
-  tm.ForEach([&](const string& id, const Terrain& terrain) { terrain_records.push_back(Build(id, terrain)); });
-  auto terrain_records_off = builder_.CreateVector(terrain_records);
-  return save::CreateTerrainManager(builder_, terrain_records_off);
-}
-
 flatbuffers::Offset<save::TerrainRecord> Serializer::Build(const string& id, const Terrain& terrain) {
   auto id_off = builder_.CreateString(id);
   auto terrain_off = Build(terrain);
@@ -107,15 +78,6 @@ flatbuffers::Offset<save::Terrain> Serializer::Build(const Terrain& terrain) {
 
 flatbuffers::Offset<save::PromotionInfo> Serializer::Build(const PromotionInfo& promotion_info) {
   return save::CreatePromotionInfoDirect(builder_, promotion_info.id.c_str(), promotion_info.level);
-}
-
-flatbuffers::Offset<save::EquipmentManager> Serializer::Build(const EquipmentManager& em) {
-  std::vector<flatbuffers::Offset<save::Equipment>> records;
-  em.ForEach([&](const string& id, const Equipment& equipment) {
-    ASSERT(id == equipment.GetId());
-    records.push_back(Build(equipment));
-  });
-  return save::CreateEquipmentManager(builder_, builder_.CreateVector(records));
 }
 
 flatbuffers::Offset<save::Equipment> Serializer::Build(const Equipment& equipment) {

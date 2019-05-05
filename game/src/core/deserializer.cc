@@ -20,4 +20,3 @@ unique_ptr<Scenario> Deserializer::Deserialize() {
 
 }  // namespace core
 }  // namespace mengde
-

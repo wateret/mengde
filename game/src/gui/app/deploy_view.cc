@@ -7,8 +7,8 @@
 #include "core/force.h"
 #include "core/hero.h"
 #include "core/i_deploy_helper.h"
-#include "core/unit.h"
 #include "core/serializer.h"
+#include "core/unit.h"
 #include "deploy_director.h"
 #include "equipment_select_view.h"
 #include "equipment_set_view.h"
@@ -97,8 +97,8 @@ HeroModelListView::HeroModelListView(const Rect& frame, const vector<const core:
   }
 }
 
-DeployView::DeployView(const Rect& frame, const core::Scenario* sce, core::Assets* assets, core::IDeployHelper* deploy_helper, GameView* gv,
-                       const Path& base_path)
+DeployView::DeployView(const Rect& frame, const core::Scenario* sce, core::Assets* assets,
+                       core::IDeployHelper* deploy_helper, GameView* gv, const Path& base_path)
     : CompositeView(frame), sce_{sce}, gv_(gv) {
   padding(8);
   bg_color(COLOR("darkgray"));
