@@ -26,12 +26,8 @@ class Serializer {
  private:
   flatbuffers::Offset<save::Scenario> Build(const Scenario& scenario);
   flatbuffers::Offset<save::ResourceManagers> Build(const ResourceManagers& rm);
-  flatbuffers::Offset<save::HeroClassManager> Build(const HeroClassManager& hcm);
-  flatbuffers::Offset<save::HeroTemplateManager> Build(const HeroTemplateManager& htm);
-  flatbuffers::Offset<save::EquipmentManager> Build(const EquipmentManager& em);
   flatbuffers::Offset<save::HeroClass> Build(const HeroClass& hero_class);
   flatbuffers::Offset<save::HeroTemplate> Build(const HeroTemplate& hero_tpl);
-  flatbuffers::Offset<save::TerrainManager> Build(const TerrainManager& tm);
   flatbuffers::Offset<save::TerrainRecord> Build(const string& id, const Terrain& terrain);
   flatbuffers::Offset<save::Terrain> Build(const Terrain& terrain);
   flatbuffers::Offset<save::Equipment> Build(const Equipment& equipment);
@@ -58,6 +54,14 @@ class Serializer {
   const FbsStruct* BuildStruct(const CoreStruct& cs) {
     static_assert(sizeof(FbsStruct) == sizeof(CoreStruct), "struct size mismatches");
     return reinterpret_cast<const FbsStruct*>(&cs);
+  }
+
+  template <typename FbsStruct, typename CoreType>
+  flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<FbsStruct>>> BuildVec(
+      const ResourceManager<CoreType>& manager) {
+    std::vector<flatbuffers::Offset<FbsStruct>> vec;
+    manager.ForEach([&](const string&, const CoreType& obj) { vec.push_back(Build(obj)); });
+    return builder_.CreateVector(vec);
   }
 
  private:

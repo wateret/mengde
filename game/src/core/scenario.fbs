@@ -9,23 +9,11 @@ table Scenario {
 }
 
 table ResourceManagers {
-  terrain_manager: TerrainManager;
-  hero_class_manager: HeroClassManager;
+  terrain_manager: [Terrain];
+  hero_class_manager: [HeroClass];
   magic_manager: [Magic];
-  equipment_manager: EquipmentManager;
-  hero_tpl_manager: HeroTemplateManager;
-}
-
-table TerrainManager {
-  records: [TerrainRecord];
-}
-
-table HeroClassManager {
-  records: [HeroClass];
-}
-
-table HeroTemplateManager {
-  records: [HeroTemplate];
+  equipment_manager: [Equipment];
+  hero_tpl_manager: [HeroTemplate];
 }
 
 table TerrainRecord {
@@ -78,10 +66,6 @@ struct Attribute {
 struct Position {
   x: int;
   y: int;
-}
-
-table EquipmentManager {
-  records: [Equipment];
 }
 
 table Equipment {

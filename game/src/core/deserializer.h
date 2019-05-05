@@ -1,9 +1,9 @@
 #ifndef MENGDE_CORE_DESERIALIZER_H_
 #define MENGDE_CORE_DESERIALIZER_H_
 
-#include "util/path.h"
-#include "util/common.h"
 #include "scenario.h"
+#include "util/common.h"
+#include "util/path.h"
 
 namespace mengde {
 namespace core {
