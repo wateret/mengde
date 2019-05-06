@@ -27,7 +27,29 @@ unique_ptr<Scenario> Deserializer::Deserialize() {
 
 ResourceManagers Deserializer::Build(const save::ResourceManagers& rm) {
   ResourceManagers ret;
+  ret.terrain_manager = Build(*rm.terrain_manager());
   ret.hero_class_manager = Build(*rm.hero_class_manager());
+  return ret;
+}
+
+TerrainManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<save::Terrain>>& tm) {
+  auto ret = new TerrainManager;
+  for (uint32_t i = 0; i < tm.Length(); ++i) {
+    auto t = tm.Get(i);
+    auto id = t->id()->str();
+    vector<int32_t> move_costs;
+    for (auto cost : *t->move_costs()) {
+      move_costs.push_back(cost);
+    }
+    vector<int32_t> effects;
+    for (auto cost : *t->class_effects()) {
+      effects.push_back(cost);
+    }
+
+    auto obj = new Terrain{id, move_costs, effects};
+    obj->SetIndex(i);
+    ret->Add(id, obj);
+  }
   return ret;
 }
 

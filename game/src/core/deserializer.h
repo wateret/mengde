@@ -18,6 +18,7 @@ class Deserializer {
 
  private:
   ResourceManagers Build(const save::ResourceManagers& rm);
+  TerrainManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::Terrain>>& tm);
   HeroClassManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::HeroClass>>& hcm);
 
   template <typename CoreStruct, typename FbsStruct>
