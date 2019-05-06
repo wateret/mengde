@@ -10,6 +10,7 @@ namespace gui {
 namespace app {
 
 class App;
+class SavefileSelectView;
 class ScenarioSelectView;
 
 class MainView : public CompositeView {
@@ -19,6 +20,7 @@ class MainView : public CompositeView {
 
  private:
   ScenarioSelectView* scenario_select_view_;
+  SavefileSelectView* savefile_select_view_;
 };
 
 }  // namespace app

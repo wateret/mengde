@@ -6,6 +6,8 @@
 namespace mengde {
 namespace core {
 
+Deserializer::Deserializer(const Path& path) : path_{path} {}
+
 unique_ptr<Scenario> Deserializer::Deserialize() {
   std::ifstream file(path_.ToString(), std::ios::binary | std::ios::ate);
   std::streamsize size = file.tellg();
