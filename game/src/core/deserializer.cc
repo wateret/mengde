@@ -47,7 +47,6 @@ TerrainManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offse
     }
 
     auto obj = new Terrain{id, move_costs, effects};
-    obj->SetIndex(i);
     ret->Add(id, obj);
   }
   return ret;
