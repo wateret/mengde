@@ -116,13 +116,13 @@ MagicEffect* Deserializer::Build(const save::MagicEffect& me) {
       throw std::runtime_error{"Invalid MagicEffect Type"};
   }
 }
-  
+
 StatModifier Deserializer::Build(const save::AttributeModifier& mod) {
   auto id = mod.id()->str();
   auto stat_idx = mod.stat_idx();
   auto turn = TurnBased{mod.turn()->turns()};
-  auto stat_mod = BuildStruct<StatMod>(*mod.mod());
-  return StatModifier{id, stat_idx, stat_mod, turn};
+  auto change = BuildStruct<AttributeChange>(*mod.change());
+  return StatModifier{id, stat_idx, change, turn};
 }
   
 }  // namespace core

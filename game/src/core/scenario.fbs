@@ -83,14 +83,14 @@ table AttributeModifier {
   id: string;
   stat_idx: ushort;
   turn: TurnBased;
-  mod: StatMod;
+  change: AttributeChange;
 }
 
 struct TurnBased {
   turns: ushort;
 }
 
-struct StatMod {
+struct AttributeChange {
   addend: short;
   multiplier: short;
 }
@@ -120,7 +120,7 @@ table GeneralEventEffect {
 }
 
 table GEERestoreHp {
-  mod: StatMod;
+  change: AttributeChange;
 }
 
 table OnCmdEventEffect {
@@ -132,7 +132,7 @@ table OCEEPreemptiveAttack {
 }
 
 table OCEEEnhanceBasicAttack {
-  mod: StatMod;
+  change: AttributeChange;
 }
 
 table Magic {

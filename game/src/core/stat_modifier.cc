@@ -6,7 +6,7 @@
 namespace mengde {
 namespace core {
 
-StatModifier::StatModifier(const std::string& id, uint16_t stat_id, StatMod mod, TurnBased turn)
+StatModifier::StatModifier(const std::string& id, uint16_t stat_id, AttributeChange mod, TurnBased turn)
     : id_(id), stat_id_(stat_id), turn_(turn), mod_(mod) {}
 
 void StatModifier::NextTurn() { turn_.Next(); }

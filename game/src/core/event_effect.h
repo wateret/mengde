@@ -65,7 +65,7 @@ class GEERestoreHp : public GeneralEventEffect {
  public:
   GEERestoreHp(event::GeneralEvent type, int multiplier, int addend, TurnBased turn = TurnBased{});
   virtual unique_ptr<Cmd> OnEvent(Unit* unit) override;
-  StatMod stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
+  AttributeChange stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
 
  private:
   int multiplier_;
@@ -84,7 +84,7 @@ class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
  public:
   OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multiplier, int addend, TurnBased turn = TurnBased{});
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
-  StatMod stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
+  AttributeChange stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
 
  private:
   int multiplier_;

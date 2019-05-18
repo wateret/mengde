@@ -8,19 +8,19 @@
 namespace mengde {
 namespace core {
 
-struct StatMod {
+struct AttributeChange {
   int16_t addend;
   int16_t multiplier;
 };
 
 class StatModifier {
  public:
-  StatModifier(const std::string& id, uint16_t stat_id, StatMod mod, TurnBased turn = TurnBased{});
+  StatModifier(const std::string& id, uint16_t stat_id, AttributeChange mod, TurnBased turn = TurnBased{});
   std::string id() const { return id_; }
   uint16_t stat_id() const { return stat_id_; }
   int16_t addend() const { return mod_.addend; }
   uint16_t multiplier() const { return mod_.multiplier; }
-  const StatMod& mod() const { return mod_; }
+  const AttributeChange& mod() const { return mod_; }
   const TurnBased& turn() const { return turn_; }
   void NextTurn();
 
@@ -31,7 +31,7 @@ class StatModifier {
   std::string id_;
   uint16_t stat_id_;
   TurnBased turn_;
-  StatMod mod_;
+  AttributeChange mod_;
 };
 
 }  // namespace core
