@@ -1,6 +1,7 @@
 #include "config_loader.h"
 
 #include "attack_range.h"
+#include "attribute_modifier.h"
 #include "equipment.h"
 #include "event_effect.h"
 #include "exceptions.h"
@@ -8,7 +9,6 @@
 #include "hero_class.h"
 #include "magic.h"
 #include "stat.h"
-#include "stat_modifier.h"
 #include "terrain.h"
 #include "util/common.h"
 #include "util/path.h"
@@ -247,7 +247,7 @@ void ConfigLoader::ParseMagics() {
           auto turns = TurnBased{static_cast<uint16_t>(effect["turns"])};
           auto stat_id = StatStrToIdx(stat_s);
           AttributeChange stat_mod{0, amount};
-          magic->AddEffect(std::make_unique<MagicEffectStat>(StatModifier{id, stat_id, stat_mod, turns}));
+          magic->AddEffect(std::make_unique<MagicEffectStat>(AttributeModifier{id, stat_id, stat_mod, turns}));
           break;
         }
         case MagicEffectType::kCondition: {
@@ -318,7 +318,7 @@ void ConfigLoader::ParseEquipments() {
         string stat_s = modifier_tbl["attr"];
         int16_t addend = modifier_tbl.get_or("addend", 0);
         int16_t multiplier = modifier_tbl.get_or("multiplier", 0);
-        StatModifier* mod = new StatModifier{id, StatStrToIdx(stat_s), {addend, multiplier}};
+        AttributeModifier* mod = new AttributeModifier{id, StatStrToIdx(stat_s), {addend, multiplier}};
         equipment->AddModifier(mod);
       }
     }

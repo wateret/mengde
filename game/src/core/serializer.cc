@@ -89,7 +89,7 @@ flatbuffers::Offset<save::Equipment> Serializer::Build(const Equipment& equipmen
 
 flatbuffers::Offset<save::VolatileAttributes> Serializer::Build(const VolatileAttribute& va) {
   std::vector<flatbuffers::Offset<save::AttributeModifier>> am_vec;
-  va.stat_modifier_list().iterate([&](const StatModifier& am) { am_vec.push_back(Build(am)); });
+  va.attribute_modifier_list().iterate([&](const AttributeModifier& am) { am_vec.push_back(Build(am)); });
   auto aml = builder_.CreateVector(am_vec);
 
   std::vector<flatbuffers::Offset<save::EventEffect>> ee_vec;
@@ -99,10 +99,10 @@ flatbuffers::Offset<save::VolatileAttributes> Serializer::Build(const VolatileAt
   return save::CreateVolatileAttributes(builder_, aml, eel);
 }
 
-flatbuffers::Offset<save::AttributeModifier> Serializer::Build(const StatModifier& am) {
+flatbuffers::Offset<save::AttributeModifier> Serializer::Build(const AttributeModifier& am) {
   return save::CreateAttributeModifierDirect(builder_, am.id().c_str(), am.stat_id(),
                                              BuildStruct<save::TurnBased>(am.turn()),
-                                             BuildStruct<save::AttributeChange>(am.mod()));
+                                             BuildStruct<save::AttributeChange>(am.change()));
 }
 
 flatbuffers::Offset<save::EventEffect> Serializer::Build(const EventEffectBase& event_effect) {

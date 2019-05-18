@@ -1,23 +1,23 @@
-#include "stat_modifier_list.h"
+#include "attribute_modifier_list.h"
 
-#include "stat_modifier.h"
+#include "attribute_modifier.h"
 #include "util/common.h"
 #include "util/std/util.h"
 
 namespace mengde {
 namespace core {
 
-StatModifierList::StatModifierList() {}
+AttributeModifierList::AttributeModifierList() {}
 
-StatModifierList::~StatModifierList() {
+AttributeModifierList::~AttributeModifierList() {
   for (auto e : elements_) {
     delete e;
   }
 }
 
-void StatModifierList::AddModifier(StatModifier* m) {
+void AttributeModifierList::AddModifier(AttributeModifier* m) {
   for (int i = 0, sz = elements_.size(); i < sz; i++) {
-    StatModifier* e = elements_[i];
+    AttributeModifier* e = elements_[i];
     if (e->id() == m->id() && e->stat_id() == m->stat_id()) {
       // If both two have the same sign it will be replaced
       // or it will be erased (cancelling out)
@@ -34,8 +34,8 @@ void StatModifierList::AddModifier(StatModifier* m) {
   elements_.push_back(m);
 }
 
-void StatModifierList::NextTurn() {
-  util::std::VectorEraseIf(elements_, [](StatModifier* m) -> bool {
+void AttributeModifierList::NextTurn() {
+  util::std::VectorEraseIf(elements_, [](AttributeModifier* m) -> bool {
     bool remove = (m->turn().left() == 0);
     if (remove) delete m;
     return remove;
@@ -46,7 +46,7 @@ void StatModifierList::NextTurn() {
   }
 }
 
-Attribute StatModifierList::CalcAddends() const {
+Attribute AttributeModifierList::CalcAddends() const {
   Attribute calc_mods;
   for (auto e : elements_) {
     calc_mods[e->stat_id()] += e->addend();
@@ -54,7 +54,7 @@ Attribute StatModifierList::CalcAddends() const {
   return calc_mods;
 }
 
-Attribute StatModifierList::CalcMultipliers() const {
+Attribute AttributeModifierList::CalcMultipliers() const {
   Attribute calc_mods;
   for (auto e : elements_) {
     calc_mods[e->stat_id()] += e->multiplier();
@@ -62,7 +62,7 @@ Attribute StatModifierList::CalcMultipliers() const {
   return calc_mods;
 }
 
-void StatModifierList::iterate(const std::function<void(const StatModifier&)>& fn) const {
+void AttributeModifierList::iterate(const std::function<void(const AttributeModifier&)>& fn) const {
   for (auto e : elements_) {
     fn(*e);
   }

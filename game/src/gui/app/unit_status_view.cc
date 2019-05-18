@@ -1,7 +1,7 @@
 #include "unit_status_view.h"
 
+#include "core/attribute_modifier.h"
 #include "core/event_effect.h"
-#include "core/stat_modifier.h"
 #include "core/unit.h"
 #include "gui/uifw/text_view.h"
 
@@ -32,7 +32,7 @@ void UnitStatusView::OnUnitUpdate() {
   AddCol("+");
   AddCol("%");
   {
-    auto sm_handler = [&](const core::StatModifier& mod) {
+    auto sm_handler = [&](const core::AttributeModifier& mod) {
       auto id = string(core::Attribute::kToString[mod.stat_id()]);
       auto turns_left = std::to_string(mod.turn().left());
       auto addend = std::to_string(mod.addend());
@@ -42,10 +42,10 @@ void UnitStatusView::OnUnitUpdate() {
               new TextView{element_rect, addend}, new TextView{element_rect, mul}});
     };
 
-    unit_->volatile_attribute().stat_modifier_list().iterate(sm_handler);
-    if (weapon) weapon->volatile_attribute().stat_modifier_list().iterate(sm_handler);
-    if (armor) armor->volatile_attribute().stat_modifier_list().iterate(sm_handler);
-    if (aid) aid->volatile_attribute().stat_modifier_list().iterate(sm_handler);
+    unit_->volatile_attribute().attribute_modifier_list().iterate(sm_handler);
+    if (weapon) weapon->volatile_attribute().attribute_modifier_list().iterate(sm_handler);
+    if (armor) armor->volatile_attribute().attribute_modifier_list().iterate(sm_handler);
+    if (aid) aid->volatile_attribute().attribute_modifier_list().iterate(sm_handler);
   }
 
   {

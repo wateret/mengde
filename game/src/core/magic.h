@@ -5,8 +5,8 @@
 #include <unordered_map>
 
 #include "attack_range.h"
+#include "attribute_modifier.h"
 #include "condition.h"
-#include "stat_modifier.h"
 #include "turn_based.h"
 
 namespace mengde {
@@ -66,14 +66,14 @@ class MagicEffectHP : public MagicEffect {
 
 class MagicEffectStat : public MagicEffect {
  public:
-  MagicEffectStat(const StatModifier& attribute_modifier);
-  const StatModifier& attribute_modifier() const { return attribute_modifier_; }
+  MagicEffectStat(const AttributeModifier& attribute_modifier);
+  const AttributeModifier& attribute_modifier() const { return attribute_modifier_; }
 
  public:
   virtual void Perform(Unit* atk, Unit* def) override;
 
  private:
-  StatModifier attribute_modifier_;
+  AttributeModifier attribute_modifier_;
 };
 
 class MagicEffectCondition : public MagicEffect {

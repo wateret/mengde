@@ -11,7 +11,7 @@ namespace mengde {
 namespace core {
 
 class EventEffect;
-class StatModifier;
+class AttributeModifier;
 
 class Equipment : public IEvent {
  public:
@@ -25,7 +25,7 @@ class Equipment : public IEvent {
   Equipment(const std::string&, Type);
   string GetId() const { return id_; }
   Type GetType() const { return type_; }
-  void AddModifier(StatModifier*);
+  void AddModifier(AttributeModifier*);
   void AddEffect(EventEffect*);
   void AddGeneralEffect(GeneralEventEffect*);
   void AddOnCmdEffect(OnCmdEventEffect*);

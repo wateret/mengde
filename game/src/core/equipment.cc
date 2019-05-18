@@ -7,8 +7,8 @@ namespace core {
 
 Equipment::Equipment(const std::string& id, Type type) : id_(id), type_(type) {}
 
-void Equipment::AddModifier(StatModifier* sm) {
-  auto& modifier_list = volatile_attribute_.stat_modifier_list();
+void Equipment::AddModifier(AttributeModifier* sm) {
+  auto& modifier_list = volatile_attribute_.attribute_modifier_list();
   modifier_list.AddModifier(sm);
 }
 
@@ -23,12 +23,12 @@ void Equipment::AddOnCmdEffect(OnCmdEventEffect* ocee) {
 }
 
 Attribute Equipment::CalcAddends() const {
-  const auto& modifier_list = volatile_attribute_.stat_modifier_list();
+  const auto& modifier_list = volatile_attribute_.attribute_modifier_list();
   return modifier_list.CalcAddends();
 }
 
 Attribute Equipment::CalcMultipliers() const {
-  const auto& modifier_list = volatile_attribute_.stat_modifier_list();
+  const auto& modifier_list = volatile_attribute_.attribute_modifier_list();
   return modifier_list.CalcMultipliers();
 }
 

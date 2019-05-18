@@ -1,5 +1,5 @@
-#ifndef MENGDE_CORE_STAT_MODIFIER_H_
-#define MENGDE_CORE_STAT_MODIFIER_H_
+#ifndef MENGDE_CORE_ATTRIBUTE_MODIFIER_H_
+#define MENGDE_CORE_ATTRIBUTE_MODIFIER_H_
 
 #include <string>
 #include "turn_based.h"
@@ -13,14 +13,14 @@ struct AttributeChange {
   int16_t multiplier;
 };
 
-class StatModifier {
+class AttributeModifier {
  public:
-  StatModifier(const std::string& id, uint16_t stat_id, AttributeChange mod, TurnBased turn = TurnBased{});
+  AttributeModifier(const std::string& id, uint16_t stat_id, AttributeChange mod, TurnBased turn = TurnBased{});
   std::string id() const { return id_; }
   uint16_t stat_id() const { return stat_id_; }
-  int16_t addend() const { return mod_.addend; }
-  uint16_t multiplier() const { return mod_.multiplier; }
-  const AttributeChange& mod() const { return mod_; }
+  int16_t addend() const { return change_.addend; }
+  uint16_t multiplier() const { return change_.multiplier; }
+  const AttributeChange& change() const { return change_; }
   const TurnBased& turn() const { return turn_; }
   void NextTurn();
 
@@ -31,10 +31,10 @@ class StatModifier {
   std::string id_;
   uint16_t stat_id_;
   TurnBased turn_;
-  AttributeChange mod_;
+  AttributeChange change_;
 };
 
 }  // namespace core
 }  // namespace mengde
 
-#endif  // MENGDE_CORE_STAT_MODIFIER_H_
+#endif  // MENGDE_CORE_ATTRIBUTE_MODIFIER_H_
