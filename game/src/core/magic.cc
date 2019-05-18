@@ -1,8 +1,8 @@
 #include "magic.h"
 
+#include "attribute_modifier.h"
+#include "attribute_modifier_list.h"
 #include "formulae.h"
-#include "stat_modifier.h"
-#include "stat_modifier_list.h"
 #include "unit.h"
 
 namespace mengde {
@@ -40,12 +40,12 @@ void MagicEffectHP::Perform(Unit* atk, Unit* def) {
 //
 // MagicEffectStat
 //
-MagicEffectStat::MagicEffectStat(const StatModifier& attribute_modifier)
+MagicEffectStat::MagicEffectStat(const AttributeModifier& attribute_modifier)
     : MagicEffect{MagicEffectType::kStat}, attribute_modifier_{attribute_modifier} {}
 
 void MagicEffectStat::Perform(Unit* atk, Unit* def) {
   UNUSED(atk);
-  def->AddStatModifier(new StatModifier(attribute_modifier_));
+  def->AddAttributeModifier(new AttributeModifier(attribute_modifier_));
   LOG_INFO("Magic changes stat id %u by {%d+, %d%}", attribute_modifier_.stat_id(), attribute_modifier_.addend(),
            attribute_modifier_.multiplier());
 }

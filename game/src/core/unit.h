@@ -64,7 +64,7 @@ class Unit : public IUnitBase, public IEvent, public IEquipper {
   ConditionSet& condition_set() { return condition_set_; }
 
  public:
-  void AddStatModifier(StatModifier*);
+  void AddAttributeModifier(AttributeModifier*);
   void AddEventEffect(EventEffect*);
   bool IsHPLow() const;
   bool IsDead() const;

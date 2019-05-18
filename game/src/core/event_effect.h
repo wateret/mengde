@@ -1,8 +1,8 @@
 #ifndef MENGDE_CORE_EVENT_EFFECT_H_
 #define MENGDE_CORE_EVENT_EFFECT_H_
 
+#include "attribute_modifier.h"
 #include "event_types.h"
-#include "stat_modifier.h"
 #include "turn_based.h"
 #include "util/common.h"
 

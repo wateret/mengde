@@ -59,7 +59,7 @@ void Unit::UpdateStat() {
   // TODO update HpMp
   current_attr_ = hero_->GetUnitPureStat();
   {
-    const auto& modifier_list = volatile_attribute_.stat_modifier_list();
+    const auto& modifier_list = volatile_attribute_.attribute_modifier_list();
     Attribute addends = modifier_list.CalcAddends() + equipment_set_->CalcAddends();
     Attribute multipliers = modifier_list.CalcMultipliers() + equipment_set_->CalcMultipliers();
 
@@ -72,8 +72,8 @@ void Unit::NextTurn() {
   condition_set_.NextTurn();
 }
 
-void Unit::AddStatModifier(StatModifier* sm) {
-  volatile_attribute_.stat_modifier_list().AddModifier(sm);
+void Unit::AddAttributeModifier(AttributeModifier* sm) {
+  volatile_attribute_.attribute_modifier_list().AddModifier(sm);
   UpdateStat();
 }
 

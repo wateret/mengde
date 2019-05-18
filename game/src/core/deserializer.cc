@@ -89,13 +89,12 @@ MagicManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<
       obj->AddEffect(std::unique_ptr<MagicEffect>(Build(*effect)));
     }
     ret->Add(id, obj);
-
   }
   return ret;
 }
 
 MagicEffect* Deserializer::Build(const save::MagicEffect& me) {
-//  auto turn = me.type();
+  //  auto turn = me.type();
   switch (me.instance_type()) {
     case save::MagicEffectImpl::MagicEffectHp: {
       auto inst = me.instance_as_MagicEffectHp();
@@ -117,13 +116,13 @@ MagicEffect* Deserializer::Build(const save::MagicEffect& me) {
   }
 }
 
-StatModifier Deserializer::Build(const save::AttributeModifier& mod) {
+AttributeModifier Deserializer::Build(const save::AttributeModifier& mod) {
   auto id = mod.id()->str();
   auto stat_idx = mod.stat_idx();
   auto turn = TurnBased{mod.turn()->turns()};
   auto change = BuildStruct<AttributeChange>(*mod.change());
-  return StatModifier{id, stat_idx, change, turn};
+  return AttributeModifier{id, stat_idx, change, turn};
 }
-  
+
 }  // namespace core
 }  // namespace mengde

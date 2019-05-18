@@ -4,7 +4,7 @@ namespace mengde {
 namespace core {
 
 void VolatileAttribute::NextTurn() {
-  stat_modifier_list_.NextTurn();
+  attribute_modifier_list_.NextTurn();
   event_effect_list_.NextTurn();
 }
 
