@@ -81,7 +81,7 @@ table VolatileAttributes {
 
 table AttributeModifier {
   id: string;
-  stat_idx: short;
+  stat_idx: ushort;
   turn: TurnBased;
   mod: StatMod;
 }

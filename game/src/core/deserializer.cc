@@ -72,5 +72,58 @@ HeroClassManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Off
   return ret;
 }
 
+MagicManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<save::Magic>>& mm) {
+  auto ret = new MagicManager;
+  for (auto magic : mm) {
+    auto id = magic->id()->str();
+    auto range = magic->range();
+    auto learn_info_list = magic->learn_info_list();
+    auto target_enemy = magic->target_enemy();
+    auto mp_cost = magic->mp_cost();
+    auto effects = magic->effects();
+    auto obj = new Magic{id, static_cast<Range::Type>(range), target_enemy, mp_cost};
+    for (auto li : *learn_info_list) {
+      obj->AddLearnInfo(li->id(), li->lv());
+    }
+    for (auto effect : *effects) {
+      obj->AddEffect(std::unique_ptr<MagicEffect>(Build(*effect)));
+    }
+    ret->Add(id, obj);
+
+  }
+  return ret;
+}
+
+MagicEffect* Deserializer::Build(const save::MagicEffect& me) {
+//  auto turn = me.type();
+  switch (me.instance_type()) {
+    case save::MagicEffectImpl::MagicEffectHp: {
+      auto inst = me.instance_as_MagicEffectHp();
+      return new MagicEffectHP{inst->power()};
+    }
+    case save::MagicEffectImpl::MagicEffectAttribute: {
+      auto inst = me.instance_as_MagicEffectAttribute();
+      auto attr_mod = Build(*inst->attribute_modifier());
+      return new MagicEffectStat{attr_mod};
+    }
+    case save::MagicEffectImpl::MagicEffectCondition: {
+      auto inst = me.instance_as_MagicEffectCondition();
+      auto cond = static_cast<Condition>(inst->condition());
+      auto turn = TurnBased{inst->turn()->turns()};
+      return new MagicEffectCondition{cond, turn};
+    }
+    default:
+      throw std::runtime_error{"Invalid MagicEffect Type"};
+  }
+}
+  
+StatModifier Deserializer::Build(const save::AttributeModifier& mod) {
+  auto id = mod.id()->str();
+  auto stat_idx = mod.stat_idx();
+  auto turn = TurnBased{mod.turn()->turns()};
+  auto stat_mod = BuildStruct<StatMod>(*mod.mod());
+  return StatModifier{id, stat_idx, stat_mod, turn};
+}
+  
 }  // namespace core
 }  // namespace mengde

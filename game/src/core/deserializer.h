@@ -20,6 +20,9 @@ class Deserializer {
   ResourceManagers Build(const save::ResourceManagers& rm);
   TerrainManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::Terrain>>& tm);
   HeroClassManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::HeroClass>>& hcm);
+  MagicManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::Magic>>& mm);
+  MagicEffect* Build(const save::MagicEffect& me);
+  StatModifier Build(const save::AttributeModifier& mod);
 
   template <typename CoreStruct, typename FbsStruct>
   CoreStruct BuildStruct(const FbsStruct& fs) {

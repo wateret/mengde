@@ -1174,8 +1174,8 @@ struct AttributeModifier FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const flatbuffers::String *id() const {
     return GetPointer<const flatbuffers::String *>(VT_ID);
   }
-  int16_t stat_idx() const {
-    return GetField<int16_t>(VT_STAT_IDX, 0);
+  uint16_t stat_idx() const {
+    return GetField<uint16_t>(VT_STAT_IDX, 0);
   }
   const TurnBased *turn() const {
     return GetStruct<const TurnBased *>(VT_TURN);
@@ -1187,7 +1187,7 @@ struct AttributeModifier FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(id()) &&
-           VerifyField<int16_t>(verifier, VT_STAT_IDX) &&
+           VerifyField<uint16_t>(verifier, VT_STAT_IDX) &&
            VerifyField<TurnBased>(verifier, VT_TURN) &&
            VerifyField<StatMod>(verifier, VT_MOD) &&
            verifier.EndTable();
@@ -1200,8 +1200,8 @@ struct AttributeModifierBuilder {
   void add_id(flatbuffers::Offset<flatbuffers::String> id) {
     fbb_.AddOffset(AttributeModifier::VT_ID, id);
   }
-  void add_stat_idx(int16_t stat_idx) {
-    fbb_.AddElement<int16_t>(AttributeModifier::VT_STAT_IDX, stat_idx, 0);
+  void add_stat_idx(uint16_t stat_idx) {
+    fbb_.AddElement<uint16_t>(AttributeModifier::VT_STAT_IDX, stat_idx, 0);
   }
   void add_turn(const TurnBased *turn) {
     fbb_.AddStruct(AttributeModifier::VT_TURN, turn);
@@ -1224,7 +1224,7 @@ struct AttributeModifierBuilder {
 inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifier(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<flatbuffers::String> id = 0,
-    int16_t stat_idx = 0,
+    uint16_t stat_idx = 0,
     const TurnBased *turn = 0,
     const StatMod *mod = 0) {
   AttributeModifierBuilder builder_(_fbb);
@@ -1238,7 +1238,7 @@ inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifier(
 inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifierDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     const char *id = nullptr,
-    int16_t stat_idx = 0,
+    uint16_t stat_idx = 0,
     const TurnBased *turn = 0,
     const StatMod *mod = 0) {
   return mengde::save::CreateAttributeModifier(
