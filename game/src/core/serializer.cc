@@ -102,7 +102,7 @@ flatbuffers::Offset<save::VolatileAttributes> Serializer::Build(const VolatileAt
 flatbuffers::Offset<save::AttributeModifier> Serializer::Build(const StatModifier& am) {
   return save::CreateAttributeModifierDirect(builder_, am.id().c_str(), am.stat_id(),
                                              BuildStruct<save::TurnBased>(am.turn()),
-                                             BuildStruct<save::StatMod>(am.mod()));
+                                             BuildStruct<save::AttributeChange>(am.mod()));
 }
 
 flatbuffers::Offset<save::EventEffect> Serializer::Build(const EventEffectBase& event_effect) {
@@ -138,7 +138,7 @@ flatbuffers::Offset<save::GeneralEventEffect> Serializer::Build(const GeneralEve
 
 flatbuffers::Offset<save::GEERestoreHp> Serializer::Build(const GEERestoreHp& gee_restore_hp) {
   auto sm = gee_restore_hp.stat_mod();
-  return save::CreateGEERestoreHp(builder_, BuildStruct<save::StatMod>(sm));
+  return save::CreateGEERestoreHp(builder_, BuildStruct<save::AttributeChange>(sm));
 }
 
 flatbuffers::Offset<save::OnCmdEventEffect> Serializer::Build(const OnCmdEventEffect& ocee) {
@@ -164,7 +164,7 @@ flatbuffers::Offset<save::OCEEPreemptiveAttack> Serializer::Build(const OCEEPree
 
 flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Serializer::Build(const OCEEEnhanceBasicAttack& obj) {
   auto sm = obj.stat_mod();
-  return save::CreateOCEEEnhanceBasicAttack(builder_, BuildStruct<save::StatMod>(sm));
+  return save::CreateOCEEEnhanceBasicAttack(builder_, BuildStruct<save::AttributeChange>(sm));
 }
 
 flatbuffers::Offset<save::Magic> Serializer::Build(const Magic& magic) {

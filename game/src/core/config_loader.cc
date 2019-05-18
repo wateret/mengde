@@ -246,7 +246,7 @@ void ConfigLoader::ParseMagics() {
           int16_t amount = effect["amount"];
           auto turns = TurnBased{static_cast<uint16_t>(effect["turns"])};
           auto stat_id = StatStrToIdx(stat_s);
-          StatMod stat_mod{0, amount};
+          AttributeChange stat_mod{0, amount};
           magic->AddEffect(std::make_unique<MagicEffectStat>(StatModifier{id, stat_id, stat_mod, turns}));
           break;
         }

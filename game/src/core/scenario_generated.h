@@ -37,7 +37,7 @@ struct AttributeModifier;
 
 struct TurnBased;
 
-struct StatMod;
+struct AttributeChange;
 
 struct EventEffect;
 
@@ -359,16 +359,16 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) TurnBased FLATBUFFERS_FINAL_CLASS {
 };
 FLATBUFFERS_STRUCT_END(TurnBased, 2);
 
-FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) StatMod FLATBUFFERS_FINAL_CLASS {
+FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) AttributeChange FLATBUFFERS_FINAL_CLASS {
  private:
   int16_t addend_;
   int16_t multiplier_;
 
  public:
-  StatMod() {
-    memset(this, 0, sizeof(StatMod));
+  AttributeChange() {
+    memset(this, 0, sizeof(AttributeChange));
   }
-  StatMod(int16_t _addend, int16_t _multiplier)
+  AttributeChange(int16_t _addend, int16_t _multiplier)
       : addend_(flatbuffers::EndianScalar(_addend)),
         multiplier_(flatbuffers::EndianScalar(_multiplier)) {
   }
@@ -379,7 +379,7 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) StatMod FLATBUFFERS_FINAL_CLASS {
     return flatbuffers::EndianScalar(multiplier_);
   }
 };
-FLATBUFFERS_STRUCT_END(StatMod, 4);
+FLATBUFFERS_STRUCT_END(AttributeChange, 4);
 
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(2) LearnInfo FLATBUFFERS_FINAL_CLASS {
  private:
@@ -1169,7 +1169,7 @@ struct AttributeModifier FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_ID = 4,
     VT_STAT_IDX = 6,
     VT_TURN = 8,
-    VT_MOD = 10
+    VT_CHANGE = 10
   };
   const flatbuffers::String *id() const {
     return GetPointer<const flatbuffers::String *>(VT_ID);
@@ -1180,8 +1180,8 @@ struct AttributeModifier FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const TurnBased *turn() const {
     return GetStruct<const TurnBased *>(VT_TURN);
   }
-  const StatMod *mod() const {
-    return GetStruct<const StatMod *>(VT_MOD);
+  const AttributeChange *change() const {
+    return GetStruct<const AttributeChange *>(VT_CHANGE);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1189,7 +1189,7 @@ struct AttributeModifier FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.VerifyString(id()) &&
            VerifyField<uint16_t>(verifier, VT_STAT_IDX) &&
            VerifyField<TurnBased>(verifier, VT_TURN) &&
-           VerifyField<StatMod>(verifier, VT_MOD) &&
+           VerifyField<AttributeChange>(verifier, VT_CHANGE) &&
            verifier.EndTable();
   }
 };
@@ -1206,8 +1206,8 @@ struct AttributeModifierBuilder {
   void add_turn(const TurnBased *turn) {
     fbb_.AddStruct(AttributeModifier::VT_TURN, turn);
   }
-  void add_mod(const StatMod *mod) {
-    fbb_.AddStruct(AttributeModifier::VT_MOD, mod);
+  void add_change(const AttributeChange *change) {
+    fbb_.AddStruct(AttributeModifier::VT_CHANGE, change);
   }
   explicit AttributeModifierBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1226,9 +1226,9 @@ inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifier(
     flatbuffers::Offset<flatbuffers::String> id = 0,
     uint16_t stat_idx = 0,
     const TurnBased *turn = 0,
-    const StatMod *mod = 0) {
+    const AttributeChange *change = 0) {
   AttributeModifierBuilder builder_(_fbb);
-  builder_.add_mod(mod);
+  builder_.add_change(change);
   builder_.add_turn(turn);
   builder_.add_id(id);
   builder_.add_stat_idx(stat_idx);
@@ -1240,13 +1240,13 @@ inline flatbuffers::Offset<AttributeModifier> CreateAttributeModifierDirect(
     const char *id = nullptr,
     uint16_t stat_idx = 0,
     const TurnBased *turn = 0,
-    const StatMod *mod = 0) {
+    const AttributeChange *change = 0) {
   return mengde::save::CreateAttributeModifier(
       _fbb,
       id ? _fbb.CreateString(id) : 0,
       stat_idx,
       turn,
-      mod);
+      change);
 }
 
 struct EventEffect FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -1396,14 +1396,14 @@ inline flatbuffers::Offset<GeneralEventEffect> CreateGeneralEventEffect(
 
 struct GEERestoreHp FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_MOD = 4
+    VT_CHANGE = 4
   };
-  const StatMod *mod() const {
-    return GetStruct<const StatMod *>(VT_MOD);
+  const AttributeChange *change() const {
+    return GetStruct<const AttributeChange *>(VT_CHANGE);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<StatMod>(verifier, VT_MOD) &&
+           VerifyField<AttributeChange>(verifier, VT_CHANGE) &&
            verifier.EndTable();
   }
 };
@@ -1411,8 +1411,8 @@ struct GEERestoreHp FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct GEERestoreHpBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_mod(const StatMod *mod) {
-    fbb_.AddStruct(GEERestoreHp::VT_MOD, mod);
+  void add_change(const AttributeChange *change) {
+    fbb_.AddStruct(GEERestoreHp::VT_CHANGE, change);
   }
   explicit GEERestoreHpBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1428,9 +1428,9 @@ struct GEERestoreHpBuilder {
 
 inline flatbuffers::Offset<GEERestoreHp> CreateGEERestoreHp(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const StatMod *mod = 0) {
+    const AttributeChange *change = 0) {
   GEERestoreHpBuilder builder_(_fbb);
-  builder_.add_mod(mod);
+  builder_.add_change(change);
   return builder_.Finish();
 }
 
@@ -1540,14 +1540,14 @@ inline flatbuffers::Offset<OCEEPreemptiveAttack> CreateOCEEPreemptiveAttack(
 
 struct OCEEEnhanceBasicAttack FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_MOD = 4
+    VT_CHANGE = 4
   };
-  const StatMod *mod() const {
-    return GetStruct<const StatMod *>(VT_MOD);
+  const AttributeChange *change() const {
+    return GetStruct<const AttributeChange *>(VT_CHANGE);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<StatMod>(verifier, VT_MOD) &&
+           VerifyField<AttributeChange>(verifier, VT_CHANGE) &&
            verifier.EndTable();
   }
 };
@@ -1555,8 +1555,8 @@ struct OCEEEnhanceBasicAttack FLATBUFFERS_FINAL_CLASS : private flatbuffers::Tab
 struct OCEEEnhanceBasicAttackBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_mod(const StatMod *mod) {
-    fbb_.AddStruct(OCEEEnhanceBasicAttack::VT_MOD, mod);
+  void add_change(const AttributeChange *change) {
+    fbb_.AddStruct(OCEEEnhanceBasicAttack::VT_CHANGE, change);
   }
   explicit OCEEEnhanceBasicAttackBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1572,9 +1572,9 @@ struct OCEEEnhanceBasicAttackBuilder {
 
 inline flatbuffers::Offset<OCEEEnhanceBasicAttack> CreateOCEEEnhanceBasicAttack(
     flatbuffers::FlatBufferBuilder &_fbb,
-    const StatMod *mod = 0) {
+    const AttributeChange *change = 0) {
   OCEEEnhanceBasicAttackBuilder builder_(_fbb);
-  builder_.add_mod(mod);
+  builder_.add_change(change);
   return builder_.Finish();
 }
 
