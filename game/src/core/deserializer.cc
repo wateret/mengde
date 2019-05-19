@@ -29,6 +29,7 @@ ResourceManagers Deserializer::Build(const save::ResourceManagers& rm) {
   ResourceManagers ret;
   ret.terrain_manager = Build(*rm.terrain_manager());
   ret.hero_class_manager = Build(*rm.hero_class_manager());
+  ret.magic_manager = Build(*rm.magic_manager());
   return ret;
 }
 
