@@ -31,6 +31,7 @@ ScenarioSelectView::ScenarioSelectView(const Rect& frame, App* app) : VerticalLi
         ButtonView* btn_element = new ButtonView(Rect({0, 0}, btn_size), scenario_id);
         btn_element->SetMouseButtonHandler([=](const MouseButtonEvent& e) {
           if (e.IsLeftButtonDown()) {
+            visible(false);
             app->StartNewScenario(scenario_id);
             return true;
           }
