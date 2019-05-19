@@ -21,6 +21,8 @@ class Deserializer {
   TerrainManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::Terrain>>& tm);
   HeroClassManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::HeroClass>>& hcm);
   MagicManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::Magic>>& mm);
+  HeroTemplateManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::HeroTemplate>>& htm,
+                             const HeroClassManager& hcm);
   MagicEffect* Build(const save::MagicEffect& me);
   AttributeModifier Build(const save::AttributeModifier& mod);
 

@@ -30,6 +30,7 @@ ResourceManagers Deserializer::Build(const save::ResourceManagers& rm) {
   ret.terrain_manager = Build(*rm.terrain_manager());
   ret.hero_class_manager = Build(*rm.hero_class_manager());
   ret.magic_manager = Build(*rm.magic_manager());
+  ret.hero_tpl_manager = Build(*rm.hero_tpl_manager(), *ret.hero_class_manager);
   return ret;
 }
 
@@ -89,6 +90,19 @@ MagicManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<
     for (auto effect : *effects) {
       obj->AddEffect(std::unique_ptr<MagicEffect>(Build(*effect)));
     }
+    ret->Add(id, obj);
+  }
+  return ret;
+}
+
+HeroTemplateManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<save::HeroTemplate>>& htm,
+                                         const HeroClassManager& hcm) {
+  auto ret = new HeroTemplateManager;
+  for (auto ht : htm) {
+    auto id = ht->id()->str();
+    auto hero_class_id = ht->hero_class()->str();
+    auto attr = BuildStruct<Attribute>(*ht->attr());
+    auto obj = new HeroTemplate{id, hcm.Get(hero_class_id), attr};
     ret->Add(id, obj);
   }
   return ret;
