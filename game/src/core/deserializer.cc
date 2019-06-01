@@ -1,5 +1,7 @@
 #include "deserializer.h"
+
 #include "scenario_generated.h"
+#include "util/common.h"
 
 #include <fstream>
 
@@ -102,16 +104,16 @@ EquipmentManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Off
     auto id = eq->id()->str();
     auto type = static_cast<Equipment::Type>(eq->type());
     auto va = Build(*eq->volatile_attributes());
-    auto obj = new Equipment{id, type, };
+    auto obj = new Equipment{id, type, unique_ptr<VolatileAttribute>{va}};
     ret->Add(id, obj);
   }
   return ret;
 }
 
-VolatileAttribute Deserializer::Build(const save::VolatileAttributes& va) {
+VolatileAttribute* Deserializer::Build(const save::VolatileAttributes& va) {
   AttributeModifierList aml;
   for (auto e : *va.attribute_modifier_list()) {
-    aml.AddModifier(new AttributeModifier{Build(*e)}); // NOTE this does redundant copy
+    aml.AddModifier(new AttributeModifier{Build(*e)});  // NOTE this does redundant copy
   }
 
   EventEffectList eel;
@@ -119,7 +121,7 @@ VolatileAttribute Deserializer::Build(const save::VolatileAttributes& va) {
     eel.Add(Build(*e));
   }
 
-  return VolatileAttribute{aml, eel};
+  return new VolatileAttribute{aml, eel};
 }
 
 EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
@@ -136,6 +138,7 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
       case save::GeneralEventEffectImpl::GEERestoreHp: {
         auto ree = gee->instance_as_GEERestoreHp();
         ret = new GEERestoreHp{event, BuildStruct<AttributeChange>(*ree->change())};
+        break;
       }
       default:
         throw std::runtime_error{"Invalid value GeneralEventEffectImpl"};
@@ -148,13 +151,16 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
     switch (ocee->instance_type()) {
       case save::OnCmdEventEffectImpl::NONE: {
         throw std::runtime_error{"Invalid value for OnCmdEventEffectImpl"};
+        break;
       }
       case save::OnCmdEventEffectImpl::OCEEPreemptiveAttack: {
         ret = new OCEEPreemptiveAttack{event};
+        break;
       }
       case save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack: {
         auto inst = ocee->instance_as_OCEEEnhanceBasicAttack();
         ret = new OCEEEnhanceBasicAttack{event, BuildStruct<AttributeChange>(*inst->change())};
+        break;
       }
       default:
         throw std::runtime_error{"Invalid value for OnCmdEventEffectImpl"};

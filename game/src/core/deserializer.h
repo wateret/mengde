@@ -25,7 +25,7 @@ class Deserializer {
   HeroTemplateManager* Build(const flatbuffers::Vector<flatbuffers::Offset<save::HeroTemplate>>& htm,
                              const HeroClassManager& hcm);
   MagicEffect* Build(const save::MagicEffect& me);
-  VolatileAttribute Build(const save::VolatileAttributes& va);
+  VolatileAttribute* Build(const save::VolatileAttributes& va);
   EventEffectBase* Build(const save::EventEffect& ee);
   AttributeModifier Build(const save::AttributeModifier& mod);
 

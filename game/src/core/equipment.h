@@ -22,7 +22,7 @@ class Equipment : public IEvent {
   virtual void RaiseEvent(event::OnCmdEvent, Unit*, CmdAct*) const override;
 
  public:
-  Equipment(const std::string&, Type);
+  Equipment(const std::string&, Type, unique_ptr<VolatileAttribute>&& va = std::make_unique<VolatileAttribute>());
   string GetId() const { return id_; }
   Type GetType() const { return type_; }
   void AddModifier(AttributeModifier*);
@@ -31,12 +31,12 @@ class Equipment : public IEvent {
   void AddOnCmdEffect(OnCmdEventEffect*);
   Attribute CalcAddends() const;
   Attribute CalcMultipliers() const;
-  const VolatileAttribute& volatile_attribute() const { return volatile_attribute_; }
+  const VolatileAttribute& volatile_attribute() const { return *volatile_attribute_; }
 
  private:
   string id_;
   Type type_;
-  VolatileAttribute volatile_attribute_;
+  unique_ptr<VolatileAttribute> volatile_attribute_;
 };
 
 }  // namespace core
