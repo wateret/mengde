@@ -7,32 +7,28 @@
 
 namespace mengde {
 namespace core {
-
 class Unit;
 class Map;
+}  // namespace core
+}  // namespace mengde
 
-class Formulae {
- public:
-  static const int kDefaultRatio = 100;
+namespace mengde {
+namespace core {
+namespace formulae {
 
- public:
-  static int ComputeBasicAttackDamage(const Map*, const Unit*, const Unit*, int = kDefaultRatio);
-  static int ComputeMagicDamage(const Map*, const Unit*, const Unit*, int = kDefaultRatio);
-  static int ComputeBasicAttackAccuracy(const Unit*, const Unit*, int = kDefaultRatio);
-  static int ComputeMagicAccuracy(const Unit*, const Unit*, int = kDefaultRatio);
-  static int ComputeBasicAttackDouble(const Unit*, const Unit*);
-  static int ComputeBasicAttackCritical(const Unit*, const Unit*);
-  static int ComputeAttributeChange(int value, AttributeChange change);
-  static uint32_t ComputeExp(const Unit*, const Unit*);
-  static int ApplyRatio(int, int);
+const int kDefaultRatio = 100;
 
- private:
-  static int ComputeDamageBase(int, int, int, int);
-  static int ComputeAccuracyBase(int, int, int);
-  static int ComputeDoubleCriticalBase(int, int);
-  Formulae();  // Prevent instantiation
-};
+int ComputeBasicAttackDamage(const Map*, const Unit*, const Unit*, int = kDefaultRatio);
+int ComputeMagicDamage(const Map*, const Unit*, const Unit*, int = kDefaultRatio);
+int ComputeBasicAttackAccuracy(const Unit*, const Unit*, int = kDefaultRatio);
+int ComputeMagicAccuracy(const Unit*, const Unit*, int = kDefaultRatio);
+int ComputeBasicAttackDouble(const Unit*, const Unit*);
+int ComputeBasicAttackCritical(const Unit*, const Unit*);
+int ComputeAttributeChange(int value, AttributeChange change);
+uint32_t ComputeExp(const Unit*, const Unit*);
+int ApplyRatio(int, int);
 
+}  // namespace formulae
 }  // namespace core
 }  // namespace mengde
 

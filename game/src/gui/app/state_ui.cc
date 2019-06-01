@@ -826,8 +826,8 @@ bool StateUITargeting::OnMouseMotionEvent(const foundation::MouseMotionEvent& e)
     if ((is_basic_attack_ && hostile) ||
         (!is_basic_attack_ && (gi_->GetMagic(magic_id_)->is_target_enemy() == hostile))) {
       if (is_basic_attack_) {
-        hp_diff = -core::Formulae::ComputeBasicAttackDamage(map, unit, unit_target);
-        accuracy = core::Formulae::ComputeBasicAttackAccuracy(unit, unit_target);
+        hp_diff = -core::formulae::ComputeBasicAttackDamage(map, unit, unit_target);
+        accuracy = core::formulae::ComputeBasicAttackAccuracy(unit, unit_target);
       } else {
         const auto magic = gi_->GetMagic(magic_id_);
         hp_diff = magic->HPDiff(unit, unit_target);
