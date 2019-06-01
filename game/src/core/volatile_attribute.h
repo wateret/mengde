@@ -10,6 +10,7 @@ namespace core {
 class VolatileAttribute {
  public:
   VolatileAttribute() = default;
+  VolatileAttribute(const AttributeModifierList& aml, const EventEffectList& eel);
 
  public:
   const AttributeModifierList& attribute_modifier_list() const { return attribute_modifier_list_; }

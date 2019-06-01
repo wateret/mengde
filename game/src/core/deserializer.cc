@@ -30,6 +30,7 @@ ResourceManagers Deserializer::Build(const save::ResourceManagers& rm) {
   ret.terrain_manager = Build(*rm.terrain_manager());
   ret.hero_class_manager = Build(*rm.hero_class_manager());
   ret.magic_manager = Build(*rm.magic_manager());
+  ret.equipment_manager = Build(*rm.equipment_manager());
   ret.hero_tpl_manager = Build(*rm.hero_tpl_manager(), *ret.hero_class_manager);
   return ret;
 }
@@ -92,6 +93,74 @@ MagicManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<
     }
     ret->Add(id, obj);
   }
+  return ret;
+}
+
+EquipmentManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<save::Equipment>>& em) {
+  auto ret = new EquipmentManager;
+  for (auto eq : em) {
+    auto id = eq->id()->str();
+    auto type = static_cast<Equipment::Type>(eq->type());
+    auto va = Build(*eq->volatile_attributes());
+    auto obj = new Equipment{id, type, };
+    ret->Add(id, obj);
+  }
+  return ret;
+}
+
+VolatileAttribute Deserializer::Build(const save::VolatileAttributes& va) {
+  AttributeModifierList aml;
+  for (auto e : *va.attribute_modifier_list()) {
+    aml.AddModifier(new AttributeModifier{Build(*e)}); // NOTE this does redundant copy
+  }
+
+  EventEffectList eel;
+  for (auto e : *va.event_effect_list()) {
+    eel.Add(Build(*e));
+  }
+
+  return VolatileAttribute{aml, eel};
+}
+
+EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
+  EventEffectBase* ret = nullptr;
+
+  if (ee.instance_type() == save::EventEffectImpl::GeneralEventEffect) {
+    auto gee = ee.instance_as_GeneralEventEffect();
+    auto event = static_cast<event::GeneralEvent>(gee->type());
+
+    switch (gee->instance_type()) {
+      case save::GeneralEventEffectImpl::NONE: {
+        throw std::runtime_error{"Invalid value for GeneralEventEffectImpl"};
+      }
+      case save::GeneralEventEffectImpl::GEERestoreHp: {
+        auto ree = gee->instance_as_GEERestoreHp();
+        ret = new GEERestoreHp{event, ree->change()->multiplier(), ree->change()->addend()};
+      }
+      default:
+        throw std::runtime_error{"Invalid value GeneralEventEffectImpl"};
+    }
+  } else {
+    assert(ee.instance_type() == save::EventEffectImpl::OnCmdEventEffect);
+    auto ocee = ee.instance_as_OnCmdEventEffect();
+    auto event = static_cast<event::OnCmdEvent>(ocee->type());
+
+    switch (ocee->instance_type()) {
+      case save::OnCmdEventEffectImpl::NONE: {
+        throw std::runtime_error{"Invalid value for OnCmdEventEffectImpl"};
+      }
+      case save::OnCmdEventEffectImpl::OCEEPreemptiveAttack: {
+        ret = new OCEEPreemptiveAttack{event};
+      }
+      case save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack: {
+        auto inst = ocee->instance_as_OCEEEnhanceBasicAttack();
+        ret = new OCEEEnhanceBasicAttack{event, inst->change()->multiplier(), inst->change()->addend()};
+      }
+      default:
+        throw std::runtime_error{"Invalid value for OnCmdEventEffectImpl"};
+    }
+  }
+
   return ret;
 }
 

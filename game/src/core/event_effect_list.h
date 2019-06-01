@@ -17,6 +17,7 @@ class EventEffectList : public IEvent {
  public:
   EventEffectList();
   ~EventEffectList();
+  void Add(EventEffectBase *);
   void AddGeneralEffect(GeneralEventEffect *);
   void AddOnCmdEffect(OnCmdEventEffect *);
   void NextTurn();
