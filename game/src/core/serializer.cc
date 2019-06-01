@@ -137,7 +137,7 @@ flatbuffers::Offset<save::GeneralEventEffect> Serializer::Build(const GeneralEve
 }
 
 flatbuffers::Offset<save::GEERestoreHp> Serializer::Build(const GEERestoreHp& gee_restore_hp) {
-  auto sm = gee_restore_hp.stat_mod();
+  auto sm = gee_restore_hp.change();
   return save::CreateGEERestoreHp(builder_, BuildStruct<save::AttributeChange>(sm));
 }
 
@@ -163,7 +163,7 @@ flatbuffers::Offset<save::OCEEPreemptiveAttack> Serializer::Build(const OCEEPree
 }
 
 flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Serializer::Build(const OCEEEnhanceBasicAttack& obj) {
-  auto sm = obj.stat_mod();
+  auto sm = obj.change();
   return save::CreateOCEEEnhanceBasicAttack(builder_, BuildStruct<save::AttributeChange>(sm));
 }
 

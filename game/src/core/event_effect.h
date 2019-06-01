@@ -63,13 +63,12 @@ class OnCmdEventEffect : public EventEffectBase {
 
 class GEERestoreHp : public GeneralEventEffect {
  public:
-  GEERestoreHp(event::GeneralEvent type, int multiplier, int addend, TurnBased turn = TurnBased{});
+  GEERestoreHp(event::GeneralEvent type, AttributeChange change, TurnBased turn = TurnBased{});
   virtual unique_ptr<Cmd> OnEvent(Unit* unit) override;
-  AttributeChange stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
+  AttributeChange change() const { return change_; }
 
  private:
-  int multiplier_;
-  int addend_;
+  AttributeChange change_;
 };
 
 // OnCmdEventEffect Dervatives
@@ -82,13 +81,12 @@ class OCEEPreemptiveAttack : public OnCmdEventEffect {
 
 class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
  public:
-  OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multiplier, int addend, TurnBased turn = TurnBased{});
+  OCEEEnhanceBasicAttack(event::OnCmdEvent type, AttributeChange change, TurnBased turn = TurnBased{});
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
-  AttributeChange stat_mod() const { return {static_cast<int16_t>(addend_), static_cast<int16_t>(multiplier_)}; }
+  AttributeChange change() const { return change_; }
 
  private:
-  int multiplier_;
-  int addend_;
+  AttributeChange change_;
 };
 
 }  // namespace core

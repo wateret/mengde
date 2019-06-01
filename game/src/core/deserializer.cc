@@ -135,7 +135,7 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
       }
       case save::GeneralEventEffectImpl::GEERestoreHp: {
         auto ree = gee->instance_as_GEERestoreHp();
-        ret = new GEERestoreHp{event, ree->change()->multiplier(), ree->change()->addend()};
+        ret = new GEERestoreHp{event, BuildStruct<AttributeChange>(*ree->change())};
       }
       default:
         throw std::runtime_error{"Invalid value GeneralEventEffectImpl"};
@@ -154,7 +154,7 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
       }
       case save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack: {
         auto inst = ocee->instance_as_OCEEEnhanceBasicAttack();
-        ret = new OCEEEnhanceBasicAttack{event, inst->change()->multiplier(), inst->change()->addend()};
+        ret = new OCEEEnhanceBasicAttack{event, BuildStruct<AttributeChange>(*inst->change())};
       }
       default:
         throw std::runtime_error{"Invalid value for OnCmdEventEffectImpl"};
