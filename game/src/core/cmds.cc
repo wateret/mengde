@@ -166,8 +166,7 @@ int CmdBasicAttack::ComputeDamage(Stage* stage, Map* map) {
   auto def = stage->LookupUnit(def_);
 
   int damage = Formulae::ComputeBasicAttackDamage(map, atk, def);
-  damage += change_.addend;
-  damage = damage * (100 + change_.multiplier) / 100;
+  damage = Formulae::ComputeAttributeChange(damage, change_);
   damage = std::max(damage, 0);
   return damage;
 }
@@ -419,10 +418,10 @@ unique_ptr<Cmd> CmdRestoreHp::Do(Stage* stage) {
 
 int CmdRestoreHp::CalcAmount(UserInterface* gi) const {
   auto unit = gi->GetUnit(unit_);
-
-  int amount = unit->GetOriginalHpMp().hp * change_.multiplier / 100;
-  amount += change_.addend;
-  return std::min(amount, unit->GetOriginalHpMp().hp - unit->GetCurrentHpMp().hp);
+  int cur_hp = unit->GetCurrentHpMp().hp;
+  int max_hp = unit->GetOriginalHpMp().hp;
+  int amount = Formulae::ComputeAttributeChange(max_hp, change_);
+  return std::min(amount, max_hp - cur_hp);
 }
 
 // CmdGainExp

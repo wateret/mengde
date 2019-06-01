@@ -85,6 +85,10 @@ int Formulae::ComputeAccuracyBase(int atk, int def, int cap) {
   return val;
 }
 
+int Formulae::ComputeAttributeChange(int value, AttributeChange change) {
+  return ApplyRatio(value, change.multiplier) + change.addend;
+}
+
 // ratio is a percentage value, 100 is default
 int Formulae::ApplyRatio(int value, int ratio) { return value * ratio / 100; }
 
