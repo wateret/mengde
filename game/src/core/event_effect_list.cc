@@ -19,6 +19,17 @@ EventEffectList::~EventEffectList() {
   }
 }
 
+void EventEffectList::Add(EventEffectBase* ee) {
+  auto gee = dynamic_cast<GeneralEventEffect*>(ee);
+  if (gee != nullptr) {
+    AddGeneralEffect(gee);
+  } else {
+    auto ocee = dynamic_cast<OnCmdEventEffect*>(ee);
+    assert(ocee != nullptr);
+    AddOnCmdEffect(ocee);
+  }
+}
+
 void EventEffectList::AddGeneralEffect(GeneralEventEffect* e) { general_elements_.push_back(e); }
 
 void EventEffectList::AddOnCmdEffect(OnCmdEventEffect* e) { oncmd_elements_.push_back(e); }
