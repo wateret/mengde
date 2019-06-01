@@ -185,11 +185,11 @@ void Stage::KillUnit(Unit* unit) {
 }
 
 bool Stage::TryBasicAttack(Unit* unit_atk, Unit* unit_def) {
-  return GenRandom(100) < Formulae::ComputeBasicAttackAccuracy(unit_atk, unit_def);
+  return GenRandom(100) < formulae::ComputeBasicAttackAccuracy(unit_atk, unit_def);
 }
 
 bool Stage::TryMagic(Unit* unit_atk, Unit* unit_def) {
-  return GenRandom(100) < Formulae::ComputeMagicAccuracy(unit_atk, unit_def);
+  return GenRandom(100) < formulae::ComputeMagicAccuracy(unit_atk, unit_def);
 }
 
 bool Stage::IsValidCoords(Vec2D c) const { return map_->IsValidCoords(c); }

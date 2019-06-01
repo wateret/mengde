@@ -138,7 +138,7 @@ bool CmdBasicAttack::TryBasicAttack(Stage* stage) {
   auto atk = stage->LookupUnit(atk_);
   auto def = stage->LookupUnit(def_);
 
-  int chance = Formulae::ComputeBasicAttackAccuracy(atk, def);
+  int chance = formulae::ComputeBasicAttackAccuracy(atk, def);
   LOG_INFO("Chance of Hit : %d%", chance);
   return GenRandom(100) < chance;
 }
@@ -147,7 +147,7 @@ bool CmdBasicAttack::TryBasicAttackCritical(Stage* stage) {
   auto atk = stage->LookupUnit(atk_);
   auto def = stage->LookupUnit(def_);
 
-  int chance = Formulae::ComputeBasicAttackCritical(atk, def);
+  int chance = formulae::ComputeBasicAttackCritical(atk, def);
   LOG_INFO("Chance of Critical : %d%", chance);
   return GenRandom(100) < chance;
 }
@@ -156,7 +156,7 @@ bool CmdBasicAttack::TryBasicAttackDouble(Stage* stage) {
   auto atk = stage->LookupUnit(atk_);
   auto def = stage->LookupUnit(def_);
 
-  int chance = Formulae::ComputeBasicAttackDouble(atk, def);
+  int chance = formulae::ComputeBasicAttackDouble(atk, def);
   LOG_INFO("Chance of Double Attack : %d%", chance);
   return GenRandom(100) < chance;
 }
@@ -165,8 +165,8 @@ int CmdBasicAttack::ComputeDamage(Stage* stage, Map* map) {
   auto atk = stage->LookupUnit(atk_);
   auto def = stage->LookupUnit(def_);
 
-  int damage = Formulae::ComputeBasicAttackDamage(map, atk, def);
-  damage = Formulae::ComputeAttributeChange(damage, change_);
+  int damage = formulae::ComputeBasicAttackDamage(map, atk, def);
+  damage = formulae::ComputeAttributeChange(damage, change_);
   damage = std::max(damage, 0);
   return damage;
 }
@@ -236,7 +236,7 @@ unique_ptr<Cmd> CmdHit::Do(Stage* stage) {
 
   // Gain experience
   {
-    uint32_t exp = Formulae::ComputeExp(atk, def) * exp_factor;
+    uint32_t exp = formulae::ComputeExp(atk, def) * exp_factor;
     if (exp > 0) {
       ret->Append(std::make_unique<CmdGainExp>(atk_, exp));
     }
@@ -259,7 +259,7 @@ unique_ptr<Cmd> CmdMiss::Do(Stage* stage) {
 
   // Gain experience
   {
-    uint32_t exp = Formulae::ComputeExp(atk, def) / 2;
+    uint32_t exp = formulae::ComputeExp(atk, def) / 2;
     if (exp > 0) {
       return std::make_unique<CmdGainExp>(atk_, exp);
     }
@@ -420,7 +420,7 @@ int CmdRestoreHp::CalcAmount(UserInterface* gi) const {
   auto unit = gi->GetUnit(unit_);
   int cur_hp = unit->GetCurrentHpMp().hp;
   int max_hp = unit->GetOriginalHpMp().hp;
-  int amount = Formulae::ComputeAttributeChange(max_hp, change_);
+  int amount = formulae::ComputeAttributeChange(max_hp, change_);
   return std::min(amount, max_hp - cur_hp);
 }
 

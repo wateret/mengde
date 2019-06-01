@@ -20,9 +20,9 @@ MagicEffectHP::MagicEffectHP(int32_t power) : MagicEffect{MagicEffectType::kHP},
 
 int MagicEffectHP::Diff(const Unit* atk, const Unit* def) {
   if (power_ < 0) {
-    return -Formulae::ComputeMagicDamage(nullptr, atk, def, -power_);
+    return -formulae::ComputeMagicDamage(nullptr, atk, def, -power_);
   } else {
-    return Formulae::ComputeMagicDamage(nullptr, atk, def, power_);  // TODO Fix it with proper calculation
+    return formulae::ComputeMagicDamage(nullptr, atk, def, power_);  // TODO Fix it with proper calculation
   }
 }
 
@@ -76,7 +76,7 @@ void Magic::Perform(Unit* unit_atk, Unit* unit_def) {
 }
 
 int Magic::CalcAccuracy(const Unit* unit_atk, const Unit* unit_def) const {
-  return Formulae::ComputeMagicAccuracy(unit_atk, unit_def, 100 /* force */);
+  return formulae::ComputeMagicAccuracy(unit_atk, unit_def, 100 /* force */);
 }
 
 bool Magic::TryPerform(Unit* unit_atk, Unit* unit_def) { return GenRandom(100) < CalcAccuracy(unit_atk, unit_def); }
