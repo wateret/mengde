@@ -68,7 +68,7 @@ unique_ptr<Cmd> CmdEndAction::Do(Stage* game) {
 // CmdBasicAttack
 
 CmdBasicAttack::CmdBasicAttack(const UId& atk, const UId& def, Type type)
-    : CmdAct(atk, def), type_(type), multiplier_(0), addend_(0) {
+    : CmdAct(atk, def), type_(type), change_{0, 0} {
   // Either one of kActive or kCounter must be set
   ASSERT(type & Type::kActiveOrCounter);
   // Cannot set flag kActive and kCounter at the same time
@@ -166,8 +166,8 @@ int CmdBasicAttack::ComputeDamage(Stage* stage, Map* map) {
   auto def = stage->LookupUnit(def_);
 
   int damage = Formulae::ComputeBasicAttackDamage(map, atk, def);
-  damage += addend_;
-  damage = damage * (100 + multiplier_) / 100;
+  damage += change_.addend;
+  damage = damage * (100 + change_.multiplier) / 100;
   damage = std::max(damage, 0);
   return damage;
 }
@@ -407,7 +407,7 @@ unique_ptr<Cmd> CmdSpeak::Do(Stage*) {
 
 // CmdRestoreHp
 
-CmdRestoreHp::CmdRestoreHp(const UId& unit, int ratio, int adder) : CmdUnit(unit), ratio_(ratio), adder_(adder) {}
+CmdRestoreHp::CmdRestoreHp(const UId& unit, AttributeChange change) : CmdUnit(unit), change_{change} {}
 
 unique_ptr<Cmd> CmdRestoreHp::Do(Stage* stage) {
   auto unit = stage->LookupUnit(unit_);
@@ -420,8 +420,8 @@ unique_ptr<Cmd> CmdRestoreHp::Do(Stage* stage) {
 int CmdRestoreHp::CalcAmount(UserInterface* gi) const {
   auto unit = gi->GetUnit(unit_);
 
-  int amount = unit->GetOriginalHpMp().hp * ratio_ / 100;
-  amount += adder_;
+  int amount = unit->GetOriginalHpMp().hp * change_.multiplier / 100;
+  amount += change_.addend;
   return std::min(amount, unit->GetOriginalHpMp().hp - unit->GetCurrentHpMp().hp);
 }
 

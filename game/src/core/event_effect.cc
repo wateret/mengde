@@ -2,6 +2,7 @@
 
 #include "cmds.h"
 #include "unit.h"
+#include "attribute_modifier.h"
 
 namespace mengde {
 namespace core {
@@ -24,11 +25,11 @@ OnCmdEventEffect::OnCmdEventEffect(event::OnCmdEvent type, TurnBased turn) : Eve
 
 // class GEERestoreHp
 
-GEERestoreHp::GEERestoreHp(event::GeneralEvent type, int multiplier, int addend, TurnBased turn)
-    : GeneralEventEffect(type, turn), multiplier_(multiplier), addend_(addend) {}
+GEERestoreHp::GEERestoreHp(event::GeneralEvent type, AttributeChange change, TurnBased turn)
+    : GeneralEventEffect{type, turn}, change_{change} {}
 
 unique_ptr<Cmd> GEERestoreHp::OnEvent(Unit* unit) {
-  return unique_ptr<Cmd>(new CmdRestoreHp(unit->uid(), multiplier_, addend_));
+  return unique_ptr<Cmd>(new CmdRestoreHp{unit->uid(), change_});
 }
 
 // OnCmdEventEffect Derivatives
@@ -48,15 +49,14 @@ void OCEEPreemptiveAttack::OnEvent(Unit* unit, CmdAct* act) {
 }
 
 // class OCEEEnhanceBasicAttack
-OCEEEnhanceBasicAttack::OCEEEnhanceBasicAttack(event::OnCmdEvent type, int multiplier, int addend, TurnBased turn)
-    : OnCmdEventEffect(type, turn), multiplier_(multiplier), addend_(addend) {}
+OCEEEnhanceBasicAttack::OCEEEnhanceBasicAttack(event::OnCmdEvent type, AttributeChange change, TurnBased turn)
+    : OnCmdEventEffect{type, turn}, change_{change} {}
 
 void OCEEEnhanceBasicAttack::OnEvent(Unit* unit, CmdAct* act) {
-  LOG_INFO("'%s' the damage will be enhanced by (%d%%,+%d)", unit->id().c_str(), multiplier_, addend_);
+  LOG_INFO("'%s' the damage will be enhanced by (%d%%,+%d)", unit->id().c_str(), change_.multiplier, change_.addend);
   CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
   ASSERT(ba != nullptr);
-  ba->AddToMultiplier(multiplier_);
-  ba->AddToAddend(addend_);
+  ba->UpdateChange(change_);
 }
 
 }  // namespace core

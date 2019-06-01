@@ -81,8 +81,10 @@ class CmdBasicAttack : public CmdAct {
  public:
   bool IsCounter() { return type_ & Type::kCounter; }
   bool IsSecond() { return type_ & Type::kSecond; }
-  void AddToMultiplier(int m) { multiplier_ += m; }
-  void AddToAddend(int m) { addend_ += m; }
+  void UpdateChange(AttributeChange change) {
+    change_.multiplier += change.multiplier;
+    change_.addend += change.addend;
+  }
 
  private:
   bool TryBasicAttack(Stage* stage);
@@ -92,8 +94,7 @@ class CmdBasicAttack : public CmdAct {
 
  private:
   Type type_;
-  int multiplier_;
-  int addend_;
+  AttributeChange change_;
 };
 
 class Magic;
@@ -289,7 +290,7 @@ class CmdSpeak : public CmdUnit {
 
 class CmdRestoreHp : public CmdUnit {
  public:
-  CmdRestoreHp(const UId&, int ratio, int adder);
+  CmdRestoreHp(const UId&, AttributeChange change);
   virtual unique_ptr<Cmd> Do(Stage*) override;
   virtual Cmd::Op op() const override { return Op::kCmdRestoreHp; }
   int CalcAmount(UserInterface* stage) const;
@@ -298,8 +299,7 @@ class CmdRestoreHp : public CmdUnit {
   virtual void Accept(CmdVisitor& visitor) const override;
 
  private:
-  int ratio_;
-  int adder_;
+  AttributeChange change_;
 };
 
 class CmdGainExp : public CmdUnit {

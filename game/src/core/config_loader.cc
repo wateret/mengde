@@ -35,9 +35,9 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const sol::table
 
   // Find Effect Type
   if (str_effect == "restore_hp") {
-    auto mult = table.get_or("multiplier", 0);
-    auto add = table.get_or("addend", 0);
-    return new GEERestoreHp(event, mult, add);
+    auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
+    auto add = static_cast<int16_t>(table.get_or("addend", 0));
+    return new GEERestoreHp(event, {add, mult});
   }
 
   throw DataFormatException("Such GeneralEventEffect '" + str_effect + "' does not exist");
@@ -57,9 +57,9 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& ta
   if (str_effect == "preemptive_attack") {
     return new OCEEPreemptiveAttack(event);
   } else if (str_effect == "enhance_basic_attack") {
-    auto mult = table.get_or("multiplier", 0);
-    auto add = table.get_or("addend", 0);
-    return new OCEEEnhanceBasicAttack(event, mult, add);
+    auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
+    auto add = static_cast<int16_t>(table.get_or("addend", 0));
+    return new OCEEEnhanceBasicAttack(event, {add, mult});
   }
 
   throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");
