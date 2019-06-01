@@ -1,8 +1,8 @@
 #include "event_effect.h"
 
+#include "attribute_modifier.h"
 #include "cmds.h"
 #include "unit.h"
-#include "attribute_modifier.h"
 
 namespace mengde {
 namespace core {
@@ -28,9 +28,7 @@ OnCmdEventEffect::OnCmdEventEffect(event::OnCmdEvent type, TurnBased turn) : Eve
 GEERestoreHp::GEERestoreHp(event::GeneralEvent type, AttributeChange change, TurnBased turn)
     : GeneralEventEffect{type, turn}, change_{change} {}
 
-unique_ptr<Cmd> GEERestoreHp::OnEvent(Unit* unit) {
-  return unique_ptr<Cmd>(new CmdRestoreHp{unit->uid(), change_});
-}
+unique_ptr<Cmd> GEERestoreHp::OnEvent(Unit* unit) { return unique_ptr<Cmd>(new CmdRestoreHp{unit->uid(), change_}); }
 
 // OnCmdEventEffect Derivatives
 

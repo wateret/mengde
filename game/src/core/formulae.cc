@@ -85,7 +85,7 @@ int ComputeBasicAttackCritical(const Unit* unit_atk, const Unit* unit_def) {
 }
 
 int ComputeAttributeChange(int value, AttributeChange change) {
-  return ApplyRatio(value, change.multiplier) + change.addend;
+  return value * (change.multiplier + 100) / 100 + change.addend;
 }
 
 // ratio is a percentage value, 100 is default
