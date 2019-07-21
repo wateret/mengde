@@ -9,21 +9,21 @@ namespace core {
 
 class VolatileAttribute {
  public:
-  VolatileAttribute() = default;
-  VolatileAttribute(const AttributeModifierList& aml, const EventEffectList& eel);
+  VolatileAttribute();
+  VolatileAttribute(unique_ptr<AttributeModifierList>&& aml, unique_ptr<EventEffectList>&& eel);
 
  public:
-  const AttributeModifierList& attribute_modifier_list() const { return attribute_modifier_list_; }
-  const EventEffectList& event_effect_list() const { return event_effect_list_; }
-  AttributeModifierList& attribute_modifier_list() { return attribute_modifier_list_; }
-  EventEffectList& event_effect_list() { return event_effect_list_; }
+  const AttributeModifierList& attribute_modifier_list() const { return *attribute_modifier_list_; }
+  const EventEffectList& event_effect_list() const { return *event_effect_list_; }
+  AttributeModifierList& attribute_modifier_list() { return *attribute_modifier_list_; }
+  EventEffectList& event_effect_list() { return *event_effect_list_; }
 
  public:
   void NextTurn();
 
  private:
-  AttributeModifierList attribute_modifier_list_;
-  EventEffectList event_effect_list_;
+  unique_ptr<AttributeModifierList> attribute_modifier_list_;
+  unique_ptr<EventEffectList> event_effect_list_;
 };
 
 }  // namespace core

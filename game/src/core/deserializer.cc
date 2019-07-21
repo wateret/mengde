@@ -123,17 +123,17 @@ EquipmentManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Off
 }
 
 VolatileAttribute* Deserializer::Build(const save::VolatileAttributes& va) {
-  AttributeModifierList aml;
+  auto aml = std::make_unique<AttributeModifierList>();
   for (auto e : *va.attribute_modifier_list()) {
-    aml.AddModifier(new AttributeModifier{Build(*e)});  // NOTE this does redundant copy
+    aml->AddModifier(new AttributeModifier{Build(*e)});  // NOTE this does redundant copy
   }
 
-  EventEffectList eel;
+  auto eel = std::make_unique<EventEffectList>();
   for (auto e : *va.event_effect_list()) {
-    eel.Add(Build(*e));
+    eel->Add(Build(*e));
   }
 
-  return new VolatileAttribute{aml, eel};
+  return new VolatileAttribute{std::move(aml), std::move(eel)};
 }
 
 EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
