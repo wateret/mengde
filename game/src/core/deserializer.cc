@@ -20,10 +20,22 @@ unique_ptr<Scenario> Deserializer::Deserialize() {
 
   auto sce = save::GetScenario(buffer.data());
 
-  auto assets = Build(*sce->resource_managers());
+  auto sce_id = sce->id()->str();
+  vector<string> stage_ids;
+  for (auto e : *sce->stage_id_list()) {
+    stage_ids.push_back(e->str());
+    LOG_DEBUG("STAGE ID : %s", e->c_str());
+  }
+  auto stage_no = sce->stage_no();
+  auto rcm = Build(*sce->resource_managers());
+  auto assets = unique_ptr<Assets>(Build(*sce->assets(), rcm));
 
+  return std::make_unique<Scenario>(sce_id, stage_ids, stage_no, rcm, std::move(assets));
+}
+
+Assets* Deserializer::Build(const save::Assets& assets, const ResourceManagers& rm) {
   (void)assets;
-
+  (void)rm;
   return nullptr;
 }
 
