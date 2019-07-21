@@ -4,8 +4,7 @@ namespace mengde {
 namespace core {
 
 VolatileAttribute::VolatileAttribute()
-    : attribute_modifier_list_{new AttributeModifierList},
-      event_effect_list_{new EventEffectList} {}
+    : attribute_modifier_list_{new AttributeModifierList}, event_effect_list_{new EventEffectList} {}
 
 VolatileAttribute::VolatileAttribute(unique_ptr<AttributeModifierList>&& aml, unique_ptr<EventEffectList>&& eel)
     : attribute_modifier_list_{std::move(aml)}, event_effect_list_{std::move(eel)} {}
