@@ -233,7 +233,7 @@ flatbuffers::Offset<save::Assets> Serializer::Build(const Assets& assets) {
   }
   auto equip_off = builder_.CreateVector(equip_vec);
 
-  return save::CreateAssets(builder_, assets.GetMoneyAmount(), heroes_off, equip_off);
+  return save::CreateAssets(builder_, assets.money().amount(), heroes_off, equip_off);
 }
 
 flatbuffers::Offset<save::Hero> Serializer::Build(const Hero& hero) {

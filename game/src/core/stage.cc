@@ -321,7 +321,7 @@ uint32_t Stage::GetNumOwnsAlive() {
 
 void Stage::AppointHero(const string& id, uint16_t level) {
   LOG_INFO("Hero added to asset '%s' with Lv %d", id.c_str(), level);
-  assets_->AddHero(std::make_unique<Hero>(rc_.hero_tpl_manager->Get(id), level));
+  assets_->AddHero(std::make_unique<Hero>(rc_.hero_tpl_manager->Get(id), Level{level, 0}));
 }
 
 uint32_t Stage::GenerateOwnUnit(const string& id, Vec2D pos) {
@@ -340,7 +340,7 @@ uint32_t Stage::GenerateOwnUnit(Hero* hero, Vec2D pos) {
 
 uint32_t Stage::GenerateUnit(const string& id, uint16_t level, Force force, Vec2D pos) {
   HeroTemplate* hero_tpl = rc_.hero_tpl_manager->Get(id);
-  Hero* hero = new Hero(hero_tpl, level);
+  Hero* hero = new Hero(hero_tpl, Level{level, 0});
   Unit* unit = new Unit(hero, force);
   auto uid = stage_unit_manager_->Deploy(unit);
   unit->position(pos);
