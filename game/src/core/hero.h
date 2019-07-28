@@ -17,7 +17,7 @@ class Equipment;
 
 class Hero : public IUnitBase, IEquipper {
  public:
-  Hero(const HeroTemplate*, uint16_t);
+  Hero(const HeroTemplate* hero_tpl, Level level);
   Hero(const Hero&);
   virtual ~Hero();
 

@@ -2,6 +2,7 @@
 
 #include "scenario_generated.h"
 #include "util/common.h"
+#include "equipment_set.h"
 
 #include <fstream>
 
@@ -34,9 +35,42 @@ unique_ptr<Scenario> Deserializer::Deserialize() {
 }
 
 Assets* Deserializer::Build(const save::Assets& assets, const ResourceManagers& rm) {
-  (void)assets;
-  (void)rm;
-  return nullptr;
+  auto ret = new Assets{};
+
+  auto money_amount = assets.money();
+  ret->money().Gain(Money{money_amount});
+
+  for (auto e : *assets.equipments()) {
+    auto id = e->equipment()->str();
+    auto eq = rm.equipment_manager->Get(id);
+    auto amount = e->amount();
+    ret->AddEquipment(eq, amount);
+  }
+
+  for (auto e : *assets.heroes()) {
+    auto hero = std::unique_ptr<Hero>(Build(*e, rm));
+    ret->AddHero(std::move(hero));
+  }
+
+  return ret;
+}
+
+Hero* Deserializer::Build(const save::Hero& hero, const ResourceManagers& rm) {
+  auto id = hero.id()->str();
+  auto hero_class_id = hero.hero_class()->str();
+  auto hero_template = rm.hero_tpl_manager->Get(hero_class_id);
+  auto level_exp = BuildStruct<Level>(*hero.level());
+
+  auto ret = new Hero{hero_template, level_exp};
+
+  auto weapon_str = hero.equipment_set()->weapon()->str();
+  auto armor_str = hero.equipment_set()->armor()->str();
+  auto aid_str = hero.equipment_set()->aid()->str();
+  ret->PutOn(rm.equipment_manager->Get(weapon_str));
+  ret->PutOn(rm.equipment_manager->Get(armor_str));
+  ret->PutOn(rm.equipment_manager->Get(aid_str));
+
+  return ret;
 }
 
 ResourceManagers Deserializer::Build(const save::ResourceManagers& rm) {

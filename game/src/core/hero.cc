@@ -6,15 +6,15 @@
 namespace mengde {
 namespace core {
 
-Hero::Hero(const HeroTemplate* hero_tpl, uint16_t level)
-    : hero_tpl_(hero_tpl),
+Hero::Hero(const HeroTemplate* hero_tpl, Level level)
+    : hero_tpl_{hero_tpl},
       hero_class_{hero_tpl_->hero_class()},
-      equipment_set_(new EquipmentSet(this)),
-      level_(level, 0),
-      hero_attr_(hero_tpl->GetHeroStat()),
-      unit_attr_(),
-      unit_pure_attr_(),
-      hpmp_() {
+      equipment_set_{new EquipmentSet{this}},
+      level_{level},
+      hero_attr_{hero_tpl->GetHeroStat()},
+      unit_attr_{},
+      unit_pure_attr_{},
+      hpmp_{} {
   ASSERT(hero_class_ != nullptr);
   // TODO Handle promotion chain
   UpdateStat();

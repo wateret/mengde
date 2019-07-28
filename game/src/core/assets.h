@@ -64,9 +64,8 @@ class Assets {
   vector<const Equipment*> GetEquipments();
 
   // Money related //
-  void PayMoney(const Money& cost);
-  void GainMoney(const Money& money);
-  uint32_t GetMoneyAmount() const { return money_.amount(); }
+  Money& money() { return money_; }
+  const Money& money() const { return money_; }
 
   // Others //
   void HeroPutEquipmentOn(Hero*, const Equipment*);
