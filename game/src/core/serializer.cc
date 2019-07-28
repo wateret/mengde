@@ -238,13 +238,9 @@ flatbuffers::Offset<save::Assets> Serializer::Build(const Assets& assets) {
 
 flatbuffers::Offset<save::Hero> Serializer::Build(const Hero& hero) {
   auto id = builder_.CreateString(hero.id());
-  auto hero_class = builder_.CreateString(hero.hero_class()->id());
-  auto hero_attr = BuildStruct<save::Attribute>(hero.GetHeroStat());
   auto equipment_set = Build(*hero.GetEquipmentSet());
   auto levelexp = BuildStruct<save::LevelExp>(hero.level_exp());
-  auto hp = hero.GetOriginalHpMp().hp;
-  auto mp = hero.GetOriginalHpMp().mp;
-  return save::CreateHero(builder_, id, hero_class, hero_attr, equipment_set, levelexp, hp, mp);
+  return save::CreateHero(builder_, id, equipment_set, levelexp);
 }
 
 flatbuffers::Offset<save::EquipmentWithAmount> Serializer::Build(const EquipmentWithAmount& eq) {
