@@ -2044,21 +2044,11 @@ inline flatbuffers::Offset<EquipmentWithAmount> CreateEquipmentWithAmountDirect(
 struct Hero FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_ID = 4,
-    VT_HERO_CLASS = 6,
-    VT_HERO_ATTR = 8,
-    VT_EQUIPMENT_SET = 10,
-    VT_LEVEL = 12,
-    VT_HP = 14,
-    VT_MP = 16
+    VT_EQUIPMENT_SET = 6,
+    VT_LEVEL = 8
   };
   const flatbuffers::String *id() const {
     return GetPointer<const flatbuffers::String *>(VT_ID);
-  }
-  const flatbuffers::String *hero_class() const {
-    return GetPointer<const flatbuffers::String *>(VT_HERO_CLASS);
-  }
-  const Attribute *hero_attr() const {
-    return GetStruct<const Attribute *>(VT_HERO_ATTR);
   }
   const EquipmentSet *equipment_set() const {
     return GetPointer<const EquipmentSet *>(VT_EQUIPMENT_SET);
@@ -2066,24 +2056,13 @@ struct Hero FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const LevelExp *level() const {
     return GetStruct<const LevelExp *>(VT_LEVEL);
   }
-  uint32_t hp() const {
-    return GetField<uint32_t>(VT_HP, 0);
-  }
-  uint32_t mp() const {
-    return GetField<uint32_t>(VT_MP, 0);
-  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(id()) &&
-           VerifyOffset(verifier, VT_HERO_CLASS) &&
-           verifier.VerifyString(hero_class()) &&
-           VerifyField<Attribute>(verifier, VT_HERO_ATTR) &&
            VerifyOffset(verifier, VT_EQUIPMENT_SET) &&
            verifier.VerifyTable(equipment_set()) &&
            VerifyField<LevelExp>(verifier, VT_LEVEL) &&
-           VerifyField<uint32_t>(verifier, VT_HP) &&
-           VerifyField<uint32_t>(verifier, VT_MP) &&
            verifier.EndTable();
   }
 };
@@ -2094,23 +2073,11 @@ struct HeroBuilder {
   void add_id(flatbuffers::Offset<flatbuffers::String> id) {
     fbb_.AddOffset(Hero::VT_ID, id);
   }
-  void add_hero_class(flatbuffers::Offset<flatbuffers::String> hero_class) {
-    fbb_.AddOffset(Hero::VT_HERO_CLASS, hero_class);
-  }
-  void add_hero_attr(const Attribute *hero_attr) {
-    fbb_.AddStruct(Hero::VT_HERO_ATTR, hero_attr);
-  }
   void add_equipment_set(flatbuffers::Offset<EquipmentSet> equipment_set) {
     fbb_.AddOffset(Hero::VT_EQUIPMENT_SET, equipment_set);
   }
   void add_level(const LevelExp *level) {
     fbb_.AddStruct(Hero::VT_LEVEL, level);
-  }
-  void add_hp(uint32_t hp) {
-    fbb_.AddElement<uint32_t>(Hero::VT_HP, hp, 0);
-  }
-  void add_mp(uint32_t mp) {
-    fbb_.AddElement<uint32_t>(Hero::VT_MP, mp, 0);
   }
   explicit HeroBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -2127,19 +2094,11 @@ struct HeroBuilder {
 inline flatbuffers::Offset<Hero> CreateHero(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<flatbuffers::String> id = 0,
-    flatbuffers::Offset<flatbuffers::String> hero_class = 0,
-    const Attribute *hero_attr = 0,
     flatbuffers::Offset<EquipmentSet> equipment_set = 0,
-    const LevelExp *level = 0,
-    uint32_t hp = 0,
-    uint32_t mp = 0) {
+    const LevelExp *level = 0) {
   HeroBuilder builder_(_fbb);
-  builder_.add_mp(mp);
-  builder_.add_hp(hp);
   builder_.add_level(level);
   builder_.add_equipment_set(equipment_set);
-  builder_.add_hero_attr(hero_attr);
-  builder_.add_hero_class(hero_class);
   builder_.add_id(id);
   return builder_.Finish();
 }
@@ -2147,21 +2106,13 @@ inline flatbuffers::Offset<Hero> CreateHero(
 inline flatbuffers::Offset<Hero> CreateHeroDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     const char *id = nullptr,
-    const char *hero_class = nullptr,
-    const Attribute *hero_attr = 0,
     flatbuffers::Offset<EquipmentSet> equipment_set = 0,
-    const LevelExp *level = 0,
-    uint32_t hp = 0,
-    uint32_t mp = 0) {
+    const LevelExp *level = 0) {
   return mengde::save::CreateHero(
       _fbb,
       id ? _fbb.CreateString(id) : 0,
-      hero_class ? _fbb.CreateString(hero_class) : 0,
-      hero_attr,
       equipment_set,
-      level,
-      hp,
-      mp);
+      level);
 }
 
 struct EquipmentSet FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {

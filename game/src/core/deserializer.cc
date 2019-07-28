@@ -1,8 +1,8 @@
 #include "deserializer.h"
 
+#include "equipment_set.h"
 #include "scenario_generated.h"
 #include "util/common.h"
-#include "equipment_set.h"
 
 #include <fstream>
 
@@ -57,8 +57,7 @@ Assets* Deserializer::Build(const save::Assets& assets, const ResourceManagers& 
 
 Hero* Deserializer::Build(const save::Hero& hero, const ResourceManagers& rm) {
   auto id = hero.id()->str();
-  auto hero_class_id = hero.hero_class()->str();
-  auto hero_template = rm.hero_tpl_manager->Get(hero_class_id);
+  auto hero_template = rm.hero_tpl_manager->Get(id);
   auto level_exp = BuildStruct<Level>(*hero.level());
 
   auto ret = new Hero{hero_template, level_exp};

@@ -186,12 +186,8 @@ table EquipmentWithAmount {
 
 table Hero {
   id: string;
-  hero_class: string;
-  hero_attr: Attribute;
   equipment_set: EquipmentSet;
   level: LevelExp;
-  hp: uint32;
-  mp: uint32;
 }
 
 struct LevelExp {
