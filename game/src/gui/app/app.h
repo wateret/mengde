@@ -73,6 +73,7 @@ class App {
   void EndStage();
 
   void StartNewScenario(const string& scenario_id);
+  void LoadScenario(const Path& savefile_path);
   void SetupScenario(const string& scenario_id);
 
   void NextFrame(NextFrameCallback);

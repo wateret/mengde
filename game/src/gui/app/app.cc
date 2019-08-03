@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include "core/assets.h"
+#include "core/deserializer.h"
 #include "core/exceptions.h"
 #include "core/scenario.h"
 #include "core/stage.h"
@@ -175,6 +176,23 @@ void App::Render() {
 
 void App::StartNewScenario(const string& scenario_id) {
   SetupScenario(scenario_id);
+  target_view_ = root_view_;
+}
+
+void App::LoadScenario(const Path& savefile_path) {
+  try {
+    core::Deserializer deserializer{savefile_path};
+    auto scenario = deserializer.Deserialize();
+    scenario_ = scenario.release();
+  } catch (const core::ConfigLoadException& e) {
+    // TODO Show error message appropriately
+    LOG_FATAL("Savefile load failure - %s", e.what());
+    UNREACHABLE("Savefile load failure."); // TODO Change this to throw
+  }
+
+  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
+  drawer_->SetBitmapBasePath(GetCurrentScenarioPath().ToString());
+
   target_view_ = root_view_;
 }
 
