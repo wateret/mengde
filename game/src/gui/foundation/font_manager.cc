@@ -29,6 +29,10 @@ TTF_Font* FontManager::FetchFont(const string& name, int size) {
   auto iter = container_.find(key);
   if (iter == container_.end()) {
     TTF_Font* font = TTF_OpenFont(full_path.c_str(), size);
+    if (!font && name != default_font_name_) {
+      LOG_ERROR("Unable to load font '%s'. Try returning the default font.", name.c_str());
+      return FetchDefaultFont(size);
+    }
     container_[key] = font;
     return font;
   } else {
@@ -36,7 +40,13 @@ TTF_Font* FontManager::FetchFont(const string& name, int size) {
   }
 }
 
-TTF_Font* FontManager::FetchDefaultFont(int size) { return FetchFont(default_font_name_, size); }
+TTF_Font* FontManager::FetchDefaultFont(int size) {
+  TTF_Font* font = FetchFont(default_font_name_, size);
+  if (!font) {
+    throw std::runtime_error{"Unable to load default font."};
+  }
+  return font;
+}
 
 }  // namespace foundation
 }  // namespace gui

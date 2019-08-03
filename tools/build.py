@@ -3,6 +3,7 @@
 import argparse
 import multiprocessing
 import time
+import os
 from cmd_helpers import *
 
 def parse_args():
@@ -33,7 +34,7 @@ def main():
         machine = "armv7l"
 
     # Set the install folder
-    install_folder = "mengde"
+    install_folder = "bin"
 
     home_folder = os.getcwd()
 
@@ -47,7 +48,6 @@ def main():
                     "../" * (build_dir.count("/") + 1),
                     "-DCMAKE_BUILD_TYPE=" + options.buildtype,
                     "-DCMAKE_INSTALL_PREFIX=./",
-                    "-DINSTALL_FOLDER=" + install_folder,
                     "-DCMAKE_EXPORT_COMPILE_COMMANDS=1"]
 
     if options.cross == "armv7l":

@@ -9,4 +9,4 @@ target_include_directories(core SYSTEM PUBLIC ${LUA_INCLUDE_DIR} ${FLATBUFFERS_I
 target_link_libraries(core util)
 target_link_libraries(core ${LUA_LIBRARIES})
 
-install(TARGETS core DESTINATION ${INSTALL_FOLDER})
+install(TARGETS core DESTINATION lib)
