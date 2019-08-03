@@ -73,7 +73,7 @@ flatbuffers::Offset<save::TerrainRecord> Serializer::Build(const string& id, con
 }
 
 flatbuffers::Offset<save::Terrain> Serializer::Build(const Terrain& terrain) {
-  return save::CreateTerrainDirect(builder_, terrain.id().c_str(), &terrain.move_costs(), &terrain.class_effects());
+  return save::CreateTerrainDirect(builder_, terrain.id().c_str(), terrain.ascii(), &terrain.move_costs(), &terrain.class_effects());
 }
 
 flatbuffers::Offset<save::PromotionInfo> Serializer::Build(const PromotionInfo& promotion_info) {
