@@ -5,9 +5,6 @@ set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH "./")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-if(NOT INSTALL_FOLDER)
-  set(INSTALL_FOLDER, "mengde")
-endif()
 
 file(GLOB SOURCES src/main.cc)
 
@@ -23,7 +20,7 @@ add_executable(game ${SOURCES})
 # Project Libraries
 target_link_libraries(game util core gui)
 
-install(TARGETS game DESTINATION ${INSTALL_FOLDER})
+install(TARGETS game DESTINATION bin)
 
 if(BUILD_TESTING)
     add_subdirectory(test)
