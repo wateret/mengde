@@ -90,19 +90,6 @@ App::~App() {
 
 Path App::GetCurrentScenarioPath() const { return GameEnv::GetInstance()->GetScenarioPath() / scenario_->id(); }
 
-void App::SetupScenario(const string& scenario_id) {
-  try {
-    scenario_ = new core::Scenario(scenario_id);
-  } catch (const core::ConfigLoadException& e) {
-    // TODO Show error message appropriately
-    LOG_FATAL("Scenario config load failure - %s", e.what());
-    UNREACHABLE("Scenario config load failure.");
-  }
-
-  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
-  drawer_->SetBitmapBasePath(GetCurrentScenarioPath().ToString());
-}
-
 Drawer* App::GetDrawer() { return drawer_; }
 
 void App::Run() {
@@ -175,7 +162,17 @@ void App::Render() {
 }
 
 void App::StartNewScenario(const string& scenario_id) {
-  SetupScenario(scenario_id);
+  try {
+    scenario_ = new core::Scenario(scenario_id);
+  } catch (const core::ConfigLoadException& e) {
+    // TODO Show error message appropriately
+    LOG_FATAL("Scenario config load failure - %s", e.what());
+    UNREACHABLE("Scenario config load failure.");
+  }
+
+  root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);
+  drawer_->SetBitmapBasePath(GetCurrentScenarioPath().ToString());
+
   target_view_ = root_view_;
 }
 
