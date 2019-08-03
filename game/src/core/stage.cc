@@ -46,16 +46,6 @@ Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage
   lua_callbacks_->on_deploy()(*lua_game_);
 
   deployer_ = std::unique_ptr<Deployer>(CreateDeployer());
-
-  /*
-  // XXX Temporal code for testing
-  {
-    SaveFile save{Path{"save.mengde"}};
-    save.Serialize(this);
-    auto loaded_sce = save.Deserialize();
-    delete loaded_sce;
-  }
-  */
 }
 
 Stage::~Stage() {
