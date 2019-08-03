@@ -64,9 +64,9 @@ Hero* Deserializer::Build(const save::Hero& hero, const ResourceManagers& rm) {
   auto weapon_str = hero.equipment_set()->weapon()->str();
   auto armor_str = hero.equipment_set()->armor()->str();
   auto aid_str = hero.equipment_set()->aid()->str();
-  ret->PutOn(rm.equipment_manager->Get(weapon_str));
-  ret->PutOn(rm.equipment_manager->Get(armor_str));
-  ret->PutOn(rm.equipment_manager->Get(aid_str));
+  if (!weapon_str.empty()) ret->PutOn(rm.equipment_manager->Get(weapon_str));
+  if (!armor_str.empty()) ret->PutOn(rm.equipment_manager->Get(armor_str));
+  if (!aid_str.empty()) ret->PutOn(rm.equipment_manager->Get(aid_str));
 
   return ret;
 }
