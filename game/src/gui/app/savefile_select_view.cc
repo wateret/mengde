@@ -11,7 +11,7 @@ namespace mengde {
 namespace gui {
 namespace app {
 
-SavefileSelectView::SavefileSelectView(const Rect& frame, App* /* app */) : VerticalListView(frame) {
+SavefileSelectView::SavefileSelectView(const Rect& frame, App* app) : VerticalListView(frame) {
   bg_color(COLOR("black"));
   padding(8);
 
@@ -29,11 +29,10 @@ SavefileSelectView::SavefileSelectView(const Rect& frame, App* /* app */) : Vert
         const Vec2D btn_size = {GetActualFrameSize().x, 24};
         const string scenario_id = itr->path().stem().string();
         ButtonView* btn_element = new ButtonView(Rect(btn_pos, btn_size), scenario_id);
-        auto path = itr->path().string();
+        auto path = itr->path();
         btn_element->SetMouseButtonHandler([=](const MouseButtonEvent& e) {
           if (e.IsLeftButtonDown()) {
-            core::Deserializer deserializer{path};
-            deserializer.Deserialize();
+            app->LoadScenario(path);
             return true;
           }
           return false;
