@@ -86,6 +86,7 @@ TerrainManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offse
   for (uint32_t i = 0; i < tm.Length(); ++i) {
     auto t = tm.Get(i);
     auto id = t->id()->str();
+    auto ascii = static_cast<char>(t->ascii());
     vector<int32_t> move_costs;
     for (auto cost : *t->move_costs()) {
       move_costs.push_back(cost);
@@ -95,8 +96,8 @@ TerrainManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offse
       effects.push_back(cost);
     }
 
-    auto obj = new Terrain{id, move_costs, effects};
-    ret->Add(id, obj);
+    auto obj = new Terrain{id, ascii, move_costs, effects};
+    ret->Add(string(1, ascii), obj);
   }
   return ret;
 }

@@ -9,8 +9,9 @@ namespace core {
 
 class Terrain {
  public:
-  Terrain(const std::string&, const std::vector<int>&, const std::vector<int>&);
+  Terrain(const std::string&, char ascii, const std::vector<int>&, const std::vector<int>&);
   const std::string& id() const { return id_; }
+  char ascii() const { return ascii_; }
   int GetMoveCost(int) const;
   int GetEffect(int) const;
   const std::vector<int>& move_costs() const { return move_costs_; }
@@ -18,6 +19,7 @@ class Terrain {
 
  private:
   std::string id_;
+  char ascii_;
   std::vector<int> move_costs_;
   std::vector<int> effects_;
 };

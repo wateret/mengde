@@ -24,6 +24,7 @@ table TerrainRecord {
 table Terrain {
   id: string;
 //  index: int;
+  ascii: byte;
   move_costs: [int];
   class_effects: [int];
 }

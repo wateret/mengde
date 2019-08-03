@@ -159,14 +159,15 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
 
   rc_.terrain_manager = new TerrainManager();
   vector<string> ids;
+  vector<char> asciis;
   vector<char> cmaps;
   sol::table terrains = lua_["gconfig"]["terrains"];
   for (uint32_t i = 1, size = terrains.size(); i <= size; i++) {
     auto terrain = terrains[i];
     string id = terrain["id"];
-    string cmap = terrain["char"];
+    string ascii = terrain["char"];
     ids.push_back(id);
-    cmaps.push_back(cmap[0]);
+    asciis.push_back(ascii[0]);
   }
 
   uint32_t terrain_count = ids.size();
@@ -202,8 +203,8 @@ void ConfigLoader::ParseUnitClassesAndTerrains() {
   }
 
   for (uint32_t i = 0; i < terrain_count; i++) {
-    Terrain* t = new Terrain(ids[i], cost_list[i], effect_list[i]);
-    rc_.terrain_manager->Add(string(1, cmaps[i]), t);
+    Terrain* t = new Terrain(ids[i], asciis[i], cost_list[i], effect_list[i]);
+    rc_.terrain_manager->Add(string(1, asciis[i]), t);
   }
 }
 

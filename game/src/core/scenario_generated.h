@@ -697,11 +697,15 @@ inline flatbuffers::Offset<TerrainRecord> CreateTerrainRecordDirect(
 struct Terrain FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_ID = 4,
-    VT_MOVE_COSTS = 6,
-    VT_CLASS_EFFECTS = 8
+    VT_ASCII = 6,
+    VT_MOVE_COSTS = 8,
+    VT_CLASS_EFFECTS = 10
   };
   const flatbuffers::String *id() const {
     return GetPointer<const flatbuffers::String *>(VT_ID);
+  }
+  int8_t ascii() const {
+    return GetField<int8_t>(VT_ASCII, 0);
   }
   const flatbuffers::Vector<int32_t> *move_costs() const {
     return GetPointer<const flatbuffers::Vector<int32_t> *>(VT_MOVE_COSTS);
@@ -713,6 +717,7 @@ struct Terrain FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(id()) &&
+           VerifyField<int8_t>(verifier, VT_ASCII) &&
            VerifyOffset(verifier, VT_MOVE_COSTS) &&
            verifier.VerifyVector(move_costs()) &&
            VerifyOffset(verifier, VT_CLASS_EFFECTS) &&
@@ -726,6 +731,9 @@ struct TerrainBuilder {
   flatbuffers::uoffset_t start_;
   void add_id(flatbuffers::Offset<flatbuffers::String> id) {
     fbb_.AddOffset(Terrain::VT_ID, id);
+  }
+  void add_ascii(int8_t ascii) {
+    fbb_.AddElement<int8_t>(Terrain::VT_ASCII, ascii, 0);
   }
   void add_move_costs(flatbuffers::Offset<flatbuffers::Vector<int32_t>> move_costs) {
     fbb_.AddOffset(Terrain::VT_MOVE_COSTS, move_costs);
@@ -748,23 +756,27 @@ struct TerrainBuilder {
 inline flatbuffers::Offset<Terrain> CreateTerrain(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<flatbuffers::String> id = 0,
+    int8_t ascii = 0,
     flatbuffers::Offset<flatbuffers::Vector<int32_t>> move_costs = 0,
     flatbuffers::Offset<flatbuffers::Vector<int32_t>> class_effects = 0) {
   TerrainBuilder builder_(_fbb);
   builder_.add_class_effects(class_effects);
   builder_.add_move_costs(move_costs);
   builder_.add_id(id);
+  builder_.add_ascii(ascii);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<Terrain> CreateTerrainDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     const char *id = nullptr,
+    int8_t ascii = 0,
     const std::vector<int32_t> *move_costs = nullptr,
     const std::vector<int32_t> *class_effects = nullptr) {
   return mengde::save::CreateTerrain(
       _fbb,
       id ? _fbb.CreateString(id) : 0,
+      ascii,
       move_costs ? _fbb.CreateVector<int32_t>(*move_costs) : 0,
       class_effects ? _fbb.CreateVector<int32_t>(*class_effects) : 0);
 }
