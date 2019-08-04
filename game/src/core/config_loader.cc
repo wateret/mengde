@@ -17,10 +17,10 @@ namespace mengde {
 namespace core {
 
 EventEffectLoader::EventEffectLoader() {
-  gee_map_.insert({"action_done", event::GeneralEvent::kActionDone});
-  gee_map_.insert({"turn_begin", event::GeneralEvent::kTurnBegin});
-  ocee_map_.insert({"on_normal_attack", event::OnCmdEvent::kNormalAttack});
-  ocee_map_.insert({"on_normal_attacked", event::OnCmdEvent::kNormalAttacked});
+  gee_map_.emplace("action_done", event::GeneralEvent::kActionDone);
+  gee_map_.emplace("turn_begin", event::GeneralEvent::kTurnBegin);
+  ocee_map_.emplace("on_normal_attack", event::OnCmdEvent::kNormalAttack);
+  ocee_map_.emplace("on_normal_attacked", event::OnCmdEvent::kNormalAttacked);
 }
 
 GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const sol::table& table) const {
