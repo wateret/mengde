@@ -107,7 +107,8 @@ union GeneralEventEffectImpl {
 
 union OnCmdEventEffectImpl {
   OCEEPreemptiveAttack,
-  OCEEEnhanceBasicAttack
+  OCEEEnhanceBasicAttack,
+  OCEEDoubleAttack
 }
 
 table EventEffect {
@@ -134,6 +135,9 @@ table OCEEPreemptiveAttack {
 
 table OCEEEnhanceBasicAttack {
   change: AttributeChange;
+}
+
+table OCEEDoubleAttack {
 }
 
 table Magic {

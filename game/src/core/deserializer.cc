@@ -1,9 +1,9 @@
 #include "deserializer.h"
 
 #include "equipment_set.h"
+#include "event_effect.h"
 #include "scenario_generated.h"
 #include "util/common.h"
-#include "event_effect.h"
 
 #include <fstream>
 
@@ -205,7 +205,13 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
       }
       case save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack: {
         auto inst = ocee->instance_as_OCEEEnhanceBasicAttack();
-        ret = new OCEEEnhanceBasicAttack{event, CmdBasicAttack::Type::kActiveOrCounter, BuildStruct<AttributeChange>(*inst->change())};
+        ret = new OCEEEnhanceBasicAttack{event, CmdBasicAttack::Type::kActiveOrCounter,
+                                         BuildStruct<AttributeChange>(*inst->change())};
+        break;
+      }
+      case save::OnCmdEventEffectImpl::OCEEDoubleAttack: {
+        // TODO Check event value - must be kNormalAttack
+        ret = new OCEEDoubleAttack{event};
         break;
       }
       default:

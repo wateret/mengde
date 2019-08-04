@@ -147,12 +147,16 @@ flatbuffers::Offset<save::OnCmdEventEffect> Serializer::Build(const OnCmdEventEf
   flatbuffers::Offset<void> ocee_inst = 0;
   auto preemptive_attack = dynamic_cast<const OCEEPreemptiveAttack*>(&ocee);
   auto enhance_basic_attack = dynamic_cast<const OCEEEnhanceBasicAttack*>(&ocee);
+  auto double_attack = dynamic_cast<const OCEEDoubleAttack*>(&ocee);
   if (preemptive_attack) {
     ocee_type = save::OnCmdEventEffectImpl::OCEEPreemptiveAttack;
     ocee_inst = Build(*preemptive_attack).Union();
   } else if (enhance_basic_attack) {
     ocee_type = save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack;
     ocee_inst = Build(*enhance_basic_attack).Union();
+  } else if (double_attack) {
+    ocee_type = save::OnCmdEventEffectImpl::OCEEDoubleAttack;
+    ocee_inst = Build(*double_attack).Union();
   }
 
   auto type = static_cast<int>(ocee.type());
@@ -166,6 +170,10 @@ flatbuffers::Offset<save::OCEEPreemptiveAttack> Serializer::Build(const OCEEPree
 flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Serializer::Build(const OCEEEnhanceBasicAttack& obj) {
   auto sm = obj.change();
   return save::CreateOCEEEnhanceBasicAttack(builder_, BuildStruct<save::AttributeChange>(sm));
+}
+
+flatbuffers::Offset<save::OCEEDoubleAttack> Serializer::Build(const OCEEDoubleAttack&) {
+  return save::CreateOCEEDoubleAttack(builder_);
 }
 
 flatbuffers::Offset<save::Magic> Serializer::Build(const Magic& magic) {

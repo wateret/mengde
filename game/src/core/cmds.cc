@@ -105,7 +105,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
   if (success) {
     CmdHit::HitType hit_type = TryBasicAttackCritical(game) ? CmdHit::HitType::kCritical : CmdHit::HitType::kNormal;
     int damage = ComputeDamage(game, game->GetMap());
-    if (hit_type == CmdHit::HitType::kCritical) {
+    if (force_critical_ || hit_type == CmdHit::HitType::kCritical) {
       damage = damage * 3 / 2;  // 1.5x
     }
     if (IsSecond()) {
@@ -118,7 +118,7 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
   }
 
   // Double attack
-  bool reserve_second_attack = TryBasicAttackDouble(game);
+  bool reserve_second_attack = force_double_ || TryBasicAttackDouble(game);
   if (!IsSecond() && reserve_second_attack) {
     ret->Append(std::make_unique<CmdBasicAttack>(atk_, def_, (Type)(type_ | Type::kSecond)));
   }
