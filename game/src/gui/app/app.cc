@@ -184,7 +184,7 @@ void App::LoadScenario(const Path& savefile_path) {
   } catch (const core::ConfigLoadException& e) {
     // TODO Show error message appropriately
     LOG_FATAL("Savefile load failure - %s", e.what());
-    UNREACHABLE("Savefile load failure."); // TODO Change this to throw
+    UNREACHABLE("Savefile load failure.");  // TODO Change this to throw
   }
 
   root_view_ = new RootView(Rect({0, 0}, window_size_), scenario_, this);

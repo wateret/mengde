@@ -22,7 +22,12 @@ Scenario::Scenario(const string& scenario_id)
 
 Scenario::Scenario(const string& scenario_id, const vector<string>& stage_ids, uint32_t stage_no,
                    const ResourceManagers& rc, unique_ptr<Assets>&& assets)
-    : scenario_id_{scenario_id}, stage_ids_{stage_ids}, stage_no_{stage_no}, rc_{rc}, assets_{std::move(assets)}, current_stage_{NewStage(stage_ids_[stage_no_])} {}
+    : scenario_id_{scenario_id},
+      stage_ids_{stage_ids},
+      stage_no_{stage_no},
+      rc_{rc},
+      assets_{std::move(assets)},
+      current_stage_{NewStage(stage_ids_[stage_no_])} {}
 
 unique_ptr<Stage> Scenario::NewStage(const string& stage_id) {
   const Path path = GameEnv::GetInstance()->GetScenarioPath() / scenario_id_ / "script" / (stage_id + ".lua");
