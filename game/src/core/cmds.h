@@ -2,9 +2,12 @@
 #define MENGDE_CORE_CMDS_H_
 
 #include "cmd.h"
+#include "attribute_modifier.h"
 
 namespace mengde {
 namespace core {
+
+class Unit;
 
 //
 // CmdInvalid : Unused, cannot be instantiated
@@ -79,6 +82,7 @@ class CmdBasicAttack : public CmdAct {
   virtual void Accept(CmdVisitor& visitor) const override;
 
  public:
+  Type type() const { return type_; }
   bool IsCounter() { return type_ & Type::kCounter; }
   bool IsSecond() { return type_ & Type::kSecond; }
   void UpdateChange(AttributeChange change) {

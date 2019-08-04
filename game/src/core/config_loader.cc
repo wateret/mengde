@@ -59,7 +59,7 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& ta
   } else if (str_effect == "enhance_basic_attack") {
     auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
     auto add = static_cast<int16_t>(table.get_or("addend", 0));
-    return new OCEEEnhanceBasicAttack(event, {add, mult});
+    return new OCEEEnhanceBasicAttack(event, CmdBasicAttack::Type::kActiveOrCounter, {add, mult});
   }
 
   throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");

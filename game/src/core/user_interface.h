@@ -20,6 +20,7 @@ class Unit;
 class Turn;
 class MagicList;
 class IAIUnit;
+class HeroClass;
 
 class AvailableUnits {
  public:
