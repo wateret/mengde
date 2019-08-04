@@ -4,7 +4,6 @@
 #include <boost/optional.hpp>
 
 #include "id.h"
-#include "unit.h"
 #include "util/common.h"
 
 namespace mengde {

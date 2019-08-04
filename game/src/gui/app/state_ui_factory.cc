@@ -1,5 +1,7 @@
 #include "state_ui_factory.h"
 
+#include "core/unit.h"
+
 namespace mengde {
 namespace gui {
 namespace app {

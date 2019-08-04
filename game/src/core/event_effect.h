@@ -2,6 +2,7 @@
 #define MENGDE_CORE_EVENT_EFFECT_H_
 
 #include "attribute_modifier.h"
+#include "cmds.h"
 #include "event_types.h"
 #include "turn_based.h"
 #include "util/common.h"
@@ -81,11 +82,13 @@ class OCEEPreemptiveAttack : public OnCmdEventEffect {
 
 class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
  public:
-  OCEEEnhanceBasicAttack(event::OnCmdEvent type, AttributeChange change, TurnBased turn = TurnBased{});
+  OCEEEnhanceBasicAttack(event::OnCmdEvent type, CmdBasicAttack::Type ba_type_, AttributeChange change, TurnBased turn = TurnBased{});
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
   AttributeChange change() const { return change_; }
+//  CmdBasicAttack::Type basic_attack_type() { return ba_type_; }
 
  private:
+  CmdBasicAttack::Type ba_type_;
   AttributeChange change_;
 };
 
