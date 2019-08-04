@@ -269,7 +269,8 @@ gconfig = {
             effects     = {
                 { event = "turn_begin",         effect = "restore_hp", multiplier = 15 },
                 { event = "on_normal_attacked", effect = "preemptive_attack" },
-                { event = "on_normal_attack",   effect = "enhance_basic_attack", multiplier = 25 }
+                { event = "on_normal_attack",   effect = "enhance_basic_attack", multiplier = 25 },
+                { event = "on_normal_attack",   effect = "double_attack" }
             },
             modifiers   = {
                 { attr = "atk", addend = 40 }

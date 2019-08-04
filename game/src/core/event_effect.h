@@ -82,14 +82,20 @@ class OCEEPreemptiveAttack : public OnCmdEventEffect {
 
 class OCEEEnhanceBasicAttack : public OnCmdEventEffect {
  public:
-  OCEEEnhanceBasicAttack(event::OnCmdEvent type, CmdBasicAttack::Type ba_type_, AttributeChange change, TurnBased turn = TurnBased{});
+  OCEEEnhanceBasicAttack(event::OnCmdEvent type, CmdBasicAttack::Type ba_type_, AttributeChange change,
+                         TurnBased turn = TurnBased{});
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
   AttributeChange change() const { return change_; }
-//  CmdBasicAttack::Type basic_attack_type() { return ba_type_; }
 
  private:
   CmdBasicAttack::Type ba_type_;
   AttributeChange change_;
+};
+
+class OCEEDoubleAttack : public OnCmdEventEffect {
+ public:
+  OCEEDoubleAttack(event::OnCmdEvent type, TurnBased turn = TurnBased{});
+  virtual void OnEvent(Unit* unit, CmdAct* act) override;
 };
 
 }  // namespace core

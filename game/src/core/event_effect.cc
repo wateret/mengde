@@ -47,16 +47,26 @@ void OCEEPreemptiveAttack::OnEvent(Unit* unit, CmdAct* act) {
 }
 
 // class OCEEEnhanceBasicAttack
-OCEEEnhanceBasicAttack::OCEEEnhanceBasicAttack(event::OnCmdEvent type, CmdBasicAttack::Type ba_type, AttributeChange change, TurnBased turn)
+OCEEEnhanceBasicAttack::OCEEEnhanceBasicAttack(event::OnCmdEvent type, CmdBasicAttack::Type ba_type,
+                                               AttributeChange change, TurnBased turn)
     : OnCmdEventEffect{type, turn}, ba_type_{ba_type}, change_{change} {}
 
 void OCEEEnhanceBasicAttack::OnEvent(Unit* unit, CmdAct* act) {
   CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
-  ASSERT(ba != nullptr);
 
-  if (ba_type_ | ba->type()) {
+  if (ba && (ba_type_ | ba->type())) {
     LOG_INFO("'%s' the damage will be enhanced by (%d%%,+%d)", unit->id().c_str(), change_.multiplier, change_.addend);
     ba->UpdateChange(change_);
+  }
+}
+
+OCEEDoubleAttack::OCEEDoubleAttack(event::OnCmdEvent type, TurnBased turn) : OnCmdEventEffect{type, turn} {}
+
+void OCEEDoubleAttack::OnEvent(Unit* unit, CmdAct* act) {
+  CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
+  if (ba) {
+    LOG_INFO("@%s does double attack", unit->id().c_str());
+    ba->ForceDouble();
   }
 }
 

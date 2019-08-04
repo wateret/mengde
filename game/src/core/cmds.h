@@ -1,8 +1,8 @@
 #ifndef MENGDE_CORE_CMDS_H_
 #define MENGDE_CORE_CMDS_H_
 
-#include "cmd.h"
 #include "attribute_modifier.h"
+#include "cmd.h"
 
 namespace mengde {
 namespace core {
@@ -89,6 +89,8 @@ class CmdBasicAttack : public CmdAct {
     change_.multiplier += change.multiplier;
     change_.addend += change.addend;
   }
+  void ForceDouble() { force_double_ = true; }
+  void ForceCritical() { force_critical_ = true; }
 
  private:
   bool TryBasicAttack(Stage* stage);
@@ -99,6 +101,8 @@ class CmdBasicAttack : public CmdAct {
  private:
   Type type_;
   AttributeChange change_;
+  bool force_double_ = false;
+  bool force_critical_ = false;
 };
 
 class Magic;
