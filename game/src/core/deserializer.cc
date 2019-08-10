@@ -4,6 +4,7 @@
 #include "event_effect.h"
 #include "scenario_generated.h"
 #include "util/common.h"
+#include "exceptions.h"
 
 #include <fstream>
 
@@ -179,7 +180,7 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
 
     switch (gee->instance_type()) {
       case save::GeneralEventEffectImpl::NONE: {
-        throw std::runtime_error{"Invalid value for GeneralEventEffectImpl"};
+        throw CoreException{"Invalid value for GeneralEventEffectImpl"};
       }
       case save::GeneralEventEffectImpl::GEERestoreHp: {
         auto ree = gee->instance_as_GEERestoreHp();
@@ -187,7 +188,7 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
         break;
       }
       default:
-        throw std::runtime_error{"Invalid value GeneralEventEffectImpl"};
+        throw CoreException{"Invalid value GeneralEventEffectImpl"};
     }
   } else {
     assert(ee.instance_type() == save::EventEffectImpl::OnCmdEventEffect);
@@ -196,7 +197,7 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
 
     switch (ocee->instance_type()) {
       case save::OnCmdEventEffectImpl::NONE: {
-        throw std::runtime_error{"Invalid value for OnCmdEventEffectImpl"};
+        throw CoreException{"Invalid value for OnCmdEventEffectImpl"};
         break;
       }
       case save::OnCmdEventEffectImpl::OCEEPreemptiveAttack: {
@@ -210,12 +211,13 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
         break;
       }
       case save::OnCmdEventEffectImpl::OCEEDoubleAttack: {
-        // TODO Check event value - must be kNormalAttack
+        if (event != event::OnCmdEvent::kNormalAttack)
+          throw CoreException("Invalid Event value for OCEEDoubleAttack");
         ret = new OCEEDoubleAttack{event};
         break;
       }
       default:
-        throw std::runtime_error{"Invalid value for OnCmdEventEffectImpl"};
+        throw CoreException{"Invalid value for OnCmdEventEffectImpl"};
     }
   }
 
@@ -254,7 +256,7 @@ MagicEffect* Deserializer::Build(const save::MagicEffect& me) {
       return new MagicEffectCondition{cond, turn};
     }
     default:
-      throw std::runtime_error{"Invalid MagicEffect Type"};
+      throw CoreException{"Invalid MagicEffect Type"};
   }
 }
 
