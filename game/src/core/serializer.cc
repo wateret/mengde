@@ -1,6 +1,7 @@
 #include "serializer.h"
 
 #include <fstream>
+#include "exceptions.h"
 
 namespace mengde {
 namespace core {
@@ -148,6 +149,7 @@ flatbuffers::Offset<save::OnCmdEventEffect> Serializer::Build(const OnCmdEventEf
   auto preemptive_attack = dynamic_cast<const OCEEPreemptiveAttack*>(&ocee);
   auto enhance_basic_attack = dynamic_cast<const OCEEEnhanceBasicAttack*>(&ocee);
   auto double_attack = dynamic_cast<const OCEEDoubleAttack*>(&ocee);
+  auto critical_attack = dynamic_cast<const OCEECriticalAttack*>(&ocee);
   if (preemptive_attack) {
     ocee_type = save::OnCmdEventEffectImpl::OCEEPreemptiveAttack;
     ocee_inst = Build(*preemptive_attack).Union();
@@ -157,6 +159,11 @@ flatbuffers::Offset<save::OnCmdEventEffect> Serializer::Build(const OnCmdEventEf
   } else if (double_attack) {
     ocee_type = save::OnCmdEventEffectImpl::OCEEDoubleAttack;
     ocee_inst = Build(*double_attack).Union();
+  } else if (critical_attack) {
+    ocee_type = save::OnCmdEventEffectImpl::OCEECriticalAttack;
+    ocee_inst = Build(*critical_attack).Union();
+  } else {
+    throw CoreException("Unhandled type of OnCmdEventEffect.");
   }
 
   auto type = static_cast<int>(ocee.type());
@@ -174,6 +181,10 @@ flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Serializer::Build(const OCEEEn
 
 flatbuffers::Offset<save::OCEEDoubleAttack> Serializer::Build(const OCEEDoubleAttack&) {
   return save::CreateOCEEDoubleAttack(builder_);
+}
+
+flatbuffers::Offset<save::OCEECriticalAttack> Serializer::Build(const OCEECriticalAttack&) {
+  return save::CreateOCEECriticalAttack(builder_);
 }
 
 flatbuffers::Offset<save::Magic> Serializer::Build(const Magic& magic) {

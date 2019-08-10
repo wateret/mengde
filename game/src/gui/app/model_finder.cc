@@ -16,7 +16,7 @@ string FindModelId(const Path& base_path, const string& hero_class, const string
 
   string model_id{"Default"};
   for (const auto& cand : candidates) {
-    if ((base_path / rcpath::UnitModelPath(cand)).exists()) {
+    if ((base_path / rcpath::UnitModelPath(cand)).Exists()) {
       model_id = cand;
       break;
     }

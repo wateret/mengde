@@ -2,9 +2,9 @@
 
 #include "equipment_set.h"
 #include "event_effect.h"
+#include "exceptions.h"
 #include "scenario_generated.h"
 #include "util/common.h"
-#include "exceptions.h"
 
 #include <fstream>
 
@@ -211,9 +211,13 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
         break;
       }
       case save::OnCmdEventEffectImpl::OCEEDoubleAttack: {
-        if (event != event::OnCmdEvent::kNormalAttack)
-          throw CoreException("Invalid Event value for OCEEDoubleAttack");
+        if (event != event::OnCmdEvent::kNormalAttack) throw CoreException("Invalid Event value for OCEEDoubleAttack");
         ret = new OCEEDoubleAttack{event};
+        break;
+      }
+      case save::OnCmdEventEffectImpl::OCEECriticalAttack: {
+        if (event != event::OnCmdEvent::kNormalAttack) throw CoreException("Invalid Event value for OCEEDoubleAttack");
+        ret = new OCEECriticalAttack{event};
         break;
       }
       default:

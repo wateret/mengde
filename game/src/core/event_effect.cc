@@ -55,7 +55,7 @@ void OCEEEnhanceBasicAttack::OnEvent(Unit* unit, CmdAct* act) {
   CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
 
   if (ba && (ba_type_ | ba->type())) {
-    LOG_INFO("'%s' the damage will be enhanced by (%d%%,+%d)", unit->id().c_str(), change_.multiplier, change_.addend);
+    LOG_INFO("@%'s damage is enhanced by (%d%%,+%d)", unit->id().c_str(), change_.multiplier, change_.addend);
     ba->UpdateChange(change_);
   }
 }
@@ -67,6 +67,16 @@ void OCEEDoubleAttack::OnEvent(Unit* unit, CmdAct* act) {
   if (ba) {
     LOG_INFO("@%s does double attack", unit->id().c_str());
     ba->ForceDouble();
+  }
+}
+
+OCEECriticalAttack::OCEECriticalAttack(event::OnCmdEvent type, TurnBased turn) : OnCmdEventEffect{type, turn} {}
+
+void OCEECriticalAttack::OnEvent(Unit* unit, CmdAct* act) {
+  CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
+  if (ba) {
+    LOG_INFO("@%s does critical attack", unit->id().c_str());
+    ba->ForceCritical();
   }
 }
 

@@ -21,7 +21,7 @@ class Path {
   Path& operator/=(const char* rhs);
 
   const boost::filesystem::path& path() const { return path_; }
-  bool exists() const;
+  bool Exists() const;
 
  private:
   boost::filesystem::path path_;

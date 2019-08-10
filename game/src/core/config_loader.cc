@@ -63,6 +63,9 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& ta
   } else if (str_effect == "double_attack") {
     ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
     return new OCEEDoubleAttack{event};
+  } else if (str_effect == "critical_attack") {
+    ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
+    return new OCEECriticalAttack{event};
   }
 
   throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");
@@ -87,6 +90,7 @@ ConfigLoader::ConfigLoader(const Path& filename) : lua_{}, rc_() {
   Path path = GameEnv::GetInstance()->GetScenarioPath() / filename;
 
   try {
+    if (!path.Exists()) throw CoreException("Config file '" + path.ToString() + "' does not exist.");
     lua_.script_file(path.ToString());
     ParseUnitClassesAndTerrains();
     ParseMagics();

@@ -61,7 +61,7 @@ enemies = {
 
 function on_deploy(game)
     game:appoint_hero("CaoCao", 80)
-    game:appoint_hero("ZhangLiao", 19)
+    game:appoint_hero("ZhangLiao", 10)
     game:appoint_hero("DianWei", 25)
     game:appoint_hero("ManChong", 20)
     game:appoint_hero("XiahouDun", 23)
