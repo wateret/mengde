@@ -53,6 +53,8 @@ struct OCEEEnhanceBasicAttack;
 
 struct OCEEDoubleAttack;
 
+struct OCEECriticalAttack;
+
 struct Magic;
 
 struct LearnInfo;
@@ -167,16 +169,18 @@ enum class OnCmdEventEffectImpl : uint8_t {
   OCEEPreemptiveAttack = 1,
   OCEEEnhanceBasicAttack = 2,
   OCEEDoubleAttack = 3,
+  OCEECriticalAttack = 4,
   MIN = NONE,
-  MAX = OCEEDoubleAttack
+  MAX = OCEECriticalAttack
 };
 
-inline const OnCmdEventEffectImpl (&EnumValuesOnCmdEventEffectImpl())[4] {
+inline const OnCmdEventEffectImpl (&EnumValuesOnCmdEventEffectImpl())[5] {
   static const OnCmdEventEffectImpl values[] = {
     OnCmdEventEffectImpl::NONE,
     OnCmdEventEffectImpl::OCEEPreemptiveAttack,
     OnCmdEventEffectImpl::OCEEEnhanceBasicAttack,
-    OnCmdEventEffectImpl::OCEEDoubleAttack
+    OnCmdEventEffectImpl::OCEEDoubleAttack,
+    OnCmdEventEffectImpl::OCEECriticalAttack
   };
   return values;
 }
@@ -187,6 +191,7 @@ inline const char * const *EnumNamesOnCmdEventEffectImpl() {
     "OCEEPreemptiveAttack",
     "OCEEEnhanceBasicAttack",
     "OCEEDoubleAttack",
+    "OCEECriticalAttack",
     nullptr
   };
   return names;
@@ -211,6 +216,10 @@ template<> struct OnCmdEventEffectImplTraits<OCEEEnhanceBasicAttack> {
 
 template<> struct OnCmdEventEffectImplTraits<OCEEDoubleAttack> {
   static const OnCmdEventEffectImpl enum_value = OnCmdEventEffectImpl::OCEEDoubleAttack;
+};
+
+template<> struct OnCmdEventEffectImplTraits<OCEECriticalAttack> {
+  static const OnCmdEventEffectImpl enum_value = OnCmdEventEffectImpl::OCEECriticalAttack;
 };
 
 bool VerifyOnCmdEventEffectImpl(flatbuffers::Verifier &verifier, const void *obj, OnCmdEventEffectImpl type);
@@ -1480,6 +1489,9 @@ struct OnCmdEventEffect FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const OCEEDoubleAttack *instance_as_OCEEDoubleAttack() const {
     return instance_type() == OnCmdEventEffectImpl::OCEEDoubleAttack ? static_cast<const OCEEDoubleAttack *>(instance()) : nullptr;
   }
+  const OCEECriticalAttack *instance_as_OCEECriticalAttack() const {
+    return instance_type() == OnCmdEventEffectImpl::OCEECriticalAttack ? static_cast<const OCEECriticalAttack *>(instance()) : nullptr;
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<int32_t>(verifier, VT_TYPE) &&
@@ -1500,6 +1512,10 @@ template<> inline const OCEEEnhanceBasicAttack *OnCmdEventEffect::instance_as<OC
 
 template<> inline const OCEEDoubleAttack *OnCmdEventEffect::instance_as<OCEEDoubleAttack>() const {
   return instance_as_OCEEDoubleAttack();
+}
+
+template<> inline const OCEECriticalAttack *OnCmdEventEffect::instance_as<OCEECriticalAttack>() const {
+  return instance_as_OCEECriticalAttack();
 }
 
 struct OnCmdEventEffectBuilder {
@@ -1631,6 +1647,34 @@ struct OCEEDoubleAttackBuilder {
 inline flatbuffers::Offset<OCEEDoubleAttack> CreateOCEEDoubleAttack(
     flatbuffers::FlatBufferBuilder &_fbb) {
   OCEEDoubleAttackBuilder builder_(_fbb);
+  return builder_.Finish();
+}
+
+struct OCEECriticalAttack FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           verifier.EndTable();
+  }
+};
+
+struct OCEECriticalAttackBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  explicit OCEECriticalAttackBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  OCEECriticalAttackBuilder &operator=(const OCEECriticalAttackBuilder &);
+  flatbuffers::Offset<OCEECriticalAttack> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<OCEECriticalAttack>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<OCEECriticalAttack> CreateOCEECriticalAttack(
+    flatbuffers::FlatBufferBuilder &_fbb) {
+  OCEECriticalAttackBuilder builder_(_fbb);
   return builder_.Finish();
 }
 
@@ -2315,6 +2359,10 @@ inline bool VerifyOnCmdEventEffectImpl(flatbuffers::Verifier &verifier, const vo
     }
     case OnCmdEventEffectImpl::OCEEDoubleAttack: {
       auto ptr = reinterpret_cast<const OCEEDoubleAttack *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case OnCmdEventEffectImpl::OCEECriticalAttack: {
+      auto ptr = reinterpret_cast<const OCEECriticalAttack *>(obj);
       return verifier.VerifyTable(ptr);
     }
     default: return false;

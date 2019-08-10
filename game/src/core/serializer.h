@@ -41,6 +41,7 @@ class Serializer {
   flatbuffers::Offset<save::OCEEPreemptiveAttack> Build(const OCEEPreemptiveAttack& ocee);
   flatbuffers::Offset<save::OCEEEnhanceBasicAttack> Build(const OCEEEnhanceBasicAttack& ocee);
   flatbuffers::Offset<save::OCEEDoubleAttack> Build(const OCEEDoubleAttack& ocee);
+  flatbuffers::Offset<save::OCEECriticalAttack> Build(const OCEECriticalAttack& ocee);
   flatbuffers::Offset<save::Magic> Build(const Magic& magic);
   flatbuffers::Offset<save::MagicEffect> Build(const MagicEffect& magic_effect);
   flatbuffers::Offset<save::MagicEffectHp> Build(const MagicEffectHP& me_hp);

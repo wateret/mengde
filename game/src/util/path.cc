@@ -33,4 +33,4 @@ Path& Path::operator/=(const char* rhs) {
   return *this;
 }
 
-bool Path::exists() const { return boost::filesystem::exists(path_); }
+bool Path::Exists() const { return boost::filesystem::exists(path_); }

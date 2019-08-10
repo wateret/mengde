@@ -98,6 +98,12 @@ class OCEEDoubleAttack : public OnCmdEventEffect {
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
 };
 
+class OCEECriticalAttack : public OnCmdEventEffect {
+ public:
+  OCEECriticalAttack(event::OnCmdEvent type, TurnBased turn = TurnBased{});
+  virtual void OnEvent(Unit* unit, CmdAct* act) override;
+};
+
 }  // namespace core
 }  // namespace mengde
 
