@@ -71,7 +71,15 @@ class CmdStay : public CmdAct {
 class CmdBasicAttack : public CmdAct {
  public:
   // Type of Basic Attack
-  enum Type { kNone = 0x0, kActive = 0x1, kCounter = 0x2, kSecond = 0x4, kActiveOrCounter = kActive | kCounter };
+  enum Type {
+    kNone = 0x0,      //< None, invalid type
+    kActive = 0x1,    //< Active
+    kCounter1 = 0x2,  //< Counter
+    kCounter2 = 0x4,  //< Counter
+    kSecond = 0x8,    //< Second attack of a double attack, independent with kActive and kCounter
+    kCounter = kCounter1 | kCounter2,
+    kActiveOrCounter = kActive | kCounter1 | kCounter2
+  };
 
  public:
   CmdBasicAttack(const UId&, const UId&, Type);
@@ -84,6 +92,8 @@ class CmdBasicAttack : public CmdAct {
  public:
   Type type() const { return type_; }
   bool IsCounter() { return type_ & Type::kCounter; }
+  bool IsCounter1() { return type_ & Type::kCounter1; }
+  bool IsCounter2() { return type_ & Type::kCounter2; }
   bool IsSecond() { return type_ & Type::kSecond; }
   void UpdateChange(AttributeChange change) {
     change_.multiplier += change.multiplier;
@@ -91,6 +101,7 @@ class CmdBasicAttack : public CmdAct {
   }
   void ForceDouble() { force_double_ = true; }
   void ForceCritical() { force_critical_ = true; }
+  void ForceCounter2(UId uid) { uid_counter2_ = uid; }
 
  private:
   bool TryBasicAttack(Stage* stage);
@@ -103,6 +114,7 @@ class CmdBasicAttack : public CmdAct {
   AttributeChange change_;
   bool force_double_ = false;
   bool force_critical_ = false;
+  UId uid_counter2_;  //<
 };
 
 class Magic;

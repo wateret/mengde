@@ -120,15 +120,25 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
   // Double attack
   bool reserve_second_attack = force_double_ || TryBasicAttackDouble(game);
   if (!IsSecond() && reserve_second_attack) {
-    ret->Append(std::make_unique<CmdBasicAttack>(atk_, def_, (Type)(type_ | Type::kSecond)));
+    auto cmd = std::make_unique<CmdBasicAttack>(atk_, def_, static_cast<Type>(type_ | Type::kSecond));
+    cmd->ForceCounter2(uid_counter2_);
+    ret->Append(std::move(cmd));
   }
 
   // Counter attack
   bool is_last_attack = (reserve_second_attack == IsSecond());
-  if (is_last_attack && !IsCounter() && def->IsInRange(atk->position()) &&
-      !def->condition_set().Has(Condition::kStunned)) {
-    LOG_INFO("'%s's' counter-attack to '%s' is reserved.", def->id().c_str(), atk->id().c_str());
-    ret->Append(std::make_unique<CmdBasicAttack>(def_, atk_, CmdBasicAttack::Type::kCounter));
+  if (is_last_attack && def->IsInRange(atk->position()) && !def->condition_set().Has(Condition::kStunned)) {
+    if (!IsCounter()) {
+      LOG_INFO("@%s's counter-attack to '%s' is reserved.", def->id().c_str(), atk->id().c_str());
+      auto cmd = std::make_unique<CmdBasicAttack>(def_, atk_, CmdBasicAttack::Type::kCounter1);
+      cmd->ForceCounter2(uid_counter2_);
+      ret->Append(std::move(cmd));
+    } else if (IsCounter1() && uid_counter2_ == def_) {  // Counter-Counter Attack
+      LOG_INFO("@%s's counter-counter-attack to '%s' is reserved.", def->id().c_str(), atk->id().c_str());
+      auto cmd = std::make_unique<CmdBasicAttack>(def_, atk_, CmdBasicAttack::Type::kCounter2);
+      cmd->ForceCounter2(uid_counter2_);
+      ret->Append(std::move(cmd));
+    }
   }
 
   return unique_ptr<Cmd>(ret);

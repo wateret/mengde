@@ -66,6 +66,9 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& ta
   } else if (str_effect == "critical_attack") {
     ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
     return new OCEECriticalAttack{event};
+  } else if (str_effect == "counter_counter_attack") {
+    ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
+    return new OCEECounterCounterAttack{event};
   }
 
   throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");

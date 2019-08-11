@@ -80,5 +80,16 @@ void OCEECriticalAttack::OnEvent(Unit* unit, CmdAct* act) {
   }
 }
 
+OCEECounterCounterAttack::OCEECounterCounterAttack(event::OnCmdEvent type, TurnBased turn)
+    : OnCmdEventEffect{type, turn} {}
+
+void OCEECounterCounterAttack::OnEvent(Unit* unit, CmdAct* act) {
+  CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
+  if (ba) {
+    LOG_INFO("@%s does counter-counter attack", unit->id().c_str());
+    ba->ForceCounter2(unit->uid());
+  }
+}
+
 }  // namespace core
 }  // namespace mengde
