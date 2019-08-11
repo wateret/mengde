@@ -255,7 +255,8 @@ gconfig = {
             description = "short_sword_desc",
             equipable   = "all",
             effects     = {
-                { event = "action_done", effect = "restore_hp", multiplier = 15 }
+                { event = "action_done", effect = "restore_hp", multiplier = 15 },
+                { event = "on_normal_attack", effect = "critical_attack" }
             },
             modifiers   = {
                 { attr = "atk", addend = 20 },
@@ -271,7 +272,7 @@ gconfig = {
                 { event = "on_normal_attacked", effect = "preemptive_attack" },
                 { event = "on_normal_attack",   effect = "enhance_basic_attack", multiplier = 5 },
                 { event = "on_normal_attack",   effect = "double_attack" },
-                { event = "on_normal_attack",   effect = "critical_attack" }
+                { event = "on_normal_attack",   effect = "counter_counter_attack" }
             },
             modifiers   = {
                 { attr = "atk", addend = 40 }
