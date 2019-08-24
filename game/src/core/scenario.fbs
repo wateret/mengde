@@ -109,7 +109,8 @@ union OnCmdEventEffectImpl {
   OCEEPreemptiveAttack,
   OCEEEnhanceBasicAttack,
   OCEEDoubleAttack,
-  OCEECriticalAttack
+  OCEECriticalAttack,
+  OCEEReflectAttack
 }
 
 table EventEffect {
@@ -142,6 +143,10 @@ table OCEEDoubleAttack {
 }
 
 table OCEECriticalAttack {
+}
+
+table OCEEReflectAttack {
+  multiplier: int16;
 }
 
 table Magic {

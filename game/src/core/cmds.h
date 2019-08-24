@@ -102,6 +102,7 @@ class CmdBasicAttack : public CmdAct {
   void ForceDouble() { force_double_ = true; }
   void ForceCritical() { force_critical_ = true; }
   void ForceCounter2(UId uid) { uid_counter2_ = uid; }
+  void ForceReflect(uint32_t multiplier) { reflect_multiplier_ = multiplier; }
 
  private:
   bool TryBasicAttack(Stage* stage);
@@ -115,6 +116,7 @@ class CmdBasicAttack : public CmdAct {
   bool force_double_ = false;
   bool force_critical_ = false;
   UId uid_counter2_;  //<
+  uint32_t reflect_multiplier_ = 0;
 };
 
 class Magic;

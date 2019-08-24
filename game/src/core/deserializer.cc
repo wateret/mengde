@@ -220,6 +220,11 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
         ret = new OCEECriticalAttack{event};
         break;
       }
+      case save::OnCmdEventEffectImpl::OCEEReflectAttack: {
+        auto inst = ocee->instance_as_OCEEReflectAttack();
+        ret = new OCEEReflectAttack{event, inst->multiplier()};
+        break;
+      }
       default:
         throw CoreException{"Invalid value for OnCmdEventEffectImpl"};
     }

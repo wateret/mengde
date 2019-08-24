@@ -113,6 +113,13 @@ unique_ptr<Cmd> CmdBasicAttack::Do(Stage* game) {
     }
     damage = std::max(damage, 1);
     ret->Append(std::make_unique<CmdHit>(atk_, def_, CmdActResult::Type::kBasicAttack, hit_type, damage));
+
+    // Reflect attack
+    if (reflect_multiplier_ > 0) {
+      auto reflect_damage = damage * reflect_multiplier_ / 100;
+      ret->Append(std::make_unique<CmdHit>(def_, atk_, CmdActResult::Type::kBasicAttack, CmdHit::HitType::kNormal,
+                                           reflect_damage));
+    }
   } else {
     ret->Append(std::make_unique<CmdMiss>(atk_, def_, CmdActResult::Type::kBasicAttack));
   }
