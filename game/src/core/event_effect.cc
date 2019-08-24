@@ -91,5 +91,16 @@ void OCEECounterCounterAttack::OnEvent(Unit* unit, CmdAct* act) {
   }
 }
 
+OCEEReflectAttack::OCEEReflectAttack(event::OnCmdEvent type, int16_t multiplier, TurnBased turn)
+    : OnCmdEventEffect{type, turn}, multiplier_{multiplier} {}
+
+void OCEEReflectAttack::OnEvent(Unit* unit, CmdAct* act) {
+  CmdBasicAttack* ba = dynamic_cast<CmdBasicAttack*>(act);
+  if (ba) {
+    LOG_INFO("@%s reflect attack by %d%%", unit->id().c_str());
+    ba->ForceReflect(multiplier_);
+  }
+}
+
 }  // namespace core
 }  // namespace mengde

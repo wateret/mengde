@@ -69,6 +69,10 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& ta
   } else if (str_effect == "counter_counter_attack") {
     ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
     return new OCEECounterCounterAttack{event};
+  } else if (str_effect == "reflect_attack") {
+    ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
+    auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
+    return new OCEEReflectAttack{event, mult};
   }
 
   throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");

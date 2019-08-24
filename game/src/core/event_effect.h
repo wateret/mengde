@@ -110,6 +110,16 @@ class OCEECounterCounterAttack : public OnCmdEventEffect {
   virtual void OnEvent(Unit* unit, CmdAct* act) override;
 };
 
+class OCEEReflectAttack : public OnCmdEventEffect {
+ public:
+  OCEEReflectAttack(event::OnCmdEvent type, int16_t multiplier, TurnBased turn = TurnBased{});
+  virtual void OnEvent(Unit* unit, CmdAct* act) override;
+  int16_t multiplier() const { return multiplier_; }
+
+ private:
+  int16_t multiplier_;
+};
+
 }  // namespace core
 }  // namespace mengde
 
