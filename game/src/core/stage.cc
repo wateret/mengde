@@ -7,6 +7,7 @@
 #include "core/path_tree.h"
 #include "deployer.h"
 #include "event_effect.h"
+#include "exceptions.h"
 #include "formulae.h"
 #include "lua_callbacks.h"
 #include "lua_game.h"
@@ -33,19 +34,23 @@ Stage::Stage(const ResourceManagers& rc, const Assets* assets, const Path& stage
       stage_unit_manager_{new StageUnitManager},
       turn_{0},  // FIXME Currently intialization must be done after SetupLua
       status_(Status::kDeploying) {
-  SetupLua(stage_script_path);
+  try {
+    SetupLua(stage_script_path);
 
-  turn_ = Turn{GetTurnLimit()};
+    turn_ = Turn{GetTurnLimit()};
+    map_ = std::unique_ptr<Map>(CreateMap());
 
-  map_ = std::unique_ptr<Map>(CreateMap());
+    // Run main function
+    lua_["main"](*lua_game_);
 
-  // Run main function
-  lua_["main"](*lua_game_);
+    // Begin with on_deploy
+    lua_callbacks_->on_deploy()(*lua_game_);
 
-  // Begin with on_deploy
-  lua_callbacks_->on_deploy()(*lua_game_);
-
-  deployer_ = std::unique_ptr<Deployer>(CreateDeployer());
+    deployer_ = std::unique_ptr<Deployer>(CreateDeployer());
+  } catch (const std::exception& e) {
+    LOG_ERROR(e.what());
+    throw CoreException(std::string("Error while Stage script load : ") + e.what());
+  }
 }
 
 Stage::~Stage() {
@@ -55,6 +60,13 @@ Stage::~Stage() {
 void Stage::SetupLua(const Path& stage_script_path) {
   // Run the user's script file
   lua_.open_libraries(sol::lib::base);
+
+  const char* blacklist_lib_base[] = {"dofile", "load", "loadfile"};
+  for (auto fn : blacklist_lib_base) {
+    // TODO How to completely delete table entry instead of setting to nil
+    lua_[fn] = sol::lua_nil;
+  }
+
   lua_.script_file(stage_script_path.ToString());
   lua_config_ = lua_["gstage"];
 
