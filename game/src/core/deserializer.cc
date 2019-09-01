@@ -200,37 +200,56 @@ EventEffectBase* Deserializer::Build(const save::EventEffect& ee) {
         throw CoreException{"Invalid value for OnCmdEventEffectImpl"};
         break;
       }
-      case save::OnCmdEventEffectImpl::OCEEPreemptiveAttack: {
-        ret = new OCEEPreemptiveAttack{event};
-        break;
-      }
-      case save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack: {
-        auto inst = ocee->instance_as_OCEEEnhanceBasicAttack();
-        ret = new OCEEEnhanceBasicAttack{event, CmdBasicAttack::Type::kActiveOrCounter,
-                                         BuildStruct<AttributeChange>(*inst->change())};
-        break;
-      }
-      case save::OnCmdEventEffectImpl::OCEEDoubleAttack: {
-        if (event != event::OnCmdEvent::kNormalAttack) throw CoreException("Invalid Event value for OCEEDoubleAttack");
-        ret = new OCEEDoubleAttack{event};
-        break;
-      }
-      case save::OnCmdEventEffectImpl::OCEECriticalAttack: {
-        if (event != event::OnCmdEvent::kNormalAttack) throw CoreException("Invalid Event value for OCEEDoubleAttack");
-        ret = new OCEECriticalAttack{event};
-        break;
-      }
-      case save::OnCmdEventEffectImpl::OCEEReflectAttack: {
-        auto inst = ocee->instance_as_OCEEReflectAttack();
-        ret = new OCEEReflectAttack{event, inst->multiplier()};
-        break;
-      }
+
+#define BUILD_OCEE(T)                             \
+  case save::OnCmdEventEffectImpl::T: {           \
+    ret = Build(event, *ocee->instance_as_##T()); \
+    break;                                        \
+  }
+
+        BUILD_OCEE(OCEEPreemptiveAttack);
+        BUILD_OCEE(OCEEEnhanceBasicAttack);
+        BUILD_OCEE(OCEEDoubleAttack);
+        BUILD_OCEE(OCEECriticalAttack);
+        BUILD_OCEE(OCEECounterCounterAttack);
+        BUILD_OCEE(OCEEReflectAttack);
+
+#undef BUILD_OCEE
+
       default:
         throw CoreException{"Invalid value for OnCmdEventEffectImpl"};
     }
   }
 
   return ret;
+}
+
+EventEffectBase* Deserializer::Build(event::OnCmdEvent event, const save::OCEEPreemptiveAttack&) {
+  return new OCEEPreemptiveAttack{event};
+}
+
+EventEffectBase* Deserializer::Build(event::OnCmdEvent event, const save::OCEEEnhanceBasicAttack& ocee) {
+  return new OCEEEnhanceBasicAttack{event, CmdBasicAttack::Type::kActiveOrCounter,
+                                    BuildStruct<AttributeChange>(*ocee.change())};
+}
+
+EventEffectBase* Deserializer::Build(event::OnCmdEvent event, const save::OCEEDoubleAttack&) {
+  if (event != event::OnCmdEvent::kNormalAttack) throw CoreException("Invalid Event value for OCEEDoubleAttack");
+  return new OCEEDoubleAttack{event};
+}
+
+EventEffectBase* Deserializer::Build(event::OnCmdEvent event, const save::OCEECriticalAttack&) {
+  if (event != event::OnCmdEvent::kNormalAttack) throw CoreException("Invalid Event value for OCEEDoubleAttack");
+  return new OCEECriticalAttack{event};
+}
+
+EventEffectBase* Deserializer::Build(event::OnCmdEvent event, const save::OCEECounterCounterAttack&) {
+  if (event != event::OnCmdEvent::kNormalAttack) throw CoreException("Invalid Event value for OCEEDoubleAttack");
+  return new OCEECounterCounterAttack{event};
+}
+
+EventEffectBase* Deserializer::Build(event::OnCmdEvent event, const save::OCEEReflectAttack& ocee) {
+  return new OCEEReflectAttack{event, ocee.multiplier()};
 }
 
 HeroTemplateManager* Deserializer::Build(const flatbuffers::Vector<flatbuffers::Offset<save::HeroTemplate>>& htm,
