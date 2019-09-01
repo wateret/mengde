@@ -29,6 +29,12 @@ class Deserializer {
   MagicEffect* Build(const save::MagicEffect& me);
   VolatileAttribute* Build(const save::VolatileAttributes& va);
   EventEffectBase* Build(const save::EventEffect& ee);
+  EventEffectBase* Build(event::OnCmdEvent event, const save::OCEEPreemptiveAttack& ocee);
+  EventEffectBase* Build(event::OnCmdEvent event, const save::OCEEEnhanceBasicAttack& ocee);
+  EventEffectBase* Build(event::OnCmdEvent event, const save::OCEEDoubleAttack& ocee);
+  EventEffectBase* Build(event::OnCmdEvent event, const save::OCEECriticalAttack& ocee);
+  EventEffectBase* Build(event::OnCmdEvent event, const save::OCEECounterCounterAttack& ocee);
+  EventEffectBase* Build(event::OnCmdEvent event, const save::OCEEReflectAttack& ocee);
   AttributeModifier Build(const save::AttributeModifier& mod);
 
   template <typename CoreStruct, typename FbsStruct>

@@ -110,6 +110,7 @@ union OnCmdEventEffectImpl {
   OCEEEnhanceBasicAttack,
   OCEEDoubleAttack,
   OCEECriticalAttack,
+  OCEECounterCounterAttack,
   OCEEReflectAttack
 }
 
@@ -143,6 +144,9 @@ table OCEEDoubleAttack {
 }
 
 table OCEECriticalAttack {
+}
+
+table OCEECounterCounterAttack {
 }
 
 table OCEEReflectAttack {

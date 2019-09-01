@@ -55,6 +55,8 @@ struct OCEEDoubleAttack;
 
 struct OCEECriticalAttack;
 
+struct OCEECounterCounterAttack;
+
 struct OCEEReflectAttack;
 
 struct Magic;
@@ -172,18 +174,20 @@ enum class OnCmdEventEffectImpl : uint8_t {
   OCEEEnhanceBasicAttack = 2,
   OCEEDoubleAttack = 3,
   OCEECriticalAttack = 4,
-  OCEEReflectAttack = 5,
+  OCEECounterCounterAttack = 5,
+  OCEEReflectAttack = 6,
   MIN = NONE,
   MAX = OCEEReflectAttack
 };
 
-inline const OnCmdEventEffectImpl (&EnumValuesOnCmdEventEffectImpl())[6] {
+inline const OnCmdEventEffectImpl (&EnumValuesOnCmdEventEffectImpl())[7] {
   static const OnCmdEventEffectImpl values[] = {
     OnCmdEventEffectImpl::NONE,
     OnCmdEventEffectImpl::OCEEPreemptiveAttack,
     OnCmdEventEffectImpl::OCEEEnhanceBasicAttack,
     OnCmdEventEffectImpl::OCEEDoubleAttack,
     OnCmdEventEffectImpl::OCEECriticalAttack,
+    OnCmdEventEffectImpl::OCEECounterCounterAttack,
     OnCmdEventEffectImpl::OCEEReflectAttack
   };
   return values;
@@ -196,6 +200,7 @@ inline const char * const *EnumNamesOnCmdEventEffectImpl() {
     "OCEEEnhanceBasicAttack",
     "OCEEDoubleAttack",
     "OCEECriticalAttack",
+    "OCEECounterCounterAttack",
     "OCEEReflectAttack",
     nullptr
   };
@@ -225,6 +230,10 @@ template<> struct OnCmdEventEffectImplTraits<OCEEDoubleAttack> {
 
 template<> struct OnCmdEventEffectImplTraits<OCEECriticalAttack> {
   static const OnCmdEventEffectImpl enum_value = OnCmdEventEffectImpl::OCEECriticalAttack;
+};
+
+template<> struct OnCmdEventEffectImplTraits<OCEECounterCounterAttack> {
+  static const OnCmdEventEffectImpl enum_value = OnCmdEventEffectImpl::OCEECounterCounterAttack;
 };
 
 template<> struct OnCmdEventEffectImplTraits<OCEEReflectAttack> {
@@ -1501,6 +1510,9 @@ struct OnCmdEventEffect FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const OCEECriticalAttack *instance_as_OCEECriticalAttack() const {
     return instance_type() == OnCmdEventEffectImpl::OCEECriticalAttack ? static_cast<const OCEECriticalAttack *>(instance()) : nullptr;
   }
+  const OCEECounterCounterAttack *instance_as_OCEECounterCounterAttack() const {
+    return instance_type() == OnCmdEventEffectImpl::OCEECounterCounterAttack ? static_cast<const OCEECounterCounterAttack *>(instance()) : nullptr;
+  }
   const OCEEReflectAttack *instance_as_OCEEReflectAttack() const {
     return instance_type() == OnCmdEventEffectImpl::OCEEReflectAttack ? static_cast<const OCEEReflectAttack *>(instance()) : nullptr;
   }
@@ -1528,6 +1540,10 @@ template<> inline const OCEEDoubleAttack *OnCmdEventEffect::instance_as<OCEEDoub
 
 template<> inline const OCEECriticalAttack *OnCmdEventEffect::instance_as<OCEECriticalAttack>() const {
   return instance_as_OCEECriticalAttack();
+}
+
+template<> inline const OCEECounterCounterAttack *OnCmdEventEffect::instance_as<OCEECounterCounterAttack>() const {
+  return instance_as_OCEECounterCounterAttack();
 }
 
 template<> inline const OCEEReflectAttack *OnCmdEventEffect::instance_as<OCEEReflectAttack>() const {
@@ -1691,6 +1707,34 @@ struct OCEECriticalAttackBuilder {
 inline flatbuffers::Offset<OCEECriticalAttack> CreateOCEECriticalAttack(
     flatbuffers::FlatBufferBuilder &_fbb) {
   OCEECriticalAttackBuilder builder_(_fbb);
+  return builder_.Finish();
+}
+
+struct OCEECounterCounterAttack FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           verifier.EndTable();
+  }
+};
+
+struct OCEECounterCounterAttackBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  explicit OCEECounterCounterAttackBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  OCEECounterCounterAttackBuilder &operator=(const OCEECounterCounterAttackBuilder &);
+  flatbuffers::Offset<OCEECounterCounterAttack> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<OCEECounterCounterAttack>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<OCEECounterCounterAttack> CreateOCEECounterCounterAttack(
+    flatbuffers::FlatBufferBuilder &_fbb) {
+  OCEECounterCounterAttackBuilder builder_(_fbb);
   return builder_.Finish();
 }
 
@@ -2419,6 +2463,10 @@ inline bool VerifyOnCmdEventEffectImpl(flatbuffers::Verifier &verifier, const vo
     }
     case OnCmdEventEffectImpl::OCEECriticalAttack: {
       auto ptr = reinterpret_cast<const OCEECriticalAttack *>(obj);
+      return verifier.VerifyTable(ptr);
+    }
+    case OnCmdEventEffectImpl::OCEECounterCounterAttack: {
+      auto ptr = reinterpret_cast<const OCEECounterCounterAttack *>(obj);
       return verifier.VerifyTable(ptr);
     }
     case OnCmdEventEffectImpl::OCEEReflectAttack: {

@@ -146,26 +146,25 @@ flatbuffers::Offset<save::GEERestoreHp> Serializer::Build(const GEERestoreHp& ge
 flatbuffers::Offset<save::OnCmdEventEffect> Serializer::Build(const OnCmdEventEffect& ocee) {
   save::OnCmdEventEffectImpl ocee_type = save::OnCmdEventEffectImpl::NONE;
   flatbuffers::Offset<void> ocee_inst = 0;
-  auto preemptive_attack = dynamic_cast<const OCEEPreemptiveAttack*>(&ocee);
-  auto enhance_basic_attack = dynamic_cast<const OCEEEnhanceBasicAttack*>(&ocee);
-  auto double_attack = dynamic_cast<const OCEEDoubleAttack*>(&ocee);
-  auto critical_attack = dynamic_cast<const OCEECriticalAttack*>(&ocee);
-  if (preemptive_attack) {
-    ocee_type = save::OnCmdEventEffectImpl::OCEEPreemptiveAttack;
-    ocee_inst = Build(*preemptive_attack).Union();
-  } else if (enhance_basic_attack) {
-    ocee_type = save::OnCmdEventEffectImpl::OCEEEnhanceBasicAttack;
-    ocee_inst = Build(*enhance_basic_attack).Union();
-  } else if (double_attack) {
-    ocee_type = save::OnCmdEventEffectImpl::OCEEDoubleAttack;
-    ocee_inst = Build(*double_attack).Union();
-  } else if (critical_attack) {
-    ocee_type = save::OnCmdEventEffectImpl::OCEECriticalAttack;
-    ocee_inst = Build(*critical_attack).Union();
-  } else if (auto reflect_attack = dynamic_cast<const OCEEReflectAttack*>(&ocee)) {
-    ocee_type = save::OnCmdEventEffectImpl::OCEEReflectAttack;
-    ocee_inst = Build(*reflect_attack).Union();
-  } else {
+
+#define BUILD_OCEE(T)                                       \
+  do {                                                      \
+    if (auto actual_ocee = dynamic_cast<const T*>(&ocee)) { \
+      ocee_type = save::OnCmdEventEffectImpl::T;            \
+      ocee_inst = Build(*actual_ocee).Union();              \
+    }                                                       \
+  } while (false)
+
+  BUILD_OCEE(OCEEPreemptiveAttack);
+  BUILD_OCEE(OCEEEnhanceBasicAttack);
+  BUILD_OCEE(OCEEDoubleAttack);
+  BUILD_OCEE(OCEECriticalAttack);
+  BUILD_OCEE(OCEECounterCounterAttack);
+  BUILD_OCEE(OCEEReflectAttack);
+
+#undef BUILD_OCEE
+
+  if (ocee_type == save::OnCmdEventEffectImpl::NONE) {
     throw CoreException("Unhandled type of OnCmdEventEffect.");
   }
 
@@ -188,6 +187,10 @@ flatbuffers::Offset<save::OCEEDoubleAttack> Serializer::Build(const OCEEDoubleAt
 
 flatbuffers::Offset<save::OCEECriticalAttack> Serializer::Build(const OCEECriticalAttack&) {
   return save::CreateOCEECriticalAttack(builder_);
+}
+
+flatbuffers::Offset<save::OCEECounterCounterAttack> Serializer::Build(const OCEECounterCounterAttack&) {
+  return save::CreateOCEECounterCounterAttack(builder_);
 }
 
 flatbuffers::Offset<save::OCEEReflectAttack> Serializer::Build(const OCEEReflectAttack& obj) {

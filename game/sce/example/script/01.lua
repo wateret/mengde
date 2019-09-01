@@ -58,8 +58,6 @@ enemies = {
     lubu = nil
 }
 
-dofile('02.lua')
-
 function on_deploy(game)
     game:appoint_hero("CaoCao", 80)
     game:appoint_hero("ZhangLiao", 10)

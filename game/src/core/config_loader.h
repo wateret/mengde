@@ -18,6 +18,9 @@ class OnCmdEventEffect;
 
 class EventEffectLoader {
  public:
+  using OCEEGenerator = std::function<OnCmdEventEffect*(event::OnCmdEvent event, const sol::table& table)>;
+
+ public:
   static const EventEffectLoader& instance();
 
  public:
@@ -25,15 +28,24 @@ class EventEffectLoader {
 
   GeneralEventEffect* CreateGeneralEventEffect(const sol::table&) const;
   OnCmdEventEffect* CreateOnCmdEventEffect(const sol::table&) const;
+
   bool IsGeneralEventEffect(const std::string& key) const;
   bool IsOnCmdEventEffect(const std::string& key) const;
 
  private:
   EventEffectLoader();
 
+  static OnCmdEventEffect* CreateOCEEPreemptiveAttack(event::OnCmdEvent event, const sol::table& table);
+  static OnCmdEventEffect* CreateOCEEEnhanceBasicAttack(event::OnCmdEvent event, const sol::table& table);
+  static OnCmdEventEffect* CreateOCEEDoubleAttack(event::OnCmdEvent event, const sol::table& table);
+  static OnCmdEventEffect* CreateOCEECriticalAttack(event::OnCmdEvent event, const sol::table& table);
+  static OnCmdEventEffect* CreateOCEECounterCounterAttack(event::OnCmdEvent event, const sol::table& table);
+  static OnCmdEventEffect* CreateOCEEReflectAttack(event::OnCmdEvent event, const sol::table& table);
+
  private:
   std::unordered_map<std::string, event::GeneralEvent> gee_map_;
   std::unordered_map<std::string, event::OnCmdEvent> ocee_map_;
+  std::unordered_map<std::string, OCEEGenerator> ocee_gen_map_;
 };
 
 class ConfigLoader {

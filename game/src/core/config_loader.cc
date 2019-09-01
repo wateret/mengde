@@ -21,6 +21,17 @@ EventEffectLoader::EventEffectLoader() {
   gee_map_.emplace("turn_begin", event::GeneralEvent::kTurnBegin);
   ocee_map_.emplace("on_normal_attack", event::OnCmdEvent::kNormalAttack);
   ocee_map_.emplace("on_normal_attacked", event::OnCmdEvent::kNormalAttacked);
+
+#define BUILD_OCEE(S, T) ocee_gen_map_.emplace(#S, Create##T);
+
+  BUILD_OCEE(preemptive_attack, OCEEPreemptiveAttack);
+  BUILD_OCEE(enhance_basic_attack, OCEEEnhanceBasicAttack);
+  BUILD_OCEE(double_attack, OCEEDoubleAttack);
+  BUILD_OCEE(critical_attack, OCEECriticalAttack);
+  BUILD_OCEE(counter_counter_attack, OCEECounterCounterAttack);
+  BUILD_OCEE(reflect_attack, OCEEReflectAttack);
+
+#undef BUILD_OCEE
 }
 
 GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const sol::table& table) const {
@@ -53,29 +64,43 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& ta
   event::OnCmdEvent event = found->second;
   ASSERT(event != event::OnCmdEvent::kNone);
 
-  // Find Effect Type
-  if (str_effect == "preemptive_attack") {
-    return new OCEEPreemptiveAttack(event);
-  } else if (str_effect == "enhance_basic_attack") {
-    auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
-    auto add = static_cast<int16_t>(table.get_or("addend", 0));
-    return new OCEEEnhanceBasicAttack(event, CmdBasicAttack::Type::kActiveOrCounter, {add, mult});
-  } else if (str_effect == "double_attack") {
-    ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
-    return new OCEEDoubleAttack{event};
-  } else if (str_effect == "critical_attack") {
-    ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
-    return new OCEECriticalAttack{event};
-  } else if (str_effect == "counter_counter_attack") {
-    ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
-    return new OCEECounterCounterAttack{event};
-  } else if (str_effect == "reflect_attack") {
-    ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
-    auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
-    return new OCEEReflectAttack{event, mult};
+  auto itr = ocee_gen_map_.find(str_effect);
+  if (itr == ocee_gen_map_.end()) {
+    throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");
+  } else {
+    return itr->second(event, table);
   }
+}
 
-  throw DataFormatException("Such OnCmdEventEffect '" + str_effect + "' does not exist");
+OnCmdEventEffect* EventEffectLoader::CreateOCEEPreemptiveAttack(event::OnCmdEvent event, const sol::table&) {
+  return new OCEEPreemptiveAttack(event);
+}
+
+OnCmdEventEffect* EventEffectLoader::CreateOCEEEnhanceBasicAttack(event::OnCmdEvent event, const sol::table& table) {
+  auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
+  auto add = static_cast<int16_t>(table.get_or("addend", 0));
+  return new OCEEEnhanceBasicAttack(event, CmdBasicAttack::Type::kActiveOrCounter, {add, mult});
+}
+
+OnCmdEventEffect* EventEffectLoader::CreateOCEEDoubleAttack(event::OnCmdEvent event, const sol::table&) {
+  ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
+  return new OCEEDoubleAttack{event};
+}
+
+OnCmdEventEffect* EventEffectLoader::CreateOCEECriticalAttack(event::OnCmdEvent event, const sol::table&) {
+  ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
+  return new OCEECriticalAttack{event};
+}
+
+OnCmdEventEffect* EventEffectLoader::CreateOCEECounterCounterAttack(event::OnCmdEvent event, const sol::table&) {
+  ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
+  return new OCEECounterCounterAttack{event};
+}
+
+OnCmdEventEffect* EventEffectLoader::CreateOCEEReflectAttack(event::OnCmdEvent event, const sol::table& table) {
+  ASSERT(event == event::OnCmdEvent::kNormalAttack);  // TODO Change it to throw
+  auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
+  return new OCEEReflectAttack{event, mult};
 }
 
 bool EventEffectLoader::IsGeneralEventEffect(const std::string& key) const {
