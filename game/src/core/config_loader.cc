@@ -22,14 +22,20 @@ EventEffectLoader::EventEffectLoader() {
   ocee_map_.emplace("on_normal_attack", event::OnCmdEvent::kNormalAttack);
   ocee_map_.emplace("on_normal_attacked", event::OnCmdEvent::kNormalAttacked);
 
-#define BUILD_OCEE(S, T) ocee_gen_map_.emplace(#S, Create##T);
+#define BUILD_GEE(S, T) gee_gen_map_.emplace(#S, CreateGEE##T);
 
-  BUILD_OCEE(preemptive_attack, OCEEPreemptiveAttack);
-  BUILD_OCEE(enhance_basic_attack, OCEEEnhanceBasicAttack);
-  BUILD_OCEE(double_attack, OCEEDoubleAttack);
-  BUILD_OCEE(critical_attack, OCEECriticalAttack);
-  BUILD_OCEE(counter_counter_attack, OCEECounterCounterAttack);
-  BUILD_OCEE(reflect_attack, OCEEReflectAttack);
+  BUILD_GEE(restore_hp, RestoreHp);
+
+#undef BUILD_GEE
+
+#define BUILD_OCEE(S, T) ocee_gen_map_.emplace(#S, CreateOCEE##T);
+
+  BUILD_OCEE(preemptive_attack, PreemptiveAttack);
+  BUILD_OCEE(enhance_basic_attack, EnhanceBasicAttack);
+  BUILD_OCEE(double_attack, DoubleAttack);
+  BUILD_OCEE(critical_attack, CriticalAttack);
+  BUILD_OCEE(counter_counter_attack, CounterCounterAttack);
+  BUILD_OCEE(reflect_attack, ReflectAttack);
 
 #undef BUILD_OCEE
 }
@@ -47,13 +53,20 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const sol::table
   }
 
   // Find Effect Type
-  if (str_effect == "restore_hp") {
-    auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
-    auto add = static_cast<int16_t>(table.get_or("addend", 0));
-    return new GEERestoreHp(event, {add, mult});
+  auto itr = gee_gen_map_.find(str_effect);
+  if (itr == gee_gen_map_.end()) {
+    throw DataFormatException("Such GeneralEventEffect '" + str_effect + "' does not exist");
+  } else {
+    return itr->second(event, table);
   }
 
   throw DataFormatException("Such GeneralEventEffect '" + str_effect + "' does not exist");
+}
+
+GeneralEventEffect* EventEffectLoader::CreateGEERestoreHp(event::GeneralEvent event, const sol::table& table) {
+  auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
+  auto add = static_cast<int16_t>(table.get_or("addend", 0));
+  return new GEERestoreHp(event, {add, mult});
 }
 
 OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& table) const {
