@@ -49,7 +49,7 @@ GeneralEventEffect* EventEffectLoader::CreateGeneralEventEffect(const sol::table
   ASSERT(found != gee_map_.end());
   event::GeneralEvent event = found->second;
   if (event == event::GeneralEvent::kNone) {
-    throw ConfigLoadException("Invalid type of GeneralEvent.");
+    throw DataFormatException("Invalid type of GeneralEvent.");
   }
 
   // Find Effect Type
@@ -78,7 +78,7 @@ OnCmdEventEffect* EventEffectLoader::CreateOnCmdEventEffect(const sol::table& ta
   ASSERT(found != ocee_map_.end());
   event::OnCmdEvent event = found->second;
   if (event == event::OnCmdEvent::kNone) {
-    throw ConfigLoadException("Invalid type of OnCmdEvent.");
+    throw DataFormatException("Invalid type of OnCmdEvent.");
   }
 
   auto itr = ocee_gen_map_.find(str_effect);
@@ -101,28 +101,28 @@ OnCmdEventEffect* EventEffectLoader::CreateOCEEEnhanceBasicAttack(event::OnCmdEv
 
 OnCmdEventEffect* EventEffectLoader::CreateOCEEDoubleAttack(event::OnCmdEvent event, const sol::table&) {
   if (event != event::OnCmdEvent::kNormalAttack) {
-    throw ConfigLoadException("NormalAttack is the only event allowed for OCEEDoubleAttack.");
+    throw DataFormatException("NormalAttack is the only event allowed for OCEEDoubleAttack.");
   }
   return new OCEEDoubleAttack{event};
 }
 
 OnCmdEventEffect* EventEffectLoader::CreateOCEECriticalAttack(event::OnCmdEvent event, const sol::table&) {
   if (event != event::OnCmdEvent::kNormalAttack) {
-    throw ConfigLoadException("NormalAttack is the only event allowed for OCEECriticalAttack.");
+    throw DataFormatException("NormalAttack is the only event allowed for OCEECriticalAttack.");
   }
   return new OCEECriticalAttack{event};
 }
 
 OnCmdEventEffect* EventEffectLoader::CreateOCEECounterCounterAttack(event::OnCmdEvent event, const sol::table&) {
   if (event != event::OnCmdEvent::kNormalAttack) {
-    throw ConfigLoadException("NormalAttack is the only event allowed for OCEECounterCounterAttack.");
+    throw DataFormatException("NormalAttack is the only event allowed for OCEECounterCounterAttack.");
   }
   return new OCEECounterCounterAttack{event};
 }
 
 OnCmdEventEffect* EventEffectLoader::CreateOCEEReflectAttack(event::OnCmdEvent event, const sol::table& table) {
   if (event != event::OnCmdEvent::kNormalAttack) {
-    throw ConfigLoadException("NormalAttack is the only event allowed for OCEEReflectAttack.");
+    throw DataFormatException("NormalAttack is the only event allowed for OCEEReflectAttack.");
   }
   auto mult = static_cast<int16_t>(table.get_or("multiplier", 0));
   return new OCEEReflectAttack{event, mult};
@@ -156,7 +156,7 @@ ConfigLoader::ConfigLoader(const Path& filename) : lua_{}, rc_() {
     ParseStages();
   } catch (const DataFormatException& e) {
     LOG_ERROR("%s", e.what());
-    throw ConfigLoadException(e.what());
+    throw DataFormatException(e.what());
   }
   // TODO Handle sol2 execptions
 }
