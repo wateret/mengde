@@ -15,11 +15,13 @@ def parse_args():
     parser.add_argument("--clean",     default=False,
                         help="clean before build", dest="clean", action="store_true")
     parser.add_argument("--single",    default=False,
-                        help="disalbe parallel build", dest="single", action="store_true")
+                        help="disable parallel build", dest="single", action="store_true")
     parser.add_argument("--cross",     default="",
                         help="cross build target", choices=["", "armv7l"])
     parser.add_argument("--generator", default="Unix Makefiles",
                         help="cmake generator", choices=["Unix Makefiles", "Xcode"])
+    parser.add_argument("--install", default=False,
+                        help="Install")
 
     return parser.parse_args()
 
@@ -34,7 +36,7 @@ def main():
         machine = "armv7l"
 
     # Set the install folder
-    install_folder = "bin"
+    install_folder = "install"
 
     home_folder = os.getcwd()
 
@@ -78,7 +80,7 @@ def main():
     elapsed_time = time.time() - start_time
     print("Build Time is %d:%02d.%02d" % (elapsed_time // 60, elapsed_time % 60, (elapsed_time * 100) % 100))
 
-    # Temporary works for res (Font)
+    # Install font
     res_path = os.path.join("game", "res")
     if not path_exists(res_path):
         os.mkdir(res_path)
@@ -105,4 +107,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

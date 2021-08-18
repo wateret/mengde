@@ -23,7 +23,7 @@ def main():
     build_dir = os.path.join("build", "%s.%s.%s" % (system, machine, options.buildtype))
     os.chdir(build_dir)
 
-    install_folder = "mengde"
+    install_folder = "install"
     os.chdir(install_folder)
 
     if (options.rpi):
@@ -32,7 +32,7 @@ def main():
 
     game_path = os.path.join(".", "game")
     check_run_cmd(game_path)
-    
+
     if (options.rpi):
         check_run_cmd("tvservice", ["-p"]) # change to prefered(default) mode
         time.sleep(1)

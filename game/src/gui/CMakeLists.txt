@@ -16,4 +16,4 @@ target_link_libraries(gui ${SDL2_LIBRARY})
 target_link_libraries(gui ${SDL2_TTF_LIBRARIES})
 target_link_libraries(gui ${Boost_LIBRARIES})
 
-install(TARGETS gui DESTINATION lib)
+install(TARGETS gui DESTINATION install)
