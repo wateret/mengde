@@ -1,12 +1,12 @@
-# Run Example Scenario
+# Run Example/Demo Scenario
 
-As the game is in its early stage of development, the developers who are new would not know what to do with this project.
-We do not have much document even code are incomplete. Many features are still not fixed, they can be changed any time. So it is not worth writing much document yet.
-For now, We would recommend running the "example" scenario which may be the easist way to get to know how everything works. The "example" scenario will always be compatible with the latest code and will be a reference for scenario developers.
+As the game is in its early stage of development, new developers who want to contribute on this project would not know what to do.
+We do not have much document and code is incomplete. Many features/APIs are still not fixed, they may change any time. So it is not worth writing much document yet.
+For now, we would recommend running the "example" or "demo" scenario which may be the easist way to get to know how everything works. Those scenarios will always be compatible with the latest code and is a reference for scenario developers.
 
 ## How to Run
 
-After running `build.py`, we need directory `sce` in the directory that contains executable `game`.
+After [build the project](Build.md), you need directory `sce` in the directory that contains executable `game`.
 
 For example,
 
@@ -16,5 +16,6 @@ $ mkdir sce && cd sce
 $ cp -r game/sce/example .             # Or maybe create a symlink
 ```
 
-And if you have bitmap resources, you can copy it under "example" directory.
-Please refer to [Create Scenario](Create-Scenario.md) to learn the scenario directory structure.
+NOTE "example" scenario does not contain bitmap resource due to copyright issues, while "demo" scenario does contain it.
+
+If you want to know more about scenario directory structure, refer to [Create Scenario](Create-Scenario.md).
