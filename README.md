@@ -8,16 +8,21 @@ A turn based game engine inspired by "三國志曹操傳" (by KOEI, 1998).
 
 (Sprite resource from https://cafe.naver.com/jojopeople, which is originally from 三國志曹操傳 Chinese MODs)
 
-## For game engine developers
+## Documents
 
-### How to Build
+### General
 
-Please refer to [Build Document](docs/Build.md).
+- [Introduction](Introduction.md)
 
-## For scenario(MOD) developers
+### For game engine developers
 
-TBD
+- [How to Build](docs/Build.md)
 
-## For gamers
+### For scenario(MOD) developers
+
+- [How to Build](docs/Build.md) (There is no release yet 😂)
+- [Create Scenario](docs/Create-Scenario.md)
+
+### For gamers
 
 TBD
