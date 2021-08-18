@@ -6,7 +6,7 @@ A turn based game engine inspired by "三國志曹操傳" (by KOEI, 1998).
 
 ![Demo GIF](docs/mengde.gif)
 
-(Sprite resource from https://cafe.naver.com/jojopeople , originally from 三國志曹操傳 Chinese MOD)
+(Sprite resource from https://cafe.naver.com/jojopeople, which is originally from 三國志曹操傳 Chinese MODs)
 
 ## For game engine developers
 
