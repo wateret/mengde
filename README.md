@@ -12,7 +12,7 @@ A turn based game engine inspired by "三國志曹操傳" (by KOEI, 1998).
 
 ### General
 
-- [Introduction](Introduction.md)
+- [Introduction](docs/Introduction.md)
 
 ### For game engine developers
 
