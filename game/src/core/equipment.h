@@ -23,7 +23,7 @@ class Equipment : public IEvent {
 
  public:
   Equipment(const std::string&, Type, unique_ptr<VolatileAttribute>&& va = std::make_unique<VolatileAttribute>());
-  string GetId() const { return id_; }
+  const string& GetId() const { return id_; }
   Type GetType() const { return type_; }
   void AddModifier(AttributeModifier*);
   void AddEffect(EventEffect*);
