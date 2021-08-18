@@ -6,14 +6,13 @@ For now, we would recommend running the "example" or "demo" scenario which may b
 
 ## How to Run
 
-After [build the project](Build.md), you need directory `sce` in the directory that contains executable `game`.
+After [building the project](Build.md), `sce` directory is also copied to install directory. You can run `tools/play.py` to play mengde.
 
 For example,
 
 ```
-$ cd build/Darwin.x86_64.Debug/game    # Or go to installed directory
-$ mkdir sce && cd sce
-$ cp -r game/sce/example .             # Or maybe create a symlink
+$ tools/build.py # Binaries and resources(demo scenario are installed in `build/Darwin.x86_64.Debug/install`
+$ tools/play.py  # This executes `build/Darwin.x86_64.Debug/install/game`
 ```
 
 NOTE "example" scenario does not contain bitmap resource due to copyright issues, while "demo" scenario does contain it.
